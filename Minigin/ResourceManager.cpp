@@ -27,6 +27,20 @@ std::shared_ptr<dae::Texture2D> dae::ResourceManager::LoadTexture(const std::str
 	return std::make_shared<Texture2D>(texture);
 }
 
+std::shared_ptr<dae::Texture2D> dae::ResourceManager::LoadTextureFromFont(const std::string& text, std::shared_ptr<Font> font) const
+{
+	const SDL_Color color = { 255,255,255,255 }; // only white text is supported now
+	const auto surf = TTF_RenderText_Blended(font->GetFont(), text.c_str(), color);
+	if (surf == nullptr) throw std::runtime_error(std::string("Render text failed: ") + SDL_GetError());
+
+	auto texture = SDL_CreateTextureFromSurface(Renderer::GetInstance().GetSDLRenderer(), surf);
+	if (texture == nullptr) throw std::runtime_error(std::string("Create text texture from surface failed: ") + SDL_GetError());
+
+	SDL_FreeSurface(surf);
+
+	return std::make_shared<Texture2D>(texture);
+}
+
 std::shared_ptr<dae::Font> dae::ResourceManager::LoadFont(const std::string& file, unsigned int size) const
 {
 	return std::make_shared<Font>(m_dataPath + file, size);

@@ -1,5 +1,6 @@
 #include <SDL.h>
 #include "InputManager.h"
+#include "GameTime.h"
 
 bool dae::InputManager::ProcessInput()
 {
@@ -10,6 +11,12 @@ bool dae::InputManager::ProcessInput()
 		}
 		if (e.type == SDL_KEYDOWN) {
 			
+		}
+		if (e.type == SDL_KEYUP) {
+			if (e.key.keysym.sym == SDLK_SPACE)
+			{
+				GameTime::GetInstance().ToggleUseFPSGoal();
+			}
 		}
 		if (e.type == SDL_MOUSEBUTTONDOWN) {
 			

@@ -1,31 +1,61 @@
 #pragma once
 #include <memory>
-#include "Transform.h"
+#include <map>
+#include <typeindex>
+#include <stdexcept>
+#include "Component.h"
+
 
 namespace dae
 {
 	class Texture2D;
 
 	// todo: this should become final.
-	class GameObject 
+	class GameObject final
 	{
 	public:
-		virtual void Update();
-		virtual void Render() const;
+		//virtual void FixedUpdate(float fixedTimeStep);
+		void Update();
+		void Render() const;
+	
 
-		void SetTexture(const std::string& filename);
-		void SetPosition(float x, float y);
+		
+		template <typename T, typename ...Args>
+		void AddComponent(const std::shared_ptr<GameObject>& pOwner, Args&&... args)
+		{
+			if (!HasComponent<T>()) m_pMapComponents[typeid(T)] = std::move(std::make_shared<T>(pOwner, args...));
+			else throw std::runtime_error(std::string{ "Object already owns a reference to the passed component" });
+		}
+
+		template <typename T>
+		void RemoveComponent()
+		{
+			if (HasComponent<T>()) m_pMapComponents.erase(typeid(T));
+		}
+
+		template <typename T>
+		std::shared_ptr<T> GetComponent() const
+		{
+			if (HasComponent<T>()) return std::dynamic_pointer_cast<T>(m_pMapComponents.at(typeid(T)));
+			else return nullptr;
+		}
+
+		template <typename T>
+		bool HasComponent() const
+		{
+			return m_pMapComponents.contains(typeid(T));
+		}
+
 
 		GameObject() = default;
-		virtual ~GameObject();
+
+		virtual ~GameObject() = default;
 		GameObject(const GameObject& other) = delete;
 		GameObject(GameObject&& other) = delete;
 		GameObject& operator=(const GameObject& other) = delete;
 		GameObject& operator=(GameObject&& other) = delete;
 
 	private:
-		Transform m_transform{};
-		// todo: mmm, every gameobject has a texture? Is that correct?
-		std::shared_ptr<Texture2D> m_texture{};
+		std::map<std::type_index, std::shared_ptr<Component>> m_pMapComponents;	
 	};
 }

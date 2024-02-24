@@ -8,7 +8,9 @@
 #include "InputManager.h"
 #include "SceneManager.h"
 #include "Renderer.h"
+#include "GameTime.h"
 #include "ResourceManager.h"
+#include <chrono>
 
 SDL_Window* g_window{};
 
@@ -40,7 +42,7 @@ void PrintSDLVersion()
 		version.major, version.minor, version.patch);
 }
 
-dae::Minigin::Minigin(const std::string &dataPath)
+dae::Minigin::Minigin(const std::string &dataPath, float fixedTimeStep, int FPSGoal)
 {
 	PrintSDLVersion();
 	
@@ -65,6 +67,8 @@ dae::Minigin::Minigin(const std::string &dataPath)
 	Renderer::GetInstance().Init(g_window);
 
 	ResourceManager::GetInstance().Init(dataPath);
+
+	GameTime::GetInstance().Init(fixedTimeStep, FPSGoal);
 }
 
 dae::Minigin::~Minigin()
@@ -82,13 +86,36 @@ void dae::Minigin::Run(const std::function<void()>& load)
 	auto& renderer = Renderer::GetInstance();
 	auto& sceneManager = SceneManager::GetInstance();
 	auto& input = InputManager::GetInstance();
+	auto& gameTime = GameTime::GetInstance();
 
 	// todo: this update loop could use some work.
 	bool doContinue = true;
+	//float deltaTime = 0.0f;
+	auto prevTime = std::chrono::high_resolution_clock::now();
+	float lag = 0.0f;
 	while (doContinue)
 	{
+		const auto currTime = std::chrono::high_resolution_clock::now();
+		gameTime.SetDeltaTime(std::chrono::duration<float>(currTime - prevTime).count()) ;
+		prevTime = currTime;
+		lag += gameTime.GetDeltaTime();
+
 		doContinue = input.ProcessInput();
+
+		while (lag >= gameTime.GetFixedTimeStep())
+		{
+			sceneManager.FixedUpdate(gameTime.GetFixedTimeStep());
+			lag -= gameTime.GetFixedTimeStep();
+		}
+
 		sceneManager.Update();
 		renderer.Render();
+
+		if(gameTime.UsingFPSGoal())
+		{
+			const auto sleepTime = currTime + std::chrono::milliseconds(int(gameTime.GetMillisecPerFrame())) - std::chrono::high_resolution_clock::now();
+			std::this_thread::sleep_for(sleepTime);
+		}
+		
 	}
 }

@@ -1,4 +1,5 @@
 #include <stdexcept>
+#include <algorithm>
 #include "Renderer.h"
 #include "SceneManager.h"
 #include "Texture2D.h"
@@ -25,6 +26,9 @@ void dae::Renderer::Init(SDL_Window* window)
 	{
 		throw std::runtime_error(std::string("SDL_CreateRenderer Error: ") + SDL_GetError());
 	}
+
+	//Mattias Devred
+	SDL_RenderSetVSync(m_renderer, 1);
 }
 
 void dae::Renderer::Render() const
@@ -34,6 +38,7 @@ void dae::Renderer::Render() const
 	SDL_RenderClear(m_renderer);
 
 	SceneManager::GetInstance().Render();
+	//std::for_each(m_pVecRenderComps.cbegin(), m_pVecRenderComps.cend(), [&](const std::shared_ptr<dae::RenderComponent>& pRenderComp) {pRenderComp->Render(); });
 	
 	SDL_RenderPresent(m_renderer);
 }

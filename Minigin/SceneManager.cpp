@@ -1,6 +1,14 @@
 #include "SceneManager.h"
 #include "Scene.h"
 
+void dae::SceneManager::FixedUpdate(float fixedTimeStep)
+{
+	for (auto& scene : m_scenes)
+	{
+		scene->FixedUpdate(fixedTimeStep);
+	}
+}
+
 void dae::SceneManager::Update()
 {
 	for(auto& scene : m_scenes)
@@ -9,7 +17,7 @@ void dae::SceneManager::Update()
 	}
 }
 
-void dae::SceneManager::Render()
+void dae::SceneManager::Render() const
 {
 	for (const auto& scene : m_scenes)
 	{
