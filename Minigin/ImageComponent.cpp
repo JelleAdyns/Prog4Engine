@@ -12,6 +12,5 @@ namespace dae
 		m_pOwner.lock()->GetComponent<RenderComponent>()->AddTexture<ThisType>(m_pTexture);
 	}
 	
-	//void ImageComponent::FixedUpdate(float){}
 	void ImageComponent::Update(){}
 }

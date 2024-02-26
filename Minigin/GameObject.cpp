@@ -6,13 +6,7 @@
 
 namespace dae
 {
-	//void dae::GameObject::FixedUpdate(float fixedTimeStep)
-	//{
-	//	for (auto& component : m_pMapComponents)
-	//	{
-	//		component.second->FixedUpdate(fixedTimeStep);
-	//	}
-	//}
+
 	void GameObject::Update()
 	{
 		for (auto& component: m_pMapComponents)

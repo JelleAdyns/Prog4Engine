@@ -10,8 +10,6 @@ namespace dae
 	{}
 
 
-	//void FPSComponent::FixedUpdate(float ){}
-
 	void FPSComponent::Update()
 	{
 		m_Fps = 1.f / GameTime::GetInstance().GetDeltaTime();

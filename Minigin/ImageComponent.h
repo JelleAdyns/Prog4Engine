@@ -14,7 +14,7 @@ namespace dae
 		ImageComponent(ImageComponent&&) noexcept = delete;
 		ImageComponent& operator= (const ImageComponent&) = delete;
 		ImageComponent& operator= (ImageComponent&&) noexcept = delete;
-		//virtual void FixedUpdate(float) override;
+
 		virtual void Update() override;
 		
 	private:

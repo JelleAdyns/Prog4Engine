@@ -26,15 +26,6 @@ void Scene::RemoveAll()
 	m_objects.clear();
 }
 
-void dae::Scene::FixedUpdate(float)
-{
-	// NO PHYSICS YET
-
-	//for (auto& object : m_objects)
-	//{
-	//	//object->FixedUpdate(fixedTimeStep);
-	//}
-}
 
 void Scene::Update()
 {

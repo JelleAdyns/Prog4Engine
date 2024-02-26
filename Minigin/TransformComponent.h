@@ -13,7 +13,7 @@ namespace dae
 		TransformComponent(TransformComponent&& other) = delete;
 		TransformComponent& operator=(const TransformComponent& other) = delete;
 		TransformComponent& operator=(TransformComponent&& other) = delete;
-		//virtual void FixedUpdate(float fixedTimeStep) override;
+
 		virtual void Update() override;
 
 		const glm::vec3& GetPosition() const { return m_position; }

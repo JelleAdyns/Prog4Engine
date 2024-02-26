@@ -10,14 +10,12 @@ namespace dae
 {
 	class Texture2D;
 
-	// todo: this should become final.
 	class GameObject final
 	{
 	public:
-		//virtual void FixedUpdate(float fixedTimeStep);
+
 		void Update();
 		void Render() const;
-	
 
 		
 		template <typename T, typename ...Args>

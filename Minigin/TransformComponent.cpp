@@ -6,7 +6,6 @@ namespace dae
 		Component{pOwner}, m_position{}
 	{}
 
-	//void TransformComponent::FixedUpdate(float fixedTimeStep) {}
 	void TransformComponent::Update(){}
 	void dae::TransformComponent::SetPosition(const float x, const float y, const float z)
 	{

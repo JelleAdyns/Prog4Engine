@@ -16,7 +16,7 @@ namespace dae
 		using ThisType = std::remove_reference<decltype(*this)>::type;
 		m_pOwner.lock()->GetComponent<RenderComponent>()->AddTexture<ThisType>(m_pTextTexture);
 	}
-	//void TextComponent::FixedUpdate(float fixedTimeStep){}
+
 
 	void TextComponent::Update()
 	{

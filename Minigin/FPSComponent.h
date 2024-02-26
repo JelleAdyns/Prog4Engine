@@ -15,7 +15,6 @@ namespace dae
 		FPSComponent& operator= (const FPSComponent&) = delete;
 		FPSComponent& operator= (FPSComponent&&) noexcept = delete;
 
-		//virtual void FixedUpdate(float ) override;
 		virtual void Update() override;
 
 		std::string GetFpsString() const;

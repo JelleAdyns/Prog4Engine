@@ -16,7 +16,6 @@ namespace dae
 		Component& operator= (const Component&) = delete;
 		Component& operator= (Component&&) noexcept = delete;
 
-		//virtual void FixedUpdate(float fixedTimeStep) = 0;
 		virtual void Update() = 0;
 
 	protected:

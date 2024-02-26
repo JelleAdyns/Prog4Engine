@@ -18,7 +18,7 @@ namespace dae
 		RenderComponent(RenderComponent&&) noexcept = delete;
 		RenderComponent& operator= (const RenderComponent&) = delete;
 		RenderComponent& operator= (RenderComponent&&) noexcept = delete;
-		//virtual void FixedUpdate(float) override;
+
 		virtual void Update() override;
 		void Render() const;
 

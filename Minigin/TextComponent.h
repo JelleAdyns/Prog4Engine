@@ -17,7 +17,7 @@ namespace dae
 		TextComponent(TextComponent&&) noexcept = delete;
 		TextComponent& operator= (const TextComponent&) = delete;
 		TextComponent& operator= (TextComponent&&) noexcept = delete;
-		//virtual void FixedUpdate(float fixedTimeStep) override;
+
 		virtual void Update() override;
 	
 

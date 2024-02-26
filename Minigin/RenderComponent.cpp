@@ -10,7 +10,6 @@ namespace dae
 		Component{pOwner}
 	{}
 
-	//void RenderComponent::FixedUpdate(float){}
 	void RenderComponent::Update(){}
 
 	void RenderComponent::Render() const
