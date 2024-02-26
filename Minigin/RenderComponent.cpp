@@ -14,7 +14,7 @@ namespace dae
 
 	void RenderComponent::Render() const
 	{
-		const auto& pTransform = (m_pOwner.lock())->GetComponent<dae::TransformComponent>();
+		const auto& pTransform = GetOwner()->GetComponent<dae::TransformComponent>();
 		float posX = pTransform->GetPosition().x;
 		float posY = pTransform->GetPosition().y;
 

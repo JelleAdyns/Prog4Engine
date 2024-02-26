@@ -14,7 +14,7 @@ namespace dae
 	{
 		
 		using ThisType = std::remove_reference<decltype(*this)>::type;
-		m_pOwner.lock()->GetComponent<RenderComponent>()->AddTexture<ThisType>(m_pTextTexture);
+		GetOwner()->GetComponent<RenderComponent>()->AddTexture<ThisType>(m_pTextTexture);
 	}
 
 
@@ -25,7 +25,7 @@ namespace dae
 			m_pTextTexture = ResourceManager::GetInstance().LoadTextureFromFont(m_text, m_pFont);
 
 			using ThisType = std::remove_reference<decltype(*this)>::type;
-			m_pOwner.lock()->GetComponent<RenderComponent>()->AddTexture<ThisType>(m_pTextTexture);
+			GetOwner()->GetComponent<RenderComponent>()->AddTexture<ThisType>(m_pTextTexture);
 
 			m_needsUpdate = false;
 		}

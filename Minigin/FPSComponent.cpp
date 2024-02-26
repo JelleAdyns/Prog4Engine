@@ -16,7 +16,7 @@ namespace dae
 		m_UpdateTextDelay += GameTime::GetInstance().GetDeltaTime();
 		if (m_UpdateTextDelay >= 0.5f)
 		{
-			m_pOwner.lock()->GetComponent<TextComponent>()->SetText(GetFpsString() + " FPS");
+			GetOwner()->GetComponent<TextComponent>()->SetText(GetFpsString() + " FPS");
 			m_UpdateTextDelay = 0.f;
 		}
 			

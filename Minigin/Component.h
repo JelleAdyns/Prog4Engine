@@ -21,8 +21,9 @@ namespace dae
 	protected:
 		Component(const std::shared_ptr<GameObject>& pOwner): m_pOwner{pOwner}
 		{}
+		std::shared_ptr<GameObject> GetOwner() const { return m_pOwner.lock();}
+	private:
 		std::weak_ptr<GameObject> m_pOwner;
-
 	};
 }
 

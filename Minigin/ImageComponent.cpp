@@ -9,7 +9,7 @@ namespace dae
 		Component{pOwner}, m_pTexture{ ResourceManager::GetInstance().LoadTexture(texturePath)}
 	{
 		using ThisType = std::remove_reference<decltype(*this)>::type;
-		m_pOwner.lock()->GetComponent<RenderComponent>()->AddTexture<ThisType>(m_pTexture);
+		GetOwner()->GetComponent<RenderComponent>()->AddTexture<ThisType>(m_pTexture);
 	}
 	
 	void ImageComponent::Update(){}
