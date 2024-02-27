@@ -4,10 +4,11 @@
 namespace dae
 {
 	class GameObject;
+	class TextComponent;
 	class FPSComponent final : public Component
 	{
 	public:
-		explicit FPSComponent(const std::shared_ptr<GameObject>& pOwner);
+		explicit FPSComponent(GameObject* pOwner);
 		virtual ~FPSComponent() = default;
 
 		FPSComponent(const FPSComponent&) = delete;
@@ -22,6 +23,9 @@ namespace dae
 	private:
 		float m_Fps;
 		float m_UpdateTextDelay;
+		int m_Count;
+
+		TextComponent* m_pTextComponent;
 	};
 
 }

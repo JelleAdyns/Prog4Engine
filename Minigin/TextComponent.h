@@ -6,11 +6,12 @@ namespace dae
 {
 	class Font;
 	class Texture2D;
+	class RenderComponent;
 
 	class TextComponent final : public Component
 	{
 	public:
-		explicit TextComponent(const std::shared_ptr<GameObject>& pOwner, const std::string& text, const std::shared_ptr<Font>& font);
+		explicit TextComponent(GameObject* pOwner, const std::string& text, const std::shared_ptr<Font>& font);
 		virtual ~TextComponent() {}
 
 		TextComponent(const TextComponent&) = delete;
@@ -30,5 +31,7 @@ namespace dae
 
 		std::shared_ptr<Font> m_pFont;
 		std::shared_ptr<Texture2D> m_pTextTexture;
+
+		RenderComponent* m_pRenderComponent;
 	};
 }

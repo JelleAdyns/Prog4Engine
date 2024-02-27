@@ -6,7 +6,7 @@
 
 namespace dae
 {
-	RenderComponent::RenderComponent(const std::shared_ptr<GameObject>& pOwner): 
+	RenderComponent::RenderComponent(GameObject* pOwner):
 		Component{pOwner}
 	{}
 

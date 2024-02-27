@@ -5,11 +5,12 @@
 #include "ImageComponent.h"
 namespace dae
 {
-	ImageComponent::ImageComponent(const std::shared_ptr<GameObject>& pOwner, const std::string& texturePath ):
+	ImageComponent::ImageComponent(GameObject* pOwner, const std::string& texturePath ):
 		Component{pOwner}, m_pTexture{ ResourceManager::GetInstance().LoadTexture(texturePath)}
 	{
 		using ThisType = std::remove_reference<decltype(*this)>::type;
-		GetOwner()->GetComponent<RenderComponent>()->AddTexture<ThisType>(m_pTexture);
+		m_pRenderComponent = GetOwner()->GetComponent<RenderComponent>();
+		m_pRenderComponent->AddTexture<ThisType>(m_pTexture);
 	}
 	
 	void ImageComponent::Update(){}

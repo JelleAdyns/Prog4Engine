@@ -11,7 +11,7 @@ namespace dae
 	class RenderComponent final : public Component
 	{
 	public:
-		explicit RenderComponent(const std::shared_ptr<GameObject>& pOwner);
+		explicit RenderComponent(GameObject* pOwner);
 		virtual ~RenderComponent() = default;
 
 		RenderComponent(const RenderComponent&) = delete;

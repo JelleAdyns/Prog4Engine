@@ -19,9 +19,9 @@ namespace dae
 
 		
 		template <typename T, typename ...Args>
-		void AddComponent(const std::shared_ptr<GameObject>& pOwner, Args&&... args)
+		void AddComponent(/*const std::shared_ptr<GameObject>& pOwner,*/ Args&&... args)
 		{
-			if (!HasComponent<T>()) m_pMapComponents[typeid(T)] = std::move(std::make_shared<T>(pOwner, args...));
+			if (!HasComponent<T>()) m_pMapComponents[typeid(T)] = std::move(std::make_unique<T>(this, args...));
 			else throw std::runtime_error(std::string{ "Object already owns a reference to the passed component" });
 		}
 
@@ -32,10 +32,10 @@ namespace dae
 		}
 
 		template <typename T>
-		std::shared_ptr<T> GetComponent() const
+		T* GetComponent() const
 		{
-			if (HasComponent<T>()) return std::dynamic_pointer_cast<T>(m_pMapComponents.at(typeid(T)));
-			else return nullptr;
+			if (HasComponent<T>()) return dynamic_cast<T*>(m_pMapComponents.at(typeid(T)).get());
+			else throw std::runtime_error(std::string{ "Object already owns a reference to the passed component" });
 		}
 
 		template <typename T>
@@ -54,6 +54,6 @@ namespace dae
 		GameObject& operator=(GameObject&& other) = delete;
 
 	private:
-		std::map<std::type_index, std::shared_ptr<Component>> m_pMapComponents;	
+		std::map<std::type_index, std::unique_ptr<Component>> m_pMapComponents;	
 	};
 }

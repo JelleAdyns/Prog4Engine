@@ -19,11 +19,11 @@ namespace dae
 		virtual void Update() = 0;
 
 	protected:
-		Component(const std::shared_ptr<GameObject>& pOwner): m_pOwner{pOwner}
+		Component(GameObject* pOwner): m_pOwner{pOwner}
 		{}
-		std::shared_ptr<GameObject> GetOwner() const { return m_pOwner.lock();}
+		GameObject* GetOwner() const { return m_pOwner;}
 	private:
-		std::weak_ptr<GameObject> m_pOwner;
+		GameObject* m_pOwner;
 	};
 }
 

@@ -5,22 +5,24 @@
 
 namespace dae
 {
-	FPSComponent::FPSComponent(const std::shared_ptr<GameObject>& pOwner):
-		Component{pOwner}, m_Fps{}, m_UpdateTextDelay{}
-	{}
+	FPSComponent::FPSComponent(GameObject* pOwner):
+		Component{ pOwner }, m_Fps{}, m_UpdateTextDelay{}, m_Count{}
+	{
+		m_pTextComponent = GetOwner()->GetComponent<TextComponent>();
+	}
 
 
 	void FPSComponent::Update()
 	{
-		m_Fps = 1.f / GameTime::GetInstance().GetDeltaTime();
 		m_UpdateTextDelay += GameTime::GetInstance().GetDeltaTime();
+		++m_Count;
 		if (m_UpdateTextDelay >= 0.5f)
 		{
-			GetOwner()->GetComponent<TextComponent>()->SetText(GetFpsString() + " FPS");
+			m_Fps = m_Count / m_UpdateTextDelay;
+			m_pTextComponent->SetText(GetFpsString() + " FPS");
 			m_UpdateTextDelay = 0.f;
+			m_Count = 0;
 		}
-			
-		
 	}
 
 	std::string FPSComponent::GetFpsString() const

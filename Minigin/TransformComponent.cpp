@@ -2,7 +2,7 @@
 
 namespace dae
 {
-	TransformComponent::TransformComponent(const std::shared_ptr<GameObject>& pOwner):
+	TransformComponent::TransformComponent(GameObject* pOwner):
 		Component{pOwner}, m_position{}
 	{}
 
