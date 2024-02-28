@@ -4,6 +4,7 @@
 #include <typeindex>
 #include <stdexcept>
 #include "Component.h"
+#include "TransformComponent.h"
 
 
 namespace dae
@@ -17,10 +18,12 @@ namespace dae
 		void Update();
 		void Render() const;
 
+		TransformComponent* GetTransform() const;
 		
 		template <typename T, typename ...Args>
 		void AddComponent(/*const std::shared_ptr<GameObject>& pOwner,*/ Args&&... args)
 		{
+			assert((typeid(T) != typeid(TransformComponent)) && "Type passed to 'AddComponent' was a TransformComponent");
 			if (!HasComponent<T>()) m_pMapComponents[typeid(T)] = std::move(std::make_unique<T>(this, args...));
 			else throw std::runtime_error(std::string{ "Object already owns a reference to the passed component" });
 		}
@@ -45,8 +48,18 @@ namespace dae
 		}
 
 
-		GameObject() = default;
-
+		GameObject() :
+			m_IsDead{},
+			m_pTransform{std::make_unique<TransformComponent>(this)},
+			m_pMapComponents{}
+		{}
+		GameObject(float x, float y) :
+			m_IsDead{},
+			m_pTransform{ std::make_unique<TransformComponent>(this) },
+			m_pMapComponents{}
+		{
+			m_pTransform->SetPosition(x, y);
+		}
 		virtual ~GameObject() = default;
 		GameObject(const GameObject& other) = delete;
 		GameObject(GameObject&& other) = delete;
@@ -54,6 +67,7 @@ namespace dae
 		GameObject& operator=(GameObject&& other) = delete;
 
 	private:
+		std::unique_ptr<TransformComponent> m_pTransform;
 		std::map<std::type_index, std::unique_ptr<Component>> m_pMapComponents;	
 	};
 }

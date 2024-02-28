@@ -20,5 +20,9 @@ namespace dae
 	}
 
 
+	TransformComponent* GameObject::GetTransform() const
+	{
+		return m_pTransform.get();
+	}
 }
 
