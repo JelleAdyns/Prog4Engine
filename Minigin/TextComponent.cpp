@@ -10,17 +10,20 @@
 namespace dae
 {
 	TextComponent::TextComponent(GameObject* pOwner, const std::string& text, const std::shared_ptr<Font>& font)
-		: Component{pOwner}, m_needsUpdate(true), m_text(text), m_pFont(font), m_pTextTexture(nullptr)
+		: Component{pOwner}, m_needsUpdate{true}, m_text{text}, m_pFont{font}, m_pTextTexture{nullptr}, m_pRenderComponent{nullptr}
 	{
-		
-		using ThisType = std::remove_reference<decltype(*this)>::type;
-		m_pRenderComponent = GetOwner()->GetComponent<RenderComponent>();
-		m_pRenderComponent->AddTexture<ThisType>(m_pTextTexture);
+	
 	}
 
 
 	void TextComponent::Update()
 	{
+		if (!m_pRenderComponent)
+		{
+			using ThisType = std::remove_reference<decltype(*this)>::type;
+			m_pRenderComponent = GetOwner()->GetComponent<RenderComponent>();
+			m_pRenderComponent->AddTexture<ThisType>(m_pTextTexture);
+		}
 		if (m_needsUpdate)
 		{
 			m_pTextTexture = ResourceManager::GetInstance().LoadTextureFromFont(m_text, m_pFont);
@@ -39,10 +42,10 @@ namespace dae
 		m_text = text;
 		m_needsUpdate = true;
 	}
-	std::shared_ptr<Texture2D> TextComponent::GetTexture() const
+	/*std::shared_ptr<Texture2D> TextComponent::GetTexture() const
 	{
 		return m_pTextTexture;
-	}
+	}*/
 
 }
 	

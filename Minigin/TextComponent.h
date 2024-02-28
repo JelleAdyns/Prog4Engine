@@ -23,7 +23,7 @@ namespace dae
 	
 
 		void SetText(const std::string& text);
-		std::shared_ptr<Texture2D> GetTexture() const;
+		//std::shared_ptr<Texture2D> GetTexture() const;
 
 	private:
 		bool m_needsUpdate;

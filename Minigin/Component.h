@@ -19,7 +19,7 @@ namespace dae
 		virtual void Update() = 0;
 
 	protected:
-		Component(GameObject* pOwner): m_pOwner{pOwner}
+		explicit Component(GameObject* pOwner): m_pOwner{pOwner}
 		{}
 		GameObject* GetOwner() const { return m_pOwner;}
 	private:

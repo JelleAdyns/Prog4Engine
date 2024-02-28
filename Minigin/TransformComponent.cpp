@@ -7,11 +7,10 @@ namespace dae
 	{}
 
 	void TransformComponent::Update(){}
-	void dae::TransformComponent::SetPosition(const float x, const float y, const float z)
+	void dae::TransformComponent::SetPosition(const float x, const float y)
 	{
 		m_position.x = x;
 		m_position.y = y;
-		m_position.z = z;
 	}
 
 }

@@ -7,16 +7,15 @@
 namespace dae
 {
 	RenderComponent::RenderComponent(GameObject* pOwner):
-		Component{pOwner}
+		Component{pOwner}, m_pTransform{nullptr}
 	{}
 
-	void RenderComponent::Update(){}
+	void RenderComponent::Update() { if (!m_pTransform) GetOwner()->GetTransform(); }
 
 	void RenderComponent::Render() const
 	{
-		const auto& pTransform = GetOwner()->GetComponent<dae::TransformComponent>();
-		float posX = pTransform->GetPosition().x;
-		float posY = pTransform->GetPosition().y;
+		float posX = m_pTransform->GetPosition().x;
+		float posY = m_pTransform->GetPosition().y;
 
 		for (auto& pair : m_pMapTexturesToRender)
 		{

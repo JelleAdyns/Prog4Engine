@@ -2,12 +2,11 @@
 #include <map>
 #include <typeindex>
 #include <cassert>
-
 #include "Component.h"
 #include "Texture2D.h"
 namespace dae
 {
-	
+	class TransformComponent;
 	class RenderComponent final : public Component
 	{
 	public:
@@ -30,6 +29,8 @@ namespace dae
 		}
 
 	private:
+
+		TransformComponent* m_pTransform;
 		std::map<std::type_index, std::shared_ptr<Texture2D>> m_pMapTexturesToRender;
 	};
 

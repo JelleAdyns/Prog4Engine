@@ -6,14 +6,16 @@
 namespace dae
 {
 	FPSComponent::FPSComponent(GameObject* pOwner):
-		Component{ pOwner }, m_Fps{}, m_UpdateTextDelay{}, m_Count{}
+		Component{ pOwner }, m_Fps{}, m_UpdateTextDelay{}, m_Count{}, m_pTextComponent{nullptr}
 	{
-		m_pTextComponent = GetOwner()->GetComponent<TextComponent>();
+
 	}
 
 
 	void FPSComponent::Update()
 	{
+		if(!m_pTextComponent) m_pTextComponent = GetOwner()->GetComponent<TextComponent>();
+
 		m_UpdateTextDelay += GameTime::GetInstance().GetDeltaTime();
 		++m_Count;
 		if (m_UpdateTextDelay >= 0.5f)

@@ -3,6 +3,7 @@
 #include <map>
 #include <typeindex>
 #include <stdexcept>
+#include <cassert>
 #include "Component.h"
 #include "TransformComponent.h"
 
@@ -20,13 +21,13 @@ namespace dae
 
 		bool IsDead() const;
 		TransformComponent* GetTransform() const;
-		
+
 		template <typename T, typename ...Args>
-		void AddComponent(/*const std::shared_ptr<GameObject>& pOwner,*/ Args&&... args)
+		void AddComponent(Args&&... args)
 		{
 			assert((typeid(T) != typeid(TransformComponent)) && "Type passed to 'AddComponent' was a TransformComponent");
 			if (!HasComponent<T>()) m_pMapComponents[typeid(T)] = std::move(std::make_unique<T>(this, args...));
-			else throw std::runtime_error(std::string{ "Object already owns a reference to the passed component" });
+			else throw std::runtime_error(std::string{ "Object already owns a reference to an instance of the passed component" });
 		}
 
 		template <typename T>
@@ -39,7 +40,7 @@ namespace dae
 		T* GetComponent() const
 		{
 			if (HasComponent<T>()) return dynamic_cast<T*>(m_pMapComponents.at(typeid(T)).get());
-			else throw std::runtime_error(std::string{ "Object already owns a reference to the passed component" });
+			else throw std::runtime_error(std::string{ "Object doesn't own a reference to an instance of the passed component" });
 		}
 
 		template <typename T>
