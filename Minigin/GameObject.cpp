@@ -19,6 +19,10 @@ namespace dae
 		if (const auto& pComp = GetComponent<dae::RenderComponent>(); pComp != nullptr) pComp->Render();
 	}
 
+	bool GameObject::IsDead() const
+	{
+		return m_IsDead;
+	}
 
 	TransformComponent* GameObject::GetTransform() const
 	{

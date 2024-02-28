@@ -18,6 +18,7 @@ namespace dae
 		void Update();
 		void Render() const;
 
+		bool IsDead() const;
 		TransformComponent* GetTransform() const;
 		
 		template <typename T, typename ...Args>
@@ -67,6 +68,9 @@ namespace dae
 		GameObject& operator=(GameObject&& other) = delete;
 
 	private:
+		
+		bool m_IsDead;
+
 		std::unique_ptr<TransformComponent> m_pTransform;
 		std::map<std::type_index, std::unique_ptr<Component>> m_pMapComponents;	
 	};
