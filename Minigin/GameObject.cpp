@@ -3,9 +3,36 @@
 #include "ResourceManager.h"
 #include "Renderer.h"
 #include "RenderComponent.h"
+#include "Textcomponent.h"
 
 namespace dae
 {
+	GameObject::GameObject() :
+		m_IsDead{},
+		m_IsPosDirty{},
+		m_pTransformComponent{ std::make_unique<TransformComponent>(this) },
+		m_pRenderComponent{nullptr},
+		m_pMapComponents{},
+		m_pParent{ nullptr },
+		m_pVecChildren{},
+		m_LocalTransform{ std::make_unique<TransformComponent>(this) },
+		m_WorldTransform{ std::make_unique<TransformComponent>(this) }
+	{}
+	GameObject::GameObject(float x, float y) :
+		m_IsDead{},
+		m_IsPosDirty{},
+		m_pTransformComponent{ std::make_unique<TransformComponent>(this) },
+		m_pRenderComponent{ nullptr },
+		m_pMapComponents{},
+		m_pParent{ nullptr },
+		m_pVecChildren{},
+		m_LocalTransform{ std::make_unique<TransformComponent>(this) },
+		m_WorldTransform{ std::make_unique<TransformComponent>(this) }
+	{
+		m_LocalTransform->SetPosition(glm::vec2{x,y});
+		m_WorldTransform->SetPosition(glm::vec2{ x,y });
+		m_pTransformComponent->SetPosition(glm::vec2{ x,y });
+	}
 
 	void GameObject::Update()
 	{
@@ -13,10 +40,14 @@ namespace dae
 		{
 			component.second->Update();
 		}
+		if (m_pRenderComponent) m_pRenderComponent->Update();
+
+		//if (m_pParent == nullptr) m_WorldTransform->SetPosition(m_LocalTransform->GetPosition());
+		//else m_WorldTransform->SetPosition(m_pParent->m_WorldTransform->GetPosition() + m_LocalTransform->GetPosition());
 	}
 	void GameObject::Render() const
 	{
-		if (const auto& pComp = GetComponent<dae::RenderComponent>(); pComp != nullptr) pComp->Render();
+		if (m_pRenderComponent) m_pRenderComponent->Render();
 	}
 
 	bool GameObject::IsDead() const
@@ -24,9 +55,65 @@ namespace dae
 		return m_IsDead;
 	}
 
-	TransformComponent* GameObject::GetTransform() const
+	TransformComponent* GameObject::GetTransformComponent() const
 	{
-		return m_pTransform.get();
+		return m_pTransformComponent.get();
+	}
+	RenderComponent* GameObject::GetRenderComponent() const
+	{
+		return m_pRenderComponent.get();
+	}
+
+	void GameObject::SetParent(const std::shared_ptr<GameObject>& pParent, bool keepWorldPosition)
+	{
+		if (pParent.get() == this || pParent == m_pParent || IsChild(pParent))
+		{
+			throw std::runtime_error{ "New Parent is not valid" };
+		}
+
+		if (pParent == nullptr || !keepWorldPosition) SetLocalPos(m_WorldTransform->GetPosition());
+		else if (keepWorldPosition) SetLocalPos(m_WorldTransform->GetPosition() - pParent->m_WorldTransform->GetPosition());
+
+		if (m_pParent) m_pParent->m_pVecChildren.erase(std::remove(m_pVecChildren.begin(), m_pVecChildren.end(), this));
+		m_pParent = pParent;
+		if (m_pParent) m_pParent->m_pVecChildren.emplace_back(this);
+	}
+
+	bool GameObject::IsChild(const std::shared_ptr<GameObject>& pGameObject) const
+	{
+		return std::find(m_pVecChildren.cbegin(), m_pVecChildren.cend(), pGameObject.get()) != m_pVecChildren.cend();
+	}
+
+	void GameObject::SetLocalPos(const glm::vec2& newLocalPos)
+	{
+		m_LocalTransform->SetPosition(newLocalPos);
+		SetPosDirty();
+	}
+	void GameObject::SetPosDirty()
+	{
+		m_IsPosDirty = true;
+		std::for_each(m_pVecChildren.begin(), m_pVecChildren.end(), [&](GameObject* pChild)
+			{
+				pChild->SetPosDirty();
+			});
+	}
+
+	const glm::vec2& GameObject::GetWorldPosition()
+	{
+		if (m_IsPosDirty)
+			UpdateWorldPosition();
+		return m_WorldTransform->GetPosition();
+	}
+	void GameObject::UpdateWorldPosition()
+	{
+		if (m_IsPosDirty)
+		{
+			if (m_pParent == nullptr) m_WorldTransform->SetPosition(m_LocalTransform->GetPosition());
+			else m_WorldTransform->SetPosition(m_pParent->GetWorldPosition() + m_LocalTransform->GetPosition());
+
+			m_IsPosDirty = false;
+		}
+		
 	}
 }
 

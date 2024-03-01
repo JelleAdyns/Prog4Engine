@@ -1,11 +1,9 @@
-#include "TextComponent.h"
-//#include <stdexcept>
 #include <SDL_ttf.h>
+#include "TextComponent.h"
 #include "RenderComponent.h"
 #include "ResourceManager.h"
 #include "GameObject.h"
 #include "Font.h"
-//#include "Texture2D.h"
 
 namespace dae
 {
@@ -21,7 +19,7 @@ namespace dae
 		if (!m_pRenderComponent)
 		{
 			using ThisType = std::remove_reference<decltype(*this)>::type;
-			m_pRenderComponent = GetOwner()->GetComponent<RenderComponent>();
+			m_pRenderComponent = GetOwner()->GetRenderComponent();
 			m_pRenderComponent->AddTexture<ThisType>(m_pTextTexture);
 		}
 		if (m_needsUpdate)

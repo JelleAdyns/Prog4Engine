@@ -16,7 +16,7 @@ namespace dae
 		if (!m_pRenderComponent)
 		{
 			using ThisType = std::remove_reference<decltype(*this)>::type;
-			m_pRenderComponent = GetOwner()->GetComponent<RenderComponent>();
+			m_pRenderComponent = GetOwner()->GetRenderComponent();
 			m_pRenderComponent->AddTexture<ThisType>(m_pTexture);
 		}
 	}

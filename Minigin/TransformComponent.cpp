@@ -1,4 +1,5 @@
 #include "TransformComponent.h"
+#include "GameObject.h"
 
 namespace dae
 {
@@ -7,10 +8,9 @@ namespace dae
 	{}
 
 	void TransformComponent::Update(){}
-	void dae::TransformComponent::SetPosition(const float x, const float y)
+	void dae::TransformComponent::SetPosition(const glm::vec2& newPos)
 	{
-		m_position.x = x;
-		m_position.y = y;
+		m_position = newPos;
 	}
 
 }

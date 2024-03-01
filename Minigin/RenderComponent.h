@@ -30,7 +30,8 @@ namespace dae
 
 	private:
 
-		TransformComponent* m_pTransform;
+		glm::vec2 m_Pos;
+		//TransformComponent* m_pTransformComponent;
 		std::map<std::type_index, std::shared_ptr<Texture2D>> m_pMapTexturesToRender;
 	};
 
