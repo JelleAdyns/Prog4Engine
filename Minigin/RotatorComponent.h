@@ -3,13 +3,11 @@
 #include "Component.h"
 namespace dae
 {
-	class Texture2D;
-	class TransformComponent;
 	class RotatorComponent final : public Component
 	{
 	public:
 		explicit RotatorComponent(GameObject* pOwner);
-		explicit RotatorComponent(GameObject* pOwner, const glm::vec2& center, float radius);
+		explicit RotatorComponent(GameObject* pOwner, const glm::vec2& center, float radius, float speed = 1.f, bool clockwise = true);
 		virtual ~RotatorComponent() = default;
 
 		RotatorComponent(const RotatorComponent&) = delete;
@@ -23,10 +21,12 @@ namespace dae
 		void SetRadius(float radius);
 
 	private:
-		std::shared_ptr<Texture2D> m_pTexture;
+		
 		glm::vec2 m_Center;
 		float m_Radius;
 		float m_Angle;
+		float m_Speed;
+		bool m_Clockwise;
 	};
 
 }

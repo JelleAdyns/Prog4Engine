@@ -10,7 +10,7 @@ namespace dae
 	GameObject::GameObject() :
 		m_IsDead{},
 		m_IsPosDirty{},
-		m_pTransformComponent{ std::make_unique<TransformComponent>(this) },
+		//m_pTransformComponent{ std::make_unique<TransformComponent>(this) },
 		m_pRenderComponent{nullptr},
 		m_pMapComponents{},
 		m_pParent{ nullptr },
@@ -21,7 +21,7 @@ namespace dae
 	GameObject::GameObject(float x, float y) :
 		m_IsDead{},
 		m_IsPosDirty{},
-		m_pTransformComponent{ std::make_unique<TransformComponent>(this) },
+		//m_pTransformComponent{ std::make_unique<TransformComponent>(this) },
 		m_pRenderComponent{ nullptr },
 		m_pMapComponents{},
 		m_pParent{ nullptr },
@@ -31,7 +31,7 @@ namespace dae
 	{
 		m_LocalTransform->SetPosition(glm::vec2{x,y});
 		m_WorldTransform->SetPosition(glm::vec2{ x,y });
-		m_pTransformComponent->SetPosition(glm::vec2{ x,y });
+		//m_pTransformComponent->SetPosition(glm::vec2{ x,y });
 	}
 
 	void GameObject::Update()
@@ -55,14 +55,14 @@ namespace dae
 		return m_IsDead;
 	}
 
-	TransformComponent* GameObject::GetTransformComponent() const
+	/*TransformComponent* GameObject::GetTransformComponent() const
 	{
 		return m_pTransformComponent.get();
-	}
-	RenderComponent* GameObject::GetRenderComponent() const
+	}*/
+	/*RenderComponent* GameObject::GetRenderComponent() const
 	{
 		return m_pRenderComponent.get();
-	}
+	}*/
 
 	void GameObject::SetParent(const std::shared_ptr<GameObject>& pParent, bool keepWorldPosition)
 	{
@@ -71,10 +71,10 @@ namespace dae
 			throw std::runtime_error{ "New Parent is not valid" };
 		}
 
-		if (pParent == nullptr || !keepWorldPosition) SetLocalPos(m_WorldTransform->GetPosition());
-		else if (keepWorldPosition) SetLocalPos(m_WorldTransform->GetPosition() - pParent->m_WorldTransform->GetPosition());
+		if (pParent == nullptr || !keepWorldPosition) SetLocalPos(GetWorldPosition());
+		else if (keepWorldPosition) SetLocalPos(GetWorldPosition() - pParent->GetWorldPosition());
 
-		if (m_pParent) m_pParent->m_pVecChildren.erase(std::remove(m_pVecChildren.begin(), m_pVecChildren.end(), this));
+		if (m_pParent) m_pParent->m_pVecChildren.erase(std::remove(m_pParent->m_pVecChildren.begin(), m_pParent->m_pVecChildren.end(), this));
 		m_pParent = pParent;
 		if (m_pParent) m_pParent->m_pVecChildren.emplace_back(this);
 	}
@@ -114,6 +114,11 @@ namespace dae
 			m_IsPosDirty = false;
 		}
 		
+	}
+
+	const std::shared_ptr<GameObject>& GameObject::GetParent()
+	{
+		return m_pParent;
 	}
 }
 
