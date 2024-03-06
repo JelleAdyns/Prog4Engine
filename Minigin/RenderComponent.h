@@ -2,23 +2,22 @@
 #include <map>
 #include <typeindex>
 #include <cassert>
-
 #include "Component.h"
 #include "Texture2D.h"
 namespace dae
 {
-	
+	class TransformComponent;
 	class RenderComponent final : public Component
 	{
 	public:
-		explicit RenderComponent(const std::shared_ptr<GameObject>& pOwner);
+		explicit RenderComponent(GameObject* pOwner, bool useMiddleOfTextures = false);
 		virtual ~RenderComponent() = default;
 
 		RenderComponent(const RenderComponent&) = delete;
 		RenderComponent(RenderComponent&&) noexcept = delete;
 		RenderComponent& operator= (const RenderComponent&) = delete;
 		RenderComponent& operator= (RenderComponent&&) noexcept = delete;
-		//virtual void FixedUpdate(float) override;
+
 		virtual void Update() override;
 		void Render() const;
 
@@ -30,6 +29,10 @@ namespace dae
 		}
 
 	private:
+
+		glm::vec2 m_Pos;
+		bool m_UseMiddle;
+		//TransformComponent* m_pTransformComponent;
 		std::map<std::type_index, std::shared_ptr<Texture2D>> m_pMapTexturesToRender;
 	};
 

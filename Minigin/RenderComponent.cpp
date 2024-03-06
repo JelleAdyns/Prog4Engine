@@ -6,22 +6,34 @@
 
 namespace dae
 {
-	RenderComponent::RenderComponent(const std::shared_ptr<GameObject>& pOwner): 
-		Component{pOwner}
+	RenderComponent::RenderComponent(GameObject* pOwner, bool useMiddleOfTextures):
+		Component{ pOwner }, m_Pos{}, m_UseMiddle{useMiddleOfTextures}
 	{}
 
-	//void RenderComponent::FixedUpdate(float){}
-	void RenderComponent::Update(){}
+	void RenderComponent::Update() 
+	{
+		m_Pos = GetOwner()->GetWorldPosition();
+	}
 
 	void RenderComponent::Render() const
 	{
-		const auto& pTransform = (m_pOwner.lock())->GetComponent<dae::TransformComponent>();
-		float posX = pTransform->GetPosition().x;
-		float posY = pTransform->GetPosition().y;
-
-		for (auto& pair : m_pMapTexturesToRender)
+		const auto& renderer = Renderer::GetInstance();
+		if (m_UseMiddle)
 		{
-			Renderer::GetInstance().RenderTexture(*(pair.second), posX, posY);
+			for (auto& pair : m_pMapTexturesToRender)
+			{
+				float posX{ m_Pos.x - pair.second->GetSize().x / 2 };
+				float posY{ m_Pos.y - pair.second->GetSize().y / 2 };
+				renderer.RenderTexture(*(pair.second), posX, posY);
+			}
 		}
+		else
+		{
+			for (auto& pair : m_pMapTexturesToRender)
+			{
+				renderer.RenderTexture(*(pair.second), m_Pos.x, m_Pos.y);
+			}
+		}
+		
 	}
 }

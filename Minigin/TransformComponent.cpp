@@ -1,18 +1,16 @@
 #include "TransformComponent.h"
+#include "GameObject.h"
 
 namespace dae
 {
-	TransformComponent::TransformComponent(const std::shared_ptr<GameObject>& pOwner):
+	TransformComponent::TransformComponent(GameObject* pOwner):
 		Component{pOwner}, m_position{}
 	{}
 
-	//void TransformComponent::FixedUpdate(float fixedTimeStep) {}
 	void TransformComponent::Update(){}
-	void dae::TransformComponent::SetPosition(const float x, const float y, const float z)
+	void dae::TransformComponent::SetPosition(const glm::vec2& newPos)
 	{
-		m_position.x = x;
-		m_position.y = y;
-		m_position.z = z;
+		m_position = newPos;
 	}
 
 }

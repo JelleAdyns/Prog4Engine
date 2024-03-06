@@ -1,6 +1,7 @@
 #pragma once
 #include <memory>
-
+#include <glm/vec2.hpp>
+#include "GameTime.h"
 
 namespace dae
 {
@@ -16,14 +17,14 @@ namespace dae
 		Component& operator= (const Component&) = delete;
 		Component& operator= (Component&&) noexcept = delete;
 
-		//virtual void FixedUpdate(float fixedTimeStep) = 0;
 		virtual void Update() = 0;
 
 	protected:
-		Component(const std::shared_ptr<GameObject>& pOwner): m_pOwner{pOwner}
+		explicit Component(GameObject* pOwner): m_pOwner{pOwner}
 		{}
-		std::weak_ptr<GameObject> m_pOwner;
-
+		GameObject* GetOwner() const { return m_pOwner;}
+	private:
+		GameObject* m_pOwner;
 	};
 }
 
