@@ -11,6 +11,7 @@
 #include "GameTime.h"
 #include "ResourceManager.h"
 #include <chrono>
+#include <thread>
 
 SDL_Window* g_window{};
 
