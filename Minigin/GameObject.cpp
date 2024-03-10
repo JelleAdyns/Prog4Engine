@@ -9,7 +9,7 @@ namespace dae
 {
 	GameObject::GameObject() :
 		m_IsDead{},
-		m_IsPosDirty{},
+		m_IsPosDirty{true},
 		//m_pTransformComponent{ std::make_unique<TransformComponent>(this) },
 		m_pRenderComponent{nullptr},
 		m_pMapComponents{},
@@ -20,7 +20,7 @@ namespace dae
 	{}
 	GameObject::GameObject(float x, float y) :
 		m_IsDead{},
-		m_IsPosDirty{},
+		m_IsPosDirty{true},
 		//m_pTransformComponent{ std::make_unique<TransformComponent>(this) },
 		m_pRenderComponent{ nullptr },
 		m_pMapComponents{},
@@ -79,8 +79,14 @@ namespace dae
 			throw std::runtime_error{ "New Parent is not valid" };
 		}
 
-		if (pParent == nullptr || !keepWorldPosition) SetLocalPos(GetWorldPosition());
-		else if (keepWorldPosition) SetLocalPos(GetWorldPosition() - pParent->GetWorldPosition());
+		/*if (pParent == nullptr || !keepWorldPosition) SetLocalPos(GetWorldPosition());
+		else if (keepWorldPosition) SetLocalPos(GetWorldPosition() - pParent->GetWorldPosition());*/
+		if (pParent == nullptr) SetLocalPos(GetWorldPosition());
+		else
+		{
+			if (keepWorldPosition) SetLocalPos(GetWorldPosition() - pParent->GetWorldPosition());
+			else SetPosDirty();
+		}
 
 		if (m_pParent) m_pParent->m_pVecChildren.erase(std::remove(m_pParent->m_pVecChildren.begin(), m_pParent->m_pVecChildren.end(), this));
 		m_pParent = pParent;

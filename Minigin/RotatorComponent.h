@@ -7,7 +7,7 @@ namespace dae
 	{
 	public:
 		explicit RotatorComponent(GameObject* pOwner);
-		explicit RotatorComponent(GameObject* pOwner, const glm::vec2& center, float radius, float speed = 1.f, bool clockwise = true);
+		explicit RotatorComponent(GameObject* pOwner, float radius, float speed = 1.f);
 		virtual ~RotatorComponent() = default;
 
 		RotatorComponent(const RotatorComponent&) = delete;
@@ -18,16 +18,14 @@ namespace dae
 		virtual void Update() override;
 		virtual void PrepareImGuiRender() override;
 
-		void SetCenter(const glm::vec2& center);
 		void SetRadius(float radius);
+		void SetSpeed(float speed);
 
 	private:
 		
-		glm::vec2 m_Center;
 		float m_Radius;
 		float m_Angle;
 		float m_Speed;
-		bool m_Clockwise;
 	};
 
 }
