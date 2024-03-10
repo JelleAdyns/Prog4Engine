@@ -26,6 +26,8 @@ namespace dae
 		}
 	}
 
+	void FPSComponent::PrepareImGuiRender(){}
+
 	std::string FPSComponent::GetFpsString() const
 	{
 		return std::to_string(m_Fps);

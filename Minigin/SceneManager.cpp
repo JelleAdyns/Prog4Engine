@@ -10,6 +10,14 @@ void dae::SceneManager::Update()
 	}
 }
 
+void dae::SceneManager::PrepareImGuiRender()
+{
+	for (const auto& scene : m_scenes)
+	{
+		scene->PrepareImGuiRender();
+	}
+}
+
 void dae::SceneManager::Render() const
 {
 	for (const auto& scene : m_scenes)

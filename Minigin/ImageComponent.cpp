@@ -20,4 +20,5 @@ namespace dae
 			m_pRenderComponent->AddTexture<ThisType>(m_pTexture);
 		}
 	}
+	void ImageComponent::PrepareImGuiRender() {}
 }

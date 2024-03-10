@@ -28,6 +28,7 @@ namespace dae
 		GameObject& operator=(GameObject&& other) = delete;
 
 		void Update();
+		void PrepareImGuiRender();
 		void Render() const;
 
 		bool IsDead() const;

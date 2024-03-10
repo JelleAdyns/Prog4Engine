@@ -17,6 +17,7 @@ namespace dae
 		FPSComponent& operator= (FPSComponent&&) noexcept = delete;
 
 		virtual void Update() override;
+		virtual void PrepareImGuiRender() override;
 
 		std::string GetFpsString() const;
 

@@ -20,7 +20,8 @@ namespace dae
 		TextComponent& operator= (TextComponent&&) noexcept = delete;
 
 		virtual void Update() override;
-	
+		virtual void PrepareImGuiRender() override;
+
 
 		void SetText(const std::string& text);
 		//std::shared_ptr<Texture2D> GetTexture() const;

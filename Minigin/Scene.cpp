@@ -42,6 +42,14 @@ void Scene::Update()
 	);
 }
 
+void dae::Scene::PrepareImGuiRender()
+{
+	for (auto& object : m_pObjects)
+	{
+		object->PrepareImGuiRender();
+	}
+}
+
 void Scene::Render() const
 {
 	for (const auto& object : m_pObjects)

@@ -45,6 +45,14 @@ namespace dae
 		//if (m_pParent == nullptr) m_WorldTransform->SetPosition(m_LocalTransform->GetPosition());
 		//else m_WorldTransform->SetPosition(m_pParent->m_WorldTransform->GetPosition() + m_LocalTransform->GetPosition());
 	}
+	void GameObject::PrepareImGuiRender()
+	{
+		for (auto& component : m_pMapComponents)
+		{
+			component.second->PrepareImGuiRender();
+		}
+
+	}
 	void GameObject::Render() const
 	{
 		if (m_pRenderComponent) m_pRenderComponent->Render();

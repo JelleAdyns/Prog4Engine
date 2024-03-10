@@ -19,6 +19,8 @@ namespace dae
 		RenderComponent& operator= (RenderComponent&&) noexcept = delete;
 
 		virtual void Update() override;
+		virtual void PrepareImGuiRender() override;
+
 		void Render() const;
 
 		template <typename T>

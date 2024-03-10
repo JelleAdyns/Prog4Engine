@@ -16,6 +16,7 @@ namespace dae
 		RotatorComponent& operator= (RotatorComponent&&) noexcept = delete;
 
 		virtual void Update() override;
+		virtual void PrepareImGuiRender() override;
 
 		void SetCenter(const glm::vec2& center);
 		void SetRadius(float radius);

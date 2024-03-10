@@ -33,6 +33,8 @@ namespace dae
 		}
 	}
 
+	void TextComponent::PrepareImGuiRender() {}
+
 
 	// This implementation uses the "dirty flag" pattern
 	void TextComponent::SetText(const std::string& text)

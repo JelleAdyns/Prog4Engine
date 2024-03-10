@@ -35,6 +35,7 @@ namespace dae
 		);
 		
 	}
+	void RotatorComponent::PrepareImGuiRender() {}
 
 	void RotatorComponent::SetCenter(const glm::vec2& center)
 	{

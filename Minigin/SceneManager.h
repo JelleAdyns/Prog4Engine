@@ -13,6 +13,7 @@ namespace dae
 		Scene& CreateScene(const std::string& name);
 
 		void Update();
+		void PrepareImGuiRender();
 		void Render() const;
 	private:
 		friend class Singleton<SceneManager>;
