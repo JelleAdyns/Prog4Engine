@@ -1,5 +1,6 @@
 #include "RotatorComponent.h"
 #include "GameObject.h"
+#include <numbers>
 
 
 namespace dae
@@ -23,7 +24,10 @@ namespace dae
 	}
 	void RotatorComponent::Update()
 	{
+		constexpr float Pi2 = 2 * static_cast<float>(std::numbers::pi);
+
 		m_Angle += m_Speed * GameTime::GetInstance().GetDeltaTime();
+		if (m_Angle >= Pi2) m_Angle -= Pi2;
 
 		GetOwner()->SetLocalPos(
 			glm::vec2{cos(m_Angle) * m_Radius,
