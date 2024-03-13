@@ -40,7 +40,7 @@ namespace dae
 		{
 			component.second->Update();
 		}
-		if (m_pRenderComponent) m_pRenderComponent->Update();
+		//if (m_pRenderComponent) m_pRenderComponent->Update();
 
 		//if (m_pParent == nullptr) m_WorldTransform->SetPosition(m_LocalTransform->GetPosition());
 		//else m_WorldTransform->SetPosition(m_pParent->m_WorldTransform->GetPosition() + m_LocalTransform->GetPosition());
@@ -72,9 +72,9 @@ namespace dae
 		return m_pRenderComponent.get();
 	}*/
 
-	void GameObject::SetParent(const std::shared_ptr<GameObject>& pParent, bool keepWorldPosition)
+	void GameObject::SetParent(const std::unique_ptr<GameObject>& pParent, bool keepWorldPosition)
 	{
-		if (pParent.get() == this || pParent == m_pParent || IsChild(pParent))
+		if (pParent.get() == this || pParent.get() == m_pParent || IsChild(pParent))
 		{
 			throw std::runtime_error{ "New Parent is not valid" };
 		}
@@ -89,11 +89,11 @@ namespace dae
 		}
 
 		if (m_pParent) m_pParent->m_pVecChildren.erase(std::remove(m_pParent->m_pVecChildren.begin(), m_pParent->m_pVecChildren.end(), this));
-		m_pParent = pParent;
+		m_pParent = pParent.get();
 		if (m_pParent) m_pParent->m_pVecChildren.emplace_back(this);
 	}
 
-	bool GameObject::IsChild(const std::shared_ptr<GameObject>& pGameObject) const
+	bool GameObject::IsChild(const std::unique_ptr<GameObject>& pGameObject) const
 	{
 		return std::find(m_pVecChildren.cbegin(), m_pVecChildren.cend(), pGameObject.get()) != m_pVecChildren.cend();
 	}
@@ -128,11 +128,6 @@ namespace dae
 			m_IsPosDirty = false;
 		}
 		
-	}
-
-	const std::shared_ptr<GameObject>& GameObject::GetParent()
-	{
-		return m_pParent;
 	}
 }
 

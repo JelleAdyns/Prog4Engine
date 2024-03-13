@@ -21,7 +21,7 @@ namespace dae
 		GameObject();
 		GameObject(float x, float y);
 
-		virtual ~GameObject() = default;
+		~GameObject() = default;
 		GameObject(const GameObject& other) = delete;
 		GameObject(GameObject&& other) = delete;
 		GameObject& operator=(const GameObject& other) = delete;
@@ -35,12 +35,11 @@ namespace dae
 		//TransformComponent* GetTransformComponent() const;
 		//RenderComponent* GetRenderComponent() const;
 
-		void SetParent(const std::shared_ptr<GameObject>& pParent, bool keepWorldPosition);
-		bool IsChild(const std::shared_ptr<GameObject>& pGameObject) const;
+		void SetParent(const std::unique_ptr<GameObject>& pParent, bool keepWorldPosition);
+		bool IsChild(const std::unique_ptr<GameObject>& pGameObject) const;
 		void SetLocalPos(const glm::vec2& newLocalPos);
 		void SetPosDirty();
 		const glm::vec2& GetWorldPosition();
-		const std::shared_ptr<GameObject>& GetParent();
 	
 
 		template <typename T, typename ...Args>
@@ -54,9 +53,9 @@ namespace dae
 
 		void AddRenderComponent(bool useMiddleOfTexture = false)
 		{
-			auto pComp = std::make_shared<RenderComponent>(this, useMiddleOfTexture);
-			m_pRenderComponent = pComp;
-			m_pMapComponents[typeid(RenderComponent)] = pComp;
+			auto pComp = std::make_unique<RenderComponent>(this, useMiddleOfTexture);
+			m_pRenderComponent = pComp.get();
+			m_pMapComponents[typeid(RenderComponent)] = std::move(pComp);
 		}
 
 		template <typename T>
@@ -82,16 +81,16 @@ namespace dae
 		
 		bool m_IsDead;
 		bool m_IsPosDirty;
-		std::shared_ptr<TransformComponent> m_LocalTransform;
-		std::shared_ptr<TransformComponent> m_WorldTransform;
+		std::unique_ptr<TransformComponent> m_LocalTransform;
+		std::unique_ptr<TransformComponent> m_WorldTransform;
 
 		//Tree
-		std::shared_ptr<GameObject> m_pParent;
+		GameObject* m_pParent;
 		std::vector<GameObject*> m_pVecChildren;
 
 		//Components
-		std::shared_ptr<RenderComponent> m_pRenderComponent;
-		std::map<std::type_index, std::shared_ptr<Component>> m_pMapComponents;	
+		RenderComponent* m_pRenderComponent;
+		std::map<std::type_index, std::unique_ptr<Component>> m_pMapComponents;	
 
 		void UpdateWorldPosition();
 	};

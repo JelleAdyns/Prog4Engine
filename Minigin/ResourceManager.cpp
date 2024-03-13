@@ -3,8 +3,8 @@
 #include <SDL_ttf.h>
 #include "ResourceManager.h"
 #include "Renderer.h"
-#include "Texture2D.h"
-#include "Font.h"
+//#include "Texture2D.h"
+//#include "Font.h"
 
 void dae::ResourceManager::Init(const std::string& dataPath)
 {
@@ -16,7 +16,7 @@ void dae::ResourceManager::Init(const std::string& dataPath)
 	}
 }
 
-std::shared_ptr<dae::Texture2D> dae::ResourceManager::LoadTexture(const std::string& file) const
+std::unique_ptr<dae::Texture2D> dae::ResourceManager::LoadTexture(const std::string& file) const
 {
 	const auto fullPath = m_dataPath + file;
 	auto texture = IMG_LoadTexture(Renderer::GetInstance().GetSDLRenderer(), fullPath.c_str());
@@ -24,10 +24,10 @@ std::shared_ptr<dae::Texture2D> dae::ResourceManager::LoadTexture(const std::str
 	{
 		throw std::runtime_error(std::string("Failed to load texture: ") + SDL_GetError());
 	}
-	return std::make_shared<Texture2D>(texture);
+	return std::make_unique<Texture2D>(texture);
 }
 
-std::shared_ptr<dae::Texture2D> dae::ResourceManager::LoadTextureFromFont(const std::string& text, std::shared_ptr<Font> font) const
+std::unique_ptr<dae::Texture2D> dae::ResourceManager::LoadTextureFromFont(const std::string& text, const std::unique_ptr<Font>& font) const
 {
 	const SDL_Color color = { 255,255,255,255 }; // only white text is supported now
 	const auto surf = TTF_RenderText_Blended(font->GetFont(), text.c_str(), color);
@@ -38,10 +38,10 @@ std::shared_ptr<dae::Texture2D> dae::ResourceManager::LoadTextureFromFont(const 
 
 	SDL_FreeSurface(surf);
 
-	return std::make_shared<Texture2D>(texture);
+	return std::make_unique<Texture2D>(texture);
 }
 
-std::shared_ptr<dae::Font> dae::ResourceManager::LoadFont(const std::string& file, unsigned int size) const
+std::unique_ptr<dae::Font> dae::ResourceManager::LoadFont(const std::string& file, unsigned int size) const
 {
-	return std::make_shared<Font>(m_dataPath + file, size);
+	return std::make_unique<Font>(m_dataPath + file, size);
 }
