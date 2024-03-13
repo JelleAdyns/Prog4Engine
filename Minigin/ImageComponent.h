@@ -17,9 +17,10 @@ namespace dae
 		ImageComponent& operator= (ImageComponent&&) noexcept = delete;
 
 		virtual void Update() override;
-		
+		virtual void PrepareImGuiRender() override;
+
 	private:
-		std::shared_ptr<Texture2D> m_pTexture;
+		std::unique_ptr<Texture2D> m_pTexture;
 
 		RenderComponent* m_pRenderComponent;
 	};

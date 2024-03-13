@@ -18,6 +18,7 @@ namespace dae
 		Component& operator= (Component&&) noexcept = delete;
 
 		virtual void Update() = 0;
+		virtual void PrepareImGuiRender() = 0;
 
 	protected:
 		explicit Component(GameObject* pOwner): m_pOwner{pOwner}

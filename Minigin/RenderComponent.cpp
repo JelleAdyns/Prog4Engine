@@ -15,6 +15,8 @@ namespace dae
 		m_Pos = GetOwner()->GetWorldPosition();
 	}
 
+	void RenderComponent::PrepareImGuiRender() { }
+
 	void RenderComponent::Render() const
 	{
 		const auto& renderer = Renderer::GetInstance();

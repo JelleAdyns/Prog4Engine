@@ -19,13 +19,15 @@ namespace dae
 		RenderComponent& operator= (RenderComponent&&) noexcept = delete;
 
 		virtual void Update() override;
+		virtual void PrepareImGuiRender() override;
+
 		void Render() const;
 
 		template <typename T>
-		void AddTexture(const std::shared_ptr<Texture2D>& pTexture)
+		void AddTexture(const std::unique_ptr<Texture2D>& pTexture)
 		{
 			assert((std::derived_from<T,Component>));
-			m_pMapTexturesToRender[typeid(T)] = pTexture;
+			m_pMapTexturesToRender[typeid(T)] = pTexture.get();
 		}
 
 	private:
@@ -33,7 +35,7 @@ namespace dae
 		glm::vec2 m_Pos;
 		bool m_UseMiddle;
 		//TransformComponent* m_pTransformComponent;
-		std::map<std::type_index, std::shared_ptr<Texture2D>> m_pMapTexturesToRender;
+		std::map<std::type_index,	Texture2D*> m_pMapTexturesToRender;
 	};
 
 }

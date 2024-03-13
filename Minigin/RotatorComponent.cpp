@@ -1,47 +1,48 @@
 #include "RotatorComponent.h"
 #include "GameObject.h"
+#include <numbers>
 
 
 namespace dae
 {
 	RotatorComponent::RotatorComponent(GameObject* pOwner):
 		Component{pOwner},
-		m_Center{},
 		m_Radius{},
 		m_Angle{},
-		m_Speed{},
-		m_Clockwise {}
+		m_Speed{}
 	{
 
 	}
 
-	RotatorComponent::RotatorComponent(GameObject* pOwner, const glm::vec2& center, float radius, float speed, bool clockwise):
+	RotatorComponent::RotatorComponent(GameObject* pOwner, float radius, float speed):
 		Component{ pOwner },
-		m_Center{ center },
 		m_Radius{ radius },
 		m_Angle{},
-		m_Speed{ speed },
-		m_Clockwise{ clockwise }
+		m_Speed{ speed }
 	{
 
 	}
 	void RotatorComponent::Update()
 	{
+		constexpr float Pi2 = 2 * static_cast<float>(std::numbers::pi);
+
 		m_Angle += m_Speed * GameTime::GetInstance().GetDeltaTime();
+		if (m_Angle >= Pi2) m_Angle -= Pi2;
 
 		GetOwner()->SetLocalPos(
-			glm::vec2{ m_Center.x + cos(m_Angle) * m_Radius,
-						m_Center.y + (m_Clockwise ? sin(m_Angle) : -sin(m_Angle)) * m_Radius }
+			glm::vec2{cos(m_Angle) * m_Radius,
+					  sin(m_Angle) * m_Radius }
 		);
 		
 	}
+	void RotatorComponent::PrepareImGuiRender() {}
 
-	void RotatorComponent::SetCenter(const glm::vec2& center)
-	{
-		m_Center = center;
-	}
 	void RotatorComponent::SetRadius(float radius)
 	{
 		m_Radius = radius;
+	}
+	void RotatorComponent::SetSpeed(float speed)
+	{
+		m_Speed = speed;
 	}
 }

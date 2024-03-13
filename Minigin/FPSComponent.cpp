@@ -1,4 +1,6 @@
 #include "FPSComponent.h"
+#include <sstream>
+#include <iomanip>
 #include "GameObject.h"
 #include "TextComponent.h"
 
@@ -20,14 +22,15 @@ namespace dae
 		if (m_UpdateTextDelay >= 0.5f)
 		{
 			m_Fps = m_Count / m_UpdateTextDelay;
-			m_pTextComponent->SetText(GetFpsString() + " FPS");
+			std::stringstream fps;
+			fps << std::fixed << std::setprecision(1) << m_Fps << " FPS";
+			
+			m_pTextComponent->SetText(fps.str());
 			m_UpdateTextDelay = 0.f;
 			m_Count = 0;
 		}
 	}
 
-	std::string FPSComponent::GetFpsString() const
-	{
-		return std::to_string(m_Fps);
-	}
+	void FPSComponent::PrepareImGuiRender(){}
+
 }

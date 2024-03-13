@@ -15,6 +15,7 @@ namespace dae
 		TransformComponent& operator=(TransformComponent&& other) = delete;
 
 		virtual void Update() override;
+		virtual void PrepareImGuiRender() override;
 
 		const glm::vec2& GetPosition() const { return m_position; }
 		void SetPosition(const glm::vec2& newPos);

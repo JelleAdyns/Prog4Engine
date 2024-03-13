@@ -1,6 +1,7 @@
 #include <SDL.h>
 #include "InputManager.h"
 #include "GameTime.h"
+#include <backends/imgui_impl_sdl2.h>
 
 bool dae::InputManager::ProcessInput()
 {
@@ -22,6 +23,10 @@ bool dae::InputManager::ProcessInput()
 			
 		}
 		// etc...
+
+
+		//Process event for ImGui
+		ImGui_ImplSDL2_ProcessEvent(&e);
 	}
 
 	return true;

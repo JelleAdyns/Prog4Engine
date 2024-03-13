@@ -8,6 +8,8 @@ namespace dae
 	{}
 
 	void TransformComponent::Update(){}
+	void TransformComponent::PrepareImGuiRender(){}
+
 	void dae::TransformComponent::SetPosition(const glm::vec2& newPos)
 	{
 		m_position = newPos;
