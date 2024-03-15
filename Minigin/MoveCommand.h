@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObjectCommand.h"
+#include "GameTime.h"
 
 namespace dae
 {
@@ -18,8 +19,8 @@ namespace dae
 		MoveCommand& operator= (MoveCommand&&) noexcept = delete;
 		virtual void Execute() const override
 		{
-			glm::vec2 world = GetGameObject()->GetWorldPosition();
-			GetGameObject()->SetLocalPos(world + m_MoveSpeed);
+			glm::vec2 currPos = GetGameObject()->GetLocalPosition();
+			GetGameObject()->SetLocalPos(currPos + m_MoveSpeed * GameTime::GetInstance().GetDeltaTime());
 		}
 	private:
 		glm::vec2 m_MoveSpeed;

@@ -15,10 +15,13 @@ namespace dae
 		GameObjectCommand& operator= (const GameObjectCommand&) = delete;
 		GameObjectCommand& operator= (GameObjectCommand&&) noexcept = delete;
 	protected:
-		GameObjectCommand(GameObject* pGameObject);
-		GameObject* GetGameObject() const;
+		GameObjectCommand(GameObject* pGameObject) :
+			Command{},
+			m_pGameObject{ pGameObject }
+		{}
+		GameObject* GetGameObject() const { return m_pGameObject; }
 	private:
-		GameObject* m_GameObject;
+		GameObject* m_pGameObject;
 	};
 }
 

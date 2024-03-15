@@ -25,9 +25,6 @@
     <Filter Include="Header Files\Commands">
       <UniqueIdentifier>{035b7cbb-9012-4fe5-960a-6ef0d7b1aa98}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Commands">
-      <UniqueIdentifier>{289f43a0-55ab-45db-a2e7-b436053d4e9e}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Singleton.h">
@@ -126,9 +123,6 @@
     <ClInclude Include="Controller.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="KeyState.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Command.h">
       <Filter>Header Files\Commands</Filter>
     </ClInclude>
@@ -140,6 +134,12 @@
     </ClInclude>
     <ClInclude Include="Commands.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorCommand.h">
+      <Filter>Header Files\Commands</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -226,9 +226,6 @@
     </ClCompile>
     <ClCompile Include="Controller.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObjectCommand.cpp">
-      <Filter>Source Files\Commands</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
