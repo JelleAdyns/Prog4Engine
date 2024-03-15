@@ -39,7 +39,7 @@ namespace dae
 				TestCache<T>(testNr, func);
 			}
 
-			std::cout << "\nAverages\n";
+			//std::cout << "\nAverages\n";
 
 			//calculate averages of every deque
 			
@@ -57,7 +57,7 @@ namespace dae
 				float average = std::accumulate(deq.cbegin(), deq.cend(), 0.f) / deq.size();
 				m_Averages.push_back(average);
 
-				std::cout << average << '\n';
+				//std::cout << average << '\n';
 			}
 
 			
@@ -72,7 +72,7 @@ namespace dae
 		{
 			constexpr int stepsizeMultiplier{ 2 };
 
-			std::cout << "\nTest " << (testNr + 1) << "\n";
+			//std::cout << "\nTest " << (testNr + 1) << "\n";
 			std::deque<int> times{};
 
 			const int nrOfObjects{ int(std::pow(2, 26)) };
@@ -95,7 +95,7 @@ namespace dae
 
 				const auto total = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
 
-				std::cout << stepsize << ": " << total << '\n';
+				//std::cout << stepsize << ": " << total << '\n';
 				times.push_back(int(total));
 
 			}
