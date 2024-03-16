@@ -112,6 +112,10 @@ namespace dae
 			});
 	}
 
+	const glm::vec2& GameObject::GetLocalPosition()
+	{
+		return m_LocalTransform->GetPosition();
+	}
 	const glm::vec2& GameObject::GetWorldPosition()
 	{
 		if (m_IsPosDirty)

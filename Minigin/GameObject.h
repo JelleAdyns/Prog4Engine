@@ -40,6 +40,7 @@ namespace dae
 		void SetLocalPos(const glm::vec2& newLocalPos);
 		void SetPosDirty();
 		const glm::vec2& GetWorldPosition();
+		const glm::vec2& GetLocalPosition();
 	
 
 		template <typename T, typename ...Args>
