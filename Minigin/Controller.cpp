@@ -23,6 +23,7 @@ namespace dae
 	const int ControllerButtons::Y = XINPUT_GAMEPAD_Y;
 	//Implementation
 	
+
 	class Controller::ControllerImpl
 	{
 	public:
@@ -49,6 +50,8 @@ namespace dae
 		bool IsPressedImpl(int button)  const;
 
 		void AddCommandImpl(std::unique_ptr<Command>&& pCommand, int button, KeyState keyState);
+		glm::vec2 GetJoystickValueImpl(bool leftJoystick);
+		float GetTriggerValueImpl(bool leftJoystick);
 	private:
 		uint8_t m_ControllerIndex{};
 		XINPUT_STATE m_PreviousState{};
@@ -58,10 +61,22 @@ namespace dae
 
 		std::unordered_map<int, std::pair<std::unique_ptr<Command>, KeyState>> m_MapCommands{};
 
-		void HandleInput() const;
+		static float m_MaxJoystickValue;
+		static float m_JoystickDeadZonePercentage;
+		static float m_MaxTriggerValue;
+		static float m_TriggerDeadZonePercentage;
+
+		void HandleInputImpl() const;
 	};
 
-	void Controller::ControllerImpl::HandleInput() const
+
+	float Controller::ControllerImpl::m_MaxJoystickValue = static_cast<float>(SHRT_MAX);
+	float Controller::ControllerImpl::m_JoystickDeadZonePercentage = 30.f;
+	float Controller::ControllerImpl::m_MaxTriggerValue = static_cast<float>(_UI8_MAX);
+	float Controller::ControllerImpl::m_TriggerDeadZonePercentage = 50.f;
+
+
+	void Controller::ControllerImpl::HandleInputImpl() const
 	{
 		for (const auto& pair : m_MapCommands)
 		{
@@ -94,7 +109,7 @@ namespace dae
 		m_ButtonsPressedThisFrame = buttonChanges & m_CurrentState.Gamepad.wButtons;
 		m_ButtonsReleasedThisFrame = buttonChanges & (~m_CurrentState.Gamepad.wButtons);
 
-		HandleInput();
+		HandleInputImpl();
 
 		return true;
 	}
@@ -113,6 +128,37 @@ namespace dae
 	void Controller::ControllerImpl::AddCommandImpl(std::unique_ptr<Command>&& pCommand, int button, KeyState keyState)
 	{
 		m_MapCommands[button] = std::make_pair(std::move(pCommand), keyState);
+	}
+
+	glm::vec2 Controller::ControllerImpl::GetJoystickValueImpl(bool leftJoystick)
+	{
+		float x, y;
+		if (leftJoystick)
+		{
+			x = m_CurrentState.Gamepad.sThumbLX / m_MaxJoystickValue;
+			y = m_CurrentState.Gamepad.sThumbLY / m_MaxJoystickValue;
+		}
+		else
+		{
+			x = m_CurrentState.Gamepad.sThumbRX / m_MaxJoystickValue;
+			y = m_CurrentState.Gamepad.sThumbRY / m_MaxJoystickValue;
+		}
+
+		if (std::abs(x) < m_JoystickDeadZonePercentage / 100.f) x = 0;
+		if (std::abs(y) < m_JoystickDeadZonePercentage / 100.f) y = 0;
+
+		return glm::vec2{ x, -y };
+	}
+
+	float Controller::ControllerImpl::GetTriggerValueImpl(bool leftJoystick)
+	{
+		float value;
+		if (leftJoystick) value = m_CurrentState.Gamepad.bLeftTrigger / m_MaxTriggerValue;
+		else value = m_CurrentState.Gamepad.bRightTrigger / m_MaxTriggerValue;
+
+		if (value < m_TriggerDeadZonePercentage / 100.f) value = 0;
+
+		return value;
 	}
 
 	//Controller
@@ -148,6 +194,16 @@ namespace dae
 	void Controller::AddCommand(std::unique_ptr<Command>&& pCommand, int button, KeyState keyState)
 	{
 		m_pImpl->AddCommandImpl(std::move(pCommand),button,keyState);
+	}
+
+	glm::vec2 Controller::GetJoystickValue(bool leftJoystick)
+	{
+		return m_pImpl->GetJoystickValueImpl(leftJoystick);
+	}
+
+	float Controller::GetTriggerValue(bool leftTrigger)
+	{
+		return m_pImpl->GetTriggerValueImpl(leftTrigger);
 	}
 	
 }

@@ -22,6 +22,10 @@ namespace dae
 			glm::vec2 currPos = GetGameObject()->GetLocalPosition();
 			GetGameObject()->SetLocalPos(currPos + m_MoveSpeed * GameTime::GetInstance().GetDeltaTime());
 		}
+		void SetSpeed(int xSpeed, int ySpeed)
+		{
+			m_MoveSpeed = glm::vec2{ xSpeed, ySpeed };
+		}
 	private:
 		glm::vec2 m_MoveSpeed;
 		

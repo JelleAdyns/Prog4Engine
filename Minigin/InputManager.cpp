@@ -100,5 +100,15 @@ namespace dae
 		return pStates[key];
 	}
 
+	glm::vec2 InputManager::GetJoystickValue(bool leftJoystick, uint8_t controllerIndex)
+	{
+		return m_VecControllers.at(controllerIndex).GetJoystickValue(leftJoystick);
+	}
+
+	float InputManager::GetTriggerValue(bool leftTrigger, uint8_t controllerIndex)
+	{
+		return m_VecControllers.at(controllerIndex).GetTriggerValue(leftTrigger);
+	}
+
 }
 

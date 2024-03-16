@@ -1,6 +1,7 @@
 #pragma once
 #include <cstdint>
 #include <memory>
+#include <glm/glm.hpp>
 #include "Command.h"
 
 
@@ -46,6 +47,8 @@ namespace dae
 
 		void AddCommand(std::unique_ptr<Command>&& pCommand, int button, KeyState keyState);
 
+		glm::vec2 GetJoystickValue(bool leftJoystick);
+		float GetTriggerValue(bool leftTrigger);
 	private:
 
 		class ControllerImpl;

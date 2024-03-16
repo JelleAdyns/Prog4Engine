@@ -5,6 +5,7 @@
 #include <vector>
 #include <memory>
 #include <SDL.h>
+#include <glm/glm.hpp>
 
 namespace dae
 {
@@ -25,6 +26,9 @@ namespace dae
 		bool IsUpThisFrame(SDL_Event& event, SDL_Scancode key) const;
 		bool IsPressed(SDL_Scancode key)  const;
 		
+		glm::vec2 GetJoystickValue(bool leftJoystick, uint8_t controllerIndex);
+		float GetTriggerValue(bool leftTrigger, uint8_t controllerIndex);
+
 	private:
 		std::unordered_map<SDL_Scancode, std::pair<std::unique_ptr<Command>, KeyState>> m_MapCommands;
 		std::vector<Controller> m_VecControllers;
