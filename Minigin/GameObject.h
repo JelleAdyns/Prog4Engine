@@ -32,8 +32,6 @@ namespace dae
 		void Render() const;
 
 		bool IsDead() const;
-		//TransformComponent* GetTransformComponent() const;
-		//RenderComponent* GetRenderComponent() const;
 
 		void SetParent(const std::unique_ptr<GameObject>& pParent, bool keepWorldPosition);
 		bool IsChild(const std::unique_ptr<GameObject>& pGameObject) const;

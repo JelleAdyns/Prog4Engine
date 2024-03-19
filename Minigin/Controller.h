@@ -40,12 +40,10 @@ namespace dae
 		Controller& operator= (const Controller&) = delete;
 		Controller& operator= (Controller&&) noexcept = default;
 
-		bool ProcessInput();
+		void ProcessControllerInput();
 		bool IsDownThisFrame(int button) const;
 		bool IsUpThisFrame(int button)  const;
 		bool IsPressed(int button)  const;
-
-		void AddCommand(std::unique_ptr<Command>&& pCommand, int button, KeyState keyState);
 
 		glm::vec2 GetJoystickValue(bool leftJoystick);
 		float GetTriggerValue(bool leftTrigger);

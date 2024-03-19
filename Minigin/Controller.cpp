@@ -44,14 +44,15 @@ namespace dae
 		ControllerImpl& operator= (ControllerImpl&&) noexcept = delete;
 
 
-		bool ProcessInputImpl();
+		void ProcessInputImpl();
 		bool IsDownThisFrameImpl(int button) const;
 		bool IsUpThisFrameImpl(int button)  const;
 		bool IsPressedImpl(int button)  const;
 
-		void AddCommandImpl(std::unique_ptr<Command>&& pCommand, int button, KeyState keyState);
 		glm::vec2 GetJoystickValueImpl(bool leftJoystick);
 		float GetTriggerValueImpl(bool leftJoystick);
+
+
 	private:
 		uint8_t m_ControllerIndex{};
 		XINPUT_STATE m_PreviousState{};
@@ -59,14 +60,10 @@ namespace dae
 		int m_ButtonsPressedThisFrame{};
 		int m_ButtonsReleasedThisFrame{};
 
-		std::unordered_map<int, std::pair<std::unique_ptr<Command>, KeyState>> m_MapCommands{};
-
 		static float m_MaxJoystickValue;
 		static float m_JoystickDeadZonePercentage;
 		static float m_MaxTriggerValue;
 		static float m_TriggerDeadZonePercentage;
-
-		void HandleInputImpl() const;
 	};
 
 
@@ -76,30 +73,7 @@ namespace dae
 	float Controller::ControllerImpl::m_TriggerDeadZonePercentage = 50.f;
 
 
-	void Controller::ControllerImpl::HandleInputImpl() const
-	{
-		for (const auto& pair : m_MapCommands)
-		{
-			auto& commandAndStatePair = pair.second;
-			switch (commandAndStatePair.second)
-			{
-			case KeyState::DownThisFrame:
-				if (IsDownThisFrameImpl(pair.first)) commandAndStatePair.first->Execute();
-				break;
-			case KeyState::UpThisFrame:
-				if (IsUpThisFrameImpl(pair.first)) commandAndStatePair.first->Execute();
-				break;
-			case KeyState::Pressed:
-				if (IsPressedImpl(pair.first)) commandAndStatePair.first->Execute();
-				break;
-			case KeyState::NotPressed:
-				if (!IsPressedImpl(pair.first)) commandAndStatePair.first->Execute();
-				break;
-			}
-		}
-	}
-
-	bool Controller::ControllerImpl::ProcessInputImpl()
+	void Controller::ControllerImpl::ProcessInputImpl()
 	{
 		m_PreviousState = m_CurrentState;
 		m_CurrentState = XINPUT_STATE{};
@@ -109,9 +83,12 @@ namespace dae
 		m_ButtonsPressedThisFrame = buttonChanges & m_CurrentState.Gamepad.wButtons;
 		m_ButtonsReleasedThisFrame = buttonChanges & (~m_CurrentState.Gamepad.wButtons);
 
-		HandleInputImpl();
+		//XINPUT_VIBRATION vibration;
+		//ZeroMemory(&vibration, sizeof(XINPUT_VIBRATION));
+		//vibration.wLeftMotorSpeed = 32000; // use any value between 0-65535 here
+		//vibration.wRightMotorSpeed = 16000; // use any value between 0-65535 here
+		//XInputSetState(m_ControllerIndex, &vibration);
 
-		return true;
 	}
 	bool Controller::ControllerImpl::IsDownThisFrameImpl(int button) const
 	{
@@ -125,10 +102,7 @@ namespace dae
 	{
 		return m_CurrentState.Gamepad.wButtons & static_cast<int>(button);
 	}
-	void Controller::ControllerImpl::AddCommandImpl(std::unique_ptr<Command>&& pCommand, int button, KeyState keyState)
-	{
-		m_MapCommands[button] = std::make_pair(std::move(pCommand), keyState);
-	}
+
 
 	glm::vec2 Controller::ControllerImpl::GetJoystickValueImpl(bool leftJoystick)
 	{
@@ -173,9 +147,9 @@ namespace dae
 
 	
 
-	bool Controller::ProcessInput()
+	void Controller::ProcessControllerInput()
 	{
-		return m_pImpl->ProcessInputImpl();
+		m_pImpl->ProcessInputImpl();
 	}
 
 	bool Controller::IsDownThisFrame(int button) const
@@ -190,10 +164,6 @@ namespace dae
 	bool Controller::IsPressed(int button) const
 	{
 		return m_pImpl->IsPressedImpl(button);
-	}
-	void Controller::AddCommand(std::unique_ptr<Command>&& pCommand, int button, KeyState keyState)
-	{
-		m_pImpl->AddCommandImpl(std::move(pCommand),button,keyState);
 	}
 
 	glm::vec2 Controller::GetJoystickValue(bool leftJoystick)
