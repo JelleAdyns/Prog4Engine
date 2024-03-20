@@ -1,6 +1,7 @@
 #include "Controller.h"
 #include "KeyState.h"
 #include <unordered_map>
+#include <iostream>
 #include <Windows.h>
 #include <XInput.h>
 
@@ -21,6 +22,7 @@ namespace dae
 	const int ControllerButtons::B = XINPUT_GAMEPAD_B;
 	const int ControllerButtons::X = XINPUT_GAMEPAD_X;
 	const int ControllerButtons::Y = XINPUT_GAMEPAD_Y;
+	
 	//Implementation
 	
 
@@ -49,9 +51,11 @@ namespace dae
 		bool IsUpThisFrameImpl(int button)  const;
 		bool IsPressedImpl(int button)  const;
 
+		void AddCommandImpl(std::unique_ptr<Command>&& pCommand, int button, KeyState keyState);
+		void RemoveCommandImpl(int button);
+
 		glm::vec2 GetJoystickValueImpl(bool leftJoystick);
 		float GetTriggerValueImpl(bool leftJoystick);
-
 
 	private:
 		uint8_t m_ControllerIndex{};
@@ -60,10 +64,14 @@ namespace dae
 		int m_ButtonsPressedThisFrame{};
 		int m_ButtonsReleasedThisFrame{};
 
+		std::unordered_map<int, std::pair<std::unique_ptr<Command>, KeyState>> m_MapCommands{};
+
 		static float m_MaxJoystickValue;
 		static float m_JoystickDeadZonePercentage;
 		static float m_MaxTriggerValue;
 		static float m_TriggerDeadZonePercentage;
+
+		void HandleInputImpl() const;
 	};
 
 
@@ -72,7 +80,28 @@ namespace dae
 	float Controller::ControllerImpl::m_MaxTriggerValue = static_cast<float>(_UI8_MAX);
 	float Controller::ControllerImpl::m_TriggerDeadZonePercentage = 50.f;
 
-
+	void Controller::ControllerImpl::HandleInputImpl() const
+	{
+		for (const auto& pair : m_MapCommands)
+		{
+			auto& commandAndStatePair = pair.second;
+			switch (commandAndStatePair.second)
+			{
+			case KeyState::DownThisFrame:
+				if (IsDownThisFrameImpl(pair.first)) commandAndStatePair.first->Execute();
+				break;
+			case KeyState::UpThisFrame:
+				if (IsUpThisFrameImpl(pair.first)) commandAndStatePair.first->Execute();
+				break;
+			case KeyState::Pressed:
+				if (IsPressedImpl(pair.first)) commandAndStatePair.first->Execute();
+				break;
+			case KeyState::NotPressed:
+				if (!IsPressedImpl(pair.first)) commandAndStatePair.first->Execute();
+				break;
+			}
+		}
+	}
 	void Controller::ControllerImpl::ProcessInputImpl()
 	{
 		m_PreviousState = m_CurrentState;
@@ -83,13 +112,15 @@ namespace dae
 		m_ButtonsPressedThisFrame = buttonChanges & m_CurrentState.Gamepad.wButtons;
 		m_ButtonsReleasedThisFrame = buttonChanges & (~m_CurrentState.Gamepad.wButtons);
 
+		HandleInputImpl();
+
 		//XINPUT_VIBRATION vibration;
 		//ZeroMemory(&vibration, sizeof(XINPUT_VIBRATION));
 		//vibration.wLeftMotorSpeed = 32000; // use any value between 0-65535 here
 		//vibration.wRightMotorSpeed = 16000; // use any value between 0-65535 here
 		//XInputSetState(m_ControllerIndex, &vibration);
-
 	}
+
 	bool Controller::ControllerImpl::IsDownThisFrameImpl(int button) const
 	{
 		return m_ButtonsPressedThisFrame & static_cast<int>(button);
@@ -101,6 +132,17 @@ namespace dae
 	bool Controller::ControllerImpl::IsPressedImpl(int button) const
 	{
 		return m_CurrentState.Gamepad.wButtons & static_cast<int>(button);
+	}
+
+	void Controller::ControllerImpl::AddCommandImpl(std::unique_ptr<Command>&& pCommand, int button, KeyState keyState)
+	{
+		if (m_MapCommands.contains(button)) std::cout << "Binding to the requested button already exists. Overwriting now.\n";
+		m_MapCommands[button] = std::make_pair(std::move(pCommand), keyState);
+	}
+
+	void Controller::ControllerImpl::RemoveCommandImpl(int button)
+	{
+		if (m_MapCommands.contains(button)) m_MapCommands.erase(button);
 	}
 
 
@@ -145,8 +187,6 @@ namespace dae
 		delete m_pImpl;
 	}
 
-	
-
 	void Controller::ProcessControllerInput()
 	{
 		m_pImpl->ProcessInputImpl();
@@ -164,6 +204,16 @@ namespace dae
 	bool Controller::IsPressed(int button) const
 	{
 		return m_pImpl->IsPressedImpl(button);
+	}
+
+	void Controller::AddCommand(std::unique_ptr<Command>&& pCommand, int button, KeyState keyState)
+	{
+		m_pImpl->AddCommandImpl(std::move(pCommand), button, keyState);
+	}
+
+	void Controller::RemoveCommand(int button)
+	{
+		m_pImpl->RemoveCommandImpl(button);
 	}
 
 	glm::vec2 Controller::GetJoystickValue(bool leftJoystick)

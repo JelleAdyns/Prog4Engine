@@ -47,6 +47,9 @@ namespace dae
 		bool IsUpThisFrame(int button)  const;
 		bool IsPressed(int button)  const;
 
+		void AddCommand(std::unique_ptr<Command>&& pCommand, int button, KeyState keyState);
+		void RemoveCommand(int button);
+
 		glm::vec2 GetJoystickValue(bool leftJoystick);
 		float GetTriggerValue(bool leftTrigger);
 	private:

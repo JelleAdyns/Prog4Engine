@@ -15,12 +15,11 @@ namespace dae
 
 	bool InputCommandBinder::ProcessInput()
 	{
-		HandleControllerInput();
-		return HandleInput();
-	}
+		for (auto& controller : m_VecControllers)
+		{
+			controller->ProcessControllerInput();
+		}
 
-	bool InputCommandBinder::HandleInput()
-	{
 		SDL_Event event{};
 		while (SDL_PollEvent(&event))
 		{
@@ -45,48 +44,27 @@ namespace dae
 				case KeyState::UpThisFrame:
 					if (KeyUpThisFrame(event, pair.first)) commandAndStatePair.first->Execute();
 					break;
-				case KeyState::Pressed:
-					if (KeyPressed(pair.first)) commandAndStatePair.first->Execute();
-					break;
-				case KeyState::NotPressed:
-					if (!KeyPressed(pair.first)) commandAndStatePair.first->Execute();
-					break;
 				}
 			}
 			ImGui_ImplSDL2_ProcessEvent(&event);
 		}
+
+		for (const auto& pair : m_MapKeyCommands)
+		{
+			auto& commandAndStatePair = pair.second;
+			switch (commandAndStatePair.second)
+			{
+			case KeyState::Pressed:
+				if (KeyPressed(pair.first)) commandAndStatePair.first->Execute();
+				break;
+			case KeyState::NotPressed:
+				if (!KeyPressed(pair.first)) commandAndStatePair.first->Execute();
+				break;
+			}
+		}
 		return true;
 	}
 
-	void InputCommandBinder::HandleControllerInput()
-	{
-
-		for (uint8_t i = 0; i < m_VecControllers.size(); ++i)
-		{
-			m_VecControllers.at(i)->ProcessControllerInput();
-
-		}
-		for (const auto& controllerInfo : m_VecControllerCommands)
-		{
-
-			switch (controllerInfo.keyState)
-			{
-			case KeyState::DownThisFrame:
-				if (ButtonDownThisFrame(controllerInfo.button, controllerInfo.controllerIndex)) controllerInfo.command->Execute();
-				break;
-			case KeyState::UpThisFrame:
-				if (ButtonUpThisFrame(controllerInfo.button, controllerInfo.controllerIndex)) controllerInfo.command->Execute();
-				break;
-			case KeyState::Pressed:
-				if (ButtonPressed(controllerInfo.button, controllerInfo.controllerIndex)) controllerInfo.command->Execute();
-				break;
-			case KeyState::NotPressed:
-				if (!ButtonPressed(controllerInfo.button, controllerInfo.controllerIndex)) controllerInfo.command->Execute();
-				break;
-			}
-
-		}
-	}
 
 
 	//Removing
@@ -96,29 +74,11 @@ namespace dae
 	}
 	void InputCommandBinder::RemoveControllerCommand(int button, uint8_t controllerIndex)
 	{
-		auto pos = std::find_if(m_VecControllerCommands.cbegin(), m_VecControllerCommands.cend(), [&](const ControllerCommandInfo& info)
-			{
-				return info.button == button && info.controllerIndex == controllerIndex;
-			});
-
-		if(pos == m_VecControllerCommands.cend()) std::cout << "There was no command bound to the controller and button while trying to remove the binding, you're good to go.\n";
-		else m_VecControllerCommands.erase(pos);
-	
+		m_VecControllers.at(controllerIndex)->RemoveCommand(button);
 	}
 	void InputCommandBinder::PopController()
 	{
 		if (!m_VecControllers.empty()) m_VecControllers.pop_back();
-
-		uint8_t controllerIndex = static_cast<uint8_t>(m_VecControllers.size());
-
-		m_VecControllerCommands.erase(
-			std::remove_if(m_VecControllerCommands.begin(), m_VecControllerCommands.end(), [&](const ControllerCommandInfo& info)
-				{
-					return info.controllerIndex == controllerIndex;
-				}
-			),
-			m_VecControllerCommands.end());
-
 	}
 
 
@@ -130,20 +90,7 @@ namespace dae
 	}
 	void InputCommandBinder::AddControllerCommand(std::unique_ptr<Command>&& pCommand, int button, KeyState keyState, uint8_t controllerIndex)
 	{
-		
-		auto pos = std::find_if(m_VecControllerCommands.cbegin(), m_VecControllerCommands.cend(), [&](const ControllerCommandInfo& info)
-			{
-				return info.button == button && info.controllerIndex == controllerIndex;
-			});
-		if (pos != m_VecControllerCommands.cend()) throw std::runtime_error("The requested button and controller are already bound! Remove the binding before adding the new command.");
-
-		ControllerCommandInfo info;
-		info.command = std::move(pCommand);
-		info.keyState = keyState;
-		info.button = button;
-		info.controllerIndex = controllerIndex;
-
-		m_VecControllerCommands.push_back(std::move(info));
+		m_VecControllers.at(controllerIndex)->AddCommand(std::move(pCommand), button, keyState);
 	}
 	void InputCommandBinder::AddController()
 	{

@@ -206,9 +206,6 @@
     <ClCompile Include="GameObject.cpp">
       <Filter>Engine Files</Filter>
     </ClCompile>
-    <ClCompile Include="Main.cpp">
-      <Filter>Engine Files</Filter>
-    </ClCompile>
     <ClCompile Include="Minigin.cpp">
       <Filter>Engine Files</Filter>
     </ClCompile>
@@ -231,6 +228,9 @@
       <Filter>Engine Files\Singletons</Filter>
     </ClCompile>
     <ClCompile Include="Game.cpp">
+      <Filter>Game Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp">
       <Filter>Game Files</Filter>
     </ClCompile>
   </ItemGroup>

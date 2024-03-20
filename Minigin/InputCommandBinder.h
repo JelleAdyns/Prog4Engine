@@ -37,7 +37,7 @@ namespace dae
 
 		bool KeyDownThisFrame(SDL_Event& event, SDL_Scancode key) const;
 		bool KeyUpThisFrame(SDL_Event& event, SDL_Scancode key) const;
-		bool KeyPressed(SDL_Scancode key)  const;
+		bool KeyPressed(SDL_Scancode key) const;
 
 		bool ButtonDownThisFrame(int button, uint8_t controllerIndex) const;
 		bool ButtonUpThisFrame(int button, uint8_t controllerIndex) const;
@@ -50,19 +50,9 @@ namespace dae
 		friend class Singleton<InputCommandBinder>;
 		InputCommandBinder() = default;
 
-
 		bool HandleInput();
-		void HandleControllerInput();
-		struct ControllerCommandInfo
-		{
-			std::unique_ptr<Command> command;
-			KeyState keyState{};
-			int button{};
-			uint8_t controllerIndex{};
-		};
 
 		std::unordered_map<SDL_Scancode, std::pair<std::unique_ptr<Command>, KeyState>> m_MapKeyCommands;
-		std::vector<ControllerCommandInfo> m_VecControllerCommands;
 		
 		std::vector<std::unique_ptr<Controller>> m_VecControllers;
 	};
