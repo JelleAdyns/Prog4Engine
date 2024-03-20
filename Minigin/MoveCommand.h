@@ -1,4 +1,6 @@
-#pragma once
+#ifndef MOVECOMMAND_H
+#define MOVECOMMAND_H
+
 #include "GameObjectCommand.h"
 #include "GameTime.h"
 
@@ -31,3 +33,4 @@ namespace dae
 		
 	};
 }
+#endif // !MOVECOMMAND_H

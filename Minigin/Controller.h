@@ -1,4 +1,6 @@
-#pragma once
+#ifndef CONTROLLER_H
+#define CONTROLLER_H
+
 #include <cstdint>
 #include <memory>
 #include <glm/glm.hpp>
@@ -26,7 +28,7 @@ namespace dae
 	};
 
 	enum class KeyState;
-	class Controller
+	class Controller final
 	{
 	public:
 
@@ -54,4 +56,4 @@ namespace dae
 	};
 }
 
-	
+#endif // !CONTROLLER_H

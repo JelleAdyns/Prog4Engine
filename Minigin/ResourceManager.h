@@ -1,4 +1,6 @@
-#pragma once
+#ifndef RESOURCEMANAGER_H
+#define RESOURCEMANAGER_H
+
 #include <string>
 #include <memory>
 #include "Singleton.h"
@@ -12,6 +14,14 @@ namespace dae
 	class ResourceManager final : public Singleton<ResourceManager>
 	{
 	public:
+
+		virtual ~ResourceManager() = default;
+
+		ResourceManager(const ResourceManager&) = delete;
+		ResourceManager(ResourceManager&&) noexcept = delete;
+		ResourceManager& operator= (const ResourceManager&) = delete;
+		ResourceManager& operator= (ResourceManager&&) noexcept = delete;
+
 		void Init(const std::string& data);
 		std::unique_ptr<Texture2D> LoadTexture(const std::string& file) const;
 		std::unique_ptr<Texture2D> LoadTextureFromFont(const std::string& text, const std::unique_ptr<Font>& font) const;
@@ -22,3 +32,4 @@ namespace dae
 		std::string m_dataPath;
 	};
 }
+#endif // !RESOURCEMANAGER_H

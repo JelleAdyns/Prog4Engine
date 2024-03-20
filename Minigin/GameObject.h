@@ -1,4 +1,7 @@
-#pragma once
+#ifndef GAMEOBJECT_H
+#define GAMEOBJECT_H
+
+
 #include <memory>
 #include <map>
 #include <vector>
@@ -23,9 +26,9 @@ namespace dae
 
 		~GameObject() = default;
 		GameObject(const GameObject& other) = delete;
-		GameObject(GameObject&& other) = delete;
+		GameObject(GameObject&& other) noexcept = delete;
 		GameObject& operator=(const GameObject& other) = delete;
-		GameObject& operator=(GameObject&& other) = delete;
+		GameObject& operator=(GameObject&& other) noexcept = delete;
 
 		void Update();
 		void PrepareImGuiRender();
@@ -95,3 +98,4 @@ namespace dae
 	};
 
 }
+#endif // !GAMEOBJECT_H

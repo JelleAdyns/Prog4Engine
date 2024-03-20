@@ -1,4 +1,6 @@
-#pragma once
+#ifndef INPUTCOMMANDBINDER_H
+#define	INPUTCOMMANDBINDER_H
+
 #include "Singleton.h"
 #include <unordered_map>
 #include <vector>
@@ -66,3 +68,4 @@ namespace dae
 	};
 
 }
+#endif // !INPUTCOMMANDBINDER_H

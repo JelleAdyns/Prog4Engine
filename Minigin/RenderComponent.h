@@ -1,4 +1,6 @@
-#pragma once
+#ifndef RENDERCOMPONENT_H
+#define RENDERCOMPONENT_H
+
 #include <map>
 #include <typeindex>
 #include <cassert>
@@ -40,3 +42,4 @@ namespace dae
 
 }
 
+#endif // !RENDERCOMPONENT_H

@@ -1,5 +1,5 @@
-#pragma once
-
+#ifndef COMMAND_H
+#define COMMAND_H
 namespace dae
 {
 	class Command
@@ -18,3 +18,4 @@ namespace dae
 
 }
 
+#endif // !COMMAND_H

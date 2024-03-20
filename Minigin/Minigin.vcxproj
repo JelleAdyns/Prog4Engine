@@ -195,6 +195,7 @@
     <ClInclude Include="EditorCommand.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="FPSComponent.h" />
+    <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameObjectCommand.h" />
     <ClInclude Include="GameTime.h" />
@@ -229,6 +230,7 @@
     <ClCompile Include="Controller.cpp" />
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="FPSComponent.cpp" />
+    <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="ImageComponent.cpp" />
     <ClCompile Include="InputCommandBinder.cpp" />

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CACHEEXPERIMENTCOMPONENT_H
+#define CACHEEXPERIMENTCOMPONENT_H
 #include "Component.h"
 #include <vector>
 #include <deque>
@@ -117,3 +118,4 @@ namespace dae
 		//static float* m_XValues;
 	};
 }
+#endif // !CACHEEXPERIMENTCOMPONENT_H

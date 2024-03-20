@@ -7,8 +7,6 @@
 #include <memory>
 #include "Singleton.h"
 
-
-
 namespace dae
 {
 	class Scene;
@@ -16,6 +14,14 @@ namespace dae
 	{
 	public:
 		Scene& CreateScene(const std::string& name);
+
+
+		virtual ~SceneManager() = default;
+
+		SceneManager(const SceneManager&) = delete;
+		SceneManager(SceneManager&&) noexcept = delete;
+		SceneManager& operator= (const SceneManager&) = delete;
+		SceneManager& operator= (SceneManager&&) noexcept = delete;
 
 		void Update();
 		void PrepareImGuiRender();

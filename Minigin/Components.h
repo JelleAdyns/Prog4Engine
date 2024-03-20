@@ -1,4 +1,6 @@
-#pragma once
+#ifndef COMPONENTS_H
+#define COMPONENTS_H
+
 #include "Component.h"
 #include "RenderComponent.h"
 #include "TransformComponent.h"
@@ -9,3 +11,5 @@
 #include "CacheExperimentComponent.h"
 #include "TrashTheCacheIntComponent.h"
 #include "TrashTheCacheGameObjectsComponent.h"
+
+#endif // !COMPONENTS_H
