@@ -11,5 +11,9 @@
 #include "CacheExperimentComponent.h"
 #include "TrashTheCacheIntComponent.h"
 #include "TrashTheCacheGameObjectsComponent.h"
+#include "LivesComponent.h"
+#include "LivesUIComponent.h"
+#include "PickUpComponent.h"
+#include "ScoreUIComponent.h"
 
 #endif // !COMPONENTS_H

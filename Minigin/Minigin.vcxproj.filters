@@ -144,6 +144,30 @@
     <ClInclude Include="GameTime.h">
       <Filter>Engine Files\Singletons</Filter>
     </ClInclude>
+    <ClInclude Include="Observer.h">
+      <Filter>Engine Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Subject.h">
+      <Filter>Engine Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LivesComponent.h">
+      <Filter>Engine Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Killcommand.h">
+      <Filter>Engine Files\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="LivesUIComponent.h">
+      <Filter>Engine Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="PickUpCommand.h">
+      <Filter>Engine Files\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="PickUpComponent.h">
+      <Filter>Engine Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ScoreUIComponent.h">
+      <Filter>Engine Files\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\3rdParty\imgui-1.90.4\imgui.cpp">
@@ -232,6 +256,21 @@
     </ClCompile>
     <ClCompile Include="Main.cpp">
       <Filter>Game Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Subject.cpp">
+      <Filter>Engine Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LivesComponent.cpp">
+      <Filter>Engine Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="LivesUIComponent.cpp">
+      <Filter>Engine Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="PickUpComponent.cpp">
+      <Filter>Engine Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ScoreUIComponent.cpp">
+      <Filter>Engine Files\Components</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
