@@ -50,8 +50,6 @@ namespace dae
 		friend class Singleton<InputCommandBinder>;
 		InputCommandBinder() = default;
 
-		bool HandleInput();
-
 		std::unordered_map<SDL_Scancode, std::pair<std::unique_ptr<Command>, KeyState>> m_MapKeyCommands;
 		
 		std::vector<std::unique_ptr<Controller>> m_VecControllers;

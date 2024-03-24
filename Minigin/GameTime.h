@@ -9,7 +9,7 @@ namespace dae
 	class GameTime final : public Singleton<GameTime>
 	{
 	public:
-		~GameTime() = default;
+		virtual ~GameTime() = default;
 		GameTime(const GameTime& other) = delete;
 		GameTime(GameTime&& other) noexcept = delete;
 		GameTime& operator=(const GameTime& other) = delete;

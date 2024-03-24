@@ -9,7 +9,7 @@ namespace dae
 	class PickUpComponent final : public Component, public Subject<PickUpComponent>
 	{
 	public:
-		explicit PickUpComponent(GameObject* pOwner, int scoreValue);
+		explicit PickUpComponent(GameObject* pOwner);
 		virtual ~PickUpComponent() = default;
 
 		PickUpComponent(const PickUpComponent&) = delete;
@@ -19,11 +19,10 @@ namespace dae
 
 		virtual void Update() override;
 		virtual void PrepareImGuiRender() override;
-		void PickUp();
+		void PickUp(int scoreValue);
 		int GetScoreValue() const;
 	private:
 		int m_ScoreValue;
-
 	};
 }
 

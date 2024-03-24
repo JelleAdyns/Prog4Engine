@@ -35,12 +35,10 @@ namespace dae
 
 		void NotifyObservers()
 		{
-
 			for (auto& pObserver : m_pVecObservers)
 			{
 				pObserver->Notify(static_cast<T*>(this));
 			}
-
 		}
 	private:
 		std::vector<Observer<T>*> m_pVecObservers;

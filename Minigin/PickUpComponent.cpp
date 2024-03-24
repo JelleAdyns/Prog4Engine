@@ -3,10 +3,10 @@
 namespace dae
 {
 
-	PickUpComponent::PickUpComponent(GameObject* pOwner, int scoreValue):
+	PickUpComponent::PickUpComponent(GameObject* pOwner):
 		Component{pOwner},
 		Subject{},
-		m_ScoreValue{scoreValue}
+		m_ScoreValue{}
 	{
 
 	}
@@ -19,8 +19,9 @@ namespace dae
 	{
 	}
 
-	void PickUpComponent::PickUp()
+	void PickUpComponent::PickUp(int scoreValue)
 	{
+		m_ScoreValue = scoreValue;
 		NotifyObservers();
 	}
 
