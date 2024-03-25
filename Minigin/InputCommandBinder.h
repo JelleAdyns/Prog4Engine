@@ -28,20 +28,20 @@ namespace dae
 		bool ProcessInput();
 
 		void AddKeyCommand(std::unique_ptr<Command>&& pCommand, SDL_Scancode key, KeyState keyState);
-		void AddControllerCommand(std::unique_ptr<Command>&& pCommand, int button, KeyState keyState, uint8_t controllerIndex);
+		void AddControllerCommand(std::unique_ptr<Command>&& pCommand, ControllerButton button, KeyState keyState, uint8_t controllerIndex);
 		void AddController();
 
 		void RemoveKeyCommand(SDL_Scancode key);
-		void RemoveControllerCommand(int button, uint8_t controllerIndex);
+		void RemoveControllerCommand(ControllerButton button, uint8_t controllerIndex);
 		void PopController();
 
 		bool KeyDownThisFrame(SDL_Event& event, SDL_Scancode key) const;
 		bool KeyUpThisFrame(SDL_Event& event, SDL_Scancode key) const;
 		bool KeyPressed(SDL_Scancode key) const;
 
-		bool ButtonDownThisFrame(int button, uint8_t controllerIndex) const;
-		bool ButtonUpThisFrame(int button, uint8_t controllerIndex) const;
-		bool ButtonPressed(int button, uint8_t controllerIndex)  const;
+		bool ButtonDownThisFrame(ControllerButton button, uint8_t controllerIndex) const;
+		bool ButtonUpThisFrame(ControllerButton button, uint8_t controllerIndex) const;
+		bool ButtonPressed(ControllerButton button, uint8_t controllerIndex)  const;
 		
 		glm::vec2 GetJoystickValue(bool leftJoystick, uint8_t controllerIndex);
 		float GetTriggerValue(bool leftTrigger, uint8_t controllerIndex);

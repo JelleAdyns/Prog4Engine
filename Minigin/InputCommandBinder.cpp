@@ -72,7 +72,7 @@ namespace dae
 	{
 		if (m_MapKeyCommands.contains(key)) m_MapKeyCommands.erase(key);
 	}
-	void InputCommandBinder::RemoveControllerCommand(int button, uint8_t controllerIndex)
+	void InputCommandBinder::RemoveControllerCommand(ControllerButton button, uint8_t controllerIndex)
 	{
 		m_VecControllers.at(controllerIndex)->RemoveCommand(button);
 	}
@@ -88,7 +88,7 @@ namespace dae
 		if (m_MapKeyCommands.contains(key)) std::cout << "Binding to the requested key already exists. Overwriting now.\n";
 		m_MapKeyCommands[key] = std::make_pair(std::move(pCommand), keyState);
 	}
-	void InputCommandBinder::AddControllerCommand(std::unique_ptr<Command>&& pCommand, int button, KeyState keyState, uint8_t controllerIndex)
+	void InputCommandBinder::AddControllerCommand(std::unique_ptr<Command>&& pCommand, ControllerButton button, KeyState keyState, uint8_t controllerIndex)
 	{
 		m_VecControllers.at(controllerIndex)->AddCommand(std::move(pCommand), button, keyState);
 	}
@@ -122,15 +122,15 @@ namespace dae
 
 
 	//Controller button checks
-	bool InputCommandBinder::ButtonDownThisFrame(int button, uint8_t controllerIndex) const
+	bool InputCommandBinder::ButtonDownThisFrame(ControllerButton button, uint8_t controllerIndex) const
 	{
 		return m_VecControllers.at(controllerIndex)->IsDownThisFrame(button);
 	}
-	bool InputCommandBinder::ButtonUpThisFrame(int button, uint8_t controllerIndex) const
+	bool InputCommandBinder::ButtonUpThisFrame(ControllerButton button, uint8_t controllerIndex) const
 	{
 		return m_VecControllers.at(controllerIndex)->IsUpThisFrame(button);
 	}
-	bool InputCommandBinder::ButtonPressed(int button, uint8_t controllerIndex) const
+	bool InputCommandBinder::ButtonPressed(ControllerButton button, uint8_t controllerIndex) const
 	{
 		return m_VecControllers.at(controllerIndex)->IsPressed(button);
 	}
