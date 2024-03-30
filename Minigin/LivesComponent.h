@@ -6,10 +6,11 @@
 namespace dae
 {
 	class GameObject;
-	class LivesComponent final : public Component, public Subject<LivesComponent>
+	class LivesUIComponent;
+	class LivesComponent final : public Component
 	{
 	public:
-		explicit LivesComponent(GameObject* pOwner, int nrOfLives);
+		explicit LivesComponent(GameObject* pOwner, int nrOfLives, LivesUIComponent* pObserver);
 		virtual ~LivesComponent() = default;
 
 		LivesComponent(const LivesComponent&) = delete;
@@ -21,9 +22,10 @@ namespace dae
 		virtual void PrepareImGuiRender() override;
 		void TakeLife();
 		int GetNrOfLives() const;
+
 	private:
 		int m_Lives;
-
+		std::unique_ptr<Subject<LivesComponent>> m_LivesChanged;
 	};
 }
 

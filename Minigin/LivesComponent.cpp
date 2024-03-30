@@ -4,12 +4,12 @@
 #include "TextComponent.h"
 namespace dae
 {
-	LivesComponent::LivesComponent(GameObject* pOwner, int nrOfLives) :
+	LivesComponent::LivesComponent(GameObject* pOwner, int nrOfLives, LivesUIComponent* pObserver) :
 		Component{ pOwner },
-		m_Lives{ nrOfLives }
-		//m_pDieEvent{ std::make_unique<Subject<LivesComponent>>() }
+		m_Lives{ nrOfLives },
+		m_LivesChanged{ std::make_unique<Subject<LivesComponent>>() }
 	{
-
+		m_LivesChanged->AddObserver(pObserver);
 	}
 
 	void LivesComponent::Update()
@@ -23,17 +23,11 @@ namespace dae
 	void LivesComponent::TakeLife()
 	{
 		--m_Lives;
-		NotifyObservers();
+		m_LivesChanged->NotifyObservers(this);
 	}
 
 	int LivesComponent::GetNrOfLives() const
 	{
 		return m_Lives;
 	}
-
-	/*const std::unique_ptr<Subject<LivesComponent>>& LivesComponent::GetSubject()
-	{
-		return m_pDieEvent;
-	}*/
-
 }

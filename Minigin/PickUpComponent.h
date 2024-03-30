@@ -6,10 +6,16 @@
 namespace dae
 {
 	class GameObject;
-	class PickUpComponent final : public Component, public Subject<PickUpComponent>
+	class ScoreUIComponent;
+	class PickUpComponent final : public Component
 	{
 	public:
-		explicit PickUpComponent(GameObject* pOwner);
+		enum class PickUpType
+		{
+			Melon,
+			Fries
+		};
+		explicit PickUpComponent(GameObject* pOwner, PickUpComponent::PickUpType pickUpType, ScoreUIComponent* pObserver);
 		virtual ~PickUpComponent() = default;
 
 		PickUpComponent(const PickUpComponent&) = delete;
@@ -19,10 +25,11 @@ namespace dae
 
 		virtual void Update() override;
 		virtual void PrepareImGuiRender() override;
-		void PickUp(int scoreValue);
-		int GetScoreValue() const;
+		void PickUp();
+		PickUpType GetPickUpType() const;
 	private:
-		int m_ScoreValue;
+		PickUpType m_PickUpType;
+		std::unique_ptr<Subject<PickUpComponent>> m_PickedUp;
 	};
 }
 

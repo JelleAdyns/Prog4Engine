@@ -171,8 +171,8 @@
     <ClInclude Include="CSteamAchievements.h">
       <Filter>Engine Files</Filter>
     </ClInclude>
-    <ClInclude Include="Achievement.h">
-      <Filter>Engine Files</Filter>
+    <ClInclude Include="Achievements.h">
+      <Filter>Engine Files\Singletons</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -278,8 +278,8 @@
     <ClCompile Include="CSteamAchievements.cpp">
       <Filter>Engine Files</Filter>
     </ClCompile>
-    <ClCompile Include="Achievement.cpp">
-      <Filter>Engine Files</Filter>
+    <ClCompile Include="Achievements.cpp">
+      <Filter>Engine Files\Singletons</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

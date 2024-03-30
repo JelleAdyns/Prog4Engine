@@ -1,14 +1,15 @@
 #include "PickUpComponent.h"
+#include "ScoreUIComponent.h"
 
 namespace dae
 {
 
-	PickUpComponent::PickUpComponent(GameObject* pOwner):
+	PickUpComponent::PickUpComponent(GameObject* pOwner, PickUpComponent::PickUpType pickUpType, ScoreUIComponent* pObserver):
 		Component{pOwner},
-		Subject{},
-		m_ScoreValue{}
+		m_PickUpType{pickUpType},
+		m_PickedUp{std::make_unique<Subject<PickUpComponent>>()}
 	{
-
+		m_PickedUp->AddObserver(pObserver);
 	}
 
 	void PickUpComponent::Update()
@@ -19,15 +20,14 @@ namespace dae
 	{
 	}
 
-	void PickUpComponent::PickUp(int scoreValue)
+	void PickUpComponent::PickUp()
 	{
-		m_ScoreValue = scoreValue;
-		NotifyObservers();
+		m_PickedUp->NotifyObservers(this);
 	}
 
-	int PickUpComponent::GetScoreValue() const
+	PickUpComponent::PickUpType PickUpComponent::GetPickUpType() const
 	{
-		return m_ScoreValue;
+		return m_PickUpType;
 	}
 
 }

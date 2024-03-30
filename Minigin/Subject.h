@@ -9,11 +9,11 @@
 namespace dae
 {
 	template <typename T>
-	class Subject
+	class Subject final
 	{
 	public:
 		Subject() = default;
-		virtual ~Subject() = default;
+		~Subject() = default;
 
 		Subject(const Subject&) = delete;
 		Subject(Subject&&) noexcept = delete;
@@ -33,11 +33,11 @@ namespace dae
 			else std::cout << "Couldn't find Observer to remove in the vector. Continuing.\n";
 		}
 
-		void NotifyObservers()
+		void NotifyObservers(T* pSubjectOwner)
 		{
 			for (auto& pObserver : m_pVecObservers)
 			{
-				pObserver->Notify(static_cast<T*>(this));
+				pObserver->Notify(pSubjectOwner);
 			}
 		}
 	private:

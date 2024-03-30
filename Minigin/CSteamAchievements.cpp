@@ -49,7 +49,7 @@ bool CSteamAchievements::SetAchievement(const char* ID)
 	return false;
 }
 
-
+#pragma warning (push)
 #pragma warning (disable: 4996)
 #pragma warning (disable: 4389)
 void CSteamAchievements::OnUserStatsReceived(UserStatsReceived_t* pCallback)
@@ -111,3 +111,4 @@ void CSteamAchievements::OnAchievementStored(UserAchievementStored_t* pCallback)
 		OutputDebugString("Stored Achievement for Steam\n");
 	}
 }
+#pragma warning (pop)
