@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RENDERER_H
+#define RENDERER_H
 #include <SDL.h>
 #include <vector>
 #include <memory>
@@ -15,6 +16,14 @@ namespace dae
 	{
 	
 	public:
+
+		virtual ~Renderer() = default;
+
+		Renderer(const Renderer&) = delete;
+		Renderer(Renderer&&) noexcept = delete;
+		Renderer& operator= (const Renderer&) = delete;
+		Renderer& operator= (Renderer&&) noexcept = delete;
+
 		void Init(SDL_Window* window);
 		void Render() const;
 		void Destroy();
@@ -27,17 +36,12 @@ namespace dae
 		const SDL_Color& GetBackgroundColor() const { return m_clearColor; }
 		void SetBackgroundColor(const SDL_Color& color) { m_clearColor = color; }
 
-		//void AddRenderComp(const std::shared_ptr<dae::RenderComponent>& pRenderComp)
-		//{
-		//	m_pVecRenderComps.emplace_back(pRenderComp);
-		//}
-
 	private:
+		friend class Singleton<Renderer>;
+		Renderer() = default;
 		SDL_Renderer* m_renderer{};
 		SDL_Window* m_window{};
 		SDL_Color m_clearColor{};	
-
-		//std::vector<std::shared_ptr<dae::RenderComponent>> m_pVecRenderComps;
 	};
 }
-
+#endif // !RENDERER_H

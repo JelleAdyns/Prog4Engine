@@ -1,4 +1,6 @@
-#pragma once
+#ifndef TEXTCOMPONENT_H
+#define TEXTCOMPONENT_H
+
 #include <string>
 #include "Component.h"
 #include "Font.h"
@@ -36,3 +38,4 @@ namespace dae
 		RenderComponent* m_pRenderComponent;
 	};
 }
+#endif // !TEXTCOMPONENT_H

@@ -1,4 +1,6 @@
-#pragma once
+#ifndef IMAGECOMPONENT_H
+#define IMAGECOMPONENT_H
+
 #include <memory>
 #include "Component.h"
 namespace dae
@@ -27,3 +29,4 @@ namespace dae
 
 }
 
+#endif // !IMAGECOMPONENT_H

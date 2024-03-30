@@ -1,4 +1,5 @@
-#pragma once
+#ifndef KEYSTATE_H
+#define KEYSTATE_H
 
 namespace dae
 {
@@ -11,3 +12,4 @@ namespace dae
 
 	};
 }
+#endif // !KEYSTATE_H

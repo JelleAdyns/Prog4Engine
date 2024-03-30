@@ -1,4 +1,6 @@
-#pragma once
+#ifndef TRASHTHECACHEGAMEOBJECTCOMPONENT_H
+#define TRASHTHECACHEGAMEOBJECTCOMPONENT_H
+
 #include "Component.h"
 #include <string>
 #include <vector>
@@ -42,3 +44,4 @@ namespace dae
 
 }
 
+#endif // !TRASHTHECACHEGAMEOBJECTCOMPONENT_H

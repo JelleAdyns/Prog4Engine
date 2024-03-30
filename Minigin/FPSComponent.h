@@ -1,4 +1,6 @@
-#pragma once
+#ifndef FPSCOMPONENT_H
+#define FPSCOMPONENT_H
+
 #include <string>
 #include "Component.h"
 namespace dae
@@ -30,3 +32,4 @@ namespace dae
 
 }
 
+#endif // !FPSCOMPONENT_H

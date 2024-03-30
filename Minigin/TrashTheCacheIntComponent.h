@@ -1,4 +1,6 @@
-#pragma once
+#ifndef TRASHTHECACHEINTCOMPONENT_H
+#define TRASHTHECACHEINTCOMPONENT_H
+
 #include "Component.h"
 #include <string>
 #include <imgui_plot.h>
@@ -28,3 +30,4 @@ namespace dae
 	};
 
 }
+#endif // !TRASHTHECACHEINTCOMPONENT_H

@@ -1,8 +1,9 @@
 #include "SceneManager.h"
 #include "Scene.h"
+
 void dae::SceneManager::Update()
 {
-	for(auto& scene : m_scenes)
+	for(auto& scene : m_pVecScenes)
 	{
 		scene->Update();
 	}
@@ -10,7 +11,7 @@ void dae::SceneManager::Update()
 
 void dae::SceneManager::PrepareImGuiRender()
 {
-	for (const auto& scene : m_scenes)
+	for (const auto& scene : m_pVecScenes)
 	{
 		scene->PrepareImGuiRender();
 	}
@@ -18,7 +19,7 @@ void dae::SceneManager::PrepareImGuiRender()
 
 void dae::SceneManager::Render() const
 {
-	for (const auto& scene : m_scenes)
+	for (const auto& scene : m_pVecScenes)
 	{
 		scene->Render();
 	}
@@ -27,6 +28,6 @@ void dae::SceneManager::Render() const
 dae::Scene& dae::SceneManager::CreateScene(const std::string& name)
 {
 	const auto& scene = std::shared_ptr<Scene>(new Scene(name));
-	m_scenes.push_back(scene);
+	m_pVecScenes.push_back(scene);
 	return *scene;
 }

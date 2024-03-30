@@ -1,4 +1,6 @@
-#pragma once
+#ifndef ROTATORCOMPONENT_H
+#define ROTATORCOMPONENT_H
+
 #include <memory>
 #include "Component.h"
 namespace dae
@@ -30,3 +32,4 @@ namespace dae
 
 }
 
+#endif // !ROTATORCOMPONENT_H

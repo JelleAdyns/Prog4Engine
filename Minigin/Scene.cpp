@@ -6,9 +6,9 @@ using namespace dae;
 
 unsigned int Scene::m_idCounter = 0;
 
-Scene::Scene(const std::string& name) : m_name(name) {}
+Scene::Scene(const std::string& name) : m_name(name) { ++m_idCounter; }
 
-Scene::~Scene() = default;
+Scene::~Scene() { --m_idCounter; }
 
 void Scene::Add(std::unique_ptr<GameObject>&& object)
 {

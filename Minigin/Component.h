@@ -1,4 +1,6 @@
-#pragma once
+#ifndef COMPONENT_H
+#define COMPONENT_H
+
 #include <memory>
 #include <glm/vec2.hpp>
 #include "GameTime.h"
@@ -29,3 +31,4 @@ namespace dae
 	};
 }
 
+#endif // !COMPONENT_H

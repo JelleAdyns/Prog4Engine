@@ -1,4 +1,6 @@
-#pragma once
+#ifndef EDITORCOMMAND_H
+#define EDITORCOMMAND_H
+
 #include <memory>
 #include "Command.h"
 
@@ -20,3 +22,4 @@ namespace dae
 		virtual void Undo() = 0;
 	};
 }
+#endif // !EDITORCOMMAND_H

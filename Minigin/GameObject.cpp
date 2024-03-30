@@ -10,7 +10,6 @@ namespace dae
 	GameObject::GameObject() :
 		m_IsDead{},
 		m_IsPosDirty{true},
-		//m_pTransformComponent{ std::make_unique<TransformComponent>(this) },
 		m_pRenderComponent{nullptr},
 		m_pMapComponents{},
 		m_pParent{ nullptr },
@@ -21,7 +20,6 @@ namespace dae
 	GameObject::GameObject(float x, float y) :
 		m_IsDead{},
 		m_IsPosDirty{true},
-		//m_pTransformComponent{ std::make_unique<TransformComponent>(this) },
 		m_pRenderComponent{ nullptr },
 		m_pMapComponents{},
 		m_pParent{ nullptr },
@@ -31,7 +29,6 @@ namespace dae
 	{
 		m_LocalTransform->SetPosition(glm::vec2{x,y});
 		m_WorldTransform->SetPosition(glm::vec2{ x,y });
-		//m_pTransformComponent->SetPosition(glm::vec2{ x,y });
 	}
 
 	void GameObject::Update()
@@ -40,10 +37,6 @@ namespace dae
 		{
 			component.second->Update();
 		}
-		//if (m_pRenderComponent) m_pRenderComponent->Update();
-
-		//if (m_pParent == nullptr) m_WorldTransform->SetPosition(m_LocalTransform->GetPosition());
-		//else m_WorldTransform->SetPosition(m_pParent->m_WorldTransform->GetPosition() + m_LocalTransform->GetPosition());
 	}
 	void GameObject::PrepareImGuiRender()
 	{
@@ -62,15 +55,6 @@ namespace dae
 	{
 		return m_IsDead;
 	}
-
-	/*TransformComponent* GameObject::GetTransformComponent() const
-	{
-		return m_pTransformComponent.get();
-	}*/
-	/*RenderComponent* GameObject::GetRenderComponent() const
-	{
-		return m_pRenderComponent.get();
-	}*/
 
 	void GameObject::SetParent(const std::unique_ptr<GameObject>& pParent, bool keepWorldPosition)
 	{

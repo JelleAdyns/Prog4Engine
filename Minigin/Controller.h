@@ -1,32 +1,36 @@
-#pragma once
+#ifndef CONTROLLER_H
+#define CONTROLLER_H
+
 #include <cstdint>
 #include <memory>
 #include <glm/glm.hpp>
 #include "Command.h"
+#include "Windows.h"
+#include <XInput.h>
 
 
 namespace dae
 {
-	struct ControllerButtons
-	{
-		static const int DpadUp;
-		static const int DpadDown;
-		static const int DpadLeft;
-		static const int DpadRight;
-		static const int Start;
-		static const int Back;
-		static const int LeftThumb;
-		static const int RightThumb;
-		static const int LeftShoulder;
-		static const int RightShoulder;
-		static const int A;
-		static const int B;
-		static const int X;
-		static const int Y;
+	
+	enum class ControllerButton {
+		DpadUp = XINPUT_GAMEPAD_DPAD_UP,
+		DpadDown = XINPUT_GAMEPAD_DPAD_DOWN,
+		DpadLeft = XINPUT_GAMEPAD_DPAD_LEFT,
+		DpadRight = XINPUT_GAMEPAD_DPAD_RIGHT,
+		Start = XINPUT_GAMEPAD_START,
+		Back = XINPUT_GAMEPAD_BACK,
+		LeftThumb = XINPUT_GAMEPAD_LEFT_THUMB,
+		RightThumb = XINPUT_GAMEPAD_RIGHT_THUMB,
+		LeftShoulder = XINPUT_GAMEPAD_LEFT_SHOULDER,
+		RightShoulder = XINPUT_GAMEPAD_RIGHT_SHOULDER,
+		A = XINPUT_GAMEPAD_A,
+		B = XINPUT_GAMEPAD_B,
+		X = XINPUT_GAMEPAD_X,
+		Y = XINPUT_GAMEPAD_Y
 	};
 
 	enum class KeyState;
-	class Controller
+	class Controller final
 	{
 	public:
 
@@ -40,12 +44,13 @@ namespace dae
 		Controller& operator= (const Controller&) = delete;
 		Controller& operator= (Controller&&) noexcept = default;
 
-		bool ProcessInput();
-		bool IsDownThisFrame(int button) const;
-		bool IsUpThisFrame(int button)  const;
-		bool IsPressed(int button)  const;
+		void ProcessControllerInput();
+		bool IsDownThisFrame(ControllerButton button) const;
+		bool IsUpThisFrame(ControllerButton button)  const;
+		bool IsPressed(ControllerButton button)  const;
 
-		void AddCommand(std::unique_ptr<Command>&& pCommand, int button, KeyState keyState);
+		void AddCommand(std::unique_ptr<Command>&& pCommand, ControllerButton button, KeyState keyState);
+		void RemoveCommand(ControllerButton button);
 
 		glm::vec2 GetJoystickValue(bool leftJoystick);
 		float GetTriggerValue(bool leftTrigger);
@@ -56,4 +61,4 @@ namespace dae
 	};
 }
 
-	
+#endif // !CONTROLLER_H
