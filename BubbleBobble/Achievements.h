@@ -1,19 +1,18 @@
 #ifndef ACHIEVEMENT_H
 #define ACHIEVEMENT_H
-#include "CSteamAchievements.h"
+//#include "CSteamAchievements.h"
 #include "Observer.h"
 #include "ScoreUIComponent.h"
 #include "Singleton.h"
 
 namespace dae
 {
-	enum EAchievements
-		{
-			ACH_WIN_ONE_GAME = 0,
-			ACH_WIN_100_GAMES = 1,
-			ACH_TRAVEL_FAR_ACCUM = 2,
-			ACH_TRAVEL_FAR_SINGLE = 3,
-		};
+	struct AchievementProps
+	{
+		const char* name;
+		bool achieved;
+	};
+	
 	class Achievements final : public Singleton<Achievements>, public Observer<ScoreUIComponent>
 	{
 	public:
@@ -27,15 +26,16 @@ namespace dae
 		
 		virtual void Notify(ScoreUIComponent* pScoreUIComponent) override;
 
-		static void SetSteamAchievements(CSteamAchievements* pSteamAchievements);
-		static Achievement_t g_Achievements[4];
+		//static void SetSteamAchievements(CSteamAchievements* pSteamAchievements);
+		//static Achievement_t g_Achievements[4];
+		static AchievementProps g_Achievements[2];
 	private:
 		friend class Singleton<Achievements>;
 		Achievements() :
 			Observer{}
 		{}
 		
-		static std::unique_ptr<CSteamAchievements> m_pSteamAchievements;
+		//static std::unique_ptr<CSteamAchievements> m_pSteamAchievements;
 	};
 }
 #endif // !ACHIEVEMENT_H

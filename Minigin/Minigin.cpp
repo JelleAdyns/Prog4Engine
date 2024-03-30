@@ -13,10 +13,10 @@
 #include <chrono>
 #include <thread>
 
-#pragma warning(push)
-#pragma warning (disable: 4996)
-#include <steam_api.h>
-#pragma warning(pop)
+//#pragma warning(push)
+//#pragma warning (disable: 4996)
+//#include <steam_api.h>
+//#pragma warning(pop)
 
 SDL_Window* g_window{};
 namespace dae
@@ -106,7 +106,7 @@ namespace dae
 			gameTime.SetDeltaTime(std::chrono::duration<float>(currTime - prevTime).count());
 			prevTime = currTime;
 			//lag += gameTime.GetDeltaTime();
-			SteamAPI_RunCallbacks();
+			//SteamAPI_RunCallbacks();
 			doContinue = input.ProcessInput();
 
 			//while (lag >= gameTime.GetFixedTimeStep())
