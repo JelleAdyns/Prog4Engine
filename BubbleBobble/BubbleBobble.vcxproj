@@ -151,6 +151,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\Minigin\SpriteComponent.cpp" />
     <ClCompile Include="Achievements.cpp" />
     <ClCompile Include="CacheExperimentComponent.cpp" />
     <ClCompile Include="FPSComponent.cpp" />
@@ -165,15 +166,19 @@
     <ClCompile Include="TrashTheCacheIntComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Minigin\SpriteComponent.h" />
     <ClInclude Include="Achievements.h" />
     <ClInclude Include="CacheExperimentComponent.h" />
     <ClInclude Include="Commands.h" />
     <ClInclude Include="Components.h" />
+    <ClInclude Include="DestroySceneCommand.h" />
     <ClInclude Include="FPSComponent.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Killcommand.h" />
+    <ClInclude Include="LevelLoader.h" />
     <ClInclude Include="LivesComponent.h" />
     <ClInclude Include="LivesUIComponent.h" />
+    <ClInclude Include="LoadSceneCommand.h" />
     <ClInclude Include="MoveCommand.h" />
     <ClInclude Include="PickUpCommand.h" />
     <ClInclude Include="PickUpComponent.h" />

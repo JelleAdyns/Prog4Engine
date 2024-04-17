@@ -31,9 +31,11 @@ namespace dae
 		void AddControllerCommand(std::unique_ptr<Command>&& pCommand, ControllerButton button, KeyState keyState, uint8_t controllerIndex);
 		void AddController();
 
+		void RemoveAllCommands();
 		void RemoveKeyCommand(SDL_Scancode key);
 		void RemoveControllerCommand(ControllerButton button, uint8_t controllerIndex);
 		void PopController();
+		void PopAllControllers();
 
 		bool KeyDownThisFrame(SDL_Event& event, SDL_Scancode key) const;
 		bool KeyUpThisFrame(SDL_Event& event, SDL_Scancode key) const;

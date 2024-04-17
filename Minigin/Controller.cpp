@@ -34,6 +34,7 @@ namespace dae
 
 		void AddCommandImpl(std::unique_ptr<Command>&& pCommand, ControllerButton button, KeyState keyState);
 		void RemoveCommandImpl(ControllerButton button);
+		void RemoveAllCommandsImpl();
 
 		glm::vec2 GetJoystickValueImpl(bool leftJoystick);
 		float GetTriggerValueImpl(bool leftJoystick);
@@ -126,6 +127,11 @@ namespace dae
 		if (m_MapCommands.contains(button)) m_MapCommands.erase(button);
 	}
 
+	void Controller::ControllerImpl::RemoveAllCommandsImpl()
+	{
+		m_MapCommands.clear();
+	}
+
 
 	glm::vec2 Controller::ControllerImpl::GetJoystickValueImpl(bool leftJoystick)
 	{
@@ -195,6 +201,11 @@ namespace dae
 	void Controller::RemoveCommand(ControllerButton button)
 	{
 		m_pImpl->RemoveCommandImpl(button);
+	}
+
+	void Controller::RemoveAllCommands()
+	{
+		m_pImpl->RemoveAllCommandsImpl();
 	}
 
 	glm::vec2 Controller::GetJoystickValue(bool leftJoystick)

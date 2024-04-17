@@ -34,10 +34,10 @@ namespace dae
 
 	private:
 
-		glm::vec2 m_Pos;
 		bool m_UseMiddle;
-		//TransformComponent* m_pTransformComponent;
-		std::map<std::type_index,	Texture2D*> m_pMapTexturesToRender;
+		glm::vec2 m_Pos;
+
+		std::map<std::type_index, Texture2D*> m_pMapTexturesToRender;
 	};
 
 }

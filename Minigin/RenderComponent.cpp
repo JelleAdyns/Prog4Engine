@@ -7,34 +7,37 @@
 namespace dae
 {
 	RenderComponent::RenderComponent(GameObject* pOwner, bool useMiddleOfTextures):
-		Component{ pOwner }, m_Pos{}, m_UseMiddle{useMiddleOfTextures}
+		Component{ pOwner }, m_UseMiddle{useMiddleOfTextures}, m_Pos{}
 	{}
 
-	void RenderComponent::Update() 
+	void RenderComponent::Update()
 	{
 		m_Pos = GetOwner()->GetWorldPosition();
-	}
 
+		for (auto& pair : m_pMapTexturesToRender)
+		{
+			pair.second->SetDstRect(m_Pos);
+		}
+	}
 	void RenderComponent::PrepareImGuiRender() { }
 
 	void RenderComponent::Render() const
 	{
 		const auto& renderer = Renderer::GetInstance();
-		if (m_UseMiddle)
+		
+		for (auto& pair : m_pMapTexturesToRender)
 		{
-			for (auto& pair : m_pMapTexturesToRender)
+			if (m_UseMiddle)
 			{
-				float posX{ m_Pos.x - pair.second->GetSize().x / 2 };
-				float posY{ m_Pos.y - pair.second->GetSize().y / 2 };
-				renderer.RenderTexture(*(pair.second), posX, posY);
+				glm::ivec2 pos
+				{
+					static_cast<int>(m_Pos.x - pair.second->GetDstRect().w / 2.f),
+					static_cast<int>(m_Pos.y - pair.second->GetDstRect().h / 2.f)
+				};
+				pair.second->SetDstRect(pos);
 			}
-		}
-		else
-		{
-			for (auto& pair : m_pMapTexturesToRender)
-			{
-				renderer.RenderTexture(*(pair.second), m_Pos.x, m_Pos.y);
-			}
+
+			renderer.RenderTexture(*(pair.second), pair.second->GetSrcRect(), pair.second->GetDstRect());
 		}
 		
 	}

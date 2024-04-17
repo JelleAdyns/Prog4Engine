@@ -18,9 +18,12 @@
 //#include <steam_api.h>
 //#pragma warning(pop)
 
-SDL_Window* g_window{};
 namespace dae
 {
+	int Minigin::m_WindowScale{ 1 };
+	const glm::ivec2 Minigin::m_WindowSize{ 256, 224 };
+	SDL_Window* Minigin::m_Window{ nullptr };
+
 	void PrintSDLVersion()
 	{
 		SDL_version version{};
@@ -49,8 +52,10 @@ namespace dae
 			version.major, version.minor, version.patch);
 	}
 
-	dae::Minigin::Minigin(const std::string& dataPath, float fixedTimeStep, int FPSGoal)
+	dae::Minigin::Minigin(const std::string& dataPath, int windowScale, float fixedTimeStep, int FPSGoal)
 	{
+		m_WindowScale = windowScale;
+
 		PrintSDLVersion();
 
 		if (SDL_Init(SDL_INIT_VIDEO) != 0)
@@ -58,20 +63,20 @@ namespace dae
 			throw std::runtime_error(std::string("SDL_Init Error: ") + SDL_GetError());
 		}
 
-		g_window = SDL_CreateWindow(
+		m_Window = SDL_CreateWindow(
 			"Programming 4 assignment",
 			SDL_WINDOWPOS_CENTERED,
 			SDL_WINDOWPOS_CENTERED,
-			640,
-			480,
+			m_WindowSize.x * windowScale,
+			m_WindowSize.y * windowScale,
 			SDL_WINDOW_OPENGL
 		);
-		if (g_window == nullptr)
+		if (m_Window == nullptr)
 		{
 			throw std::runtime_error(std::string("SDL_CreateWindow Error: ") + SDL_GetError());
 		}
 
-		Renderer::GetInstance().Init(g_window);
+		Renderer::GetInstance().Init(m_Window);
 
 		ResourceManager::GetInstance().Init(dataPath);
 
@@ -81,16 +86,13 @@ namespace dae
 	dae::Minigin::~Minigin()
 	{
 		Renderer::GetInstance().Destroy();
-		SDL_DestroyWindow(g_window);
-		g_window = nullptr;
+		SDL_DestroyWindow(m_Window);
+		m_Window = nullptr;
 		SDL_Quit();
 	}
 
-	void dae::Minigin::Run(const std::function<void()>& load)
+	void dae::Minigin::Run()
 	{
-
-		load();
-
 		auto& renderer = Renderer::GetInstance();
 		auto& sceneManager = SceneManager::GetInstance();
 		auto& input = InputCommandBinder::GetInstance();
@@ -126,6 +128,14 @@ namespace dae
 
 		}
 
+	}
+	glm::ivec2 Minigin::GetWindowSize()
+	{
+		return m_WindowSize;
+	}
+	int Minigin::GetWindowScale()
+	{
+		return m_WindowScale;
 	}
 }
 

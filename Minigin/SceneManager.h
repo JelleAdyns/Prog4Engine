@@ -2,11 +2,12 @@
 #ifndef SCENEMANAGER_H
 #define	SCENEMANAGER_H
 
-#include <vector>
+#include <unordered_map>
 #include <string>
 #include <memory>
 #include "Singleton.h"
 
+class Game;
 namespace dae
 {
 	class Scene;
@@ -14,7 +15,9 @@ namespace dae
 	{
 	public:
 		Scene& CreateScene(const std::string& name);
+		void RemoveScene(const std::string& name);
 
+		void SetActiveScene(const std::string& sceneToActivate);
 
 		virtual ~SceneManager() = default;
 
@@ -29,7 +32,9 @@ namespace dae
 	private:
 		friend class Singleton<SceneManager>;
 		SceneManager() = default;
-		std::vector < std::shared_ptr <Scene>> m_pVecScenes;
+
+		std::string m_ActiveScene;
+		std::unordered_map <std::string, std::shared_ptr <Scene>> m_pMapScenes;
 	};
 }
 #endif // !SCENEMANAGER_H

@@ -1,4 +1,6 @@
 #include "InputCommandBinder.h"
+#include "InputCommandBinder.h"
+#include "InputCommandBinder.h"
 #include "GameTime.h"
 #include "KeyState.h"
 #include <backends/imgui_impl_sdl2.h>
@@ -67,7 +69,16 @@ namespace dae
 
 
 
+	
 	//Removing
+	void InputCommandBinder::RemoveAllCommands()
+	{
+		m_MapKeyCommands.clear();
+		for (auto& controller : m_VecControllers)
+		{
+			controller->RemoveAllCommands();
+		}
+	}
 	void InputCommandBinder::RemoveKeyCommand(SDL_Scancode key)
 	{
 		if (m_MapKeyCommands.contains(key)) m_MapKeyCommands.erase(key);
@@ -79,6 +90,10 @@ namespace dae
 	void InputCommandBinder::PopController()
 	{
 		if (!m_VecControllers.empty()) m_VecControllers.pop_back();
+	}
+	void InputCommandBinder::PopAllControllers()
+	{
+		m_VecControllers.clear();
 	}
 
 

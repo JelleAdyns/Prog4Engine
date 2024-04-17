@@ -27,6 +27,7 @@ namespace dae
 
 			using ThisType = std::remove_reference<decltype(*this)>::type;
 			m_pRenderComponent->AddTexture<ThisType>(m_pTextTexture);
+			m_pTextTexture->SetDstRect(GetOwner()->GetWorldPosition());
 
 			m_needsUpdate = false;
 		}

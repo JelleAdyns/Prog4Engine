@@ -51,6 +51,7 @@ namespace dae
 
 		void AddCommand(std::unique_ptr<Command>&& pCommand, ControllerButton button, KeyState keyState);
 		void RemoveCommand(ControllerButton button);
+		void RemoveAllCommands();
 
 		glm::vec2 GetJoystickValue(bool leftJoystick);
 		float GetTriggerValue(bool leftTrigger);

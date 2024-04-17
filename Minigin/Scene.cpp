@@ -4,13 +4,13 @@
 
 using namespace dae;
 
-unsigned int Scene::m_idCounter = 0;
+unsigned int Scene::m_IdCounter = 0;
 
-Scene::Scene(const std::string& name) : m_name(name) { ++m_idCounter; }
+Scene::Scene() { ++m_IdCounter; }
 
-Scene::~Scene() { --m_idCounter; }
+Scene::~Scene() { --m_IdCounter; }
 
-void Scene::Add(std::unique_ptr<GameObject>&& object)
+void Scene::AddGameObject(std::unique_ptr<GameObject>&& object)
 {
 	m_pObjects.emplace_back(std::move(object));
 }
@@ -55,5 +55,25 @@ void Scene::Render() const
 	{
 		object->Render();
 	}
+}
+
+Scene::SceneType dae::Scene::GetSceneType() const
+{
+	return m_SceneType;
+}
+
+bool dae::Scene::IsActive() const
+{
+	return m_IsActive;
+}
+
+void dae::Scene::SetSceneType(Scene::SceneType sceneType)
+{
+	m_SceneType = sceneType;
+}
+
+void dae::Scene::SetActivity(bool active)
+{
+	m_IsActive = active;
 }
 
