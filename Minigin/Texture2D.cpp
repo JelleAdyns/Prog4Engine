@@ -1,5 +1,6 @@
 
 #include "Texture2D.h"
+#include "Minigin.h"
 
 dae::Texture2D::~Texture2D()
 {
@@ -39,6 +40,27 @@ glm::ivec2 dae::Texture2D::GetTextureSize() const
 	SDL_Rect dst;
 	SDL_QueryTexture(GetSDLTexture(), nullptr, nullptr, &dst.w, &dst.h);
 	return { dst.w,dst.h };
+}
+
+SDL_Rect dae::Texture2D::GetSrcRect() const
+{
+	return m_SrcRect;
+}
+
+SDL_Rect dae::Texture2D::GetDstRect() const
+{
+	float scale = static_cast<float>(dae::Minigin::GetWindowScale());
+	if (m_UsesFont)
+	{
+		return SDL_Rect
+		{
+			m_DstRect.x,
+			m_DstRect.y,
+			static_cast<int>(m_DstRect.w / scale),
+			static_cast<int>(m_DstRect.h / scale)
+		};
+	}
+	else return m_DstRect;
 }
 
 SDL_Texture* dae::Texture2D::GetSDLTexture() const

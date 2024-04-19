@@ -118,7 +118,9 @@ namespace dae
 
 	void Controller::ControllerImpl::AddCommandImpl(std::unique_ptr<Command>&& pCommand, ControllerButton button, KeyState keyState)
 	{
+#ifndef NDEBUG
 		if (m_MapCommands.contains(button)) std::cout << "Binding to the requested button already exists. Overwriting now.\n";
+#endif // !NDEBUG
 		m_MapCommands[button] = std::make_pair(std::move(pCommand), keyState);
 	}
 

@@ -11,9 +11,7 @@
 
 namespace dae
 {
-	//enum class ControllerButton;
 	enum class KeyState;
-	//class Controller;
 	class Command;
 	class InputCommandBinder final : public Singleton<InputCommandBinder>
 	{

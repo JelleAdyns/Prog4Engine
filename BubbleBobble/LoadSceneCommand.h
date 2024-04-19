@@ -1,33 +1,29 @@
 #ifndef LOADSCENECOMMAND_H
 #define LOADSCENECOMMAND_H
 
-#include "Command.h"
-#include <SceneManager.h>
-#include <string>
+#include <Command.h>
+#include "Game.h"
 
-namespace dae
+class LoadSceneCommand final : public dae::Command 
 {
-	class LoadSceneCommand final : public Command 
+public:
+	LoadSceneCommand(Game::CurrScene newScene) :
+		dae::Command{},
+		m_CurrScene{ newScene } 
+	{};
+	virtual ~LoadSceneCommand() = default;
+
+	LoadSceneCommand(const LoadSceneCommand&) = delete;
+	LoadSceneCommand(LoadSceneCommand&&) noexcept = delete;
+	LoadSceneCommand& operator= (const LoadSceneCommand&) = delete;
+	LoadSceneCommand& operator= (LoadSceneCommand&&) noexcept = delete;
+
+	virtual void Execute() const override
 	{
-	public:
-		LoadSceneCommand(const std::string& sceneName) :
-			m_SceneName{ sceneName } 
-		{};
-		virtual ~LoadSceneCommand() = default;
-
-		LoadSceneCommand(const LoadSceneCommand&) = delete;
-		LoadSceneCommand(LoadSceneCommand&&) noexcept = delete;
-		LoadSceneCommand& operator= (const LoadSceneCommand&) = delete;
-		LoadSceneCommand& operator= (LoadSceneCommand&&) noexcept = delete;
-
-		virtual void Execute() const override
-		{
-			SceneManager::GetInstance().SetActiveScene(m_SceneName);
-		}
-	private:
-		const std::string m_SceneName;
-	};
-}
+		Game::GetInstance().SetScene(m_CurrScene);
+	}
+private:
+	const Game::CurrScene m_CurrScene;
+};
 
 #endif // !LOADSCENECOMMAND_H
-

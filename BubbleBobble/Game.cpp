@@ -12,6 +12,7 @@
 #include "Achievements.h"
 #include "LevelLoader.h"
 #include <Minigin.h>
+#include <SceneManager.h>
 #include <functional>
 
 
@@ -23,46 +24,182 @@
 
 #include <iostream>
 
-void Game::StartGame() const
+void Game::StartGame()
+{
+	SetScene(CurrScene::TitleScreen);
+
+	//LoadLevelOne();
+	//LoadLevelTwo();
+	//LoadLevelThree();
+}
+
+void Game::SetScene(Game::CurrScene newScene)
+{
+	m_ActiveScene = newScene;
+	switch (m_ActiveScene)
+	{
+	case CurrScene::TitleScreen:
+		LoadTitleScreen();
+		break;
+	case CurrScene::Menu:		
+		LoadMainMenu();
+		break;
+	case CurrScene::Level1:
+		LoadLevelOne();
+		break;
+	case CurrScene::Level2:
+		LoadLevelTwo();
+		break;
+	case CurrScene::Level3:
+		LoadLevelThree();
+		break;
+	case CurrScene::HighScore:
+		break;
+	}
+
+	dae::SceneManager::GetInstance().RemoveNonActiveScenes();
+}
+
+void Game::LoadTitleScreen() const
 {
 	auto& sceneManager = dae::SceneManager::GetInstance();
 	auto& scene = sceneManager.CreateScene("TitleScreen");
+	auto& inputMan = dae::InputCommandBinder::GetInstance();
+	inputMan.RemoveAllCommands();
 
-	sceneManager.SetActiveScene("TitleScreen");
-
-	auto titleLogo = std::make_unique<dae::GameObject>(static_cast<float>(dae::Minigin::GetWindowSize().x) / 2, static_cast<float>(dae::Minigin::GetWindowSize().y) / 2);
+	auto titleLogo = std::make_unique<dae::GameObject>(static_cast<float>(dae::Minigin::GetWindowSize().x) / 2, static_cast<float>(dae::Minigin::GetWindowSize().y) / 2 - 20);
 	titleLogo->AddRenderComponent(true);
 	titleLogo->AddComponent<dae::SpriteComponent>("TitleLogo.png", 6, 6, 0.2f);
 
 	scene.AddGameObject(std::move(titleLogo));
 
 
+	auto buttonHandler = std::make_unique<dae::GameObject>();
+	buttonHandler->AddComponent<ButtonHandlerComponent>();
+
+	std::unique_ptr<dae::Command> activateCommand = std::make_unique<ActivateButtonCommand>(buttonHandler);
+	inputMan.AddKeyCommand(std::move(activateCommand), SDL_SCANCODE_SPACE, dae::KeyState::DownThisFrame);
+
+	const auto& handlerComponent = buttonHandler->GetComponent<ButtonHandlerComponent>();
+
+	std::unique_ptr<dae::Command> loadCommand = std::make_unique<LoadSceneCommand>(CurrScene::Menu);
+
+	auto button1 = std::make_unique<dae::GameObject>(static_cast<float>(dae::Minigin::GetWindowSize().x) / 2, 200.f);
+	button1->AddRenderComponent(true);
+	button1->AddComponent<dae::TextComponent>("Push Start Button", "Pixel_NES.otf", 10);
+	button1->AddComponent<ButtonComponent>(std::move(loadCommand));
+
+
+	handlerComponent->AddButton(button1->GetComponent<ButtonComponent>());
+
+
+
+	scene.AddGameObject(std::move(buttonHandler));
+	scene.AddGameObject(std::move(button1));
+}
+
+void Game::LoadMainMenu() const
+{
+	auto& sceneManager = dae::SceneManager::GetInstance();
+	auto& scene = sceneManager.CreateScene("MainMenu");
+
 	auto& inputMan = dae::InputCommandBinder::GetInstance();
-	std::unique_ptr<dae::Command> loadCommand = std::make_unique<dae::LoadSceneCommand>("LevelOne");
-	inputMan.AddKeyCommand(std::move(loadCommand), SDL_SCANCODE_L, dae::KeyState::Pressed);
+	inputMan.RemoveAllCommands();
 
-	loadCommand = std::make_unique<dae::LoadSceneCommand>("LevelTwo");
-	inputMan.AddKeyCommand(std::move(loadCommand), SDL_SCANCODE_M, dae::KeyState::Pressed);
+	
 
-	loadCommand = std::make_unique<dae::LoadSceneCommand>("LevelThree");
-	inputMan.AddKeyCommand(std::move(loadCommand), SDL_SCANCODE_N, dae::KeyState::Pressed);
+	auto bubbleBobbleText = std::make_unique<dae::GameObject>(static_cast<float>(dae::Minigin::GetWindowSize().x) / 2- 30.f, 20.f);
+	bubbleBobbleText->AddRenderComponent(false);
+	bubbleBobbleText->AddComponent<dae::TextComponent>("Bubble Bobble", "Pixel_NES.otf", 10);
 
-	LoadLevelOne();
-	LoadLevelTwo();
-	LoadLevelThree();
+
+
+	auto buttonHandler = std::make_unique<dae::GameObject>();
+	buttonHandler->AddComponent<ButtonHandlerComponent>();
+
+	
+
+	const auto& handlerComponent = buttonHandler->GetComponent<ButtonHandlerComponent>();
+	
+
+
+	std::unique_ptr<dae::Command> loadCommand = std::make_unique<LoadSceneCommand>(CurrScene::Level1);
+
+	auto button1 = std::make_unique<dae::GameObject>(0.f, 30.f);
+	button1->AddRenderComponent(false);
+	button1->AddComponent<dae::TextComponent>("1P Start", "Pixel_NES.otf", 10);
+	button1->AddComponent<ButtonComponent>(std::move(loadCommand));
+	button1->SetParent(bubbleBobbleText, false);
+
+	handlerComponent->AddButton(button1->GetComponent<ButtonComponent>());
+
+
+	std::unique_ptr<dae::Command> loadCommand2 = std::make_unique<LoadSceneCommand>(CurrScene::Level2);
+
+	auto button2 = std::make_unique<dae::GameObject>(0.f, 30.f);
+	button2->AddRenderComponent(false);
+	button2->AddComponent<dae::TextComponent>("2P Start", "Pixel_NES.otf", 10);
+	button2->AddComponent<ButtonComponent>(std::move(loadCommand2));
+	button2->SetParent(button1, false);
+
+	handlerComponent->AddButton(button2->GetComponent<ButtonComponent>());
+
+	std::unique_ptr<dae::Command> loadCommand3 = std::make_unique<LoadSceneCommand>(CurrScene::Level3);
+
+	auto button3 = std::make_unique<dae::GameObject>(0.f, 30.f);
+	button3->AddRenderComponent(false);
+	button3->AddComponent<dae::TextComponent>("Versus", "Pixel_NES.otf", 10);
+	button3->AddComponent<ButtonComponent>(std::move(loadCommand3));
+	button3->SetParent(button2, false);
+
+	handlerComponent->AddButton(button3->GetComponent<ButtonComponent>());
+
+
+	std::unique_ptr<dae::Command> loadCommand4 = std::make_unique<LoadSceneCommand>(CurrScene::TitleScreen);
+
+	auto button4 = std::make_unique<dae::GameObject>(0.f, 30.f);
+	button4->AddRenderComponent(false);
+	button4->AddComponent<dae::TextComponent>("HighScores", "Pixel_NES.otf", 10);
+	button4->AddComponent<ButtonComponent>(std::move(loadCommand4));
+	button4->SetParent(button3, false);
+
+	handlerComponent->AddButton(button4->GetComponent<ButtonComponent>());
+
+	auto icon = std::make_unique<dae::GameObject>(button1->GetWorldPosition().x - 20.f, button1->GetWorldPosition().y);
+	icon->AddRenderComponent(false);
+	icon->AddComponent<dae::SpriteComponent>("Selector.png", 2,2,0.1f);
+
+
+	std::unique_ptr<dae::Command> nextCommand = std::make_unique<SelectButtonCommand>(buttonHandler, icon, SelectButtonCommand::Direction::Next);
+	inputMan.AddKeyCommand(std::move(nextCommand), SDL_SCANCODE_S, dae::KeyState::DownThisFrame);
+
+	std::unique_ptr<dae::Command> previousCommand = std::make_unique<SelectButtonCommand>(buttonHandler, icon, SelectButtonCommand::Direction::Previous);
+	inputMan.AddKeyCommand(std::move(previousCommand), SDL_SCANCODE_W, dae::KeyState::DownThisFrame);
+
+	std::unique_ptr<dae::Command> activateCommand = std::make_unique<ActivateButtonCommand>(buttonHandler);
+	inputMan.AddKeyCommand(std::move(activateCommand), SDL_SCANCODE_RETURN, dae::KeyState::DownThisFrame);
+
+	scene.AddGameObject(std::move(buttonHandler));
+	scene.AddGameObject(std::move(bubbleBobbleText));
+	scene.AddGameObject(std::move(icon));
+	scene.AddGameObject(std::move(button1));
+	scene.AddGameObject(std::move(button2));
+	scene.AddGameObject(std::move(button3));
+	scene.AddGameObject(std::move(button4));
+
 }
 
 void Game::LoadLevelOne() const
 {
 	auto& inputMan = dae::InputCommandBinder::GetInstance();
-	//inputMan.RemoveAllCommands();
+	inputMan.RemoveAllCommands();
 
 	//std::unique_ptr<dae::Command> DestroyCommand = std::make_unique<dae::DestroySceneCommand>("TitleScreen");
 	//DestroyCommand->Execute();
 
 	auto& sceneManager = dae::SceneManager::GetInstance();
 
-	auto& scene = sceneManager.CreateScene("LevelOne");
+	auto& scene = sceneManager.CreateScene("Level1");
 
 	
 	//auto gui = std::make_unique<dae::GameObject>();
@@ -199,6 +336,7 @@ void Game::LoadLevelOne() const
 
 		auto player1 = std::make_unique<dae::GameObject>(38.f, 50.f);
 		player1->AddRenderComponent();
+		player1->AddPhysicsComponent();
 		player1->AddComponent<dae::LivesComponent>(starterLives, livesDisplay->GetComponent<dae::LivesUIComponent>());
 		player1->AddComponent<dae::PickUpComponent>(dae::PickUpComponent::PickUpType::Melon, scoreDisplay->GetComponent<dae::ScoreUIComponent>());
 		player1->AddComponent<dae::SpriteComponent>("BubRunning.png", 4, 4, 0.1f);
@@ -287,7 +425,7 @@ void Game::LoadLevelOne() const
 		scene.AddGameObject(std::move(player2));
 	}
 
-	LoadLevel("LevelsTest.txt", scene, 1);
+	LoadLevel("Levels.txt", scene, 1);
 
 }
 
@@ -302,7 +440,7 @@ void Game::LoadLevelTwo() const
 
 	auto& sceneManager = dae::SceneManager::GetInstance();
 
-	auto& scene = sceneManager.CreateScene("LevelTwo");
+	auto& scene = sceneManager.CreateScene("Level2");
 
 	//Input Objects
 	{
@@ -407,7 +545,7 @@ void Game::LoadLevelTwo() const
 		scene.AddGameObject(std::move(player2));
 	}
 
-	LoadLevel("LevelsTest.txt", scene, 2);
+	LoadLevel("Levels.txt", scene, 2);
 }
 void Game::LoadLevelThree() const
 {
@@ -420,7 +558,7 @@ void Game::LoadLevelThree() const
 
 	auto& sceneManager = dae::SceneManager::GetInstance();
 
-	auto& scene = sceneManager.CreateScene("LevelThree");
+	auto& scene = sceneManager.CreateScene("Level3");
 
 	//Input Objects
 	{
@@ -525,5 +663,5 @@ void Game::LoadLevelThree() const
 		scene.AddGameObject(std::move(player2));
 	}
 
-	LoadLevel("LevelsTest.txt", scene, 3);
+	LoadLevel("Levels.txt", scene, 3);
 }

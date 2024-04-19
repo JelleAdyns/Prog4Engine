@@ -16,5 +16,7 @@
 #include "PickUpComponent.h"
 #include "ScoreUIComponent.h"
 #include "SpriteComponent.h"
+#include "ButtonComponent.h"
+#include "ButtonHandlerComponent.h"
 
 #endif // !COMPONENTS_H

@@ -13,7 +13,7 @@ namespace dae
 	class TextComponent final : public Component
 	{
 	public:
-		explicit TextComponent(GameObject* pOwner, const std::string& text, const std::string& file, unsigned int size);
+		explicit TextComponent(GameObject* pOwner, const std::string& text, const std::string& fontFile, unsigned int size);
 		virtual ~TextComponent() {}
 
 		TextComponent(const TextComponent&) = delete;
@@ -26,7 +26,7 @@ namespace dae
 
 
 		void SetText(const std::string& text);
-		//std::shared_ptr<Texture2D> GetTexture() const;
+		Texture2D* GetTexture() const;
 
 	private:
 		bool m_needsUpdate;

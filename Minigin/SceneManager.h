@@ -16,6 +16,7 @@ namespace dae
 	public:
 		Scene& CreateScene(const std::string& name);
 		void RemoveScene(const std::string& name);
+		void RemoveNonActiveScenes();
 
 		void SetActiveScene(const std::string& sceneToActivate);
 
@@ -29,11 +30,15 @@ namespace dae
 		void Update();
 		void PrepareImGuiRender();
 		void Render() const;
+		void FixedUpdate();
 	private:
 		friend class Singleton<SceneManager>;
 		SceneManager() = default;
 
+		void CheckForDestroyedScenes();
+
 		std::string m_ActiveScene;
+		std::vector<std::string> m_KeysToDestroy;
 		std::unordered_map <std::string, std::shared_ptr <Scene>> m_pMapScenes;
 	};
 }

@@ -11,13 +11,7 @@ namespace dae
 	{
 		friend Scene& SceneManager::CreateScene(const std::string& name);
 	public:
-		enum class SceneType
-		{
-			TitleScreen,
-			Menu,
-			Level,
-			HighScore
-		};
+		
 		void AddGameObject(std::unique_ptr<GameObject>&& object);
 		void Remove(std::unique_ptr<GameObject> object);
 		void RemoveAll();
@@ -25,11 +19,10 @@ namespace dae
 		void Update();
 		void PrepareImGuiRender();
 		void Render() const;
+		void FixedUpdate();
 
-		Scene::SceneType GetSceneType() const;
-		bool IsActive() const;
-		void SetSceneType(Scene::SceneType sceneType);
-		void SetActivity(bool active);
+		bool IsDestroyed() const;
+		void SetDestroyed();
 
 		~Scene();
 		Scene(const Scene& other) = delete;
@@ -39,9 +32,8 @@ namespace dae
 
 	private: 
 		Scene();
-
-		bool m_IsActive{ false };
-		SceneType m_SceneType{ SceneType::TitleScreen };
+		 
+		bool m_IsDestroyed{ false };
 		std::vector < std::unique_ptr<GameObject>> m_pObjects{};
 
 		static unsigned int m_IdCounter; 

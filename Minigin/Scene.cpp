@@ -57,23 +57,28 @@ void Scene::Render() const
 	}
 }
 
-Scene::SceneType dae::Scene::GetSceneType() const
+void dae::Scene::FixedUpdate()
 {
-	return m_SceneType;
+	for (const auto& object : m_pObjects)
+	{
+		object->FixedUpdate();
+	}
+
+	m_pObjects.erase(
+		std::remove_if(m_pObjects.begin(), m_pObjects.end(),
+			[&](const std::unique_ptr<GameObject>& pObject) {return pObject->IsDead(); }
+		),
+		m_pObjects.cend()
+	);
 }
 
-bool dae::Scene::IsActive() const
+bool dae::Scene::IsDestroyed() const
 {
-	return m_IsActive;
+	return m_IsDestroyed;
 }
 
-void dae::Scene::SetSceneType(Scene::SceneType sceneType)
+void dae::Scene::SetDestroyed()
 {
-	m_SceneType = sceneType;
-}
-
-void dae::Scene::SetActivity(bool active)
-{
-	m_IsActive = active;
+	m_IsDestroyed = true;
 }
 

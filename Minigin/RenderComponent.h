@@ -8,7 +8,6 @@
 #include "Texture2D.h"
 namespace dae
 {
-	class TransformComponent;
 	class RenderComponent final : public Component
 	{
 	public:

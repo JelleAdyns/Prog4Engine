@@ -4,7 +4,6 @@
 #include <SDL.h>
 #include <glm/vec2.hpp>
 
-struct SDL_Texture;
 namespace dae
 {
 	/**
@@ -24,8 +23,8 @@ namespace dae
 
 		glm::ivec2 GetTextureSize() const;
 
-		const SDL_Rect& GetSrcRect() const { return m_SrcRect; }
-		const SDL_Rect& GetDstRect() const { return m_DstRect; }
+		SDL_Rect GetSrcRect() const;
+		SDL_Rect GetDstRect() const;
 		bool UsesFont() const { return m_UsesFont; }
 
 		Texture2D(const Texture2D &) = delete;

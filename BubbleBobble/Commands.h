@@ -8,5 +8,7 @@
 #include "PickUpCommand.h"
 #include "DestroySceneCommand.h"
 #include "LoadSceneCommand.h"
+#include "SelectButtonCommand.h"
+#include "ActivateButtonCommand.h"
 
 #endif // !COMMANDS_H

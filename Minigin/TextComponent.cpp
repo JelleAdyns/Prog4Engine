@@ -6,8 +6,13 @@
 
 namespace dae
 {
-	TextComponent::TextComponent(GameObject* pOwner, const std::string& text, const std::string& file, unsigned int size)
-		: Component{pOwner}, m_needsUpdate{true}, m_text{text}, m_pFont{ResourceManager::GetInstance().LoadFont(file, size)}, m_pTextTexture{nullptr}, m_pRenderComponent{nullptr}
+	TextComponent::TextComponent(GameObject* pOwner, const std::string& text, const std::string& fontFile, unsigned int size)
+		: Component{pOwner},
+		m_needsUpdate{true},
+		m_text{text},
+		m_pFont{ResourceManager::GetInstance().LoadFont(fontFile, size)},
+		m_pTextTexture{nullptr},
+		m_pRenderComponent{nullptr}
 	{
 	
 	}
@@ -36,16 +41,16 @@ namespace dae
 	void TextComponent::PrepareImGuiRender() {}
 
 
-	// This implementation uses the "dirty flag" pattern
 	void TextComponent::SetText(const std::string& text)
 	{
 		m_text = text;
 		m_needsUpdate = true;
 	}
-	/*std::shared_ptr<Texture2D> TextComponent::GetTexture() const
+
+	Texture2D* TextComponent::GetTexture() const
 	{
-		return m_pTextTexture;
-	}*/
+		return m_pTextTexture.get();
+	}
 
 }
 	

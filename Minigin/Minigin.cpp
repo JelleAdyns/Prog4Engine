@@ -101,21 +101,22 @@ namespace dae
 		bool doContinue = true;
 
 		auto prevTime = std::chrono::high_resolution_clock::now();
-		//float lag = 0.0f;
+		float lag = 0.0f;
 		while (doContinue)
 		{
 			const auto currTime = std::chrono::high_resolution_clock::now();
 			gameTime.SetDeltaTime(std::chrono::duration<float>(currTime - prevTime).count());
 			prevTime = currTime;
-			//lag += gameTime.GetDeltaTime();
+			lag += gameTime.GetDeltaTime();
+
 			//SteamAPI_RunCallbacks();
 			doContinue = input.ProcessInput();
 
-			//while (lag >= gameTime.GetFixedTimeStep())
-			//{
-			//	sceneManager.FixedUpdate(gameTime.GetFixedTimeStep());
-			//	lag -= gameTime.GetFixedTimeStep();
-			//}
+			while (lag >= gameTime.GetFixedTimeStep())
+			{
+				sceneManager.FixedUpdate();
+				lag -= gameTime.GetFixedTimeStep();
+			}
 
 			sceneManager.Update();
 			renderer.Render();

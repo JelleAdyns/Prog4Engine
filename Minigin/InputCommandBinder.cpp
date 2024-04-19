@@ -30,10 +30,10 @@ namespace dae
 			{
 				return false;
 			}
-			if (event.key.keysym.sym == SDLK_SPACE)
+			/*if (event.key.keysym.sym == SDLK_SPACE)
 			{
 				GameTime::GetInstance().ToggleUseFPSGoal();
-			}
+			}*/
 
 			for (const auto& pair : m_MapKeyCommands)
 			{
@@ -100,7 +100,9 @@ namespace dae
 	//Adding
 	void InputCommandBinder::AddKeyCommand(std::unique_ptr<Command>&& pCommand, SDL_Scancode key, KeyState keyState)
 	{
-		if (m_MapKeyCommands.contains(key)) std::cout << "Binding to the requested key already exists. Overwriting now.\n";
+#ifndef NDEBUG
+		if (m_MapKeyCommands.contains(key)) std::cout << "Binding to the requested key ("<<key<<") already exists.Overwriting now.\n";
+#endif // !NDEBUG
 		m_MapKeyCommands[key] = std::make_pair(std::move(pCommand), keyState);
 	}
 	void InputCommandBinder::AddControllerCommand(std::unique_ptr<Command>&& pCommand, ControllerButton button, KeyState keyState, uint8_t controllerIndex)
@@ -113,7 +115,10 @@ namespace dae
 		{
 			m_VecControllers.emplace_back(std::make_unique<Controller>( static_cast<uint8_t>(m_VecControllers.size()) ));
 		}
+#ifndef NDEBUG
 		else std::cout << "Max amount of controllers already reached.\n";
+#endif // !NDEBUG
+		
 	}
 
 

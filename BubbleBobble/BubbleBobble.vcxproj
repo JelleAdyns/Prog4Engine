@@ -153,6 +153,8 @@
   <ItemGroup>
     <ClCompile Include="..\Minigin\SpriteComponent.cpp" />
     <ClCompile Include="Achievements.cpp" />
+    <ClCompile Include="ButtonComponent.cpp" />
+    <ClCompile Include="ButtonHandlerComponent.cpp" />
     <ClCompile Include="CacheExperimentComponent.cpp" />
     <ClCompile Include="FPSComponent.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -168,10 +170,12 @@
   <ItemGroup>
     <ClInclude Include="..\Minigin\SpriteComponent.h" />
     <ClInclude Include="Achievements.h" />
+    <ClInclude Include="ActivateButtonCommand.h" />
+    <ClInclude Include="ButtonComponent.h" />
+    <ClInclude Include="ButtonHandlerComponent.h" />
     <ClInclude Include="CacheExperimentComponent.h" />
     <ClInclude Include="Commands.h" />
     <ClInclude Include="Components.h" />
-    <ClInclude Include="DestroySceneCommand.h" />
     <ClInclude Include="FPSComponent.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Killcommand.h" />
@@ -184,6 +188,7 @@
     <ClInclude Include="PickUpComponent.h" />
     <ClInclude Include="RotatorComponent.h" />
     <ClInclude Include="ScoreUIComponent.h" />
+    <ClInclude Include="SelectButtonCommand.h" />
     <ClInclude Include="TrashTheCacheGameObjectsComponent.h" />
     <ClInclude Include="TrashTheCacheIntComponent.h" />
   </ItemGroup>

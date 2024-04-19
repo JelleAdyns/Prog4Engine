@@ -1,6 +1,5 @@
 #include "RenderComponent.h"
 #include "Textcomponent.h"
-#include "TransformComponent.h"
 #include "Renderer.h"
 #include "GameObject.h"
 

@@ -26,7 +26,7 @@ namespace dae
 		);
 
 		m_pTexture->SetDstRect(
-			glm::ivec2{},
+			GetOwner()->GetWorldPosition(),
 			static_cast<float>(m_pTexture->GetSrcRect().w),
 			static_cast<float>(m_pTexture->GetSrcRect().h)
 		);
