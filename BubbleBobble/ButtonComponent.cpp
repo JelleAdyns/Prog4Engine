@@ -2,7 +2,8 @@
 #include "GameObject.h"
 
 ButtonComponent::ButtonComponent(dae::GameObject* pOwner, std::unique_ptr<dae::Command>& pCommand):
-	Component{pOwner},
+	dae::Component{pOwner},
+	m_IsSelected{false},
 	m_pCommandToExecute{ std::move(pCommand)}
 {
 }

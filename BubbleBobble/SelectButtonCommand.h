@@ -15,7 +15,7 @@ public:
 	};
 
 	SelectButtonCommand(const std::unique_ptr<dae::GameObject>& pObject, const std::unique_ptr<dae::GameObject>& pSelectionIcon, SelectButtonCommand::Direction direction) :
-		GameObjectCommand{ pObject.get()},
+		dae::GameObjectCommand{ pObject.get()},
 		m_Direction{direction},
 		m_pSelectionIcon{pSelectionIcon.get()}
 	{}

@@ -1,6 +1,5 @@
 #include <stdexcept>
 #include <SDL_ttf.h>
-#include <SDL_opengl.h>
 #include "Minigin.h"
 #include "Font.h"
 

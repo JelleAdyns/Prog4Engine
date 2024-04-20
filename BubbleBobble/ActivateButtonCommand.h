@@ -10,7 +10,7 @@ class ActivateButtonCommand final : public dae::GameObjectCommand
 public:
 
 	ActivateButtonCommand(const std::unique_ptr<dae::GameObject>& pObject) :
-		GameObjectCommand{ pObject.get() }
+		dae::GameObjectCommand{ pObject.get() }
 	{}
 	virtual ~ActivateButtonCommand() = default;
 

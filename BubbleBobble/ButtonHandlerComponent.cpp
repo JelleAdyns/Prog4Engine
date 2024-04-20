@@ -3,7 +3,7 @@
 #include <algorithm>
 
 ButtonHandlerComponent::ButtonHandlerComponent(dae::GameObject* pOwner):
-	Component{pOwner},
+	dae::Component{pOwner},
 	m_ButtonIsActivated{false},
 	m_SelectedIndex{0},
 	m_pVecButtons{}

@@ -47,9 +47,9 @@ static void LoadLevel(const std::string& filename, dae::Scene& scene, int levelN
 
 						auto tile = std::make_unique<dae::GameObject>(8.f * col, 8.f * row);
 						tile->AddRenderComponent();
-						tile->AddComponent<dae::SpriteComponent>("Tiles.png", 3, 3, 0.1f, false);
+						tile->AddComponent<SpriteComponent>("Tiles.png", 3, 3, 0.1f, false);
 
-						tile->GetComponent<dae::SpriteComponent>()->SetFrame(levelNumber - 1, 0);
+						tile->GetComponent<SpriteComponent>()->SetFrame(levelNumber - 1, 0);
 						scene.AddGameObject(std::move(tile));
 
 						break;

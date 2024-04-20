@@ -10,7 +10,7 @@ class SetTextCommand final : public dae::GameObjectCommand
 public:
 
 	SetTextCommand(const std::unique_ptr<dae::GameObject>& pObject, const std::string& newText) :
-		GameObjectCommand{ pObject.get() },
+		dae::GameObjectCommand{ pObject.get() },
 		m_NewText{newText}
 	{}
 	virtual ~SetTextCommand() = default;
