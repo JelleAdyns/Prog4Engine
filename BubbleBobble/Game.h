@@ -35,7 +35,7 @@ private:
 	void LoadLevelTwo() const;
 	void LoadLevelThree() const;
 
-	CurrScene m_ActiveScene;
+	CurrScene m_ActiveScene{ CurrScene::TitleScreen };
 
 	friend class dae::Singleton<Game>;
 	Game() = default;

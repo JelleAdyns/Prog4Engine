@@ -44,12 +44,13 @@ namespace dae
 		Controller& operator= (const Controller&) = delete;
 		Controller& operator= (Controller&&) noexcept = default;
 
+		bool IsAnyButtonPressed();
 		void ProcessControllerInput();
 		bool IsDownThisFrame(ControllerButton button) const;
 		bool IsUpThisFrame(ControllerButton button)  const;
 		bool IsPressed(ControllerButton button)  const;
 
-		void AddCommand(std::unique_ptr<Command>&& pCommand, ControllerButton button, KeyState keyState);
+		void AddCommand(const std::shared_ptr<Command>& pCommand, ControllerButton button, KeyState keyState);
 		void RemoveCommand(ControllerButton button);
 		void RemoveAllCommands();
 

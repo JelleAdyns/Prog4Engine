@@ -27,10 +27,6 @@
 void Game::StartGame()
 {
 	SetScene(CurrScene::TitleScreen);
-
-	//LoadLevelOne();
-	//LoadLevelTwo();
-	//LoadLevelThree();
 }
 
 void Game::SetScene(Game::CurrScene newScene)
@@ -66,6 +62,7 @@ void Game::LoadTitleScreen() const
 	auto& scene = sceneManager.CreateScene("TitleScreen");
 	auto& inputMan = dae::InputCommandBinder::GetInstance();
 	inputMan.RemoveAllCommands();
+	inputMan.AddController();
 
 	auto titleLogo = std::make_unique<dae::GameObject>(static_cast<float>(dae::Minigin::GetWindowSize().x) / 2, static_cast<float>(dae::Minigin::GetWindowSize().y) / 2 - 20);
 	titleLogo->AddRenderComponent(true);
@@ -77,25 +74,35 @@ void Game::LoadTitleScreen() const
 	auto buttonHandler = std::make_unique<dae::GameObject>();
 	buttonHandler->AddComponent<ButtonHandlerComponent>();
 
-	std::unique_ptr<dae::Command> activateCommand = std::make_unique<ActivateButtonCommand>(buttonHandler);
-	inputMan.AddKeyCommand(std::move(activateCommand), SDL_SCANCODE_SPACE, dae::KeyState::DownThisFrame);
+	std::shared_ptr<dae::Command> activateCommand = std::make_shared<ActivateButtonCommand>(buttonHandler);
+	inputMan.AddKeyCommand(activateCommand, SDL_SCANCODE_SPACE, dae::KeyState::DownThisFrame);
+	inputMan.AddControllerCommand(activateCommand, dae::ControllerButton::Start, dae::KeyState::DownThisFrame, 0);
 
 	const auto& handlerComponent = buttonHandler->GetComponent<ButtonHandlerComponent>();
 
 	std::unique_ptr<dae::Command> loadCommand = std::make_unique<LoadSceneCommand>(CurrScene::Menu);
 
-	auto button1 = std::make_unique<dae::GameObject>(static_cast<float>(dae::Minigin::GetWindowSize().x) / 2, 200.f);
+	auto button1 = std::make_unique<dae::GameObject>(static_cast<float>(dae::Minigin::GetWindowSize().x) / 2, 180.f);
 	button1->AddRenderComponent(true);
-	button1->AddComponent<dae::TextComponent>("Push Start Button", "Pixel_NES.otf", 10);
+	button1->AddComponent<dae::TextComponent>(inputMan.IsKeyboardActive() ? "Press Space" : "Push Start Button", "Pixel_NES.otf", 10);
 	button1->AddComponent<ButtonComponent>(std::move(loadCommand));
 
 
 	handlerComponent->AddButton(button1->GetComponent<ButtonComponent>());
 
+	std::unique_ptr<dae::Command> setTextCommand = std::make_unique<SetTextCommand>(button1, "Push Start Button");
+	inputMan.AddCommand_ChangingToController(std::move(setTextCommand));
+	std::unique_ptr<dae::Command> setTextCommand2 = std::make_unique<SetTextCommand>(button1, "Press Space");
+	inputMan.AddCommand_ChangingToKeyboard(std::move(setTextCommand2));
 
+
+	auto credit = std::make_unique<dae::GameObject>(3.f, dae::Minigin::GetWindowSize().y - 8.f);
+	credit->AddRenderComponent(false);
+	credit->AddComponent<dae::TextComponent>("Made by Jelle Adyns", "Pixel_NES.otf", 5);
 
 	scene.AddGameObject(std::move(buttonHandler));
 	scene.AddGameObject(std::move(button1));
+	scene.AddGameObject(std::move(credit));
 }
 
 void Game::LoadMainMenu() const
@@ -105,7 +112,6 @@ void Game::LoadMainMenu() const
 
 	auto& inputMan = dae::InputCommandBinder::GetInstance();
 	inputMan.RemoveAllCommands();
-
 	
 
 	auto bubbleBobbleText = std::make_unique<dae::GameObject>(static_cast<float>(dae::Minigin::GetWindowSize().x) / 2- 30.f, 20.f);
@@ -113,15 +119,12 @@ void Game::LoadMainMenu() const
 	bubbleBobbleText->AddComponent<dae::TextComponent>("Bubble Bobble", "Pixel_NES.otf", 10);
 
 
-
 	auto buttonHandler = std::make_unique<dae::GameObject>();
 	buttonHandler->AddComponent<ButtonHandlerComponent>();
 
 	
-
 	const auto& handlerComponent = buttonHandler->GetComponent<ButtonHandlerComponent>();
 	
-
 
 	std::unique_ptr<dae::Command> loadCommand = std::make_unique<LoadSceneCommand>(CurrScene::Level1);
 
@@ -170,14 +173,17 @@ void Game::LoadMainMenu() const
 	icon->AddComponent<dae::SpriteComponent>("Selector.png", 2,2,0.1f);
 
 
-	std::unique_ptr<dae::Command> nextCommand = std::make_unique<SelectButtonCommand>(buttonHandler, icon, SelectButtonCommand::Direction::Next);
-	inputMan.AddKeyCommand(std::move(nextCommand), SDL_SCANCODE_S, dae::KeyState::DownThisFrame);
+	std::shared_ptr<dae::Command> nextCommand = std::make_shared<SelectButtonCommand>(buttonHandler, icon, SelectButtonCommand::Direction::Next);
+	inputMan.AddKeyCommand(nextCommand, SDL_SCANCODE_S, dae::KeyState::DownThisFrame);
+	inputMan.AddControllerCommand(nextCommand, dae::ControllerButton::DpadDown, dae::KeyState::DownThisFrame, 0);
 
-	std::unique_ptr<dae::Command> previousCommand = std::make_unique<SelectButtonCommand>(buttonHandler, icon, SelectButtonCommand::Direction::Previous);
-	inputMan.AddKeyCommand(std::move(previousCommand), SDL_SCANCODE_W, dae::KeyState::DownThisFrame);
+	std::shared_ptr<dae::Command> previousCommand = std::make_shared<SelectButtonCommand>(buttonHandler, icon, SelectButtonCommand::Direction::Previous);
+	inputMan.AddKeyCommand(previousCommand, SDL_SCANCODE_W, dae::KeyState::DownThisFrame);
+	inputMan.AddControllerCommand(previousCommand, dae::ControllerButton::DpadUp, dae::KeyState::DownThisFrame, 0);
 
-	std::unique_ptr<dae::Command> activateCommand = std::make_unique<ActivateButtonCommand>(buttonHandler);
-	inputMan.AddKeyCommand(std::move(activateCommand), SDL_SCANCODE_RETURN, dae::KeyState::DownThisFrame);
+	std::shared_ptr<dae::Command> activateCommand = std::make_shared<ActivateButtonCommand>(buttonHandler);
+	inputMan.AddKeyCommand(activateCommand, SDL_SCANCODE_RETURN, dae::KeyState::DownThisFrame);
+	inputMan.AddControllerCommand(activateCommand, dae::ControllerButton::A, dae::KeyState::DownThisFrame, 0);
 
 	scene.AddGameObject(std::move(buttonHandler));
 	scene.AddGameObject(std::move(bubbleBobbleText));
@@ -194,23 +200,10 @@ void Game::LoadLevelOne() const
 	auto& inputMan = dae::InputCommandBinder::GetInstance();
 	inputMan.RemoveAllCommands();
 
-	//std::unique_ptr<dae::Command> DestroyCommand = std::make_unique<dae::DestroySceneCommand>("TitleScreen");
-	//DestroyCommand->Execute();
-
 	auto& sceneManager = dae::SceneManager::GetInstance();
 
 	auto& scene = sceneManager.CreateScene("Level1");
 
-	
-	//auto gui = std::make_unique<dae::GameObject>();
-	//gui->AddComponent<dae::CacheExperimentComponent>();
-	//gui->AddComponent<dae::TrashTheCacheIntComponent>(10, "Exercise 1");
-	//scene.Add(std::move(gui));
-
-	//auto ggui = std::make_unique<dae::GameObject>();
-	//ggui->AddComponent<dae::CacheExperimentComponent>();
-	//ggui->AddComponent<dae::TrashTheCacheGameObjectsComponent>(10, "Exercise 2");
-	//scene.Add(std::move(ggui));
 
 	//Background
 	auto go = std::make_unique<dae::GameObject>();
@@ -223,15 +216,6 @@ void Game::LoadLevelOne() const
 	go = std::make_unique<dae::GameObject>(100.f, 40.f);
 	go->AddRenderComponent();
 	go->AddComponent<dae::ImageComponent>("logo.tga");
-
-
-	//auto gob = std::make_unique<dae::GameObject>(10.f, 10.f);
-	//gob->AddRenderComponent();
-	//gob->AddComponent<dae::ImageComponent>("logo.tga");
-
-	//gob->SetParent(go, false);
-	//// REMOVING CHILD FROM PARENT
-	//gob->SetParent(nullptr, true);
 
 	scene.AddGameObject(std::move(go));
 	//scene.Add(std::move(gob));
@@ -315,7 +299,6 @@ void Game::LoadLevelOne() const
 	//Input Objects
 	{
 		int speedObject1 = 80;
-		int speedObject2 = speedObject1 * 2;
 
 		int starterLives = 3;
 
@@ -341,14 +324,17 @@ void Game::LoadLevelOne() const
 		player1->AddComponent<dae::PickUpComponent>(dae::PickUpComponent::PickUpType::Melon, scoreDisplay->GetComponent<dae::ScoreUIComponent>());
 		player1->AddComponent<dae::SpriteComponent>("BubRunning.png", 4, 4, 0.1f);
 
-		std::unique_ptr<dae::Command> killCommand = std::make_unique<dae::KillCommand>(player1);
-		inputMan.AddKeyCommand(std::move(killCommand), SDL_SCANCODE_E, dae::KeyState::UpThisFrame);
+		std::shared_ptr<dae::Command> killCommand = std::make_shared<dae::KillCommand>(player1);
+		inputMan.AddKeyCommand(killCommand, SDL_SCANCODE_E, dae::KeyState::UpThisFrame);
+		inputMan.AddControllerCommand(killCommand, dae::ControllerButton::X, dae::KeyState::UpThisFrame, 0);
 
-		std::unique_ptr<dae::Command> pickUpCommand = std::make_unique<dae::PickUpCommand>(player1);
-		inputMan.AddKeyCommand(std::move(pickUpCommand), SDL_SCANCODE_R, dae::KeyState::UpThisFrame);
+		std::shared_ptr<dae::Command> pickUpCommand = std::make_shared<dae::PickUpCommand>(player1);
+		inputMan.AddKeyCommand(pickUpCommand, SDL_SCANCODE_R, dae::KeyState::UpThisFrame);
+		inputMan.AddControllerCommand(pickUpCommand, dae::ControllerButton::A, dae::KeyState::UpThisFrame, 0);
 
-		std::unique_ptr<dae::Command> pickUpCommand2 = std::make_unique<dae::PickUpCommand>(player1);
-		inputMan.AddKeyCommand(std::move(pickUpCommand2), SDL_SCANCODE_T, dae::KeyState::UpThisFrame);
+		std::shared_ptr<dae::Command> pickUpCommand2 = std::make_shared<dae::PickUpCommand>(player1);
+		inputMan.AddKeyCommand(pickUpCommand2, SDL_SCANCODE_T, dae::KeyState::UpThisFrame);
+		inputMan.AddControllerCommand(pickUpCommand2, dae::ControllerButton::B, dae::KeyState::UpThisFrame, 0);
 
 
 		scene.AddGameObject(std::move(livesDisplay));
@@ -356,73 +342,25 @@ void Game::LoadLevelOne() const
 
 
 
-		//PLAYER 2
-		auto livesDisplay2 = std::make_unique<dae::GameObject>(2.f, 100.f);
-		livesDisplay2->AddRenderComponent();
-		livesDisplay2->AddComponent<dae::LivesUIComponent>();
-		livesDisplay2->AddComponent<dae::TextComponent>("Remaining lives: " + std::to_string(starterLives), "Lingua.otf", 8);
+		std::shared_ptr<dae::Command> moveCommand = std::make_shared<dae::MoveCommand>(player1, speedObject1, 0);
+		inputMan.AddKeyCommand(moveCommand, SDL_SCANCODE_D, dae::KeyState::Pressed);
+		inputMan.AddControllerCommand(moveCommand, dae::ControllerButton::DpadRight, dae::KeyState::Pressed, 0);
 
-		auto scoreDisplay2 = std::make_unique<dae::GameObject>(0.f, 10.f);
-		scoreDisplay2->AddRenderComponent();
-		scoreDisplay2->AddComponent<dae::ScoreUIComponent>(&dae::Achievements::GetInstance());
-		scoreDisplay2->AddComponent<dae::TextComponent>("Score: 0", "Lingua.otf", 8);
+		moveCommand = std::make_shared<dae::MoveCommand>(player1, -speedObject1, 0);
+		inputMan.AddKeyCommand(moveCommand, SDL_SCANCODE_A, dae::KeyState::Pressed);
+		inputMan.AddControllerCommand(moveCommand, dae::ControllerButton::DpadLeft, dae::KeyState::Pressed, 0);
 
-		scoreDisplay2->SetParent(livesDisplay2, false);
+		moveCommand = std::make_shared<dae::MoveCommand>(player1, 0, -speedObject1);
+		inputMan.AddKeyCommand(moveCommand, SDL_SCANCODE_W, dae::KeyState::Pressed);
+		inputMan.AddControllerCommand(moveCommand, dae::ControllerButton::DpadUp, dae::KeyState::Pressed, 0);
 
-		auto player2 = std::make_unique<dae::GameObject>(38.f, 100.f);
-		player2->AddRenderComponent();
-		player2->AddComponent<dae::LivesComponent>(starterLives, livesDisplay2->GetComponent<dae::LivesUIComponent>());
-		player2->AddComponent<dae::PickUpComponent>(dae::PickUpComponent::PickUpType::Fries, scoreDisplay2->GetComponent<dae::ScoreUIComponent>());
-		player2->AddComponent<dae::SpriteComponent>("BobRunning.png", 4, 4, 0.1f);
+		moveCommand = std::make_shared<dae::MoveCommand>(player1, 0, speedObject1);
+		inputMan.AddKeyCommand(moveCommand, SDL_SCANCODE_S, dae::KeyState::Pressed);
+		inputMan.AddControllerCommand(moveCommand, dae::ControllerButton::DpadDown, dae::KeyState::Pressed, 0);
 
-		inputMan.AddController();
-
-
-		std::unique_ptr<dae::Command> killCommand2 = std::make_unique<dae::KillCommand>(player2);
-		inputMan.AddControllerCommand(std::move(killCommand2), dae::ControllerButton::X, dae::KeyState::UpThisFrame, 0);
-
-		pickUpCommand = std::make_unique<dae::PickUpCommand>(player2);
-		inputMan.AddControllerCommand(std::move(pickUpCommand), dae::ControllerButton::A, dae::KeyState::UpThisFrame, 0);
-
-		pickUpCommand2 = std::make_unique<dae::PickUpCommand>(player2);
-		inputMan.AddControllerCommand(std::move(pickUpCommand2), dae::ControllerButton::B, dae::KeyState::UpThisFrame, 0);
-
-
-		scene.AddGameObject(std::move(livesDisplay2));
-		scene.AddGameObject(std::move(scoreDisplay2));
-
-
-		std::unique_ptr<dae::Command> moveCommand = std::make_unique<dae::MoveCommand>(player1, speedObject1, 0);
-		inputMan.AddKeyCommand(std::move(moveCommand), SDL_SCANCODE_D, dae::KeyState::Pressed);
-		moveCommand = std::make_unique<dae::MoveCommand>(player1, -speedObject1, 0);
-		inputMan.AddKeyCommand(std::move(moveCommand), SDL_SCANCODE_A, dae::KeyState::Pressed);
-		moveCommand = std::make_unique<dae::MoveCommand>(player1, 0, -speedObject1);
-		inputMan.AddKeyCommand(std::move(moveCommand), SDL_SCANCODE_W, dae::KeyState::Pressed);
-		moveCommand = std::make_unique<dae::MoveCommand>(player1, 0, speedObject1);
-		inputMan.AddKeyCommand(std::move(moveCommand), SDL_SCANCODE_S, dae::KeyState::Pressed);
-
-		/*inputMan.AddController();
-		std::unique_ptr<dae::Command> moveCommand = std::make_unique<dae::MoveCommand>(player1, speedObject1, 0);
-		inputMan.AddControllerCommand(std::move(moveCommand), dae::ControllerButtons::DpadRight, dae::KeyState::Pressed, 0);
-		moveCommand = std::make_unique<dae::MoveCommand>(player1, -speedObject1, 0);
-		inputMan.AddControllerCommand(std::move(moveCommand), dae::ControllerButtons::DpadLeft, dae::KeyState::Pressed, 0);
-		moveCommand = std::make_unique<dae::MoveCommand>(player1, 0, -speedObject1);
-		inputMan.AddControllerCommand(std::move(moveCommand), dae::ControllerButtons::DpadUp, dae::KeyState::Pressed, 0);
-		moveCommand = std::make_unique<dae::MoveCommand>(player1, 0, speedObject1);
-		inputMan.AddControllerCommand(std::move(moveCommand), dae::ControllerButtons::DpadDown, dae::KeyState::Pressed, 0);*/
-
-		moveCommand = std::make_unique<dae::MoveCommand>(player2, speedObject2, 0);
-		inputMan.AddControllerCommand(std::move(moveCommand), dae::ControllerButton::DpadRight, dae::KeyState::Pressed, 0);
-		moveCommand = std::make_unique<dae::MoveCommand>(player2, -speedObject2, 0);
-		inputMan.AddControllerCommand(std::move(moveCommand), dae::ControllerButton::DpadLeft, dae::KeyState::Pressed, 0);
-		moveCommand = std::make_unique<dae::MoveCommand>(player2, 0, -speedObject2);
-		inputMan.AddControllerCommand(std::move(moveCommand), dae::ControllerButton::DpadUp, dae::KeyState::Pressed, 0);
-		moveCommand = std::make_unique<dae::MoveCommand>(player2, 0, speedObject2);
-		inputMan.AddControllerCommand(std::move(moveCommand), dae::ControllerButton::DpadDown, dae::KeyState::Pressed, 0);
 
 
 		scene.AddGameObject(std::move(player1));
-		scene.AddGameObject(std::move(player2));
 	}
 
 	LoadLevel("Levels.txt", scene, 1);
@@ -433,10 +371,7 @@ void Game::LoadLevelTwo() const
 {
 
 	auto& inputMan = dae::InputCommandBinder::GetInstance();
-	//inputMan.RemoveAllCommands();
-
-	//std::unique_ptr<dae::Command> DestroyCommand = std::make_unique<dae::DestroySceneCommand>("TitleScreen");
-	//DestroyCommand->Execute();
+	inputMan.RemoveAllCommands();
 
 	auto& sceneManager = dae::SceneManager::GetInstance();
 
@@ -445,7 +380,6 @@ void Game::LoadLevelTwo() const
 	//Input Objects
 	{
 		int speedObject1 = 80;
-		int speedObject2 = speedObject1 * 2;
 
 		int starterLives = 3;
 
@@ -470,14 +404,17 @@ void Game::LoadLevelTwo() const
 		player1->AddComponent<dae::PickUpComponent>(dae::PickUpComponent::PickUpType::Melon, scoreDisplay->GetComponent<dae::ScoreUIComponent>());
 		player1->AddComponent<dae::SpriteComponent>("BubRunning.png", 4, 4, 0.1f);
 
-		std::unique_ptr<dae::Command> killCommand = std::make_unique<dae::KillCommand>(player1);
-		inputMan.AddKeyCommand(std::move(killCommand), SDL_SCANCODE_E, dae::KeyState::UpThisFrame);
+		std::shared_ptr<dae::Command> killCommand = std::make_shared<dae::KillCommand>(player1);
+		inputMan.AddKeyCommand(killCommand, SDL_SCANCODE_E, dae::KeyState::UpThisFrame);
+		inputMan.AddControllerCommand(killCommand, dae::ControllerButton::X, dae::KeyState::UpThisFrame, 0);
 
-		std::unique_ptr<dae::Command> pickUpCommand = std::make_unique<dae::PickUpCommand>(player1);
-		inputMan.AddKeyCommand(std::move(pickUpCommand), SDL_SCANCODE_R, dae::KeyState::UpThisFrame);
+		std::shared_ptr<dae::Command> pickUpCommand = std::make_shared<dae::PickUpCommand>(player1);
+		inputMan.AddKeyCommand(pickUpCommand, SDL_SCANCODE_R, dae::KeyState::UpThisFrame);
+		inputMan.AddControllerCommand(pickUpCommand, dae::ControllerButton::A, dae::KeyState::UpThisFrame, 0);
 
-		std::unique_ptr<dae::Command> pickUpCommand2 = std::make_unique<dae::PickUpCommand>(player1);
-		inputMan.AddKeyCommand(std::move(pickUpCommand2), SDL_SCANCODE_T, dae::KeyState::UpThisFrame);
+		std::shared_ptr<dae::Command> pickUpCommand2 = std::make_shared<dae::PickUpCommand>(player1);
+		inputMan.AddKeyCommand(pickUpCommand2, SDL_SCANCODE_T, dae::KeyState::UpThisFrame);
+		inputMan.AddControllerCommand(pickUpCommand2, dae::ControllerButton::B, dae::KeyState::UpThisFrame, 0);
 
 
 		scene.AddGameObject(std::move(livesDisplay));
@@ -485,64 +422,25 @@ void Game::LoadLevelTwo() const
 
 
 
-		//PLAYER 2
-		auto livesDisplay2 = std::make_unique<dae::GameObject>(2.f, 100.f);
-		livesDisplay2->AddRenderComponent();
-		livesDisplay2->AddComponent<dae::LivesUIComponent>();
-		livesDisplay2->AddComponent<dae::TextComponent>("Remaining lives: " + std::to_string(starterLives), "Lingua.otf", 8);
+		std::shared_ptr<dae::Command> moveCommand = std::make_shared<dae::MoveCommand>(player1, speedObject1, 0);
+		inputMan.AddKeyCommand(moveCommand, SDL_SCANCODE_D, dae::KeyState::Pressed);
+		inputMan.AddControllerCommand(moveCommand, dae::ControllerButton::DpadRight, dae::KeyState::Pressed, 0);
 
-		auto scoreDisplay2 = std::make_unique<dae::GameObject>(0.f, 10.f);
-		scoreDisplay2->AddRenderComponent();
-		scoreDisplay2->AddComponent<dae::ScoreUIComponent>(&dae::Achievements::GetInstance());
-		scoreDisplay2->AddComponent<dae::TextComponent>("Score: 0", "Lingua.otf", 8);
+		moveCommand = std::make_shared<dae::MoveCommand>(player1, -speedObject1, 0);
+		inputMan.AddKeyCommand(moveCommand, SDL_SCANCODE_A, dae::KeyState::Pressed);
+		inputMan.AddControllerCommand(moveCommand, dae::ControllerButton::DpadLeft, dae::KeyState::Pressed, 0);
 
-		scoreDisplay2->SetParent(livesDisplay2, false);
+		moveCommand = std::make_shared<dae::MoveCommand>(player1, 0, -speedObject1);
+		inputMan.AddKeyCommand(moveCommand, SDL_SCANCODE_W, dae::KeyState::Pressed);
+		inputMan.AddControllerCommand(moveCommand, dae::ControllerButton::DpadUp, dae::KeyState::Pressed, 0);
 
-		auto player2 = std::make_unique<dae::GameObject>(38.f, 100.f);
-		player2->AddRenderComponent();
-		player2->AddComponent<dae::LivesComponent>(starterLives, livesDisplay2->GetComponent<dae::LivesUIComponent>());
-		player2->AddComponent<dae::PickUpComponent>(dae::PickUpComponent::PickUpType::Fries, scoreDisplay2->GetComponent<dae::ScoreUIComponent>());
-		player2->AddComponent<dae::SpriteComponent>("BobRunning.png", 4, 4, 0.1f);
+		moveCommand = std::make_shared<dae::MoveCommand>(player1, 0, speedObject1);
+		inputMan.AddKeyCommand(moveCommand, SDL_SCANCODE_S, dae::KeyState::Pressed);
+		inputMan.AddControllerCommand(moveCommand, dae::ControllerButton::DpadDown, dae::KeyState::Pressed, 0);
 
-		inputMan.AddController();
-
-
-		std::unique_ptr<dae::Command> killCommand2 = std::make_unique<dae::KillCommand>(player2);
-		inputMan.AddControllerCommand(std::move(killCommand2), dae::ControllerButton::X, dae::KeyState::UpThisFrame, 0);
-
-		pickUpCommand = std::make_unique<dae::PickUpCommand>(player2);
-		inputMan.AddControllerCommand(std::move(pickUpCommand), dae::ControllerButton::A, dae::KeyState::UpThisFrame, 0);
-
-		pickUpCommand2 = std::make_unique<dae::PickUpCommand>(player2);
-		inputMan.AddControllerCommand(std::move(pickUpCommand2), dae::ControllerButton::B, dae::KeyState::UpThisFrame, 0);
-
-
-		scene.AddGameObject(std::move(livesDisplay2));
-		scene.AddGameObject(std::move(scoreDisplay2));
-
-
-		std::unique_ptr<dae::Command> moveCommand = std::make_unique<dae::MoveCommand>(player1, speedObject1, 0);
-		inputMan.AddKeyCommand(std::move(moveCommand), SDL_SCANCODE_D, dae::KeyState::Pressed);
-		moveCommand = std::make_unique<dae::MoveCommand>(player1, -speedObject1, 0);
-		inputMan.AddKeyCommand(std::move(moveCommand), SDL_SCANCODE_A, dae::KeyState::Pressed);
-		moveCommand = std::make_unique<dae::MoveCommand>(player1, 0, -speedObject1);
-		inputMan.AddKeyCommand(std::move(moveCommand), SDL_SCANCODE_W, dae::KeyState::Pressed);
-		moveCommand = std::make_unique<dae::MoveCommand>(player1, 0, speedObject1);
-		inputMan.AddKeyCommand(std::move(moveCommand), SDL_SCANCODE_S, dae::KeyState::Pressed);
-
-
-		moveCommand = std::make_unique<dae::MoveCommand>(player2, speedObject2, 0);
-		inputMan.AddControllerCommand(std::move(moveCommand), dae::ControllerButton::DpadRight, dae::KeyState::Pressed, 0);
-		moveCommand = std::make_unique<dae::MoveCommand>(player2, -speedObject2, 0);
-		inputMan.AddControllerCommand(std::move(moveCommand), dae::ControllerButton::DpadLeft, dae::KeyState::Pressed, 0);
-		moveCommand = std::make_unique<dae::MoveCommand>(player2, 0, -speedObject2);
-		inputMan.AddControllerCommand(std::move(moveCommand), dae::ControllerButton::DpadUp, dae::KeyState::Pressed, 0);
-		moveCommand = std::make_unique<dae::MoveCommand>(player2, 0, speedObject2);
-		inputMan.AddControllerCommand(std::move(moveCommand), dae::ControllerButton::DpadDown, dae::KeyState::Pressed, 0);
 
 
 		scene.AddGameObject(std::move(player1));
-		scene.AddGameObject(std::move(player2));
 	}
 
 	LoadLevel("Levels.txt", scene, 2);
@@ -551,10 +449,7 @@ void Game::LoadLevelThree() const
 {
 
 	auto& inputMan = dae::InputCommandBinder::GetInstance();
-	//inputMan.RemoveAllCommands();
-
-	//std::unique_ptr<dae::Command> DestroyCommand = std::make_unique<dae::DestroySceneCommand>("TitleScreen");
-	//DestroyCommand->Execute();
+	inputMan.RemoveAllCommands();
 
 	auto& sceneManager = dae::SceneManager::GetInstance();
 
@@ -563,7 +458,6 @@ void Game::LoadLevelThree() const
 	//Input Objects
 	{
 		int speedObject1 = 80;
-		int speedObject2 = speedObject1 * 2;
 
 		int starterLives = 3;
 
@@ -588,14 +482,17 @@ void Game::LoadLevelThree() const
 		player1->AddComponent<dae::PickUpComponent>(dae::PickUpComponent::PickUpType::Melon, scoreDisplay->GetComponent<dae::ScoreUIComponent>());
 		player1->AddComponent<dae::SpriteComponent>("BubRunning.png", 4, 4, 0.1f);
 
-		std::unique_ptr<dae::Command> killCommand = std::make_unique<dae::KillCommand>(player1);
-		inputMan.AddKeyCommand(std::move(killCommand), SDL_SCANCODE_E, dae::KeyState::UpThisFrame);
+		std::shared_ptr<dae::Command> killCommand = std::make_shared<dae::KillCommand>(player1);
+		inputMan.AddKeyCommand(killCommand, SDL_SCANCODE_E, dae::KeyState::UpThisFrame);
+		inputMan.AddControllerCommand(killCommand, dae::ControllerButton::X, dae::KeyState::UpThisFrame, 0);
 
-		std::unique_ptr<dae::Command> pickUpCommand = std::make_unique<dae::PickUpCommand>(player1);
-		inputMan.AddKeyCommand(std::move(pickUpCommand), SDL_SCANCODE_R, dae::KeyState::UpThisFrame);
+		std::shared_ptr<dae::Command> pickUpCommand = std::make_shared<dae::PickUpCommand>(player1);
+		inputMan.AddKeyCommand(pickUpCommand, SDL_SCANCODE_R, dae::KeyState::UpThisFrame);
+		inputMan.AddControllerCommand(pickUpCommand, dae::ControllerButton::A, dae::KeyState::UpThisFrame, 0);
 
-		std::unique_ptr<dae::Command> pickUpCommand2 = std::make_unique<dae::PickUpCommand>(player1);
-		inputMan.AddKeyCommand(std::move(pickUpCommand2), SDL_SCANCODE_T, dae::KeyState::UpThisFrame);
+		std::shared_ptr<dae::Command> pickUpCommand2 = std::make_shared<dae::PickUpCommand>(player1);
+		inputMan.AddKeyCommand(pickUpCommand2, SDL_SCANCODE_T, dae::KeyState::UpThisFrame);
+		inputMan.AddControllerCommand(pickUpCommand2, dae::ControllerButton::B, dae::KeyState::UpThisFrame, 0);
 
 
 		scene.AddGameObject(std::move(livesDisplay));
@@ -603,64 +500,25 @@ void Game::LoadLevelThree() const
 
 
 
-		//PLAYER 2
-		auto livesDisplay2 = std::make_unique<dae::GameObject>(2.f, 100.f);
-		livesDisplay2->AddRenderComponent();
-		livesDisplay2->AddComponent<dae::LivesUIComponent>();
-		livesDisplay2->AddComponent<dae::TextComponent>("Remaining lives: " + std::to_string(starterLives), "Lingua.otf", 8);
+		std::shared_ptr<dae::Command> moveCommand = std::make_shared<dae::MoveCommand>(player1, speedObject1, 0);
+		inputMan.AddKeyCommand(moveCommand, SDL_SCANCODE_D, dae::KeyState::Pressed);
+		inputMan.AddControllerCommand(moveCommand, dae::ControllerButton::DpadRight, dae::KeyState::Pressed, 0);
 
-		auto scoreDisplay2 = std::make_unique<dae::GameObject>(0.f, 10.f);
-		scoreDisplay2->AddRenderComponent();
-		scoreDisplay2->AddComponent<dae::ScoreUIComponent>(&dae::Achievements::GetInstance());
-		scoreDisplay2->AddComponent<dae::TextComponent>("Score: 0", "Lingua.otf", 8);
+		moveCommand = std::make_shared<dae::MoveCommand>(player1, -speedObject1, 0);
+		inputMan.AddKeyCommand(moveCommand, SDL_SCANCODE_A, dae::KeyState::Pressed);
+		inputMan.AddControllerCommand(moveCommand, dae::ControllerButton::DpadLeft, dae::KeyState::Pressed, 0);
 
-		scoreDisplay2->SetParent(livesDisplay2, false);
+		moveCommand = std::make_shared<dae::MoveCommand>(player1, 0, -speedObject1);
+		inputMan.AddKeyCommand(moveCommand, SDL_SCANCODE_W, dae::KeyState::Pressed);
+		inputMan.AddControllerCommand(moveCommand, dae::ControllerButton::DpadUp, dae::KeyState::Pressed, 0);
 
-		auto player2 = std::make_unique<dae::GameObject>(38.f, 100.f);
-		player2->AddRenderComponent();
-		player2->AddComponent<dae::LivesComponent>(starterLives, livesDisplay2->GetComponent<dae::LivesUIComponent>());
-		player2->AddComponent<dae::PickUpComponent>(dae::PickUpComponent::PickUpType::Fries, scoreDisplay2->GetComponent<dae::ScoreUIComponent>());
-		player2->AddComponent<dae::SpriteComponent>("BobRunning.png", 4, 4, 0.1f);
+		moveCommand = std::make_shared<dae::MoveCommand>(player1, 0, speedObject1);
+		inputMan.AddKeyCommand(moveCommand, SDL_SCANCODE_S, dae::KeyState::Pressed);
+		inputMan.AddControllerCommand(moveCommand, dae::ControllerButton::DpadDown, dae::KeyState::Pressed, 0);
 
-		inputMan.AddController();
-
-
-		std::unique_ptr<dae::Command> killCommand2 = std::make_unique<dae::KillCommand>(player2);
-		inputMan.AddControllerCommand(std::move(killCommand2), dae::ControllerButton::X, dae::KeyState::UpThisFrame, 0);
-
-		pickUpCommand = std::make_unique<dae::PickUpCommand>(player2);
-		inputMan.AddControllerCommand(std::move(pickUpCommand), dae::ControllerButton::A, dae::KeyState::UpThisFrame, 0);
-
-		pickUpCommand2 = std::make_unique<dae::PickUpCommand>(player2);
-		inputMan.AddControllerCommand(std::move(pickUpCommand2), dae::ControllerButton::B, dae::KeyState::UpThisFrame, 0);
-
-
-		scene.AddGameObject(std::move(livesDisplay2));
-		scene.AddGameObject(std::move(scoreDisplay2));
-
-
-		std::unique_ptr<dae::Command> moveCommand = std::make_unique<dae::MoveCommand>(player1, speedObject1, 0);
-		inputMan.AddKeyCommand(std::move(moveCommand), SDL_SCANCODE_D, dae::KeyState::Pressed);
-		moveCommand = std::make_unique<dae::MoveCommand>(player1, -speedObject1, 0);
-		inputMan.AddKeyCommand(std::move(moveCommand), SDL_SCANCODE_A, dae::KeyState::Pressed);
-		moveCommand = std::make_unique<dae::MoveCommand>(player1, 0, -speedObject1);
-		inputMan.AddKeyCommand(std::move(moveCommand), SDL_SCANCODE_W, dae::KeyState::Pressed);
-		moveCommand = std::make_unique<dae::MoveCommand>(player1, 0, speedObject1);
-		inputMan.AddKeyCommand(std::move(moveCommand), SDL_SCANCODE_S, dae::KeyState::Pressed);
-
-
-		moveCommand = std::make_unique<dae::MoveCommand>(player2, speedObject2, 0);
-		inputMan.AddControllerCommand(std::move(moveCommand), dae::ControllerButton::DpadRight, dae::KeyState::Pressed, 0);
-		moveCommand = std::make_unique<dae::MoveCommand>(player2, -speedObject2, 0);
-		inputMan.AddControllerCommand(std::move(moveCommand), dae::ControllerButton::DpadLeft, dae::KeyState::Pressed, 0);
-		moveCommand = std::make_unique<dae::MoveCommand>(player2, 0, -speedObject2);
-		inputMan.AddControllerCommand(std::move(moveCommand), dae::ControllerButton::DpadUp, dae::KeyState::Pressed, 0);
-		moveCommand = std::make_unique<dae::MoveCommand>(player2, 0, speedObject2);
-		inputMan.AddControllerCommand(std::move(moveCommand), dae::ControllerButton::DpadDown, dae::KeyState::Pressed, 0);
 
 
 		scene.AddGameObject(std::move(player1));
-		scene.AddGameObject(std::move(player2));
 	}
 
 	LoadLevel("Levels.txt", scene, 3);

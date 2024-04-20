@@ -1,9 +1,9 @@
 #ifndef PICKUPCOMMAND_H
 #define PICKUPCOMMAND_H
 
-#include "GameObjectCommand.h"
+#include <GameObjectCommand.h>
+#include <GameTime.h>
 #include "PickUpComponent.h"
-#include "GameTime.h"
 
 namespace dae
 {

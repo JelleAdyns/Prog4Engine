@@ -189,6 +189,7 @@
     <ClInclude Include="RotatorComponent.h" />
     <ClInclude Include="ScoreUIComponent.h" />
     <ClInclude Include="SelectButtonCommand.h" />
+    <ClInclude Include="SetTextCommand.h" />
     <ClInclude Include="TrashTheCacheGameObjectsComponent.h" />
     <ClInclude Include="TrashTheCacheIntComponent.h" />
   </ItemGroup>

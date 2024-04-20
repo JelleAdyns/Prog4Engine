@@ -6,9 +6,9 @@
 #include "MoveCommand.h"
 #include "KillCommand.h"
 #include "PickUpCommand.h"
-#include "DestroySceneCommand.h"
 #include "LoadSceneCommand.h"
 #include "SelectButtonCommand.h"
 #include "ActivateButtonCommand.h"
+#include "SetTextCommand.h"
 
 #endif // !COMMANDS_H

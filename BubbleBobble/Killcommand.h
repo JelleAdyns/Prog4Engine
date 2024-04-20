@@ -1,9 +1,8 @@
 #ifndef KILLCOMMAND_H
 #define KILLCOMMAND_H
 
-#include "GameObjectCommand.h"
+#include <GameObjectCommand.h>
 #include "LivesComponent.h"
-#include "GameTime.h"
 
 namespace dae
 {
@@ -19,12 +18,11 @@ namespace dae
 		KillCommand(KillCommand&&) noexcept = delete;
 		KillCommand& operator= (const KillCommand&) = delete;
 		KillCommand& operator= (KillCommand&&) noexcept = delete;
+
 		virtual void Execute() const override
 		{
 			GetGameObject()->GetComponent<LivesComponent>()->TakeLife();
 		}
-	private:
-		
 
 	};
 }

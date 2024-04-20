@@ -133,5 +133,8 @@
     <ClInclude Include="ActivateButtonCommand.h">
       <Filter>Source Files\Commands</Filter>
     </ClInclude>
+    <ClInclude Include="SetTextCommand.h">
+      <Filter>Source Files\Commands</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
