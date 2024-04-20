@@ -182,8 +182,8 @@ void Game::LoadMainMenu() const
 	inputMan.AddControllerCommand(previousCommand, dae::ControllerButton::DpadUp, dae::KeyState::DownThisFrame, 0);
 
 	std::shared_ptr<dae::Command> activateCommand = std::make_shared<ActivateButtonCommand>(buttonHandler);
-	inputMan.AddKeyCommand(activateCommand, SDL_SCANCODE_RETURN, dae::KeyState::DownThisFrame);
-	inputMan.AddControllerCommand(activateCommand, dae::ControllerButton::A, dae::KeyState::DownThisFrame, 0);
+	inputMan.AddKeyCommand(activateCommand, SDL_SCANCODE_RETURN, dae::KeyState::UpThisFrame);
+	inputMan.AddControllerCommand(activateCommand, dae::ControllerButton::A, dae::KeyState::UpThisFrame, 0);
 
 	scene.AddGameObject(std::move(buttonHandler));
 	scene.AddGameObject(std::move(bubbleBobbleText));
