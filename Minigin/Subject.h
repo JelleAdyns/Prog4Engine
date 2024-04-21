@@ -27,7 +27,7 @@ namespace dae
 			if (pos == m_pVecObservers.cend())
 			{
 				m_pVecObservers.push_back(pObserver);
-				pObserver->SetSubject(this);
+				pObserver->AddSubjectPointer(this);
 			}
 			else throw std::runtime_error("Observer already subscribed to Subject");
 		}

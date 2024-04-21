@@ -12,7 +12,7 @@ namespace dae
 	{
 	public:
 
-		virtual ~Observer() { m_pSubject->RemoveObserver(this); };
+		virtual ~Observer() = default;
 
 		Observer(const Observer&) = delete;
 		Observer(Observer&&) noexcept = delete;
@@ -20,13 +20,10 @@ namespace dae
 		Observer& operator= (Observer&&) noexcept = delete;
 
 		virtual void Notify(T* pSubjectOwner) = 0;
-		void SetSubject(Subject<T>* pSubject) { m_pSubject = pSubject; }
-		Subject<T>* GetSubject() { return m_pSubject; }
+        virtual void AddSubjectPointer(Subject<T>* pSubject) = 0;
 
 	protected:
 		Observer() = default;
-	private:
-		Subject<T>* m_pSubject;
 	};
 
 }

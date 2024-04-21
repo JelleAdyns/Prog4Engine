@@ -10,10 +10,19 @@ ScoreUIComponent::ScoreUIComponent(dae::GameObject* pOwner, Achievements* pObser
 	Observer{},
 	m_Score{},
 	m_pTextComponent{},
-	m_pScoreChanged{std::make_unique<dae::Subject<ScoreUIComponent>>()}
+	m_pScoreChanged{std::make_unique<dae::Subject<ScoreUIComponent>>()},
+    m_pVecObservedSubjects{}
 {
 	m_pScoreChanged->AddObserver(pObserver);	
 }
+ScoreUIComponent::~ScoreUIComponent()
+{
+    for (auto& pSubject : m_pVecObservedSubjects)
+    {
+        pSubject->RemoveObserver(this);
+    }
+}
+
 void ScoreUIComponent::Update()
 {
 	if (!m_pTextComponent) m_pTextComponent = GetOwner()->GetComponent<dae::TextComponent>();
@@ -34,6 +43,11 @@ void ScoreUIComponent::Notify(PickUpComponent* pSubject)
 	}
 	m_pScoreChanged->NotifyObservers(this);
 	m_pTextComponent->SetText("Score: " + std::to_string(m_Score));
+}
+
+void ScoreUIComponent::AddSubjectPointer(dae::Subject<PickUpComponent>* pSubject)
+{
+    m_pVecObservedSubjects.emplace_back(pSubject);
 }
 
 int ScoreUIComponent::GetScore() const

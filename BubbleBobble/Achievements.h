@@ -15,7 +15,7 @@ class Achievements final : public dae::Singleton<Achievements>, public dae::Obse
 {
 public:
 		
-	virtual ~Achievements() = default;
+	virtual ~Achievements();
 
 	Achievements(const Achievements&) = delete;
 	Achievements(Achievements&&) noexcept = delete;
@@ -23,6 +23,7 @@ public:
 	Achievements& operator= (Achievements&&) noexcept = delete;
 		
 	virtual void Notify(ScoreUIComponent* pScoreUIComponent) override;
+	virtual void AddSubjectPointer(dae::Subject<ScoreUIComponent>* pScoreUIComponent) override;
 
 	//static void SetSteamAchievements(CSteamAchievements* pSteamAchievements);
 	//static Achievement_t g_Achievements[4];
@@ -30,9 +31,10 @@ public:
 private:
 	friend class dae::Singleton<Achievements>;
 	Achievements() :
-		Observer{}
+		dae::Observer<ScoreUIComponent>{}
 	{}
 		
+    std::vector<dae::Subject<ScoreUIComponent>*> m_pVecObservedSubjects{};
 	//static std::unique_ptr<CSteamAchievements> m_pSteamAchievements;
 };
 

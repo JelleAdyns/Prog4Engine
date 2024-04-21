@@ -4,10 +4,13 @@
 #include "Observer.h"
 #include "Component.h"
 #include <string>
+#include <vector>
 
 
 namespace dae
 {
+    template <typename T>
+    class Subject;
 	class TextComponent;
 	class GameObject;
 }
@@ -17,7 +20,7 @@ class LivesUIComponent final : public dae::Component, public dae::Observer<Lives
 {
 public:
 	explicit LivesUIComponent(dae::GameObject* pOwner);
-	virtual ~LivesUIComponent() = default;
+	virtual ~LivesUIComponent();
 
 	LivesUIComponent(const LivesUIComponent&) = delete;
 	LivesUIComponent(LivesUIComponent&&) noexcept = delete;
@@ -28,9 +31,12 @@ public:
 	virtual void PrepareImGuiRender() override;
 
 	virtual void Notify(LivesComponent* pSubject) override;
+	virtual void AddSubjectPointer(dae::Subject<LivesComponent>* pSubject) override;
 private:
 
 	dae::TextComponent* m_pTextComponent;
+
+    std::vector<dae::Subject<LivesComponent>*> m_pVecObservedSubjects;
 };
 
 #endif // !LIVESOBSERVER_H

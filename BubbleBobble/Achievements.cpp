@@ -14,6 +14,15 @@ AchievementProps Achievements::g_Achievements[2]{
 	{"WinOneGame", false},
 	{"WinAHundredGames", false}
 };
+
+Achievements::~Achievements()
+{
+    for (auto& pSubject : m_pVecObservedSubjects)
+    {
+        pSubject->RemoveObserver(this);
+    }
+}
+
 void Achievements::Notify(ScoreUIComponent* pScoreUIComponent)
 {
 	if (!g_Achievements[0].achieved && pScoreUIComponent->GetScore() >= 500)
@@ -21,6 +30,11 @@ void Achievements::Notify(ScoreUIComponent* pScoreUIComponent)
 		std::cout << g_Achievements[0].name << '\n';
 		g_Achievements[0].achieved = true;
 	}
+}
+
+void Achievements::AddSubjectPointer(dae::Subject<ScoreUIComponent>* pScoreUIComponent)
+{
+    m_pVecObservedSubjects.emplace_back(pScoreUIComponent);
 }
 
 /*void Achievements::SetSteamAchievements(CSteamAchievements* pSteamAchievements)
