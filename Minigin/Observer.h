@@ -6,6 +6,8 @@
 namespace dae
 {
 	template <typename T>
+	class Subject;
+	template <typename T>
 	class Observer
 	{
 	public:
@@ -17,7 +19,8 @@ namespace dae
 		Observer& operator= (const Observer&) = delete;
 		Observer& operator= (Observer&&) noexcept = delete;
 
-		virtual void Notify(T* pSubject) = 0;
+		virtual void Notify(T* pSubjectOwner) = 0;
+        virtual void AddSubjectPointer(Subject<T>* pSubject) = 0;
 
 	protected:
 		Observer() = default;

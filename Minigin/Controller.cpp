@@ -27,13 +27,15 @@ namespace dae
 		ControllerImpl& operator= (ControllerImpl&&) noexcept = delete;
 
 
+		bool IsAnyButtonPressedImpl();
 		void ProcessInputImpl();
 		bool IsDownThisFrameImpl(ControllerButton button) const;
 		bool IsUpThisFrameImpl(ControllerButton button)  const;
 		bool IsPressedImpl(ControllerButton button)  const;
 
-		void AddCommandImpl(std::unique_ptr<Command>&& pCommand, ControllerButton button, KeyState keyState);
+		void AddCommandImpl(const std::shared_ptr<Command>& pCommand, ControllerButton button, KeyState keyState);
 		void RemoveCommandImpl(ControllerButton button);
+		void RemoveAllCommandsImpl();
 
 		glm::vec2 GetJoystickValueImpl(bool leftJoystick);
 		float GetTriggerValueImpl(bool leftJoystick);
@@ -45,7 +47,7 @@ namespace dae
 		int m_ButtonsPressedThisFrame{};
 		int m_ButtonsReleasedThisFrame{};
 
-		std::unordered_map<ControllerButton, std::pair<std::unique_ptr<Command>, KeyState>> m_MapCommands{};
+		std::unordered_map<ControllerButton, std::pair<std::shared_ptr<Command>, KeyState>> m_MapCommands{};
 
 		static float m_MaxJoystickValue;
 		static float m_JoystickDeadZonePercentage;
@@ -83,8 +85,47 @@ namespace dae
 			}
 		}
 	}
+	bool Controller::ControllerImpl::IsAnyButtonPressedImpl()
+	{
+		XINPUT_STATE previousState = m_CurrentState;
+		XINPUT_STATE currentState = XINPUT_STATE{};
+		XInputGetState(m_ControllerIndex, &currentState);
+
+		//buttons
+		auto buttonChanges = currentState.Gamepad.wButtons ^ previousState.Gamepad.wButtons;
+
+		//Joysticks
+		float xL, yL, xR, yR;
+		xL = currentState.Gamepad.sThumbLX / m_MaxJoystickValue;
+		yL = currentState.Gamepad.sThumbLY / m_MaxJoystickValue;
+
+		xR = currentState.Gamepad.sThumbRX / m_MaxJoystickValue;
+		yR = currentState.Gamepad.sThumbRY / m_MaxJoystickValue;
+	
+		if (std::abs(xL) < m_JoystickDeadZonePercentage / 100.f) xL = 0;
+		if (std::abs(yL) < m_JoystickDeadZonePercentage / 100.f) yL = 0;
+		if (std::abs(xR) < m_JoystickDeadZonePercentage / 100.f) xR = 0;
+		if (std::abs(yR) < m_JoystickDeadZonePercentage / 100.f) yR = 0;
+
+		//Triggers
+		float valueL, valueR;
+		valueL = currentState.Gamepad.bLeftTrigger / m_MaxTriggerValue;
+		valueR = currentState.Gamepad.bRightTrigger / m_MaxTriggerValue;
+
+		if (valueL < m_TriggerDeadZonePercentage / 100.f) valueL = 0;
+		if (valueR < m_TriggerDeadZonePercentage / 100.f) valueR = 0;
+
+		return (buttonChanges ||
+			xL >= 0.2f ||
+			yL >= 0.2f ||
+			xR >= 0.2f ||
+			yR >= 0.2f ||
+			valueL >= 0.2f ||
+			valueR >= 0.2f);
+	}
 	void Controller::ControllerImpl::ProcessInputImpl()
 	{
+		
 		m_PreviousState = m_CurrentState;
 		m_CurrentState = XINPUT_STATE{};
 		XInputGetState(m_ControllerIndex, &m_CurrentState);
@@ -92,7 +133,6 @@ namespace dae
 		auto buttonChanges = m_CurrentState.Gamepad.wButtons ^ m_PreviousState.Gamepad.wButtons;
 		m_ButtonsPressedThisFrame = buttonChanges & m_CurrentState.Gamepad.wButtons;
 		m_ButtonsReleasedThisFrame = buttonChanges & (~m_CurrentState.Gamepad.wButtons);
-
 		HandleInputImpl();
 
 		//XINPUT_VIBRATION vibration;
@@ -115,15 +155,22 @@ namespace dae
 		return m_CurrentState.Gamepad.wButtons & static_cast<int>(button);
 	}
 
-	void Controller::ControllerImpl::AddCommandImpl(std::unique_ptr<Command>&& pCommand, ControllerButton button, KeyState keyState)
+	void Controller::ControllerImpl::AddCommandImpl(const std::shared_ptr<Command>& pCommand, ControllerButton button, KeyState keyState)
 	{
+#ifndef NDEBUG
 		if (m_MapCommands.contains(button)) std::cout << "Binding to the requested button already exists. Overwriting now.\n";
-		m_MapCommands[button] = std::make_pair(std::move(pCommand), keyState);
+#endif // !NDEBUG
+		m_MapCommands[button] = std::make_pair(pCommand, keyState);
 	}
 
 	void Controller::ControllerImpl::RemoveCommandImpl(ControllerButton button)
 	{
 		if (m_MapCommands.contains(button)) m_MapCommands.erase(button);
+	}
+
+	void Controller::ControllerImpl::RemoveAllCommandsImpl()
+	{
+		m_MapCommands.clear();
 	}
 
 
@@ -168,6 +215,11 @@ namespace dae
 		delete m_pImpl;
 	}
 
+	bool Controller::IsAnyButtonPressed()
+	{
+		return m_pImpl->IsAnyButtonPressedImpl();
+	}
+
 	void Controller::ProcessControllerInput()
 	{
 		m_pImpl->ProcessInputImpl();
@@ -187,14 +239,19 @@ namespace dae
 		return m_pImpl->IsPressedImpl(button);
 	}
 
-	void Controller::AddCommand(std::unique_ptr<Command>&& pCommand, ControllerButton button, KeyState keyState)
+	void Controller::AddCommand(const std::shared_ptr<Command>& pCommand, ControllerButton button, KeyState keyState)
 	{
-		m_pImpl->AddCommandImpl(std::move(pCommand), button, keyState);
+		m_pImpl->AddCommandImpl(pCommand, button, keyState);
 	}
 
 	void Controller::RemoveCommand(ControllerButton button)
 	{
 		m_pImpl->RemoveCommandImpl(button);
+	}
+
+	void Controller::RemoveAllCommands()
+	{
+		m_pImpl->RemoveAllCommandsImpl();
 	}
 
 	glm::vec2 Controller::GetJoystickValue(bool leftJoystick)

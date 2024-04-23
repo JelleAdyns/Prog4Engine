@@ -34,7 +34,7 @@ namespace dae
 		float m_DeltaTime = 0.0f;
 		float m_TotalTime = 0.0f;
 		float m_MillisecPerFrame = 1000.f / 60.f;
-		bool m_UseFPSGoal = false;
+		bool m_UseFPSGoal = true;
 	};
 }
 

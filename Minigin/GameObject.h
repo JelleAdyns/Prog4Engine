@@ -12,6 +12,7 @@
 #include "Component.h"
 #include "TransformComponent.h"
 #include "RenderComponent.h"
+#include "PhysicsComponent.h"
 
 namespace dae
 {
@@ -33,11 +34,13 @@ namespace dae
 		void Update();
 		void PrepareImGuiRender();
 		void Render() const;
+		void FixedUpdate();
 
 		bool IsDead() const;
 
 		void SetParent(const std::unique_ptr<GameObject>& pParent, bool keepWorldPosition);
 		bool IsChild(const std::unique_ptr<GameObject>& pGameObject) const;
+		void SetLocalPos(float x, float y);
 		void SetLocalPos(const glm::vec2& newLocalPos);
 		void SetPosDirty();
 		const glm::vec2& GetWorldPosition();
@@ -49,6 +52,7 @@ namespace dae
 		{
 			assert((typeid(T) != typeid(TransformComponent)) && "Type passed to 'AddComponent' was a TransformComponent");
 			assert((typeid(T) != typeid(RenderComponent)) && "Type passed to 'AddComponent' was a RenderComponent, use AddRenderComponent instead!");
+			assert((typeid(T) != typeid(PhysicsComponent)) && "Type passed to 'AddComponent' was a PhysicsComponent, use AddPhysicsComponent instead!");
 			if (!HasComponent<T>()) m_pMapComponents[typeid(T)] = std::move(std::make_unique<T>(this, args...));
 			else throw std::runtime_error("Object already owns a reference to an instance of the passed component" );
 		}
@@ -58,6 +62,13 @@ namespace dae
 			auto pComp = std::make_unique<RenderComponent>(this, useMiddleOfTexture);
 			m_pRenderComponent = pComp.get();
 			m_pMapComponents[typeid(RenderComponent)] = std::move(pComp);
+		}
+
+		void AddPhysicsComponent()
+		{
+			auto pComp = std::make_unique<PhysicsComponent>(this);
+			m_pPhysicsComponent = pComp.get();
+			m_pMapComponents[typeid(PhysicsComponent)] = std::move(pComp);
 		}
 
 		template <typename T>
@@ -83,8 +94,8 @@ namespace dae
 		
 		bool m_IsDead;
 		bool m_IsPosDirty;
-		std::unique_ptr<TransformComponent> m_LocalTransform;
-		std::unique_ptr<TransformComponent> m_WorldTransform;
+		std::unique_ptr<TransformComponent> m_pLocalTransform;
+		std::unique_ptr<TransformComponent> m_pWorldTransform;
 
 		//Tree
 		GameObject* m_pParent;
@@ -92,6 +103,7 @@ namespace dae
 
 		//Components
 		RenderComponent* m_pRenderComponent;
+		PhysicsComponent* m_pPhysicsComponent;
 		std::map<std::type_index, std::unique_ptr<Component>> m_pMapComponents;	
 
 		void UpdateWorldPosition();

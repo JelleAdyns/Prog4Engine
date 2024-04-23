@@ -3,8 +3,10 @@
 #include "Renderer.h"
 #include "SceneManager.h"
 #include "Texture2D.h"
+#include "Minigin.h"
 #include <imgui.h>
 #include <imgui_plot.h>
+#include <SDL_opengl.h>
 #include <backends/imgui_impl_sdl2.h>
 #include <backends/imgui_impl_opengl3.h>
 
@@ -77,21 +79,34 @@ void dae::Renderer::Destroy()
 
 void dae::Renderer::RenderTexture(const Texture2D& texture, const float x, const float y) const
 {
+	int scale = Minigin::GetWindowScale();
+
 	SDL_Rect dst{};
 	dst.x = static_cast<int>(x);
 	dst.y = static_cast<int>(y);
 	SDL_QueryTexture(texture.GetSDLTexture(), nullptr, nullptr, &dst.w, &dst.h);
+
+	dst.x *= scale;
+	dst.y *= scale;
+	dst.w *= scale;
+	dst.h *= scale;
+
 	SDL_RenderCopy(GetSDLRenderer(), texture.GetSDLTexture(), nullptr, &dst);
 }
 
-void dae::Renderer::RenderTexture(const Texture2D& texture, const float x, const float y, const float width, const float height) const
+void dae::Renderer::RenderTexture(const Texture2D& texture, SDL_Rect srcRect, SDL_Rect dstRect) const
 {
+	
+	int scale = Minigin::GetWindowScale();
+
 	SDL_Rect dst{};
-	dst.x = static_cast<int>(x);
-	dst.y = static_cast<int>(y);
-	dst.w = static_cast<int>(width);
-	dst.h = static_cast<int>(height);
-	SDL_RenderCopy(GetSDLRenderer(), texture.GetSDLTexture(), nullptr, &dst);
+	dst.x = static_cast<int>(dstRect.x * scale);
+	dst.y = static_cast<int>(dstRect.y * scale);
+	dst.w = static_cast<int>(dstRect.w * scale);
+	dst.h = static_cast<int>(dstRect.h * scale);
+
+
+	SDL_RenderCopy(GetSDLRenderer(), texture.GetSDLTexture(), &srcRect, &dst);
 }
 
 SDL_Renderer* dae::Renderer::GetSDLRenderer() const { return m_renderer; }

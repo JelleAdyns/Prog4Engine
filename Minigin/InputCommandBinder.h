@@ -11,9 +11,7 @@
 
 namespace dae
 {
-	//enum class ControllerButton;
 	enum class KeyState;
-	//class Controller;
 	class Command;
 	class InputCommandBinder final : public Singleton<InputCommandBinder>
 	{
@@ -25,15 +23,21 @@ namespace dae
 		InputCommandBinder& operator= (const InputCommandBinder&) = delete;
 		InputCommandBinder& operator= (InputCommandBinder&&) noexcept = delete;
 
+		bool IsKeyboardActive() const;
+
 		bool ProcessInput();
 
-		void AddKeyCommand(std::unique_ptr<Command>&& pCommand, SDL_Scancode key, KeyState keyState);
-		void AddControllerCommand(std::unique_ptr<Command>&& pCommand, ControllerButton button, KeyState keyState, uint8_t controllerIndex);
+		void AddKeyCommand(const std::shared_ptr<Command>& pCommand, SDL_Scancode key, KeyState keyState);
+		void AddControllerCommand(const std::shared_ptr<Command>& pCommand, ControllerButton button, KeyState keyState, uint8_t controllerIndex);
+		void AddCommand_ChangingToController(std::unique_ptr<Command>&& pCommand);
+		void AddCommand_ChangingToKeyboard(std::unique_ptr<Command>&& pCommand);
 		void AddController();
 
+		void RemoveAllCommands();
 		void RemoveKeyCommand(SDL_Scancode key);
 		void RemoveControllerCommand(ControllerButton button, uint8_t controllerIndex);
 		void PopController();
+		void PopAllControllers();
 
 		bool KeyDownThisFrame(SDL_Event& event, SDL_Scancode key) const;
 		bool KeyUpThisFrame(SDL_Event& event, SDL_Scancode key) const;
@@ -50,9 +54,14 @@ namespace dae
 		friend class Singleton<InputCommandBinder>;
 		InputCommandBinder() = default;
 
-		std::unordered_map<SDL_Scancode, std::pair<std::unique_ptr<Command>, KeyState>> m_MapKeyCommands;
+		bool m_IsKeyboardActive{ true };
+
+		std::unordered_map<SDL_Scancode, std::pair<std::shared_ptr<Command>, KeyState>> m_MapKeyCommands;
 		
-		std::vector<std::unique_ptr<Controller>> m_VecControllers;
+		std::vector<std::unique_ptr<Command>> m_pVecCommandsChangingToController;
+		std::vector<std::unique_ptr<Command>> m_pVecCommandsChangingToKeyboard;
+
+		std::vector<std::unique_ptr<Controller>> m_pVecControllers;
 	};
 
 }

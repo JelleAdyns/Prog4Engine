@@ -1,4 +1,6 @@
 #include "InputCommandBinder.h"
+#include "InputCommandBinder.h"
+#include "InputCommandBinder.h"
 #include "GameTime.h"
 #include "KeyState.h"
 #include <backends/imgui_impl_sdl2.h>
@@ -12,93 +14,145 @@
 
 namespace dae
 {
-
+	bool InputCommandBinder::IsKeyboardActive() const
+	{
+		return m_IsKeyboardActive;
+	}
 	bool InputCommandBinder::ProcessInput()
 	{
-		for (auto& controller : m_VecControllers)
+		for (auto& pController : m_pVecControllers)
 		{
-			controller->ProcessControllerInput();
+			if (pController->IsAnyButtonPressed())
+			{
+				m_IsKeyboardActive = false;
+				for (auto& pCommand : m_pVecCommandsChangingToController) pCommand->Execute();
+			}
 		}
 
 		SDL_Event event{};
 		while (SDL_PollEvent(&event))
 		{
-
-			if (event.type == SDL_QUIT)
+			if (event.type == SDL_KEYDOWN) 
 			{
-				return false;
+				m_IsKeyboardActive = true;
+				for (auto& pCommand : m_pVecCommandsChangingToKeyboard) pCommand->Execute();
 			}
-			if (event.key.keysym.sym == SDLK_SPACE)
+			if (event.type == SDL_QUIT) return false;
+
+			if(m_IsKeyboardActive)
 			{
-				GameTime::GetInstance().ToggleUseFPSGoal();
+				/*if (event.key.keysym.sym == SDLK_SPACE)
+				{
+					GameTime::GetInstance().ToggleUseFPSGoal();
+				}*/
+
+				for (const auto& pair : m_MapKeyCommands)
+				{
+					auto& commandAndStatePair = pair.second;
+					switch (commandAndStatePair.second)
+					{
+					case KeyState::DownThisFrame:
+						if (KeyDownThisFrame(event, pair.first)) commandAndStatePair.first->Execute();
+						break;
+					case KeyState::UpThisFrame:
+						if (KeyUpThisFrame(event, pair.first)) commandAndStatePair.first->Execute();
+						break;
+					}
+				}
 			}
 
+			ImGui_ImplSDL2_ProcessEvent(&event);
+		}
+
+		if (m_IsKeyboardActive)
+		{
 			for (const auto& pair : m_MapKeyCommands)
 			{
 				auto& commandAndStatePair = pair.second;
 				switch (commandAndStatePair.second)
 				{
-				case KeyState::DownThisFrame:
-					if (KeyDownThisFrame(event, pair.first)) commandAndStatePair.first->Execute();
+				case KeyState::Pressed:
+					if (KeyPressed(pair.first)) commandAndStatePair.first->Execute();
 					break;
-				case KeyState::UpThisFrame:
-					if (KeyUpThisFrame(event, pair.first)) commandAndStatePair.first->Execute();
+				case KeyState::NotPressed:
+					if (!KeyPressed(pair.first)) commandAndStatePair.first->Execute();
 					break;
 				}
 			}
-			ImGui_ImplSDL2_ProcessEvent(&event);
 		}
 
-		for (const auto& pair : m_MapKeyCommands)
+		if (!m_IsKeyboardActive)
 		{
-			auto& commandAndStatePair = pair.second;
-			switch (commandAndStatePair.second)
+			for (auto& controller : m_pVecControllers)
 			{
-			case KeyState::Pressed:
-				if (KeyPressed(pair.first)) commandAndStatePair.first->Execute();
-				break;
-			case KeyState::NotPressed:
-				if (!KeyPressed(pair.first)) commandAndStatePair.first->Execute();
-				break;
+				controller->ProcessControllerInput();
 			}
 		}
+
 		return true;
+		
 	}
 
-
-
+	
 	//Removing
+	void InputCommandBinder::RemoveAllCommands()
+	{
+		m_MapKeyCommands.clear();
+		m_pVecCommandsChangingToController.clear();
+		m_pVecCommandsChangingToKeyboard.clear();
+		for (auto& controller : m_pVecControllers)
+		{
+			controller->RemoveAllCommands();
+		}
+	}
 	void InputCommandBinder::RemoveKeyCommand(SDL_Scancode key)
 	{
 		if (m_MapKeyCommands.contains(key)) m_MapKeyCommands.erase(key);
 	}
 	void InputCommandBinder::RemoveControllerCommand(ControllerButton button, uint8_t controllerIndex)
 	{
-		m_VecControllers.at(controllerIndex)->RemoveCommand(button);
+		m_pVecControllers.at(controllerIndex)->RemoveCommand(button);
 	}
 	void InputCommandBinder::PopController()
 	{
-		if (!m_VecControllers.empty()) m_VecControllers.pop_back();
+		if (!m_pVecControllers.empty()) m_pVecControllers.pop_back();
+	}
+	void InputCommandBinder::PopAllControllers()
+	{
+		m_pVecControllers.clear();
 	}
 
 
 	//Adding
-	void InputCommandBinder::AddKeyCommand(std::unique_ptr<Command>&& pCommand, SDL_Scancode key, KeyState keyState)
+	void InputCommandBinder::AddKeyCommand(const std::shared_ptr<Command>& pCommand, SDL_Scancode key, KeyState keyState)
 	{
-		if (m_MapKeyCommands.contains(key)) std::cout << "Binding to the requested key already exists. Overwriting now.\n";
-		m_MapKeyCommands[key] = std::make_pair(std::move(pCommand), keyState);
+#ifndef NDEBUG
+		if (m_MapKeyCommands.contains(key)) std::cout << "Binding to the requested key ("<<key<<") already exists.Overwriting now.\n";
+#endif // !NDEBUG
+		m_MapKeyCommands[key] = std::make_pair(pCommand, keyState);
 	}
-	void InputCommandBinder::AddControllerCommand(std::unique_ptr<Command>&& pCommand, ControllerButton button, KeyState keyState, uint8_t controllerIndex)
+	void InputCommandBinder::AddControllerCommand(const std::shared_ptr<Command>& pCommand, ControllerButton button, KeyState keyState, uint8_t controllerIndex)
 	{
-		m_VecControllers.at(controllerIndex)->AddCommand(std::move(pCommand), button, keyState);
+		m_pVecControllers.at(controllerIndex)->AddCommand(pCommand, button, keyState);
+	}
+	void InputCommandBinder::AddCommand_ChangingToController(std::unique_ptr<Command>&& pCommand)
+	{
+		m_pVecCommandsChangingToController.emplace_back(std::move(pCommand));
+	}
+	void InputCommandBinder::AddCommand_ChangingToKeyboard(std::unique_ptr<Command>&& pCommand)
+	{
+		m_pVecCommandsChangingToKeyboard.emplace_back(std::move(pCommand));
 	}
 	void InputCommandBinder::AddController()
 	{
-		if (m_VecControllers.size() < 4)
+		if (m_pVecControllers.size() < 4)
 		{
-			m_VecControllers.emplace_back(std::make_unique<Controller>( static_cast<uint8_t>(m_VecControllers.size()) ));
+			m_pVecControllers.emplace_back(std::make_unique<Controller>( static_cast<uint8_t>(m_pVecControllers.size()) ));
 		}
+#ifndef NDEBUG
 		else std::cout << "Max amount of controllers already reached.\n";
+#endif // !NDEBUG
+		
 	}
 
 
@@ -124,23 +178,23 @@ namespace dae
 	//Controller button checks
 	bool InputCommandBinder::ButtonDownThisFrame(ControllerButton button, uint8_t controllerIndex) const
 	{
-		return m_VecControllers.at(controllerIndex)->IsDownThisFrame(button);
+		return m_pVecControllers.at(controllerIndex)->IsDownThisFrame(button);
 	}
 	bool InputCommandBinder::ButtonUpThisFrame(ControllerButton button, uint8_t controllerIndex) const
 	{
-		return m_VecControllers.at(controllerIndex)->IsUpThisFrame(button);
+		return m_pVecControllers.at(controllerIndex)->IsUpThisFrame(button);
 	}
 	bool InputCommandBinder::ButtonPressed(ControllerButton button, uint8_t controllerIndex) const
 	{
-		return m_VecControllers.at(controllerIndex)->IsPressed(button);
+		return m_pVecControllers.at(controllerIndex)->IsPressed(button);
 	}
 	glm::vec2 InputCommandBinder::GetJoystickValue(bool leftJoystick, uint8_t controllerIndex)
 	{
-		return m_VecControllers.at(controllerIndex)->GetJoystickValue(leftJoystick);
+		return m_pVecControllers.at(controllerIndex)->GetJoystickValue(leftJoystick);
 	}
 	float InputCommandBinder::GetTriggerValue(bool leftTrigger, uint8_t controllerIndex)
 	{
-		return m_VecControllers.at(controllerIndex)->GetTriggerValue(leftTrigger);
+		return m_pVecControllers.at(controllerIndex)->GetTriggerValue(leftTrigger);
 	}
 
 
