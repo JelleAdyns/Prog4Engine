@@ -111,11 +111,8 @@
     </Link>
     <PostBuildEvent />
     <PostBuildEvent>
-      <Command>xcopy $(SolutionDir)3rdParty\steamworks\redistributable_bin\*.dll $(OutputPath) /R/Y
-xcopy $(SolutionDir)3rdParty\SDL2\lib\x86\SDL2.dll $(OutputPath) /R/Y
-xcopy $(SolutionDir)3rdParty\SDL2_image\lib\x86\*.dll $(OutputPath) /R/Y
-xcopy $(SolutionDir)3rdParty\SDL2_ttf\lib\x86\*.dll $(OutputPath) /R/Y
-echo 480&gt;$(OutputPath)steam_appid.txt</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
     <Lib>
       <AdditionalDependencies>xinput.lib;opengl32.lib</AdditionalDependencies>
@@ -140,11 +137,8 @@ echo 480&gt;$(OutputPath)steam_appid.txt</Command>
     </Link>
     <PostBuildEvent />
     <PostBuildEvent>
-      <Command>xcopy $(SolutionDir)3rdParty\steamworks\redistributable_bin\win64\*.dll $(OutputPath) /R/Y
-xcopy $(SolutionDir)3rdParty\SDL2\lib\x64\SDL2.dll $(OutputPath) /R/Y
-xcopy $(SolutionDir)3rdParty\SDL2_image\lib\x64\*.dll $(OutputPath) /R/Y
-xcopy $(SolutionDir)3rdParty\SDL2_ttf\lib\x64\*.dll $(OutputPath) /R/Y
-echo 480&gt;$(OutputPath)steam_appid.txt</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
     <Lib>
       <AdditionalDependencies>xinput.lib;opengl32.lib</AdditionalDependencies>
@@ -173,11 +167,8 @@ echo 480&gt;$(OutputPath)steam_appid.txt</Command>
     </Link>
     <PostBuildEvent />
     <PostBuildEvent>
-      <Command>xcopy $(SolutionDir)3rdParty\steamworks\redistributable_bin\*.dll $(OutputPath) /R/Y
-xcopy $(SolutionDir)3rdParty\SDL2\lib\x86\SDL2.dll $(OutputPath) /R/Y
-xcopy $(SolutionDir)3rdParty\SDL2_image\lib\x86\*.dll $(OutputPath) /R/Y
-xcopy $(SolutionDir)3rdParty\SDL2_ttf\lib\x86\*.dll $(OutputPath) /R/Y
-echo 480&gt;$(OutputPath)steam_appid.txt</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
     <Lib>
       <AdditionalDependencies>xinput.lib;opengl32.lib</AdditionalDependencies>
@@ -206,11 +197,8 @@ echo 480&gt;$(OutputPath)steam_appid.txt</Command>
     </Link>
     <PostBuildEvent />
     <PostBuildEvent>
-      <Command>xcopy $(SolutionDir)3rdParty\steamworks\redistributable_bin\win64\*.dll $(OutputPath) /R/Y
-xcopy $(SolutionDir)3rdParty\SDL2\lib\x64\SDL2.dll $(OutputPath) /R/Y
-xcopy $(SolutionDir)3rdParty\SDL2_image\lib\x64\*.dll $(OutputPath) /R/Y
-xcopy $(SolutionDir)3rdParty\SDL2_ttf\lib\x64\*.dll $(OutputPath) /R/Y
-echo 480&gt;$(OutputPath)steam_appid.txt</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
     <Lib>
       <AdditionalDependencies>xinput.lib;opengl32.lib</AdditionalDependencies>
@@ -226,6 +214,7 @@ echo 480&gt;$(OutputPath)steam_appid.txt</Command>
     <ClInclude Include="..\3rdParty\imgui\imstb_rectpack.h" />
     <ClInclude Include="..\3rdParty\imgui\imstb_textedit.h" />
     <ClInclude Include="..\3rdParty\imgui\imstb_truetype.h" />
+    <ClInclude Include="CollisionComponent.h" />
     <ClInclude Include="Command.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="Controller.h" />
@@ -239,11 +228,13 @@ echo 480&gt;$(OutputPath)steam_appid.txt</Command>
     <ClInclude Include="KeyState.h" />
     <ClInclude Include="Minigin.h" />
     <ClInclude Include="Observer.h" />
+    <ClInclude Include="PhysicsComponent.h" />
     <ClInclude Include="RenderComponent.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneManager.h" />
+    <ClInclude Include="Service.h" />
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="Subject.h" />
     <ClInclude Include="TextComponent.h" />
@@ -259,12 +250,14 @@ echo 480&gt;$(OutputPath)steam_appid.txt</Command>
     <ClCompile Include="..\3rdParty\imgui\imgui_plot.cpp" />
     <ClCompile Include="..\3rdParty\imgui\imgui_tables.cpp" />
     <ClCompile Include="..\3rdParty\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="CollisionComponent.cpp" />
     <ClCompile Include="Controller.cpp" />
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="ImageComponent.cpp" />
     <ClCompile Include="InputCommandBinder.cpp" />
     <ClCompile Include="Minigin.cpp" />
+    <ClCompile Include="PhysicsComponent.cpp" />
     <ClCompile Include="RenderComponent.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="ResourceManager.cpp" />

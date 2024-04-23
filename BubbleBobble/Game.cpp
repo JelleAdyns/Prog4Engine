@@ -358,6 +358,10 @@ void Game::LoadLevelOne() const
 		inputMan.AddKeyCommand(moveCommand, SDL_SCANCODE_S, dae::KeyState::Pressed);
 		inputMan.AddControllerCommand(moveCommand, dae::ControllerButton::DpadDown, dae::KeyState::Pressed, 0);
 
+        moveCommand = std::make_shared<JumpCommand>(player1, -20.f);
+        inputMan.AddKeyCommand(moveCommand, SDL_SCANCODE_SPACE, dae::KeyState::DownThisFrame);
+        inputMan.AddControllerCommand(moveCommand, dae::ControllerButton::Y, dae::KeyState::DownThisFrame, 0);
+
 
 
 		scene.AddGameObject(std::move(player1));

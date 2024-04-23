@@ -57,24 +57,6 @@
     <ClInclude Include="Component.h">
       <Filter>Engine Files\Components</Filter>
     </ClInclude>
-    <ClInclude Include="FPSComponent.h">
-      <Filter>Engine Files\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="RotatorComponent.h">
-      <Filter>Engine Files\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="CacheExperimentComponent.h">
-      <Filter>Engine Files\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="TrashTheCacheIntComponent.h">
-      <Filter>Engine Files\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Components.h">
-      <Filter>Engine Files</Filter>
-    </ClInclude>
-    <ClInclude Include="TrashTheCacheGameObjectsComponent.h">
-      <Filter>Engine Files\Components</Filter>
-    </ClInclude>
     <ClInclude Include="Controller.h">
       <Filter>Engine Files</Filter>
     </ClInclude>
@@ -83,12 +65,6 @@
     </ClInclude>
     <ClInclude Include="GameObjectCommand.h">
       <Filter>Engine Files\Commands</Filter>
-    </ClInclude>
-    <ClInclude Include="MoveCommand.h">
-      <Filter>Engine Files\Commands</Filter>
-    </ClInclude>
-    <ClInclude Include="Commands.h">
-      <Filter>Engine Files</Filter>
     </ClInclude>
     <ClInclude Include="KeyState.h">
       <Filter>Engine Files</Filter>
@@ -111,9 +87,6 @@
     <ClInclude Include="Singleton.h">
       <Filter>Engine Files\Singletons</Filter>
     </ClInclude>
-    <ClInclude Include="Game.h">
-      <Filter>Game Files</Filter>
-    </ClInclude>
     <ClInclude Include="GameTime.h">
       <Filter>Engine Files\Singletons</Filter>
     </ClInclude>
@@ -122,24 +95,6 @@
     </ClInclude>
     <ClInclude Include="Subject.h">
       <Filter>Engine Files</Filter>
-    </ClInclude>
-    <ClInclude Include="LivesComponent.h">
-      <Filter>Engine Files\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Killcommand.h">
-      <Filter>Engine Files\Commands</Filter>
-    </ClInclude>
-    <ClInclude Include="LivesUIComponent.h">
-      <Filter>Engine Files\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="PickUpCommand.h">
-      <Filter>Engine Files\Commands</Filter>
-    </ClInclude>
-    <ClInclude Include="PickUpComponent.h">
-      <Filter>Engine Files\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="ScoreUIComponent.h">
-      <Filter>Engine Files\Components</Filter>
     </ClInclude>
     <ClInclude Include="..\3rdParty\imgui\imconfig.h">
       <Filter>Engine Files\imgui</Filter>
@@ -168,39 +123,27 @@
     <ClInclude Include="..\3rdParty\imgui\backends\imgui_impl_sdl2.h">
       <Filter>Engine Files\imgui</Filter>
     </ClInclude>
-    <ClInclude Include="CSteamAchievements.h">
-      <Filter>Engine Files</Filter>
+    <ClInclude Include="PhysicsComponent.h">
+      <Filter>Engine Files\Components</Filter>
     </ClInclude>
-    <ClInclude Include="Achievements.h">
-      <Filter>Engine Files\Singletons</Filter>
+    <ClInclude Include="CollisionComponent.h">
+      <Filter>Engine Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Service.h">
+      <Filter>Engine Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CacheExperimentComponent.cpp">
-      <Filter>Engine Files\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="FPSComponent.cpp">
-      <Filter>Engine Files\Components</Filter>
-    </ClCompile>
     <ClCompile Include="ImageComponent.cpp">
       <Filter>Engine Files\Components</Filter>
     </ClCompile>
     <ClCompile Include="RenderComponent.cpp">
       <Filter>Engine Files\Components</Filter>
     </ClCompile>
-    <ClCompile Include="RotatorComponent.cpp">
-      <Filter>Engine Files\Components</Filter>
-    </ClCompile>
     <ClCompile Include="TextComponent.cpp">
       <Filter>Engine Files\Components</Filter>
     </ClCompile>
     <ClCompile Include="TransformComponent.cpp">
-      <Filter>Engine Files\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="TrashTheCacheGameObjectsComponent.cpp">
-      <Filter>Engine Files\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="TrashTheCacheIntComponent.cpp">
       <Filter>Engine Files\Components</Filter>
     </ClCompile>
     <ClCompile Include="Controller.cpp">
@@ -233,24 +176,6 @@
     <ClCompile Include="SceneManager.cpp">
       <Filter>Engine Files\Singletons</Filter>
     </ClCompile>
-    <ClCompile Include="Game.cpp">
-      <Filter>Game Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Main.cpp">
-      <Filter>Game Files</Filter>
-    </ClCompile>
-    <ClCompile Include="LivesComponent.cpp">
-      <Filter>Engine Files\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="LivesUIComponent.cpp">
-      <Filter>Engine Files\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="PickUpComponent.cpp">
-      <Filter>Engine Files\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="ScoreUIComponent.cpp">
-      <Filter>Engine Files\Components</Filter>
-    </ClCompile>
     <ClCompile Include="..\3rdParty\imgui\imgui.cpp">
       <Filter>Engine Files\imgui</Filter>
     </ClCompile>
@@ -275,11 +200,11 @@
     <ClCompile Include="..\3rdParty\imgui\backends\imgui_impl_sdl2.cpp">
       <Filter>Engine Files\imgui</Filter>
     </ClCompile>
-    <ClCompile Include="CSteamAchievements.cpp">
-      <Filter>Engine Files</Filter>
+    <ClCompile Include="PhysicsComponent.cpp">
+      <Filter>Engine Files\Components</Filter>
     </ClCompile>
-    <ClCompile Include="Achievements.cpp">
-      <Filter>Engine Files\Singletons</Filter>
+    <ClCompile Include="CollisionComponent.cpp">
+      <Filter>Engine Files\Components</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -10,5 +10,6 @@
 #include "SelectButtonCommand.h"
 #include "ActivateButtonCommand.h"
 #include "SetTextCommand.h"
+#include "JumpCommand.h"
 
 #endif // !COMMANDS_H

@@ -136,5 +136,8 @@
     <ClInclude Include="SetTextCommand.h">
       <Filter>Source Files\Commands</Filter>
     </ClInclude>
+    <ClInclude Include="JumpCommand.h">
+      <Filter>Source Files\Commands</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

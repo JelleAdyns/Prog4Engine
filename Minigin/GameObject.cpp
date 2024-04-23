@@ -9,30 +9,34 @@ namespace dae
 {
 	GameObject::GameObject() :
 		m_IsDead{},
-		m_IsPosDirty{true},
-		m_pRenderComponent{nullptr},
-		m_pMapComponents{},
+		m_IsPosDirty{ true },
+		m_pLocalTransform{ std::make_unique<TransformComponent>(this) },
+		m_pWorldTransform{ std::make_unique<TransformComponent>(this) },
 		m_pParent{ nullptr },
 		m_pVecChildren{},
-		m_LocalTransform{ std::make_unique<TransformComponent>(this) },
-		m_WorldTransform{ std::make_unique<TransformComponent>(this) }
+		m_pRenderComponent{ nullptr },
+		m_pPhysicsComponent{ nullptr },
+		m_pMapComponents{}
 	{}
 	GameObject::GameObject(float x, float y) :
 		m_IsDead{},
-		m_IsPosDirty{true},
-		m_pRenderComponent{ nullptr },
-		m_pMapComponents{},
+		m_IsPosDirty{ true },
+		m_pLocalTransform{ std::make_unique<TransformComponent>(this) },
+		m_pWorldTransform{ std::make_unique<TransformComponent>(this) },
 		m_pParent{ nullptr },
 		m_pVecChildren{},
-		m_LocalTransform{ std::make_unique<TransformComponent>(this) },
-		m_WorldTransform{ std::make_unique<TransformComponent>(this) }
+		m_pRenderComponent{ nullptr },
+		m_pPhysicsComponent{ nullptr },
+		m_pMapComponents{}
 	{
-		m_LocalTransform->SetPosition(glm::vec2{x,y});
-		m_WorldTransform->SetPosition(glm::vec2{ x,y });
+		m_pLocalTransform->SetPosition(glm::vec2{ x, y });
+		m_pWorldTransform->SetPosition(glm::vec2{ x, y });
 	}
 
 	void GameObject::Update()
 	{
+		m_pWorldTransform->Update();
+		m_pLocalTransform->Update();
 		for (auto& component: m_pMapComponents)
 		{
 			component.second->Update();
@@ -40,6 +44,8 @@ namespace dae
 	}
 	void GameObject::PrepareImGuiRender()
 	{
+		m_pWorldTransform->PrepareImGuiRender();
+		m_pLocalTransform->PrepareImGuiRender();
 		for (auto& component : m_pMapComponents)
 		{
 			component.second->PrepareImGuiRender();
@@ -49,6 +55,10 @@ namespace dae
 	void GameObject::Render() const
 	{
 		if (m_pRenderComponent) m_pRenderComponent->Render();
+	}
+	void GameObject::FixedUpdate()
+	{
+		if (m_pPhysicsComponent) m_pPhysicsComponent->FixedUpdate();
 	}
 
 	bool GameObject::IsDead() const
@@ -63,8 +73,6 @@ namespace dae
 			throw std::runtime_error{ "New Parent is not valid" };
 		}
 
-		/*if (pParent == nullptr || !keepWorldPosition) SetLocalPos(GetWorldPosition());
-		else if (keepWorldPosition) SetLocalPos(GetWorldPosition() - pParent->GetWorldPosition());*/
 		if (pParent == nullptr) SetLocalPos(GetWorldPosition());
 		else
 		{
@@ -82,9 +90,13 @@ namespace dae
 		return std::find(m_pVecChildren.cbegin(), m_pVecChildren.cend(), pGameObject.get()) != m_pVecChildren.cend();
 	}
 
+	void GameObject::SetLocalPos(float x, float y)
+	{
+		SetLocalPos(glm::vec2{ x,y });
+	}
 	void GameObject::SetLocalPos(const glm::vec2& newLocalPos)
 	{
-		m_LocalTransform->SetPosition(newLocalPos);
+		m_pLocalTransform->SetPosition(newLocalPos);
 		SetPosDirty();
 	}
 	void GameObject::SetPosDirty()
@@ -98,20 +110,20 @@ namespace dae
 
 	const glm::vec2& GameObject::GetLocalPosition()
 	{
-		return m_LocalTransform->GetPosition();
+		return m_pLocalTransform->GetPosition();
 	}
 	const glm::vec2& GameObject::GetWorldPosition()
 	{
 		if (m_IsPosDirty)
 			UpdateWorldPosition();
-		return m_WorldTransform->GetPosition();
+		return m_pWorldTransform->GetPosition();
 	}
 	void GameObject::UpdateWorldPosition()
 	{
 		if (m_IsPosDirty)
 		{
-			if (m_pParent == nullptr) m_WorldTransform->SetPosition(m_LocalTransform->GetPosition());
-			else m_WorldTransform->SetPosition(m_pParent->GetWorldPosition() + m_LocalTransform->GetPosition());
+			if (m_pParent == nullptr) m_pWorldTransform->SetPosition(m_pLocalTransform->GetPosition());
+			else m_pWorldTransform->SetPosition(m_pParent->GetWorldPosition() + m_pLocalTransform->GetPosition());
 
 			m_IsPosDirty = false;
 		}
