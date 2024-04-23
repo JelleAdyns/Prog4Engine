@@ -234,7 +234,6 @@
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneManager.h" />
-    <ClInclude Include="Service.h" />
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="Subject.h" />
     <ClInclude Include="TextComponent.h" />

@@ -129,9 +129,6 @@
     <ClInclude Include="CollisionComponent.h">
       <Filter>Engine Files\Components</Filter>
     </ClInclude>
-    <ClInclude Include="Service.h">
-      <Filter>Engine Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ImageComponent.cpp">

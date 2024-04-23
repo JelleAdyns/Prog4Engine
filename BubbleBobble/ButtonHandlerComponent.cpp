@@ -42,7 +42,7 @@ void ButtonHandlerComponent::SelectNext()
 	m_pVecButtons.at(m_SelectedIndex)->Select(false);
 
 	++m_SelectedIndex;
-	if (m_SelectedIndex >= m_pVecButtons.size()) m_SelectedIndex = 0;
+	if (m_SelectedIndex >= static_cast<int>( m_pVecButtons.size())) m_SelectedIndex = 0;
 
 	m_pVecButtons.at(m_SelectedIndex)->Select(true);
 }
