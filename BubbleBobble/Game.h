@@ -2,6 +2,7 @@
 #define GAME_H
 
 #include <Singleton.h>
+#include <AudioService.h>
 
 class GameObject;
 
@@ -25,6 +26,14 @@ public:
 		Level3,
 		HighScore
 	};
+
+	// I've got this idea of making sure it corresponds to SoundID from Wout Firlefyn
+	enum class SoundEvent : dae::SoundID
+	{
+		MainTheme,
+		Jump
+	};
+
 
 	void StartGame();
 	void SetScene(Game::CurrScene newScene);

@@ -15,15 +15,14 @@
     <Filter Include="Engine Files\Commands">
       <UniqueIdentifier>{035b7cbb-9012-4fe5-960a-6ef0d7b1aa98}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
     <Filter Include="Engine Files\Singletons">
       <UniqueIdentifier>{c936e3e7-b32f-4b8f-9e85-3a157f6b18cc}</UniqueIdentifier>
     </Filter>
     <Filter Include="Engine Files\imgui">
       <UniqueIdentifier>{e3429d40-18d3-4335-a9c7-ffd046dee9ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine Files\ServiceLocator">
+      <UniqueIdentifier>{6db949b7-9014-48ee-bff8-2d4addcf3b51}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -129,6 +128,21 @@
     <ClInclude Include="CollisionComponent.h">
       <Filter>Engine Files\Components</Filter>
     </ClInclude>
+    <ClInclude Include="AudioLocator.h">
+      <Filter>Engine Files\ServiceLocator</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioService.h">
+      <Filter>Engine Files\ServiceLocator</Filter>
+    </ClInclude>
+    <ClInclude Include="SDLAudio.h">
+      <Filter>Engine Files\ServiceLocator</Filter>
+    </ClInclude>
+    <ClInclude Include="NullAudio.h">
+      <Filter>Engine Files\ServiceLocator</Filter>
+    </ClInclude>
+    <ClInclude Include="LogAudio.h">
+      <Filter>Engine Files\ServiceLocator</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ImageComponent.cpp">
@@ -202,6 +216,9 @@
     </ClCompile>
     <ClCompile Include="CollisionComponent.cpp">
       <Filter>Engine Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="SDLAudio.cpp">
+      <Filter>Engine Files\ServiceLocator</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
