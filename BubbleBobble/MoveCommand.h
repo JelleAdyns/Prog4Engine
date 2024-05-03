@@ -22,10 +22,7 @@ public:
 		glm::vec2 currPos = GetGameObject()->GetLocalPosition();
 		GetGameObject()->SetLocalPos(currPos + m_DirectionSpeed * dae::GameTime::GetInstance().GetDeltaTime());
 	}
-	void SetSpeed(int xSpeed, int ySpeed)
-	{
-		m_DirectionSpeed = glm::vec2{ xSpeed, ySpeed };
-	}
+
 private:
 	glm::vec2 m_DirectionSpeed;
 		

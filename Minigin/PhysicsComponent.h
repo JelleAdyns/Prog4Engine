@@ -24,6 +24,8 @@ namespace dae
 
         void SetVelocityX(float xVelocity);
         void SetVelocityY(float yVelocity);
+
+		static void SetGravity(float gravity);
 	private:
 
 		float m_Mass;
@@ -32,7 +34,7 @@ namespace dae
 
         CollisionComponent* m_pPhysicsComponent;
 
-		static const float m_Gravity;
+		static float m_Gravity;
 	};
 
 }
