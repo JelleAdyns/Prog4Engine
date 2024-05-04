@@ -6,9 +6,18 @@
 namespace dae
 {
 	ImageComponent::ImageComponent(GameObject* pOwner, const std::string& texturePath ):
-		Component{pOwner}, m_pTexture{ ResourceManager::GetInstance().LoadTexture(texturePath)}, m_pRenderComponent{nullptr}
+		Component{pOwner},
+		m_pTexture{ ResourceManager::GetInstance().LoadTexture(texturePath)}, 
+		m_pRenderComponent{nullptr}
 	{
 		
+	}
+
+	ImageComponent::ImageComponent(GameObject* pOwner, std::unique_ptr<Texture2D>&& pTexture):
+		Component{ pOwner }, 
+		m_pTexture{ std::move(pTexture)},
+		m_pRenderComponent{nullptr}
+	{
 	}
 	
 	void ImageComponent::Update()

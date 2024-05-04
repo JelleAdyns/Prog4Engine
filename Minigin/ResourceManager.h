@@ -2,6 +2,7 @@
 #define RESOURCEMANAGER_H
 
 #include <string>
+#include <map>
 #include <memory>
 #include "Singleton.h"
 #include "Font.h"
@@ -23,14 +24,22 @@ namespace dae
 		ResourceManager& operator= (ResourceManager&&) noexcept = delete;
 
 		void Init(const std::string& data);
-		std::unique_ptr<Texture2D> LoadTexture(const std::string& file) const;
+
+		std::unique_ptr<Texture2D>LoadTexture(const std::string& file);
 		std::unique_ptr<Texture2D> LoadTextureFromFont(const std::string& text, const std::unique_ptr<Font>& font) const;
 		std::unique_ptr<Font> LoadFont(const std::string& file, unsigned int size) const;
 		const std::string& GetDataPath() const { return m_DataPath; }
+
 	private:
 		friend class Singleton<ResourceManager>;
 		ResourceManager() = default;
 		std::string m_DataPath;
+
+		struct SDLTextureDeleter
+		{
+			void operator()(SDL_Texture* pTexture) { SDL_DestroyTexture(pTexture);}
+		};
+		std::map<std::string, std::unique_ptr<SDL_Texture, SDLTextureDeleter>> m_pMapSDLTextures;
 	};
 }
 #endif // !RESOURCEMANAGER_H

@@ -3,6 +3,7 @@
 #include <SDL_ttf.h>
 #include "ResourceManager.h"
 #include "Renderer.h"
+#include "Minigin.h"
 
 void dae::ResourceManager::Init(const std::string& dataPath)
 {
@@ -14,20 +15,24 @@ void dae::ResourceManager::Init(const std::string& dataPath)
 	}
 }
 
-std::unique_ptr<dae::Texture2D> dae::ResourceManager::LoadTexture(const std::string& file) const
+std::unique_ptr<dae::Texture2D> dae::ResourceManager::LoadTexture(const std::string& file)
 {
-	const auto fullPath = m_DataPath + file;
-	auto texture = IMG_LoadTexture(Renderer::GetInstance().GetSDLRenderer(), fullPath.c_str());
-	if (texture == nullptr)
+
+ 	if (!m_pMapSDLTextures.contains(file))
 	{
-		throw std::runtime_error(std::string("Failed to load texture: ") + SDL_GetError());
+		const auto fullPath = m_DataPath + file;
+		auto texture = IMG_LoadTexture(Renderer::GetInstance().GetSDLRenderer(), fullPath.c_str());
+
+		if (texture == nullptr) throw std::runtime_error(std::string("Failed to load texture: ") + SDL_GetError());
+		m_pMapSDLTextures[file] = std::unique_ptr<SDL_Texture, SDLTextureDeleter>(texture);
 	}
-	return std::make_unique<Texture2D>(texture, false);
+	
+	return std::make_unique<dae::Texture2D>(m_pMapSDLTextures[file].get(), false);
+	
 }
 
 std::unique_ptr<dae::Texture2D> dae::ResourceManager::LoadTextureFromFont(const std::string& text, const std::unique_ptr<Font>& font) const
 {
-
 	const SDL_Color color = { 255,255,255,255 }; // only white text is supported now
 	const auto surf = TTF_RenderText_Blended(font->GetFont(), text.c_str(), color);
 	if (surf == nullptr) throw std::runtime_error(std::string("Render text failed: ") + SDL_GetError());
@@ -36,7 +41,7 @@ std::unique_ptr<dae::Texture2D> dae::ResourceManager::LoadTextureFromFont(const 
 	if (texture == nullptr) throw std::runtime_error(std::string("Create text texture from surface failed: ") + SDL_GetError());
 
 	SDL_FreeSurface(surf);
-
+	
 	return std::make_unique<Texture2D>(texture, true);
 }
 

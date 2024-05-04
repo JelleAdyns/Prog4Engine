@@ -32,7 +32,7 @@ namespace dae
 		Texture2D & operator= (const Texture2D &) = delete;
 		Texture2D & operator= (const Texture2D &&) = delete;
 	private:
-		SDL_Texture* m_texture;
+		SDL_Texture* m_Texture;
 
 		SDL_Rect m_SrcRect;
 		SDL_Rect m_DstRect;

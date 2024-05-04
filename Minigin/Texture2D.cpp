@@ -4,7 +4,8 @@
 
 dae::Texture2D::~Texture2D()
 {
-	SDL_DestroyTexture(m_texture);
+	// if the SDL_Texture is created with a font, we don't save it in the resourceManager so it needs to be destroyed here
+	if(m_UsesFont) SDL_DestroyTexture(m_Texture);
 }
 
 void dae::Texture2D::SetSrcRect(const glm::ivec2& offset, const float width, const float height)
@@ -65,13 +66,14 @@ SDL_Rect dae::Texture2D::GetDstRect() const
 
 SDL_Texture* dae::Texture2D::GetSDLTexture() const
 {
-	return m_texture;
+	return m_Texture;
 }
 
 dae::Texture2D::Texture2D(SDL_Texture* texture, bool usesFont):
-	m_UsesFont{usesFont}
+	m_UsesFont{usesFont},
+	m_Texture{texture}
 {
-	m_texture = texture;
+
 	auto size = GetTextureSize();
 	m_SrcRect.x = 0;
 	m_SrcRect.y = 0;
