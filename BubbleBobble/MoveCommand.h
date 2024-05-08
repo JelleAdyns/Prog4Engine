@@ -2,15 +2,20 @@
 #define MOVECOMMAND_H
 
 #include <GameObjectCommand.h>
+#include <PhysicsComponent.h>
 #include <GameTime.h>
+#include "WallCheckingComponent.h"
 
 class MoveCommand final : public dae::GameObjectCommand
 {
 public:
-	MoveCommand(const std::unique_ptr<dae::GameObject>& pObject, int xSpeed, int ySpeed) :
+	MoveCommand(const std::unique_ptr<dae::GameObject>& pObject, int xSpeed) :
 		dae::GameObjectCommand{ pObject.get() },
-		m_DirectionSpeed{xSpeed,ySpeed}
-	{}
+		m_XDirectionSpeed{static_cast<float>(xSpeed)}
+	{
+		m_pPhysicsComponent = GetGameObject()->GetComponent<dae::PhysicsComponent>();
+		m_pWallCheckingComponent = GetGameObject()->GetComponent<WallCheckingComponent>();
+	}
 	virtual ~MoveCommand() = default;
 
 	MoveCommand(const MoveCommand&) = delete;
@@ -19,13 +24,18 @@ public:
 	MoveCommand& operator= (MoveCommand&&) noexcept = delete;
 	virtual void Execute() const override
 	{
-		glm::vec2 currPos = GetGameObject()->GetLocalPosition();
-		GetGameObject()->SetLocalPos(currPos + m_DirectionSpeed * dae::GameTime::GetInstance().GetDeltaTime());
+		if ((!m_pWallCheckingComponent->CollidingWithLeft() && m_XDirectionSpeed < 0) || 
+			(!m_pWallCheckingComponent->CollidingWithRight() && m_XDirectionSpeed > 0))
+		{
+			auto localPos = GetGameObject()->GetLocalPosition();
+			m_pPhysicsComponent->AddVelocity(glm::vec2{ m_XDirectionSpeed,0 });
+		}
 	}
 
 private:
-	glm::vec2 m_DirectionSpeed;
-		
+	float m_XDirectionSpeed;
+	dae::PhysicsComponent* m_pPhysicsComponent;
+	WallCheckingComponent* m_pWallCheckingComponent;
 };
 
 #endif // !MOVECOMMAND_H

@@ -4,7 +4,10 @@
 #include <Singleton.h>
 #include <AudioService.h>
 
-class GameObject;
+namespace dae
+{
+	class Scene;
+}
 
 class Game final : public dae::Singleton<Game>
 {
@@ -43,6 +46,8 @@ private:
 	void LoadLevelOne() const;
 	void LoadLevelTwo() const;
 	void LoadLevelThree() const;
+
+	void MakePlayer(dae::Scene& scene) const;
 
 	CurrScene m_ActiveScene{ CurrScene::TitleScreen };
 

@@ -1,4 +1,6 @@
 #include "PhysicsComponent.h"
+#include "PhysicsComponent.h"
+#include "CollisionComponent.h"
 #include "GameObject.h"
 #include "GameTime.h"
 
@@ -13,6 +15,11 @@ namespace dae
 	{
 	}
 
+	PhysicsComponent::~PhysicsComponent()
+	{
+
+	}
+
 	void PhysicsComponent::Update()
 	{
 	}
@@ -21,17 +28,25 @@ namespace dae
 	{
 	}
 
+
 	void PhysicsComponent::FixedUpdate()
 	{
 		auto currPos = GetOwner()->GetLocalPosition();
 		if (currPos.y > 224) currPos.y = 0;
-		m_Velocity.y += m_Gravity * GameTime::GetInstance().GetFixedTimeStep();
-
-		if (m_Velocity.y > 200) m_Velocity.y = 200;
+		if (m_Velocity.y < 200) m_Velocity.y += m_Gravity * GameTime::GetInstance().GetFixedTimeStep();
+		
 		GetOwner()->SetLocalPos(
             currPos.x + m_Velocity.x * GameTime::GetInstance().GetFixedTimeStep(), 
             currPos.y + m_Velocity.y * GameTime::GetInstance().GetFixedTimeStep()
         );
+
+		m_Velocity.x = 0;
+	}
+
+	void PhysicsComponent::AddVelocity(const glm::vec2& Velocity)
+	{
+		m_Velocity.x += Velocity.x;
+		m_Velocity.y += Velocity.y;
 	}
 
 	void PhysicsComponent::SetVelocityX(float xVelocity)
@@ -44,9 +59,13 @@ namespace dae
         m_Velocity.y = yVelocity;
     }
 
+	const glm::vec2& PhysicsComponent::GetVelocity() const
+	{
+		return m_Velocity;
+	}
+	
 	void PhysicsComponent::SetGravity(float gravity)
 	{
 		m_Gravity = gravity;
 	}
-
 }
