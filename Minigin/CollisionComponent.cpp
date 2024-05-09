@@ -10,13 +10,14 @@ namespace dae
 {
     std::vector<CollisionComponent*> CollisionComponent::m_pVecAllCollisionComponents{};
 
-    CollisionComponent::CollisionComponent(GameObject* pOwner):
-        CollisionComponent(pOwner, glm::vec2{}, glm::vec2{})
+    CollisionComponent::CollisionComponent(GameObject* pOwner, CollisionType collisionType):
+        CollisionComponent(pOwner, glm::vec2{}, glm::vec2{}, collisionType)
     {
     }
 
-    CollisionComponent::CollisionComponent(GameObject* pOwner, const glm::vec2& posOffset, const glm::vec2& size) :
+    CollisionComponent::CollisionComponent(GameObject* pOwner, const glm::vec2& posOffset, const glm::vec2& size, CollisionType collisionType) :
         Component{ pOwner },
+        m_CollisionType{collisionType},
         m_HasPhysicsComponent{ nullptr},
         m_CollisionFlags{},
         m_PosOffset{ posOffset },
@@ -90,7 +91,7 @@ namespace dae
         return m_Size;
     }*/
 
-    void CollisionComponent::CheckForCollision()
+    void CollisionComponent::CheckForCollision(CollisionType typeToCheck)
     {
         const auto& worldPos = GetOwner()->GetWorldPosition();
 
@@ -105,7 +106,7 @@ namespace dae
 
         std::for_each(m_pVecAllCollisionComponents.cbegin(), m_pVecAllCollisionComponents.cend(), [&](CollisionComponent* pCollComponent)
             {
-                if(pCollComponent != this)
+                if(pCollComponent != this && typeToCheck == pCollComponent->m_CollisionType)
                 {
                     const auto& otherWorldPos = pCollComponent->GetOwner()->GetWorldPosition();
                     const auto& otherOffset = pCollComponent->m_PosOffset;

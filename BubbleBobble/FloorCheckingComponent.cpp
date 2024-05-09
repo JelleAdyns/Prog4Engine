@@ -22,7 +22,7 @@ void FloorCheckingComponent::Update()
 	m_pCollisionComponent->SetOffset(m_Offset);
 	m_pCollisionComponent->SetSize(m_Size);
 
-	m_pCollisionComponent->CheckForCollision();
+	m_pCollisionComponent->CheckForCollision(dae::CollisionComponent::CollisionType::Platform);
 
 	auto flags = m_pCollisionComponent->GetCollisionFlags();
 

@@ -30,6 +30,7 @@ public:
 			auto localPos = GetGameObject()->GetLocalPosition();
 			m_pPhysicsComponent->AddVelocity(glm::vec2{ m_XDirectionSpeed,0 });
 		}
+
 	}
 
 private:

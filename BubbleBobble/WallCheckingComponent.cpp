@@ -22,7 +22,7 @@ void WallCheckingComponent::Update()
 	m_pCollisionComponent->SetOffset(m_Offset);
 	m_pCollisionComponent->SetSize(m_Size);
 	
-	m_pCollisionComponent->CheckForCollision();
+	m_pCollisionComponent->CheckForCollision(dae::CollisionComponent::CollisionType::Wall);
 
 	auto flags = m_pCollisionComponent->GetCollisionFlags();
 
@@ -39,19 +39,20 @@ void WallCheckingComponent::Update()
 	{
 	
 		auto localPos = GetOwner()->GetLocalPosition();
-		auto left = localPos.x + m_Offset.x;
+		/*auto left = localPos.x + m_Offset.x;
 		if (localPos.x <= m_WallThickness)
-		{
-			GetOwner()->SetLocalPos(localPos.x + (m_WallThickness - left), localPos.y);
+		{*/
+		GetOwner()->SetLocalPos(localPos.x + overlappedDistance.x, localPos.y);
+			//GetOwner()->SetLocalPos(localPos.x + (m_WallThickness - left), localPos.y);
 			m_pPhysicsComponent->SetVelocityX(0);
 			m_CollidingLeft = true;
-		}
-		 if (m_pPhysicsComponent->GetVelocity().y > 0)
-		{
-			GetOwner()->SetLocalPos(localPos.x + overlappedDistance.x, localPos.y);
-			m_pPhysicsComponent->SetVelocityX(0);
-			m_CollidingLeft = true;
-		}
+		//}
+		//else /*(m_pPhysicsComponent->GetVelocity().y >= 0)*/
+		//{
+		//	GetOwner()->SetLocalPos(localPos.x + overlappedDistance.x, localPos.y);
+		//	m_pPhysicsComponent->SetVelocityX(0);
+		//	m_CollidingLeft = true;
+		//}
 		
 	}
 	if ((flags & rightFlag) == rightFlag)
@@ -59,20 +60,20 @@ void WallCheckingComponent::Update()
 		
 		auto localPos = GetOwner()->GetLocalPosition();
 
-		auto right = localPos.x + m_Offset.x + m_Size.x;
+		//auto right = localPos.x + m_Offset.x + m_Size.x;
 
-		if (right >= static_cast<float>(dae::Minigin::GetWindowSize().x) - m_WallThickness)
-		{
-			GetOwner()->SetLocalPos(localPos.x + (static_cast<float>(dae::Minigin::GetWindowSize().x) - (m_WallThickness) - right), localPos.y);
-			m_pPhysicsComponent->SetVelocityX(0);
-			m_CollidingRight = true;
-		}
-		if (m_pPhysicsComponent->GetVelocity().y > 0)
-		{
+		//if (right >= static_cast<float>(dae::Minigin::GetWindowSize().x) - m_WallThickness)
+		//{
+		//	GetOwner()->SetLocalPos(localPos.x + (static_cast<float>(dae::Minigin::GetWindowSize().x) - (m_WallThickness) - right), localPos.y);
+		//	m_pPhysicsComponent->SetVelocityX(0);
+		//	m_CollidingRight = true;
+		//}
+		//else /*(m_pPhysicsComponent->GetVelocity().y >= 0)*/
+		//{
 			GetOwner()->SetLocalPos(localPos.x - overlappedDistance.x, localPos.y);
 			m_pPhysicsComponent->SetVelocityX(0);
 			m_CollidingRight = true;
-		}
+		//}
 	}
 
 }

@@ -20,8 +20,15 @@ namespace dae
             Right = 0b1000
         };
 
-        explicit CollisionComponent(GameObject* pOwner);
-        explicit CollisionComponent(GameObject* pOwner, const glm::vec2& posOffset, const glm::vec2& size);
+        enum class CollisionType
+        {
+            Platform,
+            Wall,
+            Other
+        };
+
+        explicit CollisionComponent(GameObject* pOwner, CollisionType collisionType = CollisionType::Other);
+        explicit CollisionComponent(GameObject* pOwner, const glm::vec2& posOffset, const glm::vec2& size, CollisionType collisionType = CollisionType::Other);
         virtual ~CollisionComponent();
 
         CollisionComponent(const CollisionComponent&) = delete;
@@ -39,7 +46,7 @@ namespace dae
         void SetOffset(const glm::vec2& newOffset);
         void SetSize(const glm::vec2& newSize);
 
-        void CheckForCollision();
+        void CheckForCollision(CollisionType typeToCheck);
 
     private:
         //const glm::vec2& GetOffset();
@@ -53,6 +60,9 @@ namespace dae
         };
 
         bool IsColliding(const Box& box, const Box& otherBox, CollidingSide sideToTest);
+
+
+        CollisionType m_CollisionType;
 
         bool m_HasPhysicsComponent;
         uint8_t m_CollisionFlags;

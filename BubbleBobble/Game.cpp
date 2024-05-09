@@ -412,7 +412,7 @@ void Game::MakePlayer(dae::Scene& scene) const
 	dae::PhysicsComponent::SetGravity(300);
 	player1->AddComponent<dae::CollisionComponent>(glm::vec2{}, glm::vec2{ 16,16 });
 	player1->AddComponent<WallCheckingComponent>(glm::vec2{ 0,4 }, glm::vec2{ 16,8 });
-	player1->AddComponent<FloorCheckingComponent>(glm::vec2{ 4,0 }, glm::vec2{ 8,16 });
+	player1->AddComponent<FloorCheckingComponent>(glm::vec2{ 5,0 }, glm::vec2{ 6,16 });
 	player1->AddComponent<SpriteComponent>("BubRunning.png", 4, 4, 0.1f);
 	//player1->AddComponent<LivesComponent>(starterLives, livesDisplay->GetComponent<LivesUIComponent>());
 	//player1->AddComponent<PickUpComponent>(PickUpComponent::PickUpType::Melon, scoreDisplay->GetComponent<ScoreUIComponent>());

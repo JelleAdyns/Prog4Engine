@@ -1,92 +1,92 @@
 Level 1
 01
 02
-03................................
-04..                            ..
-05..                            ..
-06..                            ..
-07..                            ..
-08..                            ..
-09..                            ..
-10..                            ..
-11..                            ..
-12..                            ..
-13....   ..................   ....
-14..                            ..
-15..                            ..
-16..                            ..
-17..                            ..
-18....   ..................   ....
-19..                            ..
-20..                            ..
-21..                            ..
-22..                            ..
-23....   ..................   ....
-24..                            ..
-25..                            ..
-26..                            ..
-27..                            ..
-28................................
+03wwppppppppppppppppppppppppppppww
+04ww                            ww
+05ww                            ww
+06ww                            ww
+07ww                            ww
+08ww                            ww
+09ww                            ww
+10ww                            ww
+11ww                            ww
+12ww                            ww
+13wwpp   pppppppppppppppppp   ppww
+14ww                            ww
+15ww                            ww
+16ww                            ww
+17ww                            ww
+18wwpp   pppppppppppppppppp   ppww
+19ww                            ww
+20ww                            ww
+21ww                            ww
+22ww                            ww
+23wwpp   pppppppppppppppppp   ppww
+24ww                            ww
+25ww                            ww
+26ww                            ww
+27ww                            ww
+28wwppppppppppppppppppppppppppppww
 -
 
 Level 2
 01
 02
-03................................
-04..                            ..
-05..                            ..
-06..                            ..
-07..                            ..
-08..           ......           ..
-09..                            ..
-10..                            ..
-11..                            ..
-12..                            ..
-13..        .....  .....        ..
-14..                            ..
-15..                            ..
-16..                            ..
-17..                            ..
-18..     ..................     ..
-19..                            ..
-20..                            ..
-21..                            ..
-22..                            ..
-23..  .......  ......  .......  ..
-24..                            ..
-25..                            ..
-26..                            ..
-27..                            ..
-28................................
+03wwppppppppppppppppppppppppppppww
+04ww                            ww
+05ww                            ww
+06ww                            ww
+07ww                            ww
+08ww           pppppp           ww
+09ww                            ww
+10ww                            ww
+11ww                            ww
+12ww                            ww
+13ww        ppppp  ppppp        ww
+14ww                            ww
+15ww                            ww
+16ww                            ww
+17ww                            ww
+18ww     pppppppppppppppppp     ww
+19ww                            ww
+20ww                            ww
+21ww                            ww
+22ww                            ww
+23ww  ppppppp  pppppp  ppppppp  ww
+24ww                            ww
+25ww                            ww
+26ww                            ww
+27ww                            ww
+28wwppppppppppppppppppppppppppppww
 -
 
 Level 3
 01
 02
-03.........    ......    .........
-04..                            ..
-05..                            ..
-06..                            ..
-07..                            ..
-08..   ........      ........   ..
-09..   .                    .   ..
-10..   .                    .   ..
-11..   .                    .   ..
-12..   .                    .   ..
-13..   .........    .........   ..
-14..   .                    .   ..
-15..   .                    .   ..
-16..   .                    .   ..
-17..   .                    .   ..
-18..   ..........  ..........   ..
-19..                            ..
-20..                            ..
-21..                            ..
-22..                            ..
-23.......  ...        ...  .......
-24..                            ..
-25..                            ..
-26..                            ..
-27..                            ..
-28.........    ......    .........
+03wwppppppp    pppppp    pppppppww
+04ww                            ww
+05ww                            ww
+06ww                            ww
+07ww                            ww
+08ww   pppppppp      pppppppp   ww
+09ww   w                    w   ww
+10ww   w                    w   ww
+11ww   w                    w   ww
+12ww   w                    w   ww
+13ww   wpppppppp    ppppppppw   ww
+14ww   w                    w   ww
+15ww   w                    w   ww
+16ww   w                    w   ww
+17ww   w                    w   ww
+18ww   wppppppppp  pppppppppw   ww
+19ww                            ww
+20ww                            ww
+21ww                            ww
+22ww                            ww
+23wwppppp  ppp        ppp  pppppww
+24ww                            ww
+25ww                            ww
+26ww                            ww
+27ww                            ww
+28wwppppppp    pppppp    pppppppww
 -
