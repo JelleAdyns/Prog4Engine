@@ -3,8 +3,12 @@
 
 namespace dae
 {
-	TransformComponent::TransformComponent(GameObject* pOwner):
-		Component{pOwner}, m_position{}
+	TransformComponent::TransformComponent(GameObject* pOwner) :
+		Component{ pOwner }, m_position{ }
+	{
+	}
+	TransformComponent::TransformComponent(GameObject* pOwner, const glm::vec2& pos):
+		Component{pOwner}, m_position{pos }
 	{}
 
 	void TransformComponent::Update(){}

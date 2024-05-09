@@ -23,6 +23,7 @@ namespace dae
 	public:
 
 		GameObject();
+		GameObject(int x, int y);
 		GameObject(float x, float y);
 
 		~GameObject() = default;

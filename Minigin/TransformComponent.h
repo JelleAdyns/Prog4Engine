@@ -10,6 +10,7 @@ namespace dae
 	{
 	public:
 		explicit TransformComponent(GameObject* pOwner);
+		explicit TransformComponent(GameObject* pOwner, const glm::vec2& pos);
 		virtual ~TransformComponent() = default;
 		TransformComponent(const TransformComponent& other) = delete;
 		TransformComponent(TransformComponent&& other) = delete;

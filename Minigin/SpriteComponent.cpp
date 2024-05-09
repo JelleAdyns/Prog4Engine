@@ -56,6 +56,7 @@ SpriteComponent::SpriteComponent(dae::GameObject* pOwner, std::unique_ptr<dae::T
 		static_cast<float>(m_pTexture->GetSrcRect().h)
 	);
 }
+
 void SpriteComponent::Update()
 {
 	if (!m_pRenderComponent)

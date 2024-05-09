@@ -27,7 +27,7 @@ std::unique_ptr<dae::Texture2D> dae::ResourceManager::LoadTexture(const std::str
 		m_pMapSDLTextures[file] = std::unique_ptr<SDL_Texture, SDLTextureDeleter>(texture);
 	}
 	
-	return std::make_unique<dae::Texture2D>(m_pMapSDLTextures[file].get(), false);
+	return std::make_unique<dae::Texture2D>(m_pMapSDLTextures.at(file).get(), false);
 	
 }
 
