@@ -7,6 +7,7 @@
 #include <thread>
 #include "ResourceManager.h"
 #include <mutex>
+#include <iostream>
 
 namespace dae
 {
@@ -44,9 +45,15 @@ namespace dae
 		{
 			std::unique_ptr<Mix_Chunk, ChunkDeleter> pMixChunk;
 			std::string filename;
+		};
+		struct AudioInfo
+		{
+			SoundID id;
 			uint8_t volume;
 			bool repeat;
 		};
+		std::map<SoundID, AudioClip> m_pMapMusicClips{};
+		std::queue<AudioInfo> m_Events{};
 
 		void HandleRequests();
 
@@ -55,49 +62,44 @@ namespace dae
 
 		std::jthread m_Thread;
 		std::mutex m_EventsMutex;
-		std::mutex m_MapMutex;
-
-		std::map<SoundID, AudioClip> m_pMapMixMusics{};
-		std::queue<SoundID> m_Events{};
+		mutable std::mutex m_MapMutex;
 	};
 
 
 	void SDLAudio::SDLAudioImpl::AddSoundImpl(const std::string& filename, SoundID id)
 	{
-		AudioClip clip;
-		clip.filename = m_DataPath + filename;
-
-		std::lock_guard<std::mutex> lk{ m_MapMutex };
-		m_pMapMixMusics[id] = std::move(clip);
+		std::lock_guard<std::mutex> mapLock{m_MapMutex};
+		m_pMapMusicClips[id].filename = m_DataPath + filename;
 	}
 	void SDLAudio::SDLAudioImpl::PlaySoundClipImpl(SoundID id, uint8_t volume, bool repeat)
 	{
-		std::lock_guard<std::mutex> mapLock{ m_MapMutex };
 
-		if (m_pMapMixMusics.contains(id))
+		std::unique_lock<std::mutex> mapLock{ m_MapMutex };
+		if (m_pMapMusicClips.contains(id))
 		{
-			m_pMapMixMusics.at(id).volume = volume;
-			m_pMapMixMusics.at(id).repeat = repeat;
+			mapLock.unlock();
+
+			AudioInfo info{};
+			info.id = id;
+			info.volume = volume;
+			info.repeat = repeat;
 
 			std::lock_guard<std::mutex> eventsLock{ m_EventsMutex };
-			m_Events.push(id);
+			m_Events.push(info);
 		}
+		else throw std::runtime_error("SoundID has not been added yet.\n");
 		
 	}
 	uint8_t SDLAudio::SDLAudioImpl::GetVolumeImpl(SoundID id) const
 	{
-		if (m_pMapMixMusics.at(id).pMixChunk != nullptr)
-		{
-			return static_cast<uint8_t>( Mix_Volume(id, -1) );
-		}
+		std::lock_guard<std::mutex> mapLock{ m_MapMutex };
+		if (m_pMapMusicClips.at(id).pMixChunk != nullptr) return static_cast<uint8_t>( Mix_Volume(id, -1) );
 		return 0;
 	}
 	void SDLAudio::SDLAudioImpl::SetVolumeImpl(SoundID id, uint8_t newVolume)
 	{
-		if (m_pMapMixMusics.at(id).pMixChunk != nullptr)
-		{
-			Mix_Volume(id, newVolume);
-		}
+		std::lock_guard<std::mutex> mapLock{ m_MapMutex };
+		if (m_pMapMusicClips.at(id).pMixChunk != nullptr) Mix_Volume(id, newVolume);
 	}
 	void SDLAudio::SDLAudioImpl::PauseSoundImpl(SoundID id) const
 	{
@@ -128,23 +130,38 @@ namespace dae
 	{
 		while (m_ServiceIsActive)
 		{
-			std::unique_lock<std::mutex> eventsLock{m_EventsMutex};
-			if (m_Events.empty()) continue;
+			////////////
+			// Events lock
+			std::unique_lock<std::mutex> eventsLock{ m_EventsMutex };
 
-			SoundID id = m_Events.front();
+			if (m_Events.empty())
+			{
+				eventsLock.unlock();
+				continue;
+			}
+			AudioInfo info = m_Events.front();
 			m_Events.pop();
+
 			eventsLock.unlock();
+			////////////
 
+			SoundID id = info.id;
 
-			std::lock_guard<std::mutex> mapLock{ m_MapMutex };
-			auto& audioClip = m_pMapMixMusics.at(id);
+			////////////
+			// Map lock
+			std::unique_lock<std::mutex> mapLock{ m_MapMutex };
 
 			if (Mix_Playing(id)) Mix_HaltChannel(id);
-			else audioClip.pMixChunk.reset(Mix_LoadWAV(audioClip.filename.c_str()));
+			else m_pMapMusicClips.at(id).pMixChunk.reset(Mix_LoadWAV(m_pMapMusicClips.at(id).filename.c_str()));
 
-			Mix_Volume(id, audioClip.volume);
+			Mix_Chunk* pMusic = m_pMapMusicClips.at(id).pMixChunk.get();
 
-			Mix_PlayChannel(id, audioClip.pMixChunk.get(), audioClip.repeat ? -1 : 0);
+			mapLock.unlock();
+			////////////
+
+			Mix_Volume(id, info.volume);
+
+			Mix_PlayChannel(id, pMusic, info.repeat ? -1 : 0);
 		}
 	}
 

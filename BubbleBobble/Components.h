@@ -3,6 +3,8 @@
 
 #include <Component.h>
 #include <RenderComponent.h>
+#include <CollisionComponent.h>
+#include <PhysicsComponent.h>
 #include <TransformComponent.h>
 #include <TextComponent.h>
 #include <ImageComponent.h>
@@ -18,5 +20,7 @@
 #include "SpriteComponent.h"
 #include "ButtonComponent.h"
 #include "ButtonHandlerComponent.h"
+#include "WallCheckingComponent.h"
+#include "FloorCheckingComponent.h"
 
 #endif // !COMPONENTS_H

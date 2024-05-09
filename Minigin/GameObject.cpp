@@ -8,29 +8,24 @@
 namespace dae
 {
 	GameObject::GameObject() :
-		m_IsDead{},
-		m_IsPosDirty{ true },
-		m_pLocalTransform{ std::make_unique<TransformComponent>(this) },
-		m_pWorldTransform{ std::make_unique<TransformComponent>(this) },
-		m_pParent{ nullptr },
-		m_pVecChildren{},
-		m_pRenderComponent{ nullptr },
-		m_pPhysicsComponent{ nullptr },
-		m_pMapComponents{}
+		GameObject(0,0)
 	{}
+
+	GameObject::GameObject(int x, int y) :
+		GameObject(static_cast<float>(x), static_cast<float>(y))
+	{}
+
 	GameObject::GameObject(float x, float y) :
 		m_IsDead{},
 		m_IsPosDirty{ true },
-		m_pLocalTransform{ std::make_unique<TransformComponent>(this) },
-		m_pWorldTransform{ std::make_unique<TransformComponent>(this) },
+		m_pLocalTransform{ std::make_unique<TransformComponent>(this, glm::vec2{ x, y }) },
+		m_pWorldTransform{ std::make_unique<TransformComponent>(this, glm::vec2{ x, y }) },
 		m_pParent{ nullptr },
 		m_pVecChildren{},
 		m_pRenderComponent{ nullptr },
 		m_pPhysicsComponent{ nullptr },
 		m_pMapComponents{}
 	{
-		m_pLocalTransform->SetPosition(glm::vec2{ x, y });
-		m_pWorldTransform->SetPosition(glm::vec2{ x, y });
 	}
 
 	void GameObject::Update()

@@ -11,6 +11,7 @@ namespace dae
 	{
 	public:
 		explicit ImageComponent(GameObject* pOwner, const std::string& texturePath);
+		explicit ImageComponent(GameObject* pOwner, std::unique_ptr<Texture2D>&& pTexture);
 		virtual ~ImageComponent() = default;
 
 		ImageComponent(const ImageComponent&) = delete;

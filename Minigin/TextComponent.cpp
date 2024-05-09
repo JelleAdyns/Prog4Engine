@@ -17,6 +17,26 @@ namespace dae
 	
 	}
 
+	TextComponent::TextComponent(GameObject* pOwner, const std::string& text, std::unique_ptr<Font>&& pFont, std::unique_ptr<Texture2D>&& pTexture)
+		: Component{ pOwner },
+		m_needsUpdate{ true },
+		m_text{ text },
+		m_pFont{ std::move(pFont) },
+		m_pTextTexture{ std::move(pTexture) },
+		m_pRenderComponent{ nullptr }
+	{
+	}
+
+	TextComponent::TextComponent(GameObject* pOwner, const std::string& text, std::unique_ptr<Font>&& pFont)
+		: Component{ pOwner },
+		m_needsUpdate{ true },
+		m_text{ text },
+		m_pFont{ std::move(pFont) },
+		m_pTextTexture{ nullptr },
+		m_pRenderComponent{ nullptr } 
+	{
+	}
+
 
 	void TextComponent::Update()
 	{

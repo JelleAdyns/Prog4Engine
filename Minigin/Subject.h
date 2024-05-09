@@ -22,14 +22,16 @@ namespace dae
 
 		void AddObserver(Observer<T>* pObserver)
 		{
-			
-			auto pos = std::find(m_pVecObservers.cbegin(), m_pVecObservers.cend(), pObserver);
-			if (pos == m_pVecObservers.cend())
+			if(pObserver)
 			{
-				m_pVecObservers.push_back(pObserver);
-				pObserver->AddSubjectPointer(this);
+				auto pos = std::find(m_pVecObservers.cbegin(), m_pVecObservers.cend(), pObserver);
+				if (pos == m_pVecObservers.cend())
+				{
+					m_pVecObservers.push_back(pObserver);
+					if (pObserver) pObserver->AddSubjectPointer(this);
+				}
+				else throw std::runtime_error("Observer already subscribed to Subject");
 			}
-			else throw std::runtime_error("Observer already subscribed to Subject");
 		}
 		void RemoveObserver(Observer<T>* pObserver)
 		{

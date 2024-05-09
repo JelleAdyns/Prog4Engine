@@ -2,7 +2,10 @@
 #define PHYSICSCOMPONENT_H
 
 #include <memory>
+#include <vector>
 #include "Component.h"
+#include "Subject.h"
+
 namespace dae
 {
     class CollisionComponent;
@@ -10,7 +13,7 @@ namespace dae
 	{
 	public:
 		explicit PhysicsComponent(GameObject* pOwner);
-		virtual ~PhysicsComponent() = default;
+		virtual ~PhysicsComponent();
 
 		PhysicsComponent(const PhysicsComponent&) = delete;
 		PhysicsComponent(PhysicsComponent&&) noexcept = delete;
@@ -22,8 +25,11 @@ namespace dae
 
 		void FixedUpdate();
 
+        void AddVelocity(const glm::vec2& Velocity);
         void SetVelocityX(float xVelocity);
         void SetVelocityY(float yVelocity);
+
+		const glm::vec2& GetVelocity() const;
 
 		static void SetGravity(float gravity);
 	private:
@@ -31,8 +37,6 @@ namespace dae
 		float m_Mass;
 
 		glm::vec2 m_Velocity;
-
-        CollisionComponent* m_pPhysicsComponent;
 
 		static float m_Gravity;
 	};

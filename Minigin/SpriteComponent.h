@@ -15,6 +15,7 @@ class SpriteComponent final : public dae::Component
 {
 public:
 	explicit SpriteComponent(dae::GameObject* pOwner, const std::string& texturePath, int nrCols, int nrFrames, float frameTime, bool needsToUpdate = true);
+	explicit SpriteComponent(dae::GameObject* pOwner, std::unique_ptr<dae::Texture2D>&& pTexture, int nrCols, int nrFrames, float frameTime, bool needsToUpdate = true);
 	virtual ~SpriteComponent() = default;
 
 
