@@ -22,5 +22,6 @@
 #include "ButtonHandlerComponent.h"
 #include "WallCheckingComponent.h"
 #include "FloorCheckingComponent.h"
+#include "PlayerComponent.h"
 
 #endif // !COMPONENTS_H

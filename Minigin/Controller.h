@@ -51,7 +51,7 @@ namespace dae
 		bool IsPressed(ControllerButton button)  const;
 
 		void AddCommand(const std::shared_ptr<Command>& pCommand, ControllerButton button, KeyState keyState);
-		void RemoveCommand(ControllerButton button);
+		void RemoveCommand(ControllerButton button, KeyState keyState);
 		void RemoveAllCommands();
 
 		glm::vec2 GetJoystickValue(bool leftJoystick);

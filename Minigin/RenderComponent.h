@@ -25,10 +25,16 @@ namespace dae
 		void Render() const;
 
 		template <typename T>
-		void AddTexture(const std::unique_ptr<Texture2D>& pTexture)
+		void AddTexture(const std::unique_ptr<Texture2D>& pTexture, bool flipTexture = false)
 		{
 			assert((std::derived_from<T,Component>));
-			m_pMapTexturesToRender[typeid(T)] = pTexture.get();
+			m_pMapTexturesToRender[typeid(T)] = std::make_pair(pTexture.get(), flipTexture);
+		}
+		template <typename T>
+		void SetFlipped(bool flipTexture)
+		{
+			assert((std::derived_from<T,Component>));
+			m_pMapTexturesToRender.at(typeid(T)).second = flipTexture;
 		}
 
 	private:
@@ -36,7 +42,7 @@ namespace dae
 		bool m_UseMiddle;
 		glm::vec2 m_Pos;
 
-		std::map<std::type_index, Texture2D*> m_pMapTexturesToRender;
+		std::map<std::type_index, std::pair<Texture2D*, bool>> m_pMapTexturesToRender;
 	};
 
 }

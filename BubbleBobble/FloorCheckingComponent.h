@@ -29,6 +29,8 @@ public:
 	bool IsOnGround() const;
 private:
 
+	void HandleCollision();
+
 	bool m_IsOnGround;
 	glm::vec2 m_Offset;
 	glm::vec2 m_Size;

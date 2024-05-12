@@ -15,7 +15,7 @@ namespace dae
 
 		for (auto& pair : m_pMapTexturesToRender)
 		{
-			pair.second->SetDstRect(m_Pos);
+			pair.second.first->SetDstRect(m_Pos);
 		}
 	}
 	void RenderComponent::PrepareImGuiRender() { }
@@ -26,17 +26,20 @@ namespace dae
 		
 		for (auto& pair : m_pMapTexturesToRender)
 		{
+			auto& textureAndBoolPair = pair.second;
+
 			if (m_UseMiddle)
 			{
 				glm::ivec2 pos
 				{
-					static_cast<int>(m_Pos.x - pair.second->GetDstRect().w / 2.f),
-					static_cast<int>(m_Pos.y - pair.second->GetDstRect().h / 2.f)
+					static_cast<int>(m_Pos.x - textureAndBoolPair.first->GetDstRect().w / 2.f),
+					static_cast<int>(m_Pos.y - textureAndBoolPair.first->GetDstRect().h / 2.f)
 				};
-				pair.second->SetDstRect(pos);
+				textureAndBoolPair.first->SetDstRect(pos);
 			}
 
-			renderer.RenderTexture(*(pair.second), pair.second->GetSrcRect(), pair.second->GetDstRect());
+			renderer.RenderTexture(*(textureAndBoolPair.first), textureAndBoolPair.first->GetSrcRect(), textureAndBoolPair.first->GetDstRect(), textureAndBoolPair.second);
+				
 		}
 		
 	}

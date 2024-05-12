@@ -19,29 +19,14 @@ void FloorCheckingComponent::Update()
 	if (!m_pCollisionComponent) m_pCollisionComponent = GetOwner()->GetComponent<dae::CollisionComponent>();
 	if (!m_pPhysicsComponent) m_pPhysicsComponent = GetOwner()->GetComponent<dae::PhysicsComponent>();
 
-	m_pCollisionComponent->SetOffset(m_Offset);
-	m_pCollisionComponent->SetSize(m_Size);
 
-	m_pCollisionComponent->CheckForCollision(dae::CollisionComponent::CollisionType::Platform);
-
-	auto flags = m_pCollisionComponent->GetCollisionFlags();
-
-	//const auto leftFlag = static_cast<char>(dae::CollisionComponent::CollidingSide::Left);
-	const auto bottomFlag = static_cast<char>(dae::CollisionComponent::CollidingSide::Bottom);
-
-	auto overlappedDistance = m_pCollisionComponent->GetOverlappedDistance();
-
-	m_IsOnGround = false;
-	if ((flags & bottomFlag) == bottomFlag)
+	if (const auto& localPos = GetOwner()->GetLocalPosition(); localPos.y > dae::Minigin::GetWindowSize().y)
 	{
-		if (m_pPhysicsComponent->GetVelocity().y >= 0)
-		{
-			auto localPos = GetOwner()->GetLocalPosition();
-			GetOwner()->SetLocalPos(localPos.x, localPos.y - overlappedDistance.y);
-			m_pPhysicsComponent->SetVelocityY(0);
-			m_IsOnGround = true;
-		}
+		GetOwner()->SetLocalPos(localPos.x, -50);
 	}
+
+	HandleCollision();
+	
 }
 
 void FloorCheckingComponent::PrepareImGuiRender()
@@ -63,4 +48,30 @@ void FloorCheckingComponent::PrepareImGuiRender()
 bool FloorCheckingComponent::IsOnGround() const
 {
 	return m_IsOnGround;
+}
+
+void FloorCheckingComponent::HandleCollision()
+{
+	m_pCollisionComponent->SetOffset(m_Offset);
+	m_pCollisionComponent->SetSize(m_Size);
+
+	m_pCollisionComponent->CheckForCollision(dae::CollisionComponent::CollisionType::Platform);
+
+	auto flags = m_pCollisionComponent->GetCollisionFlags();
+
+	const auto bottomFlag = static_cast<char>(dae::CollisionComponent::CollidingSide::Bottom);
+
+	auto overlappedDistance = m_pCollisionComponent->GetOverlappedDistance();
+
+	m_IsOnGround = false;
+	if ((flags & bottomFlag) == bottomFlag)
+	{
+		if (m_pPhysicsComponent->GetVelocity().y >= 0)
+		{
+			auto localPos = GetOwner()->GetLocalPosition();
+			GetOwner()->SetLocalPos(localPos.x, localPos.y - overlappedDistance.y);
+			m_pPhysicsComponent->SetVelocityY(0);
+			m_IsOnGround = true;
+		}
+	}
 }

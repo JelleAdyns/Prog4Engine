@@ -41,7 +41,9 @@ namespace dae
 
         uint8_t GetCollisionFlags() const;
 
-        const glm::vec2& GetOverlappedDistance();
+        const glm::vec2& GetOverlappedDistance() const;
+        const glm::vec2& GetOffset() const;
+        const glm::vec2& GetSize() const;
 
         void SetOffset(const glm::vec2& newOffset);
         void SetSize(const glm::vec2& newSize);

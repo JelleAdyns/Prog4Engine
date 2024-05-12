@@ -60,10 +60,6 @@ namespace dae
         ImGui::End();
     }
 
-    const glm::vec2& CollisionComponent::GetOverlappedDistance()
-    {
-        return m_OverlappedDistance;
-    }
 
     void CollisionComponent::SetOffset(const glm::vec2& newOffset)
     {
@@ -148,9 +144,24 @@ namespace dae
         return m_CollisionFlags;
     }
 
+    const glm::vec2& CollisionComponent::GetOverlappedDistance() const
+    {
+        return m_OverlappedDistance;
+    }
+
+    const glm::vec2& CollisionComponent::GetOffset() const
+    {
+        return m_PosOffset;
+    }
+
+    const glm::vec2& CollisionComponent::GetSize() const
+    {
+        return m_Size;
+    }
+
     bool CollisionComponent::IsColliding(const Box& box, const Box& otherBox, CollidingSide sideToTest)
     {
-         switch (sideToTest)
+        switch (sideToTest)
         {
         case CollidingSide::Top:
 

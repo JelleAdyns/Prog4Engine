@@ -163,51 +163,64 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\Minigin\SpriteComponent.cpp" />
     <ClCompile Include="Achievements.cpp" />
     <ClCompile Include="ButtonComponent.cpp" />
     <ClCompile Include="ButtonHandlerComponent.cpp" />
     <ClCompile Include="CacheExperimentComponent.cpp" />
+    <ClCompile Include="EnemyComponent.cpp" />
     <ClCompile Include="FloorCheckingComponent.cpp" />
     <ClCompile Include="FPSComponent.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="IdleState.cpp" />
     <ClCompile Include="LivesComponent.cpp" />
     <ClCompile Include="LivesUIComponent.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="PickUpComponent.cpp" />
+    <ClCompile Include="PlayerComponent.cpp" />
     <ClCompile Include="RotatorComponent.cpp" />
     <ClCompile Include="ScoreUIComponent.cpp" />
+    <ClCompile Include="SpriteComponent.cpp" />
     <ClCompile Include="TrashTheCacheGameObjectsComponent.cpp" />
     <ClCompile Include="TrashTheCacheIntComponent.cpp" />
     <ClCompile Include="WallCheckingComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Minigin\SpriteComponent.h" />
     <ClInclude Include="Achievements.h" />
     <ClInclude Include="ActivateButtonCommand.h" />
+    <ClInclude Include="EnemyComponent.h" />
+    <ClInclude Include="ShootCommand.h" />
     <ClInclude Include="ButtonComponent.h" />
     <ClInclude Include="ButtonHandlerComponent.h" />
     <ClInclude Include="CacheExperimentComponent.h" />
     <ClInclude Include="Commands.h" />
     <ClInclude Include="Components.h" />
+    <ClInclude Include="FallingState.h" />
     <ClInclude Include="FloorCheckingComponent.h" />
     <ClInclude Include="FPSComponent.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="HitState.h" />
+    <ClInclude Include="IdleState.h" />
     <ClInclude Include="JumpCommand.h" />
+    <ClInclude Include="JumpingState.h" />
     <ClInclude Include="Killcommand.h" />
     <ClInclude Include="LevelLoader.h" />
     <ClInclude Include="LivesComponent.h" />
     <ClInclude Include="LivesUIComponent.h" />
     <ClInclude Include="LoadSceneCommand.h" />
-    <ClInclude Include="MoveCommand.h" />
+    <ClInclude Include="MovementCommands.h" />
     <ClInclude Include="PickUpCommand.h" />
     <ClInclude Include="PickUpComponent.h" />
+    <ClInclude Include="PlayerComponent.h" />
+    <ClInclude Include="PlayerState.h" />
     <ClInclude Include="RotatorComponent.h" />
     <ClInclude Include="ScoreUIComponent.h" />
     <ClInclude Include="SelectButtonCommand.h" />
     <ClInclude Include="SetTextCommand.h" />
+    <ClInclude Include="SpriteComponent.h" />
+    <ClInclude Include="States.h" />
     <ClInclude Include="TrashTheCacheGameObjectsComponent.h" />
     <ClInclude Include="TrashTheCacheIntComponent.h" />
+    <ClInclude Include="WalkingState.h" />
     <ClInclude Include="WallCheckingComponent.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
