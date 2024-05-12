@@ -4,6 +4,8 @@
 #include "PlayerState.h"
 #include "SpriteComponent.h"
 #include "PlayerComponent.h"
+#include "HitState.h"
+#include "FallingState.h"
 #include "Commands.h"
 #include <KeyState.h>
 #include <GameObject.h>
@@ -25,8 +27,10 @@ public:
 	JumpingState& operator= (const JumpingState&) = delete;
 	JumpingState& operator= (JumpingState&&) noexcept = delete;
 
-	virtual std::unique_ptr<PlayerState> Update() const override
+	virtual std::unique_ptr<PlayerState> Update() override
 	{
+		if (m_pPlayerComp->IsHit()) return std::make_unique<HitState>(m_pPlayer, m_pPlayerComp);
+
 		if (m_pPhysicsComp->GetVelocity().y > 0.f)
 		{
 			return std::make_unique<FallingState>(m_pPlayer, m_pPlayerComp);

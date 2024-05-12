@@ -18,10 +18,10 @@ class FloorCheckingComponent final : public dae::Component
 public:
 	explicit FloorCheckingComponent(dae::GameObject* pOwner, const glm::vec2& offset, const glm::vec2& size);
 	virtual ~FloorCheckingComponent() = default;
-	FloorCheckingComponent(const FloorCheckingComponent& other) = delete;
-	FloorCheckingComponent(FloorCheckingComponent&& other) = delete;
-	FloorCheckingComponent& operator=(const FloorCheckingComponent& other) = delete;
-	FloorCheckingComponent& operator=(FloorCheckingComponent&& other) = delete;
+	FloorCheckingComponent(const FloorCheckingComponent&) = delete;
+	FloorCheckingComponent(FloorCheckingComponent&&) noexcept = delete;
+	FloorCheckingComponent& operator= (const FloorCheckingComponent&) = delete;
+	FloorCheckingComponent& operator= (FloorCheckingComponent&&) noexcept = delete;
 
 	virtual void Update() override;
 	virtual void PrepareImGuiRender() override;

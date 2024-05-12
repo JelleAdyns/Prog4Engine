@@ -5,6 +5,7 @@
 #include "SpriteComponent.h"
 #include "PlayerComponent.h"
 #include "IdleState.h"
+#include "HitState.h"
 #include "Commands.h"
 #include <PhysicsComponent.h>
 #include <KeyState.h>
@@ -27,8 +28,11 @@ public:
 	WalkingState& operator= (const WalkingState&) = delete;
 	WalkingState& operator= (WalkingState&&) noexcept = delete;
 
-	virtual std::unique_ptr<PlayerState> Update() const override
+	virtual std::unique_ptr<PlayerState> Update() override
 	{
+
+		if (m_pPlayerComp->IsHit()) return std::make_unique<HitState>(m_pPlayer, m_pPlayerComp);
+
 		auto velocity = m_pPhysicsComp->GetVelocity();
 
 		if (velocity.y < 0.f)

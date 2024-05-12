@@ -19,6 +19,7 @@ namespace dae
         Component{ pOwner },
         m_CollisionType{collisionType},
         m_HasPhysicsComponent{ nullptr},
+        m_CollisionOn{true},
         m_CollisionFlags{},
         m_PosOffset{ posOffset },
         m_Size{ size },
@@ -40,24 +41,24 @@ namespace dae
         
         m_PosOffset = m_GeneralOffset;
         m_Size = m_GeneralSize;
-       // /*if (m_HasPhysicsComponent) */CheckForCollision();
+        /*if (m_HasPhysicsComponent) */CheckForCollision(CollisionType::Other);
 
     }
 
     void CollisionComponent::PrepareImGuiRender()
     {
-        auto scale = Minigin::GetWindowScale();
+       // auto scale = Minigin::GetWindowScale();
 
-        ImGui::Begin("Collision");
-       // ImGui::SetWindowSize(ImVec2{ float( Minigin::GetWindowSize().x* scale), float( Minigin::GetWindowSize().y*scale )});
-       // ImGui::SetWindowPos(ImVec2{});
-        float top = GetOwner()->GetWorldPosition().y + m_GeneralOffset.y;
-        float left = GetOwner()->GetWorldPosition().x + m_GeneralOffset.x;
-        ImGui::GetWindowDrawList()->AddRect(
-            ImVec2(left * scale, top * scale),
-            ImVec2((left + m_GeneralSize.x) * scale, (top + m_GeneralSize.y) * scale),
-            IM_COL32(255, 0, 0, 255));
-        ImGui::End();
+       // ImGui::Begin("Collision");
+       //// ImGui::SetWindowSize(ImVec2{ float( Minigin::GetWindowSize().x* scale), float( Minigin::GetWindowSize().y*scale )});
+       //// ImGui::SetWindowPos(ImVec2{});
+       // float top = GetOwner()->GetWorldPosition().y + m_GeneralOffset.y;
+       // float left = GetOwner()->GetWorldPosition().x + m_GeneralOffset.x;
+       // ImGui::GetWindowDrawList()->AddRect(
+       //     ImVec2(left * scale, top * scale),
+       //     ImVec2((left + m_GeneralSize.x) * scale, (top + m_GeneralSize.y) * scale),
+       //     IM_COL32(255, 0, 0, 255));
+       // ImGui::End();
     }
 
 
@@ -69,6 +70,11 @@ namespace dae
     void CollisionComponent::SetSize(const glm::vec2& newSize)
     {
         m_Size = newSize;
+    }
+
+    void CollisionComponent::SetCollision(bool collisionOn)
+    {
+        m_CollisionOn = collisionOn;
     }
 
     /*const glm::vec2 CollisionComponent::GetCollisionPos()
@@ -102,7 +108,9 @@ namespace dae
 
         std::for_each(m_pVecAllCollisionComponents.cbegin(), m_pVecAllCollisionComponents.cend(), [&](CollisionComponent* pCollComponent)
             {
-                if(pCollComponent != this && typeToCheck == pCollComponent->m_CollisionType)
+                if( pCollComponent != this &&
+                    typeToCheck == pCollComponent->m_CollisionType &&
+                    m_CollisionOn)
                 {
                     const auto& otherWorldPos = pCollComponent->GetOwner()->GetWorldPosition();
                     const auto& otherOffset = pCollComponent->m_PosOffset;

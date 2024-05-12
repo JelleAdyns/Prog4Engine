@@ -5,6 +5,7 @@
 #include "SpriteComponent.h"
 #include "PlayerComponent.h"
 #include "Commands.h"
+#include <CollisionComponent.h>
 #include <KeyState.h>
 #include <GameObject.h>
 #include <InputCommandBinder.h>
@@ -15,7 +16,8 @@ public:
 	explicit HitState(dae::GameObject* pPlayer, PlayerComponent* pPlayerComp) :
 		PlayerState{},
 		m_pPlayer{ pPlayer },
-		m_pPlayerComp{ pPlayerComp }
+		m_pPlayerComp{ pPlayerComp },
+		m_pSpriteComp{ pPlayer->GetComponent<SpriteComponent>()}
 	{}
 	virtual ~HitState() = default;
 
@@ -24,52 +26,18 @@ public:
 	HitState& operator= (const HitState&) = delete;
 	HitState& operator= (HitState&&) noexcept = delete;
 
-	virtual std::unique_ptr<PlayerState> Update() const override
-	{
-		return nullptr;
-	}
-	virtual void OnEnter() const override
-	{
-		SpriteComponent* pSpriteComp = m_pPlayer->GetComponent<SpriteComponent>();
-		pSpriteComp->SetHeightMarkers(128, static_cast<float>(pSpriteComp->GetTextureSize().y));
-		pSpriteComp->SetNrOfRows(3);
-		pSpriteComp->SetRow(0);
-		pSpriteComp->SetCol(0);
-		pSpriteComp->SetRowUpdate(true);
+	virtual std::unique_ptr<PlayerState> Update() override;
+	virtual void OnEnter() const override;
+	virtual void OnExit() const override;
 
-
-		auto& inputMan = dae::InputCommandBinder::GetInstance();
-
-		inputMan.RemoveKeyCommand(SDL_SCANCODE_A, dae::KeyState::Pressed);
-		inputMan.RemoveKeyCommand(SDL_SCANCODE_D, dae::KeyState::Pressed);
-		inputMan.RemoveControllerCommand(dae::ControllerButton::DpadLeft, dae::KeyState::Pressed, m_pPlayerComp->GetPlayerIndex());
-		inputMan.RemoveControllerCommand(dae::ControllerButton::DpadRight, dae::KeyState::Pressed, m_pPlayerComp->GetPlayerIndex());
-
-	}
-	virtual void OnExit() const override
-	{
-
-		SpriteComponent* pSpriteComp = m_pPlayer->GetComponent<SpriteComponent>();
-		pSpriteComp->SetHeightMarkers(128, static_cast<float>(pSpriteComp->GetTextureSize().y));
-		pSpriteComp->SetNrOfRows(3);
-		pSpriteComp->SetRow(0);
-		pSpriteComp->SetCol(0);
-		pSpriteComp->SetRowUpdate(true);
-
-		auto& inputMan = dae::InputCommandBinder::GetInstance();
-
-		std::shared_ptr<dae::Command> moveCommand = std::make_shared<MoveCommand>(m_pPlayer, m_pPlayerComp->GetMoveVelocity());
-		inputMan.AddKeyCommand(moveCommand, SDL_SCANCODE_D, dae::KeyState::Pressed);
-		inputMan.AddControllerCommand(moveCommand, dae::ControllerButton::DpadRight, dae::KeyState::Pressed, m_pPlayerComp->GetPlayerIndex());
-
-		moveCommand = std::make_shared<MoveCommand>(m_pPlayer, -m_pPlayerComp->GetMoveVelocity());
-		inputMan.AddKeyCommand(moveCommand, SDL_SCANCODE_A, dae::KeyState::Pressed);
-		inputMan.AddControllerCommand(moveCommand, dae::ControllerButton::DpadLeft, dae::KeyState::Pressed, m_pPlayerComp->GetPlayerIndex());
-	}
 private:
 	dae::GameObject* m_pPlayer;
 	PlayerComponent* m_pPlayerComp;
+	SpriteComponent* m_pSpriteComp;
 
+	const int m_NrOfRows{ 3 };
+	int m_RowCount{ };
+	static const float m_HitSpriteOffset;
 };
 
 

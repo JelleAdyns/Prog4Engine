@@ -1,8 +1,12 @@
 #include "IdleState.h"
 #include "States.h"
 
-std::unique_ptr<PlayerState> IdleState::Update() const
+const float IdleState::m_NormalSpritesEndHeight{ 64.f };
+
+std::unique_ptr<PlayerState> IdleState::Update()
 {
+
+	if (m_pPlayerComp->IsHit()) return std::make_unique<HitState>(m_pPlayer, m_pPlayerComp);
 
 	auto velocity = m_pPhysicsComp->GetVelocity();
 
@@ -20,10 +24,15 @@ std::unique_ptr<PlayerState> IdleState::Update() const
 }
 void IdleState::OnEnter() const
 {
-	SpriteComponent* spriteComp = m_pPlayer->GetComponent<SpriteComponent>();
-	spriteComp->SetRow(0);
-	spriteComp->SetNrOfRows(4);
-	spriteComp->SetHeightMarkers(0, 64);
+	int nrOfRows{ 4 };
+
+
+	SpriteComponent* pSpriteComp = m_pPlayer->GetComponent<SpriteComponent>();
+	pSpriteComp->SetHeightMarkers(0, m_NormalSpritesEndHeight);
+	pSpriteComp->SetNrOfRows(nrOfRows);
+	pSpriteComp->SetRow(0);
+	pSpriteComp->SetCol(0);
+	pSpriteComp->SetRowUpdate(false);
 
 	m_pPhysicsComp->SetVelocityX(0);
 	m_pPhysicsComp->SetVelocityY(0);
@@ -43,4 +52,9 @@ void IdleState::OnExit() const
 
 	inputMan.RemoveKeyCommand(SDL_SCANCODE_SPACE, dae::KeyState::Pressed);
 	inputMan.RemoveControllerCommand(dae::ControllerButton::Y, dae::KeyState::Pressed, m_pPlayerComp->GetPlayerIndex());
+}
+
+float IdleState::GetNormalSpriteEndheight()
+{
+	return m_NormalSpritesEndHeight;
 }

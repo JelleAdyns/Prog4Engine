@@ -47,7 +47,7 @@ namespace dae
 
         void SetOffset(const glm::vec2& newOffset);
         void SetSize(const glm::vec2& newSize);
-
+        void SetCollision(bool collisionOn);
         void CheckForCollision(CollisionType typeToCheck);
 
     private:
@@ -67,6 +67,7 @@ namespace dae
         CollisionType m_CollisionType;
 
         bool m_HasPhysicsComponent;
+        bool m_CollisionOn;
         uint8_t m_CollisionFlags;
 
         glm::vec2 m_PosOffset;

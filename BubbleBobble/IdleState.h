@@ -27,13 +27,17 @@ public:
 	IdleState& operator= (const IdleState&) = delete;
 	IdleState& operator= (IdleState&&) noexcept = delete;
 
-	virtual std::unique_ptr<PlayerState> Update() const override;
+	virtual std::unique_ptr<PlayerState> Update() override;
 	virtual void OnEnter() const override;
 	virtual void OnExit() const override;
+
+	static float GetNormalSpriteEndheight();
 private:
 	dae::GameObject* m_pPlayer;
 	PlayerComponent* m_pPlayerComp;
 	dae::PhysicsComponent* m_pPhysicsComp;
+
+	static const float m_NormalSpritesEndHeight;
 };
 
 

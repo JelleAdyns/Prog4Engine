@@ -30,13 +30,16 @@ namespace dae
         void SetVelocityY(float yVelocity);
 
 		const glm::vec2& GetVelocity() const;
+		void StopGravity();
+		void StartGravity();
 
 		static void SetGravity(float gravity);
+
 	private:
 
-		float m_Mass;
-
+		bool m_UseGravity;
 		glm::vec2 m_Velocity;
+
 
 		static float m_Gravity;
 	};

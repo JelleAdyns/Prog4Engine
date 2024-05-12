@@ -2,6 +2,8 @@
 #define FALINGSTATE_H
 
 #include "PlayerState.h"
+#include "IdleState.h"
+#include "HitState.h"
 #include "SpriteComponent.h"
 #include "PlayerComponent.h"
 #include "Commands.h"
@@ -25,8 +27,10 @@ public:
 	FallingState& operator= (const FallingState&) = delete;
 	FallingState& operator= (FallingState&&) noexcept = delete;
 
-	virtual std::unique_ptr<PlayerState> Update() const override
+	virtual std::unique_ptr<PlayerState> Update() override
 	{
+		if (m_pPlayerComp->IsHit()) return std::make_unique<HitState>(m_pPlayer, m_pPlayerComp);
+
 		if (m_pFloorCheckingComp->IsOnGround())
 		{
 			return std::make_unique<IdleState>(m_pPlayer, m_pPlayerComp);

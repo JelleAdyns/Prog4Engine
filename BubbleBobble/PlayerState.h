@@ -14,7 +14,7 @@ public:
 	PlayerState& operator= (const PlayerState&) = delete;
 	PlayerState& operator= (PlayerState&&) noexcept = delete;
 
-	virtual std::unique_ptr<PlayerState> Update() const = 0;
+	virtual std::unique_ptr<PlayerState> Update() = 0;
 	virtual void OnEnter() const = 0;
 	virtual void OnExit() const = 0;
 

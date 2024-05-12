@@ -39,13 +39,15 @@ public:
 	void LookLeft(bool isLookingLeft);
 
 	glm::ivec2 GetTextureSize() const;
+	glm::ivec2 GetDestRectSize() const;
 
 
 
 private:
 		
-	void UpdateSrcRect() const;
+	void UpdateSrcRect();
 
+	bool m_SpriteIsDirty;
 	bool m_NeedsUpdate;
 	bool m_NeedsRowUpdate;
 	bool m_IsLookingLeft;
@@ -65,7 +67,7 @@ private:
 	float m_EndHeightMarker;
 
 	dae::RenderComponent* m_pRenderComponent;
-	
+
 	std::unique_ptr<dae::Texture2D> m_pTexture;
 
 	std::unique_ptr<dae::Subject<SpriteComponent>> m_pRowFinished;

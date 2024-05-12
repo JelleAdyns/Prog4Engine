@@ -12,6 +12,7 @@ SpriteComponent::SpriteComponent(dae::GameObject* pOwner, const std::string& tex
 }
 SpriteComponent::SpriteComponent(dae::GameObject* pOwner, std::unique_ptr<dae::Texture2D>&& pTexture, int nrCols, int nrRows, float frameTime, bool needsUpdate, bool needsRowUpdate, PlayerComponent* pObserver):
 	dae::Component{ pOwner },
+	m_SpriteIsDirty{false},
 	m_NeedsUpdate{ needsUpdate },
 	m_NeedsRowUpdate{ needsRowUpdate },
 	m_IsLookingLeft{ false },
@@ -55,6 +56,8 @@ void SpriteComponent::Update()
 		m_pRenderComponent->AddTexture<ThisType>(m_pTexture);
 	}
 
+	if (m_SpriteIsDirty) UpdateSrcRect();
+
 	if(m_NeedsUpdate)
 	{
 		m_PassedTime += dae::GameTime::GetInstance().GetDeltaTime();
@@ -65,11 +68,11 @@ void SpriteComponent::Update()
 			{
 
 				m_pRowFinished->NotifyObservers(this);
-				if (m_NeedsRowUpdate) m_CurrentRow %= m_NrOfRows + m_StartRow;
+				if (m_NeedsRowUpdate) ++m_CurrentRow %= m_NrOfRows + m_StartRow;
 			}
 
  			++m_CurrentCol %= m_NrOfCols;
-			m_PassedTime -= m_FrameTime;
+			m_PassedTime = 0.f;
 
 			UpdateSrcRect();
 		}
@@ -82,12 +85,12 @@ void SpriteComponent::PrepareImGuiRender()
 void SpriteComponent::SetCol(int col)
 {
 	m_CurrentCol = col;
-	UpdateSrcRect();
+	m_SpriteIsDirty = true;
 }
 void SpriteComponent::SetRow(int row)
 {
 	m_CurrentRow = m_StartRow + row;
-	UpdateSrcRect();
+	m_SpriteIsDirty = true;
 }
 
 void SpriteComponent::SetHeightMarkers(float startHeight, float endHeight)
@@ -105,11 +108,14 @@ void SpriteComponent::SetHeightMarkers(float startHeight, float endHeight)
 		static_cast<float>(m_pTexture->GetSrcRect().w),
 		static_cast<float>(m_pTexture->GetSrcRect().h)
 	);
+
+	m_SpriteIsDirty = true;
 }
 
 void SpriteComponent::SetNrOfRows(int nrOfRows)
 {
 	m_NrOfRows = nrOfRows;
+	m_SpriteIsDirty = true;
 }
 
 void SpriteComponent::SetRowUpdate(bool rowNeedsToUpdate)
@@ -121,7 +127,7 @@ void SpriteComponent::SetStartRow(int startRow)
 {
 	m_StartRow = startRow;
 	m_CurrentRow -= (m_CurrentRow - m_StartRow);
-	UpdateSrcRect();
+	m_SpriteIsDirty = true;
 }
 
 void SpriteComponent::SetFrameTime(float frameTime)
@@ -142,9 +148,26 @@ glm::ivec2 SpriteComponent::GetTextureSize() const
 	return m_pTexture->GetTextureSize();
 }
 
-void SpriteComponent::UpdateSrcRect() const
+glm::ivec2 SpriteComponent::GetDestRectSize() const
 {
+	return glm::ivec2{m_pTexture->GetDstRect().w, m_pTexture->GetDstRect().h};
+}
+
+void SpriteComponent::UpdateSrcRect()
+{
+
 	m_pTexture->SetSrcRect(
 		glm::ivec2{ static_cast<float>(m_pTexture->GetTextureSize().x) / m_NrOfCols * m_CurrentCol,
-		(m_EndHeightMarker - m_StartHeightMarker) / m_NrOfRows * m_CurrentRow });
+		m_StartHeightMarker + (m_EndHeightMarker - m_StartHeightMarker) / m_NrOfRows * m_CurrentRow },
+		static_cast<float>(m_pTexture->GetTextureSize().x) / m_NrOfCols,
+		(m_EndHeightMarker - m_StartHeightMarker) / m_NrOfRows);
+
+	m_pTexture->SetDstRect(
+		GetOwner()->GetWorldPosition(),
+		static_cast<float>(m_pTexture->GetSrcRect().w),
+		static_cast<float>(m_pTexture->GetSrcRect().h)
+	);
+
+	m_SpriteIsDirty = false;
+
 }

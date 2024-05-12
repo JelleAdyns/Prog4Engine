@@ -171,6 +171,7 @@
     <ClCompile Include="FloorCheckingComponent.cpp" />
     <ClCompile Include="FPSComponent.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="HitState.cpp" />
     <ClCompile Include="IdleState.cpp" />
     <ClCompile Include="LivesComponent.cpp" />
     <ClCompile Include="LivesUIComponent.cpp" />

@@ -8,7 +8,12 @@ class ShootCommand final : public dae::GameObjectCommand
 {
 public:
 	ShootCommand(const std::unique_ptr<dae::GameObject>& pObject) :
-		dae::GameObjectCommand{ pObject.get() },
+		ShootCommand{ pObject.get() }
+	{
+
+	}
+	ShootCommand(dae::GameObject* pObject) :
+		dae::GameObjectCommand{ pObject },
 		m_pPlayerComp{pObject->GetComponent<PlayerComponent>()}
 	{}
 	virtual ~ShootCommand() = default;
