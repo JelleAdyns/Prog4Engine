@@ -10,7 +10,7 @@ namespace dae
 
 	PhysicsComponent::PhysicsComponent(GameObject* pOwner) :
 		Component{ pOwner },
-		m_Mass{},
+		m_UseGravity{true},
 		m_Velocity{}
 	{
 	}
@@ -32,15 +32,15 @@ namespace dae
 	void PhysicsComponent::FixedUpdate()
 	{
 		auto currPos = GetOwner()->GetLocalPosition();
-		if (currPos.y > 224) currPos.y = 0;
-		if (m_Velocity.y < 200) m_Velocity.y += m_Gravity * GameTime::GetInstance().GetFixedTimeStep();
+
+		if(m_UseGravity) m_Velocity.y += m_Gravity * GameTime::GetInstance().GetFixedTimeStep();
 		
 		GetOwner()->SetLocalPos(
             currPos.x + m_Velocity.x * GameTime::GetInstance().GetFixedTimeStep(), 
             currPos.y + m_Velocity.y * GameTime::GetInstance().GetFixedTimeStep()
         );
 
-		m_Velocity.x = 0;
+		//m_Velocity.x = 0;
 	}
 
 	void PhysicsComponent::AddVelocity(const glm::vec2& Velocity)
@@ -63,7 +63,14 @@ namespace dae
 	{
 		return m_Velocity;
 	}
-	
+	void PhysicsComponent::StopGravity()
+	{
+		m_UseGravity = false;
+	}
+	void PhysicsComponent::StartGravity()
+	{
+		m_UseGravity = true;
+	}
 	void PhysicsComponent::SetGravity(float gravity)
 	{
 		m_Gravity = gravity;

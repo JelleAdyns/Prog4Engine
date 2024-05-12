@@ -11,7 +11,10 @@ class JumpCommand final : public dae::GameObjectCommand
 {
 public:
     JumpCommand(const std::unique_ptr<dae::GameObject>& pObject, float jumpVelocity) :
-        dae::GameObjectCommand{pObject.get()},
+        JumpCommand{ pObject.get(), jumpVelocity }
+    {}
+    JumpCommand(dae::GameObject* pObject, float jumpVelocity) :
+        dae::GameObjectCommand{pObject},
         m_JumpVelocity{jumpVelocity}
     {
         m_pPhysicsComponent = GetGameObject()->GetComponent<dae::PhysicsComponent>();

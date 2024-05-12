@@ -1,6 +1,6 @@
 #include "Controller.h"
 #include "KeyState.h"
-#include <unordered_map>
+#include <map>
 #include <iostream>
 
 namespace dae
@@ -34,7 +34,7 @@ namespace dae
 		bool IsPressedImpl(ControllerButton button)  const;
 
 		void AddCommandImpl(const std::shared_ptr<Command>& pCommand, ControllerButton button, KeyState keyState);
-		void RemoveCommandImpl(ControllerButton button);
+		void RemoveCommandImpl(ControllerButton button, KeyState keyState);
 		void RemoveAllCommandsImpl();
 
 		glm::vec2 GetJoystickValueImpl(bool leftJoystick);
@@ -47,7 +47,25 @@ namespace dae
 		int m_ButtonsPressedThisFrame{};
 		int m_ButtonsReleasedThisFrame{};
 
-		std::unordered_map<ControllerButton, std::pair<std::shared_ptr<Command>, KeyState>> m_MapCommands{};
+		struct ControllerState
+		{
+			ControllerButton button;
+			KeyState keyState;
+
+			bool operator<(const ControllerState other) const
+			{
+				if (button != other.button)
+					return button < other.button;
+				return keyState < other.keyState;
+			}
+
+			bool operator==(const ControllerState& other) const
+			{
+				return other.button == this->button && other.keyState == this->keyState;
+			}
+		};
+
+		std::map<ControllerState, std::shared_ptr<Command>> m_MapCommands{};
 
 		static float m_MaxJoystickValue;
 		static float m_JoystickDeadZonePercentage;
@@ -67,20 +85,20 @@ namespace dae
 	{
 		for (const auto& pair : m_MapCommands)
 		{
-			auto& commandAndStatePair = pair.second;
-			switch (commandAndStatePair.second)
+			auto& pCommand = pair.second;
+			switch (pair.first.keyState)
 			{
 			case KeyState::DownThisFrame:
-				if (IsDownThisFrameImpl(pair.first)) commandAndStatePair.first->Execute();
+				if (IsDownThisFrameImpl(pair.first.button)) pCommand->Execute();
 				break;
 			case KeyState::UpThisFrame:
-				if (IsUpThisFrameImpl(pair.first)) commandAndStatePair.first->Execute();
+				if (IsUpThisFrameImpl(pair.first.button)) pCommand->Execute();
 				break;
 			case KeyState::Pressed:
-				if (IsPressedImpl(pair.first)) commandAndStatePair.first->Execute();
+				if (IsPressedImpl(pair.first.button)) pCommand->Execute();
 				break;
 			case KeyState::NotPressed:
-				if (!IsPressedImpl(pair.first)) commandAndStatePair.first->Execute();
+				if (!IsPressedImpl(pair.first.button)) pCommand->Execute();
 				break;
 			}
 		}
@@ -157,15 +175,21 @@ namespace dae
 
 	void Controller::ControllerImpl::AddCommandImpl(const std::shared_ptr<Command>& pCommand, ControllerButton button, KeyState keyState)
 	{
+		ControllerState state{};
+		state.button = button;
+		state.keyState = keyState;
 #ifndef NDEBUG
-		if (m_MapCommands.contains(button)) std::cout << "Binding to the requested button already exists. Overwriting now.\n";
+		if (m_MapCommands.contains(state)) std::cout << "Binding to the requested button already exists. Overwriting now.\n";
 #endif // !NDEBUG
-		m_MapCommands[button] = std::make_pair(pCommand, keyState);
+		m_MapCommands[state] = pCommand;
 	}
 
-	void Controller::ControllerImpl::RemoveCommandImpl(ControllerButton button)
+	void Controller::ControllerImpl::RemoveCommandImpl(ControllerButton button, KeyState keyState)
 	{
-		if (m_MapCommands.contains(button)) m_MapCommands.erase(button);
+		ControllerState state{};
+		state.button = button;
+		state.keyState = keyState;
+		if (m_MapCommands.contains(state)) m_MapCommands.erase(state);
 	}
 
 	void Controller::ControllerImpl::RemoveAllCommandsImpl()
@@ -244,9 +268,9 @@ namespace dae
 		m_pImpl->AddCommandImpl(pCommand, button, keyState);
 	}
 
-	void Controller::RemoveCommand(ControllerButton button)
+	void Controller::RemoveCommand(ControllerButton button, KeyState keyState)
 	{
-		m_pImpl->RemoveCommandImpl(button);
+		m_pImpl->RemoveCommandImpl(button, keyState);
 	}
 
 	void Controller::RemoveAllCommands()

@@ -220,5 +220,8 @@
     <ClCompile Include="SDLAudio.cpp">
       <Filter>Engine Files\ServiceLocator</Filter>
     </ClCompile>
+    <ClCompile Include="AudioLocator.cpp">
+      <Filter>Engine Files\ServiceLocator</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

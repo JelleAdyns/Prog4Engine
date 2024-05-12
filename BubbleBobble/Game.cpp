@@ -80,7 +80,7 @@ void Game::LoadTitleScreen() const
 
 	auto titleLogo = std::make_unique<dae::GameObject>(static_cast<float>(dae::Minigin::GetWindowSize().x) / 2, static_cast<float>(dae::Minigin::GetWindowSize().y) / 2 - 20);
 	titleLogo->AddRenderComponent(true);
-	titleLogo->AddComponent<SpriteComponent>("TitleLogo.png", 6, 6, 0.2f);
+	titleLogo->AddComponent<SpriteComponent>("TitleLogo.png", 6, 1, 0.2f);
 
 	scene.AddGameObject(std::move(titleLogo));
 
@@ -186,7 +186,7 @@ void Game::LoadMainMenu() const
 
 	auto icon = std::make_unique<dae::GameObject>(button1->GetWorldPosition().x - 20.f, button1->GetWorldPosition().y);
 	icon->AddRenderComponent(false);
-	icon->AddComponent<SpriteComponent>("Selector.png", 2,2,0.1f);
+	icon->AddComponent<SpriteComponent>("Selector.png", 2,1,0.1f);
 
 
 	std::shared_ptr<dae::Command> nextCommand = std::make_shared<SelectButtonCommand>(buttonHandler, icon, SelectButtonCommand::Direction::Next);
@@ -310,17 +310,18 @@ void Game::LoadLevelOne() const
 	//}
 
 	//Input Objects
-	{
-		MakePlayer(scene);
-	}
+	MakePlayer(scene);
+
+	
+
 
 	auto info = std::make_unique<dae::GameObject>();
 	info->AddRenderComponent();
-	info->AddComponent<dae::TextComponent>(inputMan.IsKeyboardActive() ? "Use SPACE to Jump" : "Use Y to Jump", "Pixel_NES.otf", 10);
+	info->AddComponent<dae::TextComponent>(inputMan.IsKeyboardActive() ? "SPACE: Jump, A/D: Move, W: Shoot " : "Y: Jump, DPAD: Move, A: Shoot", "Pixel_NES.otf", 10);
 
-	std::unique_ptr<dae::Command> setTextCommand = std::make_unique<SetTextCommand>(info, "Use Y to Jump");
+	std::unique_ptr<dae::Command> setTextCommand = std::make_unique<SetTextCommand>(info, "Y: Jump, DPAD: Move, A: Shoot");
 	inputMan.AddCommand_ChangingToController(std::move(setTextCommand));
-	std::unique_ptr<dae::Command> setTextCommand2 = std::make_unique<SetTextCommand>(info, "Use SPACE to Jump");
+	std::unique_ptr<dae::Command> setTextCommand2 = std::make_unique<SetTextCommand>(info, "SPACE: Jump, A/D: Move, W: Shoot ");
 	inputMan.AddCommand_ChangingToKeyboard(std::move(setTextCommand2));
 
 	scene.AddGameObject(std::move(info));
@@ -340,18 +341,15 @@ void Game::LoadLevelTwo() const
 
 	LoadLevel("Levels.txt", scene, 2);
 
-
-	{
-		MakePlayer(scene);
-	}
+	MakePlayer(scene);
 
 	auto info = std::make_unique<dae::GameObject>();
 	info->AddRenderComponent();
-	info->AddComponent<dae::TextComponent>(inputMan.IsKeyboardActive() ? "Use SPACE to Jump" : "Use Y to Jump", "Pixel_NES.otf", 10);
+	info->AddComponent<dae::TextComponent>(inputMan.IsKeyboardActive() ? "SPACE: Jump, A/D: Move, W: Shoot " : "Y: Jump, DPAD: Move, A: Shoot", "Pixel_NES.otf", 10);
 
-	std::unique_ptr<dae::Command> setTextCommand = std::make_unique<SetTextCommand>(info, "Use Y to Jump");
+	std::unique_ptr<dae::Command> setTextCommand = std::make_unique<SetTextCommand>(info, "Y: Jump, DPAD: Move, A: Shoot");
 	inputMan.AddCommand_ChangingToController(std::move(setTextCommand));
-	std::unique_ptr<dae::Command> setTextCommand2 = std::make_unique<SetTextCommand>(info, "Use SPACE to Jump");
+	std::unique_ptr<dae::Command> setTextCommand2 = std::make_unique<SetTextCommand>(info, "SPACE: Jump, A/D: Move, W: Shoot ");
 	inputMan.AddCommand_ChangingToKeyboard(std::move(setTextCommand2));
 
 	scene.AddGameObject(std::move(info));
@@ -369,17 +367,16 @@ void Game::LoadLevelThree() const
 
 	LoadLevel("Levels.txt", scene, 3);
 
-	{
-		MakePlayer(scene);
-	}
+	MakePlayer(scene);
+	
 
 	auto info = std::make_unique<dae::GameObject>();
 	info->AddRenderComponent();
-	info->AddComponent<dae::TextComponent>(inputMan.IsKeyboardActive() ? "Use SPACE to Jump" : "Use Y to Jump", "Pixel_NES.otf", 10);
+	info->AddComponent<dae::TextComponent>(inputMan.IsKeyboardActive() ? "SPACE: Jump, A/D: Move, W: Shoot " : "Y: Jump, DPAD: Move, A: Shoot", "Pixel_NES.otf", 10);
 
-	std::unique_ptr<dae::Command> setTextCommand = std::make_unique<SetTextCommand>(info, "Use Y to Jump");
+	std::unique_ptr<dae::Command> setTextCommand = std::make_unique<SetTextCommand>(info, "Y: Jump, DPAD: Move, A: Shoot");
 	inputMan.AddCommand_ChangingToController(std::move(setTextCommand));
-	std::unique_ptr<dae::Command> setTextCommand2 = std::make_unique<SetTextCommand>(info, "Use SPACE to Jump");
+	std::unique_ptr<dae::Command> setTextCommand2 = std::make_unique<SetTextCommand>(info, "SPACE: Jump, A/D: Move, W: Shoot ");
 	inputMan.AddCommand_ChangingToKeyboard(std::move(setTextCommand2));
 
 	scene.AddGameObject(std::move(info));
@@ -387,8 +384,6 @@ void Game::LoadLevelThree() const
 
 void Game::MakePlayer(dae::Scene& scene) const
 {
-	auto& inputMan = dae::InputCommandBinder::GetInstance();
-	int speedObject1 = 60;
 
 	//int starterLives = 3;
 
@@ -411,9 +406,47 @@ void Game::MakePlayer(dae::Scene& scene) const
 	player1->AddPhysicsComponent();
 	dae::PhysicsComponent::SetGravity(300);
 	player1->AddComponent<dae::CollisionComponent>(glm::vec2{}, glm::vec2{ 16,16 });
+	player1->AddComponent<PlayerComponent>();
 	player1->AddComponent<WallCheckingComponent>(glm::vec2{ 0,4 }, glm::vec2{ 16,8 });
 	player1->AddComponent<FloorCheckingComponent>(glm::vec2{ 5,0 }, glm::vec2{ 6,16 });
-	player1->AddComponent<SpriteComponent>("BubRunning.png", 4, 4, 0.1f);
+
+	PlayerComponent* playerComp = player1->GetComponent<PlayerComponent>();
+	player1->AddComponent<SpriteComponent>("BubStates.png", 4, 4, 0.1f, true, false, playerComp);
+
+
+	auto enemy = std::make_unique<dae::GameObject>(128, 120);
+	enemy->AddRenderComponent();
+	enemy->AddComponent<dae::CollisionComponent>(glm::vec2{}, glm::vec2{16,16});
+	enemy->AddComponent<SpriteComponent>("Zen-ChanRun.png", 4, 1, 0.1f);
+	enemy->AddComponent<EnemyComponent>(playerComp);
+
+	scene.AddGameObject(std::move(enemy));
+
+
+	uint8_t playerIndex = playerComp->GetPlayerIndex();
+
+	auto& inputMan = dae::InputCommandBinder::GetInstance();
+
+	std::shared_ptr<dae::Command> shootCommand = std::make_shared<ShootCommand>(player1);
+	inputMan.AddKeyCommand(shootCommand, SDL_SCANCODE_W, dae::KeyState::DownThisFrame);
+	inputMan.AddControllerCommand(shootCommand, dae::ControllerButton::A, dae::KeyState::DownThisFrame, playerIndex);
+
+	std::shared_ptr<dae::Command> moveCommand = std::make_shared<MoveCommand>(player1, playerComp->GetMoveVelocity());
+	inputMan.AddKeyCommand(moveCommand, SDL_SCANCODE_D, dae::KeyState::Pressed);
+	inputMan.AddControllerCommand(moveCommand, dae::ControllerButton::DpadRight, dae::KeyState::Pressed, playerIndex);
+
+	moveCommand = std::make_shared<MoveCommand>(player1, -playerComp->GetMoveVelocity());
+	inputMan.AddKeyCommand(moveCommand, SDL_SCANCODE_A, dae::KeyState::Pressed);
+	inputMan.AddControllerCommand(moveCommand, dae::ControllerButton::DpadLeft, dae::KeyState::Pressed, playerIndex);
+
+
+	std::shared_ptr<dae::Command> stopMovingCommand = std::make_shared<StopMovingCommand>(player1);
+	inputMan.AddKeyCommand(stopMovingCommand, SDL_SCANCODE_D, dae::KeyState::UpThisFrame);
+	inputMan.AddControllerCommand(stopMovingCommand, dae::ControllerButton::DpadRight, dae::KeyState::UpThisFrame, playerComp->GetPlayerIndex());
+
+	stopMovingCommand = std::make_shared<StopMovingCommand>(player1);
+	inputMan.AddKeyCommand(stopMovingCommand, SDL_SCANCODE_A, dae::KeyState::UpThisFrame);
+	inputMan.AddControllerCommand(stopMovingCommand, dae::ControllerButton::DpadLeft, dae::KeyState::UpThisFrame, playerComp->GetPlayerIndex());
 	//player1->AddComponent<LivesComponent>(starterLives, livesDisplay->GetComponent<LivesUIComponent>());
 	//player1->AddComponent<PickUpComponent>(PickUpComponent::PickUpType::Melon, scoreDisplay->GetComponent<ScoreUIComponent>());
 
@@ -435,17 +468,17 @@ void Game::MakePlayer(dae::Scene& scene) const
 
 
 
-	std::shared_ptr<dae::Command> moveCommand = std::make_shared<MoveCommand>(player1, speedObject1);
+	/*std::shared_ptr<dae::Command> moveCommand = std::make_shared<MoveCommand>(player1, speedObject1);
 	inputMan.AddKeyCommand(moveCommand, SDL_SCANCODE_D, dae::KeyState::Pressed);
 	inputMan.AddControllerCommand(moveCommand, dae::ControllerButton::DpadRight, dae::KeyState::Pressed, 0);
 
 	moveCommand = std::make_shared<MoveCommand>(player1, -speedObject1);
 	inputMan.AddKeyCommand(moveCommand, SDL_SCANCODE_A, dae::KeyState::Pressed);
-	inputMan.AddControllerCommand(moveCommand, dae::ControllerButton::DpadLeft, dae::KeyState::Pressed, 0);
+	inputMan.AddControllerCommand(moveCommand, dae::ControllerButton::DpadLeft, dae::KeyState::Pressed, 0);*/
 
-	moveCommand = std::make_shared<JumpCommand>(player1, -160.f);
+	/*moveCommand = std::make_shared<JumpCommand>(player1, -160.f);
 	inputMan.AddKeyCommand(moveCommand, SDL_SCANCODE_SPACE, dae::KeyState::Pressed);
-	inputMan.AddControllerCommand(moveCommand, dae::ControllerButton::Y, dae::KeyState::Pressed, 0);
+	inputMan.AddControllerCommand(moveCommand, dae::ControllerButton::Y, dae::KeyState::Pressed, 0);*/
 
 
 

@@ -28,7 +28,7 @@ namespace dae
 	private:
 		static std::unique_ptr<AudioService> m_Instance;
 	};
-	std::unique_ptr<AudioService> AudioLocator::m_Instance{ std::make_unique<NullAudio>() };
+
 }
 
 #endif // !AUDIOLOCATOR_H

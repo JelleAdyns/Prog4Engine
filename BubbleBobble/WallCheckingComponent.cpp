@@ -37,61 +37,37 @@ void WallCheckingComponent::Update()
 	
 	if((flags & leftFlag) == leftFlag)
 	{
-	
 		auto localPos = GetOwner()->GetLocalPosition();
-		/*auto left = localPos.x + m_Offset.x;
-		if (localPos.x <= m_WallThickness)
-		{*/
+
 		GetOwner()->SetLocalPos(localPos.x + overlappedDistance.x, localPos.y);
-			//GetOwner()->SetLocalPos(localPos.x + (m_WallThickness - left), localPos.y);
-			m_pPhysicsComponent->SetVelocityX(0);
-			m_CollidingLeft = true;
-		//}
-		//else /*(m_pPhysicsComponent->GetVelocity().y >= 0)*/
-		//{
-		//	GetOwner()->SetLocalPos(localPos.x + overlappedDistance.x, localPos.y);
-		//	m_pPhysicsComponent->SetVelocityX(0);
-		//	m_CollidingLeft = true;
-		//}
-		
+		m_pPhysicsComponent->SetVelocityX(0);
+		m_CollidingLeft = true;
 	}
 	if ((flags & rightFlag) == rightFlag)
 	{
-		
 		auto localPos = GetOwner()->GetLocalPosition();
 
-		//auto right = localPos.x + m_Offset.x + m_Size.x;
-
-		//if (right >= static_cast<float>(dae::Minigin::GetWindowSize().x) - m_WallThickness)
-		//{
-		//	GetOwner()->SetLocalPos(localPos.x + (static_cast<float>(dae::Minigin::GetWindowSize().x) - (m_WallThickness) - right), localPos.y);
-		//	m_pPhysicsComponent->SetVelocityX(0);
-		//	m_CollidingRight = true;
-		//}
-		//else /*(m_pPhysicsComponent->GetVelocity().y >= 0)*/
-		//{
-			GetOwner()->SetLocalPos(localPos.x - overlappedDistance.x, localPos.y);
-			m_pPhysicsComponent->SetVelocityX(0);
-			m_CollidingRight = true;
-		//}
+		GetOwner()->SetLocalPos(localPos.x - overlappedDistance.x, localPos.y);
+		m_pPhysicsComponent->SetVelocityX(0);
+		m_CollidingRight = true;
 	}
 
 }
 
 void WallCheckingComponent::PrepareImGuiRender()
 {
-	auto scale = dae::Minigin::GetWindowScale();
+	//auto scale = dae::Minigin::GetWindowScale();
 
-	ImGui::Begin("Collision");
-	// ImGui::SetWindowSize(ImVec2{ float( Minigin::GetWindowSize().x* scale), float( Minigin::GetWindowSize().y*scale )});
-	// ImGui::SetWindowPos(ImVec2{});
-	float top = GetOwner()->GetWorldPosition().y + m_Offset.y;
-	float left = GetOwner()->GetWorldPosition().x + m_Offset.x;
-	ImGui::GetWindowDrawList()->AddRect(
-		ImVec2(left * scale, top * scale),
-		ImVec2((left + m_Size.x) * scale, (top + m_Size.y) * scale),
-		IM_COL32(0, 255, 0, 255));
-	ImGui::End();
+	//ImGui::Begin("Collision");
+	//// ImGui::SetWindowSize(ImVec2{ float( Minigin::GetWindowSize().x* scale), float( Minigin::GetWindowSize().y*scale )});
+	//// ImGui::SetWindowPos(ImVec2{});
+	//float top = GetOwner()->GetWorldPosition().y + m_Offset.y;
+	//float left = GetOwner()->GetWorldPosition().x + m_Offset.x;
+	//ImGui::GetWindowDrawList()->AddRect(
+	//	ImVec2(left * scale, top * scale),
+	//	ImVec2((left + m_Size.x) * scale, (top + m_Size.y) * scale),
+	//	IM_COL32(0, 255, 0, 255));
+	//ImGui::End();
 }
 
 bool WallCheckingComponent::CollidingWithLeft() const

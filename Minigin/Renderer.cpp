@@ -77,7 +77,7 @@ void dae::Renderer::Destroy()
 	}
 }
 
-void dae::Renderer::RenderTexture(const Texture2D& texture, const float x, const float y) const
+void dae::Renderer::RenderTexture(const Texture2D& texture, const float x, const float y, bool flip) const
 {
 	int scale = Minigin::GetWindowScale();
 
@@ -91,10 +91,10 @@ void dae::Renderer::RenderTexture(const Texture2D& texture, const float x, const
 	dst.w *= scale;
 	dst.h *= scale;
 
-	SDL_RenderCopy(GetSDLRenderer(), texture.GetSDLTexture(), nullptr, &dst);
+	SDL_RenderCopyEx(GetSDLRenderer(), texture.GetSDLTexture(), nullptr, &dst, 0, NULL, flip ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);
 }
 
-void dae::Renderer::RenderTexture(const Texture2D& texture, SDL_Rect srcRect, SDL_Rect dstRect) const
+void dae::Renderer::RenderTexture(const Texture2D& texture, SDL_Rect srcRect, SDL_Rect dstRect, bool flip) const
 {
 	
 	int scale = Minigin::GetWindowScale();
@@ -106,7 +106,7 @@ void dae::Renderer::RenderTexture(const Texture2D& texture, SDL_Rect srcRect, SD
 	dst.h = static_cast<int>(dstRect.h * scale);
 
 
-	SDL_RenderCopy(GetSDLRenderer(), texture.GetSDLTexture(), &srcRect, &dst);
+	SDL_RenderCopyEx(GetSDLRenderer(), texture.GetSDLTexture(), &srcRect, &dst, 0, NULL, flip ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);
 }
 
 SDL_Renderer* dae::Renderer::GetSDLRenderer() const { return m_renderer; }

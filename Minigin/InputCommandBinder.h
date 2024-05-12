@@ -2,7 +2,7 @@
 #define	INPUTCOMMANDBINDER_H
 
 #include "Singleton.h"
-#include <unordered_map>
+#include <map>
 #include <vector>
 #include <memory>
 #include <SDL.h>
@@ -34,8 +34,8 @@ namespace dae
 		void AddController();
 
 		void RemoveAllCommands();
-		void RemoveKeyCommand(SDL_Scancode key);
-		void RemoveControllerCommand(ControllerButton button, uint8_t controllerIndex);
+		void RemoveKeyCommand(SDL_Scancode key, KeyState keyState);
+		void RemoveControllerCommand(ControllerButton button, KeyState keyState, uint8_t controllerIndex);
 		void PopController();
 		void PopAllControllers();
 
@@ -56,7 +56,25 @@ namespace dae
 
 		bool m_IsKeyboardActive{ true };
 
-		std::unordered_map<SDL_Scancode, std::pair<std::shared_ptr<Command>, KeyState>> m_MapKeyCommands;
+		struct KeyBoardState
+		{
+			SDL_Scancode key;
+			KeyState keyState;
+
+			bool operator<(const KeyBoardState& other) const
+			{
+				if (key != other.key)
+					return other.key < key;
+				return other.keyState < keyState;
+			}
+
+			bool operator==(const KeyBoardState& other) const 
+			{
+				return other.key == key && other.keyState == keyState;
+			}
+		};
+
+		std::map<KeyBoardState, std::shared_ptr<Command>> m_MapKeyCommands;
 		
 		std::vector<std::unique_ptr<Command>> m_pVecCommandsChangingToController;
 		std::vector<std::unique_ptr<Command>> m_pVecCommandsChangingToKeyboard;

@@ -48,14 +48,14 @@ namespace dae
 
 				for (const auto& pair : m_MapKeyCommands)
 				{
-					auto& commandAndStatePair = pair.second;
-					switch (commandAndStatePair.second)
+					auto& pCommand = pair.second;
+					switch (pair.first.keyState)
 					{
 					case KeyState::DownThisFrame:
-						if (KeyDownThisFrame(event, pair.first)) commandAndStatePair.first->Execute();
+						if (KeyDownThisFrame(event, pair.first.key)) pCommand->Execute();
 						break;
 					case KeyState::UpThisFrame:
-						if (KeyUpThisFrame(event, pair.first)) commandAndStatePair.first->Execute();
+						if (KeyUpThisFrame(event, pair.first.key)) pCommand->Execute();
 						break;
 					}
 				}
@@ -68,14 +68,14 @@ namespace dae
 		{
 			for (const auto& pair : m_MapKeyCommands)
 			{
-				auto& commandAndStatePair = pair.second;
-				switch (commandAndStatePair.second)
+				auto& pCommand = pair.second;
+				switch (pair.first.keyState)
 				{
 				case KeyState::Pressed:
-					if (KeyPressed(pair.first)) commandAndStatePair.first->Execute();
+					if (KeyPressed(pair.first.key)) pCommand->Execute();
 					break;
 				case KeyState::NotPressed:
-					if (!KeyPressed(pair.first)) commandAndStatePair.first->Execute();
+					if (!KeyPressed(pair.first.key)) pCommand->Execute();
 					break;
 				}
 			}
@@ -105,13 +105,16 @@ namespace dae
 			controller->RemoveAllCommands();
 		}
 	}
-	void InputCommandBinder::RemoveKeyCommand(SDL_Scancode key)
+	void InputCommandBinder::RemoveKeyCommand(SDL_Scancode key, KeyState keyState)
 	{
-		if (m_MapKeyCommands.contains(key)) m_MapKeyCommands.erase(key);
+		KeyBoardState state{};
+		state.key = key;
+		state.keyState = keyState;
+		if (m_MapKeyCommands.contains(state)) m_MapKeyCommands.erase(state);
 	}
-	void InputCommandBinder::RemoveControllerCommand(ControllerButton button, uint8_t controllerIndex)
+	void InputCommandBinder::RemoveControllerCommand(ControllerButton button, KeyState keyState, uint8_t controllerIndex)
 	{
-		m_pVecControllers.at(controllerIndex)->RemoveCommand(button);
+		m_pVecControllers.at(controllerIndex)->RemoveCommand(button, keyState);
 	}
 	void InputCommandBinder::PopController()
 	{
@@ -126,10 +129,13 @@ namespace dae
 	//Adding
 	void InputCommandBinder::AddKeyCommand(const std::shared_ptr<Command>& pCommand, SDL_Scancode key, KeyState keyState)
 	{
+		KeyBoardState state{};
+		state.key = key;
+		state.keyState = keyState;
 #ifndef NDEBUG
-		if (m_MapKeyCommands.contains(key)) std::cout << "Binding to the requested key ("<<key<<") already exists.Overwriting now.\n";
+		if (m_MapKeyCommands.contains(state)) std::cout << "Binding to the requested key ("<<key<<") already exists.Overwriting now.\n";
 #endif // !NDEBUG
-		m_MapKeyCommands[key] = std::make_pair(pCommand, keyState);
+		m_MapKeyCommands[state] = pCommand;
 	}
 	void InputCommandBinder::AddControllerCommand(const std::shared_ptr<Command>& pCommand, ControllerButton button, KeyState keyState, uint8_t controllerIndex)
 	{
