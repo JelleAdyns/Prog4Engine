@@ -22,7 +22,7 @@ std::unique_ptr<PlayerState> IdleState::Update()
 
 	return nullptr;
 }
-void IdleState::OnEnter() const
+void IdleState::OnEnter()
 {
 	int nrOfRows{ 4 };
 
@@ -31,7 +31,6 @@ void IdleState::OnEnter() const
 	pSpriteComp->SetHeightMarkers(0, m_NormalSpritesEndHeight);
 	pSpriteComp->SetNrOfRows(nrOfRows);
 	pSpriteComp->SetRow(0);
-	pSpriteComp->SetCol(0);
 	pSpriteComp->SetRowUpdate(false);
 
 	m_pPhysicsComp->SetVelocityX(0);
@@ -46,12 +45,16 @@ void IdleState::OnEnter() const
 
 
 }
-void IdleState::OnExit() const
+void IdleState::OnExit()
 {
 	auto& inputMan = dae::InputCommandBinder::GetInstance();
 
 	inputMan.RemoveKeyCommand(SDL_SCANCODE_SPACE, dae::KeyState::Pressed);
 	inputMan.RemoveControllerCommand(dae::ControllerButton::Y, dae::KeyState::Pressed, m_pPlayerComp->GetPlayerIndex());
+}
+
+void IdleState::Shoot()
+{
 }
 
 float IdleState::GetNormalSpriteEndheight()

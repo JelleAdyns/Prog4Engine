@@ -1,5 +1,5 @@
-#ifndef FALINGSTATE_H
-#define FALINGSTATE_H
+#ifndef FALLINGSTATE_H
+#define FALLINGSTATE_H
 
 #include "PlayerState.h"
 #include "IdleState.h"
@@ -9,6 +9,7 @@
 #include "Commands.h"
 #include <KeyState.h>
 #include <GameObject.h>
+#include <Minigin.h>
 #include <InputCommandBinder.h>
 
 class FallingState final : public PlayerState
@@ -30,6 +31,8 @@ public:
 	virtual std::unique_ptr<PlayerState> Update() override
 	{
 		if (m_pPlayerComp->IsHit()) return std::make_unique<HitState>(m_pPlayer, m_pPlayerComp);
+		 
+		if (m_pPlayer->GetWorldPosition().y > dae::Minigin::GetWindowSize().y) m_pPlayer->SetLocalPos(m_pPlayer->GetLocalPosition().x, -50);
 
 		if (m_pFloorCheckingComp->IsOnGround())
 		{
@@ -38,12 +41,17 @@ public:
 
 		return nullptr;
 	}
-	virtual void OnEnter() const override
+	virtual void OnEnter() override
 	{
 		m_pPlayer->GetComponent<SpriteComponent>()->SetRow(3);
 
 	}
-	virtual void OnExit() const override
+	virtual void OnExit() override
+	{
+
+	}
+
+	virtual void Shoot() override
 	{
 
 	}
@@ -54,4 +62,4 @@ private:
 };
 
 
-#endif // !FALINGSTATE_H
+#endif // !FALLINGSTATE_H

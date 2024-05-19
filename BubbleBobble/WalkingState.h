@@ -52,7 +52,7 @@ public:
 
 		return nullptr;
 	}
-	virtual void OnEnter() const override
+	virtual void OnEnter() override
 	{
 		m_pPlayer->GetComponent<SpriteComponent>()->SetRow(1);
 
@@ -64,13 +64,17 @@ public:
 		
 
 	}
-	virtual void OnExit() const override
+	virtual void OnExit() override
 	{
 		auto& inputMan = dae::InputCommandBinder::GetInstance();
 		
 		inputMan.RemoveKeyCommand(SDL_SCANCODE_SPACE, dae::KeyState::Pressed);
 		inputMan.RemoveControllerCommand(dae::ControllerButton::Y, dae::KeyState::Pressed, m_pPlayerComp->GetPlayerIndex());
 		
+	}
+	virtual void Shoot() override
+	{
+
 	}
 private:
 	dae::GameObject* m_pPlayer;

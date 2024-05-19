@@ -28,8 +28,9 @@ public:
 	IdleState& operator= (IdleState&&) noexcept = delete;
 
 	virtual std::unique_ptr<PlayerState> Update() override;
-	virtual void OnEnter() const override;
-	virtual void OnExit() const override;
+	virtual void OnEnter() override;
+	virtual void OnExit() override;
+	virtual void Shoot() override;
 
 	static float GetNormalSpriteEndheight();
 private:

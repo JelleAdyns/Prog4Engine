@@ -14,9 +14,25 @@ public:
 	PlayerState& operator= (const PlayerState&) = delete;
 	PlayerState& operator= (PlayerState&&) noexcept = delete;
 
-	virtual std::unique_ptr<PlayerState> Update() = 0;
-	virtual void OnEnter() const = 0;
-	virtual void OnExit() const = 0;
+	virtual std::unique_ptr<PlayerState> Update()
+	{
+		/*if (m_IsInvincible)
+		{
+			m_InvincibilityTimer += dae::GameTime::GetInstance().GetDeltaTime();
+
+			if (m_InvincibilityTimer >= m_InvincibilityMaxTime)
+			{
+				m_InvincibilityTimer = 0.f;
+				m_IsInvincible = false;
+			}
+		}*/
+		return nullptr;
+	};
+	virtual void OnEnter() = 0;
+	virtual void OnExit() = 0;
+
+	
+	virtual void Shoot() = 0;
 
 };
 

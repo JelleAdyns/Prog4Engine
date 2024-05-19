@@ -13,7 +13,8 @@ uint8_t PlayerComponent::m_NrOfPlayers{};
 
 PlayerComponent::PlayerComponent(dae::GameObject* pOwner):
 	dae::Component{pOwner},
-	m_pCurrState{}
+	m_pCurrState{},
+	m_pPosChecked{std::make_unique<dae::Subject<PlayerComponent>>()}
 {
 	m_PlayerIndex = m_NrOfPlayers;
 	++m_NrOfPlayers;
@@ -24,6 +25,16 @@ PlayerComponent::PlayerComponent(dae::GameObject* pOwner):
 PlayerComponent::~PlayerComponent()
 {
 	--m_NrOfPlayers;
+	
+	for (dae::Subject<SpriteComponent>* pSpriteSubject : m_pVecObservedSpriteSubjects)
+	{
+		pSpriteSubject->RemoveObserver(this);
+	}
+
+	for (dae::Subject<EnemyComponent>* pEnemySubject : m_pVecObservedEnemySubjects)
+	{
+		pEnemySubject->RemoveObserver(this);
+	}
 }
 
 void PlayerComponent::Update()
@@ -42,7 +53,7 @@ void PlayerComponent::Update()
 			m_IsInvincible = false;
 		}
 	}
-
+	m_pPosChecked->NotifyObservers(this);
 	UpdateStates();
 
 	if (m_pPhysicsComp->GetVelocity().x < 0) m_pSpriteComp->LookLeft(true);
@@ -62,18 +73,6 @@ void PlayerComponent::Notify(SpriteComponent* pSubject)
 		m_IsShooting = false;
 		pSubject->SetStartRow(0);
 		pSubject->SetFrameTime(0.1f);
-	}
-	if (m_IsHit)
-	{
-
-		++m_SpriteRowcount;
-
-		if (m_SpriteRowcount == 3)
-		{
-			m_SpriteRowcount = 0;
-			m_HitAnimFinished = true;
-		}
-
 	}
 }
 
@@ -114,15 +113,20 @@ bool PlayerComponent::IsHit() const
 void PlayerComponent::Respawn()
 {
 	m_IsHit = false;
-	m_HitAnimFinished = false;
 	GetOwner()->SetLocalPos(24.f, dae::Minigin::GetWindowSize().y - 40.f);
 	m_IsInvincible = true;
 }
 
-bool PlayerComponent::HitAnimFinished()
+dae::Subject<PlayerComponent>* PlayerComponent::GetSubject() const
 {
-	return m_HitAnimFinished;
+	return m_pPosChecked.get();
 }
+
+glm::vec2 PlayerComponent::GetPos() const
+{
+	return GetOwner()->GetWorldPosition();
+}
+
 
 void PlayerComponent::UpdateStates()
 {

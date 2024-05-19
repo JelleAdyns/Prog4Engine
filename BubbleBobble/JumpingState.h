@@ -37,12 +37,16 @@ public:
 		}
 		return nullptr;
 	}
-	virtual void OnEnter() const override
+	virtual void OnEnter() override
 	{
 		m_pPlayer->GetComponent<SpriteComponent>()->SetRow(2);
 
 	}
-	virtual void OnExit() const override
+	virtual void OnExit() override
+	{
+
+	}
+	virtual void Shoot() override
 	{
 
 	}

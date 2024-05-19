@@ -7,10 +7,11 @@
 #include "Commands.h"
 #include <CollisionComponent.h>
 #include <KeyState.h>
+#include <Observer.h>
 #include <GameObject.h>
 #include <InputCommandBinder.h>
 
-class HitState final : public PlayerState
+class HitState final : public PlayerState, public dae::Observer<SpriteComponent>
 {
 public:
 	explicit HitState(dae::GameObject* pPlayer, PlayerComponent* pPlayerComp) :
@@ -27,13 +28,19 @@ public:
 	HitState& operator= (HitState&&) noexcept = delete;
 
 	virtual std::unique_ptr<PlayerState> Update() override;
-	virtual void OnEnter() const override;
-	virtual void OnExit() const override;
+	virtual void OnEnter() override;
+	virtual void OnExit() override;
+	virtual void Shoot() override;
+
+	virtual void Notify(SpriteComponent* pSpriteComp) override;
+	virtual void AddSubjectPointer(dae::Subject<SpriteComponent>* pSubject) override;
 
 private:
 	dae::GameObject* m_pPlayer;
 	PlayerComponent* m_pPlayerComp;
 	SpriteComponent* m_pSpriteComp;
+
+	std::vector<dae::Subject<SpriteComponent>*> m_pVecObservedSpriteSubjects;
 
 	const int m_NrOfRows{ 3 };
 	int m_RowCount{ };
