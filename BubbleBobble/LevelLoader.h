@@ -9,6 +9,7 @@
 #include <iostream>
 #include <regex>
 #include <GameObject.h>
+#include <Minigin.h>
 #include <filesystem>
 #include "Components.h"
 
@@ -66,15 +67,33 @@ static void LoadLevel(const std::string& filename, dae::Scene& scene, int levelN
 						scene.AddGameObject(std::move(tile));
 					}
 						break;
+					case 'f':
+					{
+						auto tile = std::make_unique<dae::GameObject>(8.f * col, 8.f * row);
+						tile->AddRenderComponent();
+						tile->AddComponent<SpriteComponent>("Tiles.png", 3, 1, 0.1f, false);
+
+						tile->GetComponent<SpriteComponent>()->SetCol(levelNumber - 1);
+						scene.AddGameObject(std::move(tile));
+					}
+						break;
 					}
 					++col;
 				});
 
 			++row;
 		}
+
+		auto tile = std::make_unique<dae::GameObject>();
+		tile->AddComponent<dae::CollisionComponent>(glm::vec2{ 0, 0 }, glm::vec2{ 16.f, 16.f }, dae::CollisionComponent::CollisionType::Wall);
+		scene.AddGameObject(std::move(tile));
+		tile = std::make_unique<dae::GameObject>(dae::Minigin::GetWindowSize().x - 16.f, 0.f);
+		tile->AddComponent<dae::CollisionComponent>(glm::vec2{ 0, 0 }, glm::vec2{ 16.f, 16.f }, dae::CollisionComponent::CollisionType::Wall);
+		scene.AddGameObject(std::move(tile));
 	}
 	else { std::cout << "Couldn't open file: " << filename << '\n'; }
 
+	
 
 	/*while (std::getline(inputFile, line))
 	{
