@@ -47,18 +47,18 @@ namespace dae
 
     void CollisionComponent::PrepareImGuiRender()
     {
-       // auto scale = Minigin::GetWindowScale();
+        auto scale = Minigin::GetWindowScale();
 
-       // ImGui::Begin("Collision");
-       //// ImGui::SetWindowSize(ImVec2{ float( Minigin::GetWindowSize().x* scale), float( Minigin::GetWindowSize().y*scale )});
-       //// ImGui::SetWindowPos(ImVec2{});
-       // float top = GetOwner()->GetWorldPosition().y + m_GeneralOffset.y;
-       // float left = GetOwner()->GetWorldPosition().x + m_GeneralOffset.x;
-       // ImGui::GetWindowDrawList()->AddRect(
-       //     ImVec2(left * scale, top * scale),
-       //     ImVec2((left + m_GeneralSize.x) * scale, (top + m_GeneralSize.y) * scale),
-       //     IM_COL32(255, 0, 0, 255));
-       // ImGui::End();
+        ImGui::Begin("Collision");
+       // ImGui::SetWindowSize(ImVec2{ float( Minigin::GetWindowSize().x* scale), float( Minigin::GetWindowSize().y*scale )});
+       // ImGui::SetWindowPos(ImVec2{});
+        float top = GetOwner()->GetWorldPosition().y + m_GeneralOffset.y;
+        float left = GetOwner()->GetWorldPosition().x + m_GeneralOffset.x;
+        ImGui::GetWindowDrawList()->AddRect(
+            ImVec2(left * scale, top * scale),
+            ImVec2((left + m_GeneralSize.x) * scale, (top + m_GeneralSize.y) * scale),
+            IM_COL32(255, 0, 0, 255));
+        ImGui::End();
     }
 
 

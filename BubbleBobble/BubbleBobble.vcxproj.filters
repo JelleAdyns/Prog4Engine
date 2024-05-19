@@ -18,6 +18,18 @@
     <Filter Include="Source Files\States">
       <UniqueIdentifier>{005806b6-e3e5-4533-8c90-08fea4f85723}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\States\PlayerSate">
+      <UniqueIdentifier>{84410032-39d3-44fe-a4af-b475992556bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\States\EnemyState">
+      <UniqueIdentifier>{e78ed3ec-fff1-4ebb-ba54-9cf97ffaca8a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\States\EnemyState\MaitaStates">
+      <UniqueIdentifier>{863a93a2-4d2b-4e39-9d74-1145c51b220f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\States\EnemyState\ZenChanStates">
+      <UniqueIdentifier>{2d1e63ea-8c62-4a38-98e0-0e7a68e5329a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -71,9 +83,6 @@
     <ClCompile Include="PlayerComponent.cpp">
       <Filter>Source Files\Components</Filter>
     </ClCompile>
-    <ClCompile Include="IdleState.cpp">
-      <Filter>Source Files\States</Filter>
-    </ClCompile>
     <ClCompile Include="SpriteComponent.cpp">
       <Filter>Source Files\Components</Filter>
     </ClCompile>
@@ -81,7 +90,16 @@
       <Filter>Source Files\Components</Filter>
     </ClCompile>
     <ClCompile Include="HitState.cpp">
-      <Filter>Source Files\States</Filter>
+      <Filter>Source Files\States\PlayerSate</Filter>
+    </ClCompile>
+    <ClCompile Include="IdleState.cpp">
+      <Filter>Source Files\States\PlayerSate</Filter>
+    </ClCompile>
+    <ClCompile Include="ZenChanRunState.cpp">
+      <Filter>Source Files\States\EnemyState\ZenChanStates</Filter>
+    </ClCompile>
+    <ClCompile Include="ZenChanFallingState.cpp">
+      <Filter>Source Files\States\EnemyState\ZenChanStates</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -166,27 +184,6 @@
     <ClInclude Include="PlayerComponent.h">
       <Filter>Source Files\Components</Filter>
     </ClInclude>
-    <ClInclude Include="WalkingState.h">
-      <Filter>Source Files\States</Filter>
-    </ClInclude>
-    <ClInclude Include="IdleState.h">
-      <Filter>Source Files\States</Filter>
-    </ClInclude>
-    <ClInclude Include="PlayerState.h">
-      <Filter>Source Files\States</Filter>
-    </ClInclude>
-    <ClInclude Include="JumpingState.h">
-      <Filter>Source Files\States</Filter>
-    </ClInclude>
-    <ClInclude Include="FallingState.h">
-      <Filter>Source Files\States</Filter>
-    </ClInclude>
-    <ClInclude Include="HitState.h">
-      <Filter>Source Files\States</Filter>
-    </ClInclude>
-    <ClInclude Include="States.h">
-      <Filter>Source Files\States</Filter>
-    </ClInclude>
     <ClInclude Include="ShootCommand.h">
       <Filter>Source Files\Commands</Filter>
     </ClInclude>
@@ -195,6 +192,48 @@
     </ClInclude>
     <ClInclude Include="EnemyComponent.h">
       <Filter>Source Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="FallingState.h">
+      <Filter>Source Files\States\PlayerSate</Filter>
+    </ClInclude>
+    <ClInclude Include="HitState.h">
+      <Filter>Source Files\States\PlayerSate</Filter>
+    </ClInclude>
+    <ClInclude Include="IdleState.h">
+      <Filter>Source Files\States\PlayerSate</Filter>
+    </ClInclude>
+    <ClInclude Include="JumpingState.h">
+      <Filter>Source Files\States\PlayerSate</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerState.h">
+      <Filter>Source Files\States\PlayerSate</Filter>
+    </ClInclude>
+    <ClInclude Include="WalkingState.h">
+      <Filter>Source Files\States\PlayerSate</Filter>
+    </ClInclude>
+    <ClInclude Include="States.h">
+      <Filter>Source Files\States</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyState.h">
+      <Filter>Source Files\States\EnemyState</Filter>
+    </ClInclude>
+    <ClInclude Include="MaitaRunState.h">
+      <Filter>Source Files\States\EnemyState\MaitaStates</Filter>
+    </ClInclude>
+    <ClInclude Include="MaitaState.h">
+      <Filter>Source Files\States\EnemyState\MaitaStates</Filter>
+    </ClInclude>
+    <ClInclude Include="ZenChanRunState.h">
+      <Filter>Source Files\States\EnemyState\ZenChanStates</Filter>
+    </ClInclude>
+    <ClInclude Include="ZenChanState.h">
+      <Filter>Source Files\States\EnemyState\ZenChanStates</Filter>
+    </ClInclude>
+    <ClInclude Include="ZenChanFallingState.h">
+      <Filter>Source Files\States\EnemyState\ZenChanStates</Filter>
+    </ClInclude>
+    <ClInclude Include="ZenChanJumpState.h">
+      <Filter>Source Files\States\EnemyState\ZenChanStates</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

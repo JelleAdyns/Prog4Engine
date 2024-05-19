@@ -31,18 +31,18 @@ void FloorCheckingComponent::Update()
 
 void FloorCheckingComponent::PrepareImGuiRender()
 {
-	//auto scale = dae::Minigin::GetWindowScale();
+	auto scale = dae::Minigin::GetWindowScale();
 
-	//ImGui::Begin("Collision");
-	//// ImGui::SetWindowSize(ImVec2{ float( Minigin::GetWindowSize().x* scale), float( Minigin::GetWindowSize().y*scale )});
-	//// ImGui::SetWindowPos(ImVec2{});
-	//float top = GetOwner()->GetWorldPosition().y + m_Offset.y;
-	//float left = GetOwner()->GetWorldPosition().x + m_Offset.x;
-	//ImGui::GetWindowDrawList()->AddRect(
-	//	ImVec2(left * scale, top * scale),
-	//	ImVec2((left + m_Size.x) * scale, (top + m_Size.y) * scale),
-	//	IM_COL32(0, 0, 255, 255));
-	//ImGui::End();
+	ImGui::Begin("Collision");
+	// ImGui::SetWindowSize(ImVec2{ float( Minigin::GetWindowSize().x* scale), float( Minigin::GetWindowSize().y*scale )});
+	// ImGui::SetWindowPos(ImVec2{});
+	float top = GetOwner()->GetWorldPosition().y + m_Offset.y;
+	float left = GetOwner()->GetWorldPosition().x + m_Offset.x;
+	ImGui::GetWindowDrawList()->AddRect(
+		ImVec2(left * scale, top * scale),
+		ImVec2((left + m_Size.x) * scale, (top + m_Size.y) * scale),
+		IM_COL32(0, 0, 255, 255));
+	ImGui::End();
 }
 
 bool FloorCheckingComponent::IsOnGround() const

@@ -184,11 +184,20 @@
     <ClCompile Include="TrashTheCacheGameObjectsComponent.cpp" />
     <ClCompile Include="TrashTheCacheIntComponent.cpp" />
     <ClCompile Include="WallCheckingComponent.cpp" />
+    <ClCompile Include="ZenChanFallingState.cpp" />
+    <ClCompile Include="ZenChanRunState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Achievements.h" />
     <ClInclude Include="ActivateButtonCommand.h" />
     <ClInclude Include="EnemyComponent.h" />
+    <ClInclude Include="EnemyState.h" />
+    <ClInclude Include="ZenChanJumpState.h" />
+    <ClInclude Include="MaitaRunState.h" />
+    <ClInclude Include="MaitaState.h" />
+    <ClInclude Include="ZenChanFallingState.h" />
+    <ClInclude Include="ZenChanRunState.h" />
+    <ClInclude Include="ZenChanState.h" />
     <ClInclude Include="ShootCommand.h" />
     <ClInclude Include="ButtonComponent.h" />
     <ClInclude Include="ButtonHandlerComponent.h" />

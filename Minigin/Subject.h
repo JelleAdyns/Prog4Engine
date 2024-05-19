@@ -35,11 +35,14 @@ namespace dae
 		}
 		void RemoveObserver(Observer<T>* pObserver)
 		{
-			auto pos = std::find(m_pVecObservers.cbegin(), m_pVecObservers.cend(), pObserver);
-			if (pos != m_pVecObservers.cend()) m_pVecObservers.erase(pos);
+			if(m_pVecObservers.size() > 0)
+			{
+				auto pos = std::find(m_pVecObservers.cbegin(), m_pVecObservers.cend(), pObserver);
+				if (pos != m_pVecObservers.cend()) m_pVecObservers.erase(pos);
 #ifndef NDEBUG
-			else std::cout << "Couldn't find Observer to remove in the vector. Continuing.\n";
+				else std::cout << "Couldn't find Observer to remove in the vector. Continuing.\n";
 #endif // !NDEBUG
+			}
 		}
 
 		void NotifyObservers(T* pSubjectOwner)

@@ -25,15 +25,15 @@ namespace dae
 		void Render() const;
 
 		template <typename T>
+			requires std::derived_from<T, Component>
 		void AddTexture(const std::unique_ptr<Texture2D>& pTexture, bool flipTexture = false)
 		{
-			assert((std::derived_from<T,Component>));
 			m_pMapTexturesToRender[typeid(T)] = std::make_pair(pTexture.get(), flipTexture);
 		}
 		template <typename T>
+			requires std::derived_from<T,Component>
 		void SetFlipped(bool flipTexture)
 		{
-			assert((std::derived_from<T,Component>));
 			m_pMapTexturesToRender.at(typeid(T)).second = flipTexture;
 		}
 
