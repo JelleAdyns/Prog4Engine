@@ -47,6 +47,8 @@ namespace dae
 		bool ButtonUpThisFrame(ControllerButton button, uint8_t controllerIndex) const;
 		bool ButtonPressed(ControllerButton button, uint8_t controllerIndex)  const;
 		
+
+		void VibrateController(int strengthPercentage, uint8_t controllerIndex);
 		glm::vec2 GetJoystickValue(bool leftJoystick, uint8_t controllerIndex);
 		float GetTriggerValue(bool leftTrigger, uint8_t controllerIndex);
 
@@ -61,6 +63,13 @@ namespace dae
 			SDL_Scancode key;
 			KeyState keyState;
 
+			bool operator>(const KeyBoardState& other) const
+			{
+				if (key != other.key)
+					return other.key > key;
+				return other.keyState > keyState;
+			}
+
 			bool operator<(const KeyBoardState& other) const
 			{
 				if (key != other.key)
@@ -71,6 +80,11 @@ namespace dae
 			bool operator==(const KeyBoardState& other) const 
 			{
 				return other.key == key && other.keyState == keyState;
+			}
+
+			bool operator!=(const KeyBoardState& other) const
+			{
+				return other.key != key || other.keyState != keyState;
 			}
 		};
 

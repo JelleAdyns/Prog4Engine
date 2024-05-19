@@ -194,6 +194,16 @@ namespace dae
 	{
 		return m_pVecControllers.at(controllerIndex)->IsPressed(button);
 	}
+	void InputCommandBinder::VibrateController(int strengthPercentage, uint8_t controllerIndex)
+	{
+		if (controllerIndex < m_pVecControllers.size())
+		{
+			m_pVecControllers.at(controllerIndex)->Vibrate(strengthPercentage);
+		}
+#ifndef NDEBUG
+		else std::cout << "Trying to vibrate controller, but controller for controllerIndex ("<< controllerIndex << ") not found.\n";
+#endif // !NDEBUG
+	}
 	glm::vec2 InputCommandBinder::GetJoystickValue(bool leftJoystick, uint8_t controllerIndex)
 	{
 		return m_pVecControllers.at(controllerIndex)->GetJoystickValue(leftJoystick);
