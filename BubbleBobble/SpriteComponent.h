@@ -26,6 +26,7 @@ public:
 	SpriteComponent& operator=(const SpriteComponent& other) = delete;
 	SpriteComponent& operator=(SpriteComponent&& other) noexcept = delete;
 
+	virtual void Start() override;
 	virtual void Update() override;
 	virtual void PrepareImGuiRender() override;
 

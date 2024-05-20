@@ -26,6 +26,7 @@ public:
 	EnemyComponent& operator= (const EnemyComponent&) = delete;
 	EnemyComponent& operator= (EnemyComponent&&) noexcept = delete;
 
+	virtual void Start() override;
 	virtual void Update() override;
 	virtual void PrepareImGuiRender() override;
 

@@ -20,6 +20,10 @@ namespace dae
 
 	}
 
+	void PhysicsComponent::Start()
+	{
+	}
+
 	void PhysicsComponent::Update()
 	{
 	}

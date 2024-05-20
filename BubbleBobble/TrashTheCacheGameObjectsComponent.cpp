@@ -47,9 +47,14 @@ TrashTheCacheGameObjectsComponent::~TrashTheCacheGameObjectsComponent()
 
 }
 
-void TrashTheCacheGameObjectsComponent::Update()
+void TrashTheCacheGameObjectsComponent::Start()
 {
 	if (!m_Experiment) m_Experiment = GetOwner()->GetComponent<CacheExperimentComponent>();
+}
+
+void TrashTheCacheGameObjectsComponent::Update()
+{
+	
 }
 
 void TrashTheCacheGameObjectsComponent::PrepareImGuiRender()

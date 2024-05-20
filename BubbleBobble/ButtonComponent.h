@@ -17,6 +17,7 @@ public:
 	ButtonComponent& operator= (const ButtonComponent&) = delete;
 	ButtonComponent& operator= (ButtonComponent&&) noexcept = delete;
 
+	virtual void Start() override;
 	virtual void Update() override;
 	virtual void PrepareImGuiRender() override;
 

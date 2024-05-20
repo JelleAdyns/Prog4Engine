@@ -48,7 +48,7 @@ SpriteComponent::SpriteComponent(dae::GameObject* pOwner, std::unique_ptr<dae::T
 	);
 }
 
-void SpriteComponent::Update()
+void SpriteComponent::Start()
 {
 	if (!m_pRenderComponent)
 	{
@@ -56,6 +56,11 @@ void SpriteComponent::Update()
 		m_pRenderComponent = GetOwner()->GetComponent<dae::RenderComponent>();
 		m_pRenderComponent->AddTexture<ThisType>(m_pTexture);
 	}
+}
+
+void SpriteComponent::Update()
+{
+	
 
 	if (m_SpriteIsDirty) UpdateSrcRect();
 

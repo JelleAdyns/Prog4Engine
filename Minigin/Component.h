@@ -19,6 +19,9 @@ namespace dae
 		Component& operator= (const Component&) = delete;
 		Component& operator= (Component&&) noexcept = delete;
 
+		//Idea from Wout Firlefyn
+		virtual void Start() = 0;
+
 		virtual void Update() = 0;
 		virtual void PrepareImGuiRender() = 0;
 

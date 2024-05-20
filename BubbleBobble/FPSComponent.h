@@ -21,6 +21,7 @@ public:
 	FPSComponent& operator= (const FPSComponent&) = delete;
 	FPSComponent& operator= (FPSComponent&&) noexcept = delete;
 
+	virtual void Start() override;
 	virtual void Update() override;
 	virtual void PrepareImGuiRender() override;
 

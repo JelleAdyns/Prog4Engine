@@ -12,9 +12,14 @@ TrashTheCacheIntComponent::TrashTheCacheIntComponent(dae::GameObject* pOwner, in
 {
 }
 
-void TrashTheCacheIntComponent::Update()
+void TrashTheCacheIntComponent::Start()
 {
 	if (!m_Experiment) m_Experiment = GetOwner()->GetComponent<CacheExperimentComponent>();
+}
+
+void TrashTheCacheIntComponent::Update()
+{
+	
 }
 
 void TrashTheCacheIntComponent::PrepareImGuiRender()

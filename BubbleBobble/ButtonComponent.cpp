@@ -8,6 +8,10 @@ ButtonComponent::ButtonComponent(dae::GameObject* pOwner, std::unique_ptr<dae::C
 {
 }
 
+void ButtonComponent::Start()
+{
+}
+
 void ButtonComponent::Update()
 {
 }

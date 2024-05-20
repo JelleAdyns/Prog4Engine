@@ -14,12 +14,15 @@ FloorCheckingComponent::FloorCheckingComponent(dae::GameObject* pOwner, const gl
 {
 }
 
-void FloorCheckingComponent::Update()
+void FloorCheckingComponent::Start()
 {
 	if (!m_pCollisionComponent) m_pCollisionComponent = GetOwner()->GetComponent<dae::CollisionComponent>();
 	if (!m_pPhysicsComponent) m_pPhysicsComponent = GetOwner()->GetComponent<dae::PhysicsComponent>();
+}
 
-
+void FloorCheckingComponent::Update()
+{
+	
 	if (const auto& localPos = GetOwner()->GetLocalPosition(); localPos.y > dae::Minigin::GetWindowSize().y)
 	{
 		GetOwner()->SetLocalPos(localPos.x, -50);

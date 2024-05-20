@@ -32,6 +32,7 @@ namespace dae
 		GameObject& operator=(const GameObject& other) = delete;
 		GameObject& operator=(GameObject&& other) noexcept = delete;
 
+		void Start();
 		void Update();
 		void PrepareImGuiRender();
 		void Render() const;

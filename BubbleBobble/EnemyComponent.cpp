@@ -16,12 +16,16 @@ EnemyComponent::EnemyComponent(dae::GameObject* pOwner, EnemyType enemyType):
 	//m_pCollided->AddObserver(pObserver);
 }
 
-void EnemyComponent::Update()
+void EnemyComponent::Start()
 {
 	if (!m_pPhysicsComp) m_pPhysicsComp = GetOwner()->GetComponent<dae::PhysicsComponent>();
 	if (!m_pSpriteComp) m_pSpriteComp = GetOwner()->GetComponent<SpriteComponent>();
 	if (!m_pCollisionComp) m_pCollisionComp = GetOwner()->GetComponent<dae::CollisionComponent>();
+}
 
+void EnemyComponent::Update()
+{
+	
 	UpdateStates();
 
 	if (m_pPhysicsComp->GetVelocity().x < 0) m_pSpriteComp->LookLeft(true);

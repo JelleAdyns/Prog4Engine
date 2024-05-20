@@ -36,6 +36,7 @@ namespace dae
         CollisionComponent& operator= (const CollisionComponent&) = delete;
         CollisionComponent& operator= (CollisionComponent&&) noexcept = delete;
 
+        virtual void Start() override;
         virtual void Update() override;
         virtual void PrepareImGuiRender() override;
 

@@ -9,6 +9,10 @@ CacheExperimentComponent::CacheExperimentComponent(dae::GameObject* pOwner) :
 {
 }
 
+void CacheExperimentComponent::Start()
+{
+}
+
 void CacheExperimentComponent::Update()
 {
 }

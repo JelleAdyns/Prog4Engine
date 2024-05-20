@@ -20,6 +20,7 @@ namespace dae
 		PhysicsComponent& operator= (const PhysicsComponent&) = delete;
 		PhysicsComponent& operator= (PhysicsComponent&&) noexcept = delete;
 
+		virtual void Start() override;
 		virtual void Update() override;
 		virtual void PrepareImGuiRender() override;
 

@@ -27,6 +27,7 @@ namespace dae
 		SceneManager& operator= (const SceneManager&) = delete;
 		SceneManager& operator= (SceneManager&&) noexcept = delete;
 
+		void Start();
 		void Update();
 		void PrepareImGuiRender();
 		void Render() const;

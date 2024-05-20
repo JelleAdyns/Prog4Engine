@@ -36,6 +36,11 @@ namespace dae
             m_pVecAllCollisionComponents.cend());
     }
 
+    void CollisionComponent::Start()
+    {
+        m_HasPhysicsComponent = GetOwner()->HasComponent<PhysicsComponent>();
+    }
+
     void CollisionComponent::Update()
     {
         

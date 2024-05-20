@@ -11,6 +11,7 @@
 
 uint8_t PlayerComponent::m_NrOfPlayers{};
 
+
 PlayerComponent::PlayerComponent(dae::GameObject* pOwner):
 	dae::Component{pOwner},
 	m_pCurrState{},
@@ -24,7 +25,7 @@ PlayerComponent::PlayerComponent(dae::GameObject* pOwner):
 
 PlayerComponent::~PlayerComponent()
 {
-	--m_NrOfPlayers;
+
 	
 	for (dae::Subject<SpriteComponent>* pSpriteSubject : m_pVecObservedSpriteSubjects)
 	{
@@ -37,12 +38,17 @@ PlayerComponent::~PlayerComponent()
 	}
 }
 
-void PlayerComponent::Update()
+void PlayerComponent::Start()
 {
 	if (!m_pPhysicsComp) m_pPhysicsComp = GetOwner()->GetComponent<dae::PhysicsComponent>();
 	if (!m_pSpriteComp) m_pSpriteComp = GetOwner()->GetComponent<SpriteComponent>();
 	if (!m_pCollisionComp) m_pCollisionComp = GetOwner()->GetComponent<dae::CollisionComponent>();
+	if (!m_pMovementComp) m_pMovementComp = GetOwner()->GetComponent<MovementComponent>();
+}
 
+void PlayerComponent::Update()
+{
+	
 	if (m_IsInvincible)
 	{
 		m_InvincibilityTimer += dae::GameTime::GetInstance().GetDeltaTime();

@@ -20,7 +20,7 @@ namespace dae
 	{
 	}
 	
-	void ImageComponent::Update()
+	void ImageComponent::Start()
 	{
 		if (!m_pRenderComponent)
 		{
@@ -28,6 +28,11 @@ namespace dae
 			m_pRenderComponent = GetOwner()->GetComponent<RenderComponent>();
 			m_pRenderComponent->AddTexture<ThisType>(m_pTexture);
 		}
+	}
+
+	void ImageComponent::Update()
+	{
+		
 	}
 	void ImageComponent::PrepareImGuiRender() {}
 }

@@ -21,6 +21,7 @@ public:
 	CacheExperimentComponent& operator= (const CacheExperimentComponent&) = delete;
 	CacheExperimentComponent& operator= (CacheExperimentComponent&&) noexcept = delete;
 
+	virtual void Start() override;
 	virtual void Update() override;
 	virtual void PrepareImGuiRender() override;
 

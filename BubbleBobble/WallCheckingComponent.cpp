@@ -14,11 +14,15 @@ WallCheckingComponent::WallCheckingComponent(dae::GameObject* pOwner, const glm:
 {
 }
 
-void WallCheckingComponent::Update()
+void WallCheckingComponent::Start()
 {
 	if (!m_pCollisionComponent) m_pCollisionComponent = GetOwner()->GetComponent<dae::CollisionComponent>();
 	if (!m_pPhysicsComponent) m_pPhysicsComponent = GetOwner()->GetComponent<dae::PhysicsComponent>();
+}
 
+void WallCheckingComponent::Update()
+{
+	
 	m_pCollisionComponent->SetOffset(m_Offset);
 	m_pCollisionComponent->SetSize(m_Size);
 	

@@ -21,6 +21,7 @@ public:
 	LivesComponent& operator= (const LivesComponent&) = delete;
 	LivesComponent& operator= (LivesComponent&&) noexcept = delete;
 
+	virtual void Start() override;
 	virtual void Update() override;
 	virtual void PrepareImGuiRender() override;
 	void TakeLife();

@@ -10,6 +10,10 @@ ButtonHandlerComponent::ButtonHandlerComponent(dae::GameObject* pOwner):
 {
 }
 
+void ButtonHandlerComponent::Start()
+{
+}
+
 void ButtonHandlerComponent::Update()
 {
 	if (m_ButtonIsActivated)

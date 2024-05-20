@@ -27,6 +27,7 @@ public:
 	LivesUIComponent& operator= (const LivesUIComponent&) = delete;
 	LivesUIComponent& operator= (LivesUIComponent&&) noexcept = delete;
 
+	virtual void Start() override;
 	virtual void Update() override;
 	virtual void PrepareImGuiRender() override;
 
