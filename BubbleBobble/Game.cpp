@@ -80,7 +80,7 @@ void Game::LoadTitleScreen() const
 
 	auto titleLogo = std::make_unique<dae::GameObject>(static_cast<float>(dae::Minigin::GetWindowSize().x) / 2, static_cast<float>(dae::Minigin::GetWindowSize().y) / 2 - 20);
 	titleLogo->AddRenderComponent(true);
-	titleLogo->AddComponent<SpriteComponent>("TitleLogo.png", 6, 1, 0.2f);
+	titleLogo->AddComponent<SpriteComponent>("Textures/TitleLogo.png", 6, 1, 0.2f);
 
 	scene.AddGameObject(std::move(titleLogo));
 
@@ -186,7 +186,7 @@ void Game::LoadMainMenu() const
 
 	auto icon = std::make_unique<dae::GameObject>(button1->GetWorldPosition().x - 20.f, button1->GetWorldPosition().y);
 	icon->AddRenderComponent(false);
-	icon->AddComponent<SpriteComponent>("Selector.png", 2,1,0.1f);
+	icon->AddComponent<SpriteComponent>("Textures/Selector.png", 2,1,0.1f);
 
 
 	std::shared_ptr<dae::Command> nextCommand = std::make_shared<SelectButtonCommand>(buttonHandler, icon, SelectButtonCommand::Direction::Next);
@@ -405,7 +405,7 @@ void Game::MakePlayer(dae::Scene& scene) const
 	dae::PhysicsComponent::SetGravity(300);
 	player1->AddComponent<PlayerComponent>();
 	PlayerComponent* playerComp = player1->GetComponent<PlayerComponent>();
-	player1->AddComponent<SpriteComponent>("BubStates.png", 4, 4, 0.1f, true, false, playerComp);
+	player1->AddComponent<SpriteComponent>("Textures/BubStates.png", 4, 4, 0.1f, true, false, playerComp);
 	SpriteComponent* spriteComp = player1->GetComponent<SpriteComponent>();
 	spriteComp->SetHeightMarkers(0, 64);
 	const auto& destRctSize = spriteComp->GetDestRectSize();
@@ -421,7 +421,7 @@ void Game::MakePlayer(dae::Scene& scene) const
 	enemy->AddComponent<EnemyComponent>(EnemyComponent::EnemyType::ZenChan);
 	EnemyComponent* enemyComp = enemy->GetComponent<EnemyComponent>();
 	enemyComp->AddPlayerObserver(playerComp);
-	enemy->AddComponent<SpriteComponent>("Zen-ChanStates.png", 4, 3, 0.1f);
+	enemy->AddComponent<SpriteComponent>("Textures/Zen-ChanStates.png", 4, 7, 0.1f);
 	SpriteComponent* enemySpriteComp = enemy->GetComponent<SpriteComponent>();
 	const auto& enemyDestRctSize = enemySpriteComp->GetDestRectSize();
 	enemy->AddComponent<dae::CollisionComponent>(glm::vec2{}, enemyDestRctSize);
