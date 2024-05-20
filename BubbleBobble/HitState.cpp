@@ -26,7 +26,7 @@ void HitState::OnEnter()
 
 	m_pSpriteComp->SetNrOfRows(m_NrOfRows);
 	m_pSpriteComp->SetHeightMarkers(m_HitSpriteOffset, static_cast<float>(m_pSpriteComp->GetTextureSize().y));
-	m_pSpriteComp->SetStartRow(0);
+	//m_pSpriteComp->SetStartRow(0);
 	m_pSpriteComp->SetRow(0);
 	m_pSpriteComp->SetCol(0);
 	m_pSpriteComp->SetFrameTime(0.2f);
@@ -74,9 +74,9 @@ void HitState::Notify(SpriteComponent*)
 	++m_RowCount;
 	if (m_RowCount == m_NrOfRows)
 	{
-		int nrOfRows{ 4 };
+		int nrOfRows{ 8 };
 
-		m_pSpriteComp->SetHeightMarkers(0, IdleState::GetNormalSpriteEndheight());
+		m_pSpriteComp->SetHeightMarkers(0, m_HitSpriteOffset);
 		m_pSpriteComp->SetNrOfRows(nrOfRows);
 		m_pSpriteComp->SetRow(0);
 		m_pSpriteComp->SetCol(0);
@@ -91,3 +91,9 @@ void HitState::AddSubjectPointer(dae::Subject<SpriteComponent>* pSubject)
 {
 	m_pVecObservedSpriteSubjects.emplace_back(pSubject);
 }
+
+float HitState::GetHitSpriteOffset()
+{
+	return m_HitSpriteOffset;
+}
+

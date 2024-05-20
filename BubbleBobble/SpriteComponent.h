@@ -36,14 +36,16 @@ public:
 	void SetNrOfRows(int nrOfRows);
 	void SetRowUpdate(bool rowNeedsToUpdate);
 	void SetUpdate(bool needsToUpdate);
-	void SetStartRow(int startRow);
+	//void SetStartRow(int startRow);
 	void SetFrameTime(float frameTime);
 	void LookLeft(bool isLookingLeft);
 	void Flip();
 
+	void AddRow(int nrOfRowsToAdd);
 	void AddObserver(dae::Observer<SpriteComponent>* pObserver);
 
 	bool IsLookingLeft() const;
+	int GetCurrRow() const;
 	glm::ivec2 GetTextureSize() const;
 	glm::ivec2 GetDestRectSize() const;
 
@@ -58,7 +60,7 @@ private:
 	bool m_NeedsRowUpdate;
 	bool m_IsLookingLeft;
 
-	int	m_StartRow;
+	//int m_StartRow;
 
 	int	m_CurrentCol;
 	int	m_CurrentRow;

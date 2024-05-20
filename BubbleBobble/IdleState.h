@@ -34,14 +34,12 @@ public:
 	virtual void OnExit() override;
 	virtual void Shoot() override;
 
-	static float GetNormalSpriteEndheight();
 private:
 	dae::GameObject* m_pPlayer;
 	PlayerComponent* m_pPlayerComp;
 	MovementComponent* m_pMovementComp;
 	dae::PhysicsComponent* m_pPhysicsComp;
 
-	static const float m_NormalSpritesEndHeight;
 };
 
 

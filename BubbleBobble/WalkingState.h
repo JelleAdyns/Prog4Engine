@@ -56,13 +56,14 @@ public:
 	}
 	virtual void OnEnter() override
 	{
-		m_pPlayer->GetComponent<SpriteComponent>()->SetRow(1);
+		m_pPlayer->GetComponent<SpriteComponent>()->AddRow(1);
 
 		m_pMovementComp->RegisterJumpCommand();
 
 	}
 	virtual void OnExit() override
 	{
+		m_pPlayer->GetComponent<SpriteComponent>()->AddRow(-1);
 		m_pMovementComp->UnRegisterJumpCommand();
 	}
 	virtual void Shoot() override

@@ -1,7 +1,8 @@
 #include "IdleState.h"
+#include "HitState.h"
 #include "States.h"
 
-const float IdleState::m_NormalSpritesEndHeight{ 64.f };
+
 
 std::unique_ptr<PlayerState> IdleState::Update()
 {
@@ -24,13 +25,12 @@ std::unique_ptr<PlayerState> IdleState::Update()
 }
 void IdleState::OnEnter()
 {
-	int nrOfRows{ 4 };
+	int nrOfRows{ 8 };
 
 
 	SpriteComponent* pSpriteComp = m_pPlayer->GetComponent<SpriteComponent>();
-	pSpriteComp->SetHeightMarkers(0, m_NormalSpritesEndHeight);
+	pSpriteComp->SetHeightMarkers(0, HitState::GetHitSpriteOffset());
 	pSpriteComp->SetNrOfRows(nrOfRows);
-	pSpriteComp->SetRow(0);
 	pSpriteComp->SetRowUpdate(false);
 
 	m_pPhysicsComp->SetVelocityX(0);
@@ -45,9 +45,4 @@ void IdleState::OnExit()
 
 void IdleState::Shoot()
 {
-}
-
-float IdleState::GetNormalSpriteEndheight()
-{
-	return m_NormalSpritesEndHeight;
 }

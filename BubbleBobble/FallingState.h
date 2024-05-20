@@ -45,12 +45,13 @@ public:
 	}
 	virtual void OnEnter() override
 	{
-		m_pPlayer->GetComponent<SpriteComponent>()->SetRow(3);
+		m_pPlayer->GetComponent<SpriteComponent>()->AddRow(3);
 
 	}
 	virtual void OnExit() override
 	{
 
+		m_pPlayer->GetComponent<SpriteComponent>()->AddRow(-3);
 	}
 
 	virtual void Shoot() override

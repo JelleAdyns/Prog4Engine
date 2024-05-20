@@ -37,6 +37,8 @@ public:
 	virtual void Notify(SpriteComponent* pSpriteComp) override;
 	virtual void AddSubjectPointer(dae::Subject<SpriteComponent>* pSubject) override;
 
+
+	static float GetHitSpriteOffset();
 private:
 	dae::GameObject* m_pPlayer;
 	PlayerComponent* m_pPlayerComp;

@@ -73,9 +73,11 @@ void PlayerComponent::Notify(SpriteComponent* pSubject)
 {
 	if (m_IsShooting)
 	{
+		static const int attackStartRow{ 4 };
 		m_IsShooting = false;
-		pSubject->SetStartRow(0);
+		//pSubject->SetStartRow(0);
 		pSubject->SetFrameTime(0.1f);
+		m_pSpriteComp->AddRow(-attackStartRow);
 	}
 }
 
@@ -101,10 +103,12 @@ void PlayerComponent::Shoot()
 {
 	if(!m_IsShooting)
 	{
+		static const int attackStartRow{ 4 };
 		m_IsShooting = true;
 		m_pSpriteComp->SetFrameTime(0.2f);
-		m_pSpriteComp->SetStartRow(4);
+		//m_pSpriteComp->SetStartRow(4);
 		m_pSpriteComp->SetCol(0);
+		m_pSpriteComp->AddRow(attackStartRow);
 	}
 }
 
