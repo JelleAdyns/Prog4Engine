@@ -5,6 +5,11 @@
 #include <iostream>
 #include <algorithm>
 
+void dae::SceneManager::Start()
+{
+	m_pMapScenes.at(m_ActiveScene)->Start();
+}
+
 void dae::SceneManager::Update()
 {
 	m_pMapScenes.at(m_ActiveScene)->Update();

@@ -30,6 +30,7 @@ SpriteComponent::SpriteComponent(dae::GameObject* pOwner, std::unique_ptr<dae::T
 	m_pRowFinished{std::make_unique<dae::Subject<SpriteComponent>>()}
 {
 
+
 	m_pRowFinished->AddObserver(pObserver);
 
 	m_EndHeightMarker = static_cast<float>(m_pTexture->GetTextureSize().y);
@@ -47,7 +48,7 @@ SpriteComponent::SpriteComponent(dae::GameObject* pOwner, std::unique_ptr<dae::T
 	);
 }
 
-void SpriteComponent::Update()
+void SpriteComponent::Start()
 {
 	if (!m_pRenderComponent)
 	{
@@ -55,6 +56,11 @@ void SpriteComponent::Update()
 		m_pRenderComponent = GetOwner()->GetComponent<dae::RenderComponent>();
 		m_pRenderComponent->AddTexture<ThisType>(m_pTexture);
 	}
+}
+
+void SpriteComponent::Update()
+{
+	
 
 	if (m_SpriteIsDirty) UpdateSrcRect();
 
@@ -66,7 +72,6 @@ void SpriteComponent::Update()
 			
 			if (m_CurrentCol == m_NrOfCols - 1)
 			{
-
 				m_pRowFinished->NotifyObservers(this);
 				if (m_NeedsRowUpdate) ++m_CurrentRow %= m_NrOfRows + m_StartRow;
 			}
@@ -123,6 +128,11 @@ void SpriteComponent::SetRowUpdate(bool rowNeedsToUpdate)
 	m_NeedsRowUpdate = rowNeedsToUpdate;
 }
 
+void SpriteComponent::SetUpdate(bool needsToUpdate)
+{
+	m_NeedsUpdate = needsToUpdate;
+}
+
 void SpriteComponent::SetStartRow(int startRow)
 {
 	m_StartRow = startRow;
@@ -140,7 +150,25 @@ void SpriteComponent::LookLeft(bool isLookingLeft)
 	m_IsLookingLeft = isLookingLeft;
 
 	using ThisType = std::remove_reference<decltype(*this)>::type;
-	m_pRenderComponent->SetFlipped<ThisType>(m_IsLookingLeft);
+	if(m_pRenderComponent) m_pRenderComponent->SetFlipped<ThisType>(m_IsLookingLeft);
+}
+
+void SpriteComponent::Flip()
+{
+	m_IsLookingLeft = !m_IsLookingLeft;
+
+	using ThisType = std::remove_reference<decltype(*this)>::type;
+	if (m_pRenderComponent) m_pRenderComponent->SetFlipped<ThisType>(m_IsLookingLeft);
+}
+
+void SpriteComponent::AddObserver(dae::Observer<SpriteComponent>* pObserver)
+{
+	m_pRowFinished->AddObserver(pObserver);
+}
+
+bool SpriteComponent::IsLookingLeft() const
+{
+	return m_IsLookingLeft;
 }
 
 glm::ivec2 SpriteComponent::GetTextureSize() const

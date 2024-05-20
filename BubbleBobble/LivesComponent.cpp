@@ -11,6 +11,10 @@ LivesComponent::LivesComponent(dae::GameObject* pOwner, int nrOfLives, LivesUICo
 	m_LivesChanged->AddObserver(pObserver);
 }
 
+void LivesComponent::Start()
+{
+}
+
 void LivesComponent::Update()
 {
 }

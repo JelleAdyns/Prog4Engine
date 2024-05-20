@@ -26,6 +26,7 @@ public:
 	SpriteComponent& operator=(const SpriteComponent& other) = delete;
 	SpriteComponent& operator=(SpriteComponent&& other) noexcept = delete;
 
+	virtual void Start() override;
 	virtual void Update() override;
 	virtual void PrepareImGuiRender() override;
 
@@ -34,10 +35,15 @@ public:
 	void SetHeightMarkers(float startHeight, float endHeight);
 	void SetNrOfRows(int nrOfRows);
 	void SetRowUpdate(bool rowNeedsToUpdate);
+	void SetUpdate(bool needsToUpdate);
 	void SetStartRow(int startRow);
 	void SetFrameTime(float frameTime);
 	void LookLeft(bool isLookingLeft);
+	void Flip();
 
+	void AddObserver(dae::Observer<SpriteComponent>* pObserver);
+
+	bool IsLookingLeft() const;
 	glm::ivec2 GetTextureSize() const;
 	glm::ivec2 GetDestRectSize() const;
 

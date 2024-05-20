@@ -2,24 +2,22 @@
 #include "States.h"
 #include <PhysicsComponent.h>
 #include <Minigin.h>
+#include <InputCommandBinder.h>
 
 const float HitState::m_HitSpriteOffset{ 128.f };
 
 std::unique_ptr<PlayerState> HitState::Update()
 {
-;
-
-	if (m_pPlayerComp->HitAnimFinished())
+	if (m_RowCount == m_NrOfRows)
 	{
-		return std::make_unique<IdleState>(m_pPlayer, m_pPlayerComp);
+		return std::make_unique<IdleState>(m_pPlayer, m_pPlayerComp, m_pMovementComp);
 	}
 
-	if (!m_pPlayerComp->IsHit()) return std::make_unique<IdleState>(m_pPlayer, m_pPlayerComp);
 	return nullptr;
 }
-void HitState::OnEnter() const
+void HitState::OnEnter()
 {
-
+	m_pSpriteComp->AddObserver(this);
 
 	m_pPlayer->GetComponent<dae::PhysicsComponent>()->StopGravity();
 	
@@ -40,57 +38,56 @@ void HitState::OnEnter() const
 
 	auto& inputMan = dae::InputCommandBinder::GetInstance();
 
-	inputMan.RemoveKeyCommand(SDL_SCANCODE_W, dae::KeyState::DownThisFrame);
-	inputMan.RemoveKeyCommand(SDL_SCANCODE_A, dae::KeyState::Pressed);
-	inputMan.RemoveKeyCommand(SDL_SCANCODE_A, dae::KeyState::UpThisFrame);
-	inputMan.RemoveKeyCommand(SDL_SCANCODE_D, dae::KeyState::Pressed);
-	inputMan.RemoveKeyCommand(SDL_SCANCODE_D, dae::KeyState::UpThisFrame);
-	inputMan.RemoveControllerCommand(dae::ControllerButton::A, dae::KeyState::DownThisFrame, m_pPlayerComp->GetPlayerIndex());
-	inputMan.RemoveControllerCommand(dae::ControllerButton::DpadLeft, dae::KeyState::Pressed, m_pPlayerComp->GetPlayerIndex());
-	inputMan.RemoveControllerCommand(dae::ControllerButton::DpadLeft, dae::KeyState::UpThisFrame, m_pPlayerComp->GetPlayerIndex());
-	inputMan.RemoveControllerCommand(dae::ControllerButton::DpadRight, dae::KeyState::Pressed, m_pPlayerComp->GetPlayerIndex());
-	inputMan.RemoveControllerCommand(dae::ControllerButton::DpadRight, dae::KeyState::UpThisFrame, m_pPlayerComp->GetPlayerIndex());
+	m_pMovementComp->UnRegisterAttackCommand();
+	m_pMovementComp->UnRegisterMoveCommands();
 
-
+	inputMan.VibrateController(40, m_pMovementComp->GetPlayerIndex());
 
 }
-void HitState::OnExit() const
+void HitState::OnExit()
 {
-	int nrOfRows{ 4 };
+
+	for (dae::Subject<SpriteComponent>* pSpriteSubject : m_pVecObservedSpriteSubjects)
+	{
+		pSpriteSubject->RemoveObserver(this);
+	}
 
 	m_pPlayer->GetComponent<dae::PhysicsComponent>()->StartGravity();
 
 
-	m_pSpriteComp->SetHeightMarkers(0, IdleState::GetNormalSpriteEndheight());
-	m_pSpriteComp->SetNrOfRows(nrOfRows);
-	m_pSpriteComp->SetRow(0);
-	m_pSpriteComp->SetCol(0);
-	m_pSpriteComp->SetRowUpdate(false);
+	//auto& inputMan = dae::InputCommandBinder::GetInstance();
 
-	
-	m_pPlayerComp->Respawn();
+	m_pMovementComp->RegisterAttackCommand();
+	m_pMovementComp->RegisterMoveCommands();
 
+}
 
+void HitState::Shoot()
+{
+}
+
+void HitState::Notify(SpriteComponent*)
+{
 	auto& inputMan = dae::InputCommandBinder::GetInstance();
+	inputMan.VibrateController(0, m_pMovementComp->GetPlayerIndex());
 
-	std::shared_ptr<dae::Command> shootCommand = std::make_shared<ShootCommand>(m_pPlayer);
-	inputMan.AddKeyCommand(shootCommand, SDL_SCANCODE_W, dae::KeyState::DownThisFrame);
-	inputMan.AddControllerCommand(shootCommand, dae::ControllerButton::A, dae::KeyState::DownThisFrame, m_pPlayerComp->GetPlayerIndex());
+	++m_RowCount;
+	if (m_RowCount == m_NrOfRows)
+	{
+		int nrOfRows{ 4 };
 
-	std::shared_ptr<dae::Command> moveCommand = std::make_shared<MoveCommand>(m_pPlayer, m_pPlayerComp->GetMoveVelocity());
-	inputMan.AddKeyCommand(moveCommand, SDL_SCANCODE_D, dae::KeyState::Pressed);
-	inputMan.AddControllerCommand(moveCommand, dae::ControllerButton::DpadRight, dae::KeyState::Pressed, m_pPlayerComp->GetPlayerIndex());
-
-	moveCommand = std::make_shared<MoveCommand>(m_pPlayer, -m_pPlayerComp->GetMoveVelocity());
-	inputMan.AddKeyCommand(moveCommand, SDL_SCANCODE_A, dae::KeyState::Pressed);
-	inputMan.AddControllerCommand(moveCommand, dae::ControllerButton::DpadLeft, dae::KeyState::Pressed, m_pPlayerComp->GetPlayerIndex());
+		m_pSpriteComp->SetHeightMarkers(0, IdleState::GetNormalSpriteEndheight());
+		m_pSpriteComp->SetNrOfRows(nrOfRows);
+		m_pSpriteComp->SetRow(0);
+		m_pSpriteComp->SetCol(0);
+		m_pSpriteComp->SetRowUpdate(false);
 
 
-	std::shared_ptr<dae::Command> stopMovingCommand = std::make_shared<StopMovingCommand>(m_pPlayer);
-	inputMan.AddKeyCommand(stopMovingCommand, SDL_SCANCODE_D, dae::KeyState::UpThisFrame);
-	inputMan.AddControllerCommand(stopMovingCommand, dae::ControllerButton::DpadRight, dae::KeyState::UpThisFrame, m_pPlayerComp->GetPlayerIndex());
+		m_pPlayerComp->Respawn();
+	}
+}
 
-	stopMovingCommand = std::make_shared<StopMovingCommand>(m_pPlayer);
-	inputMan.AddKeyCommand(stopMovingCommand, SDL_SCANCODE_A, dae::KeyState::UpThisFrame);
-	inputMan.AddControllerCommand(stopMovingCommand, dae::ControllerButton::DpadLeft, dae::KeyState::UpThisFrame, m_pPlayerComp->GetPlayerIndex());
+void HitState::AddSubjectPointer(dae::Subject<SpriteComponent>* pSubject)
+{
+	m_pVecObservedSpriteSubjects.emplace_back(pSubject);
 }

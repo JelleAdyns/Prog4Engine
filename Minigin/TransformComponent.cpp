@@ -11,6 +11,10 @@ namespace dae
 		Component{pOwner}, m_position{pos }
 	{}
 
+	void TransformComponent::Start()
+	{
+	}
+
 	void TransformComponent::Update(){}
 	void TransformComponent::PrepareImGuiRender(){}
 

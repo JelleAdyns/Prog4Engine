@@ -17,9 +17,13 @@ LivesUIComponent::~LivesUIComponent()
         pSubject->RemoveObserver(this);
     }
 }
+void LivesUIComponent::Start()
+{
+    if (!m_pTextComponent) m_pTextComponent = GetOwner()->GetComponent<dae::TextComponent>();
+}
 void LivesUIComponent::Update()
 {
-	if (!m_pTextComponent) m_pTextComponent = GetOwner()->GetComponent<dae::TextComponent>();
+	
 }
 
 void LivesUIComponent::PrepareImGuiRender()

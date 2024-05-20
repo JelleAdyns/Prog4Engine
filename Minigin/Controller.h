@@ -54,6 +54,7 @@ namespace dae
 		void RemoveCommand(ControllerButton button, KeyState keyState);
 		void RemoveAllCommands();
 
+		void Vibrate(int strengthPrecantage);
 		glm::vec2 GetJoystickValue(bool leftJoystick);
 		float GetTriggerValue(bool leftTrigger);
 	private:

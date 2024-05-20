@@ -23,6 +23,7 @@ namespace dae
 		TextComponent& operator= (const TextComponent&) = delete;
 		TextComponent& operator= (TextComponent&&) noexcept = delete;
 
+		virtual void Start() override;
 		virtual void Update() override;
 		virtual void PrepareImGuiRender() override;
 

@@ -23,6 +23,7 @@ public:
 	WallCheckingComponent& operator=(const WallCheckingComponent& other) = delete;
 	WallCheckingComponent& operator=(WallCheckingComponent&& other) = delete;
 
+	virtual void Start() override;
 	virtual void Update() override;
 	virtual void PrepareImGuiRender() override;
 

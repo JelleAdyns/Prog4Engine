@@ -8,4 +8,11 @@
 #include "WalkingState.h"
 #include "HitState.h"
 
+#include "EnemyState.h"
+#include "ZenChanState.h"
+#include "ZenChanRunState.h"
+#include "ZenChanFallingState.h"
+#include "MaitaState.h"
+#include "MaitaRunState.h"
+
 #endif // !STATES_H

@@ -19,6 +19,9 @@ RotatorComponent::RotatorComponent(dae::GameObject* pOwner, float radius, float 
 {
 
 }
+void RotatorComponent::Start()
+{
+}
 void RotatorComponent::Update()
 {
 	constexpr float Pi2 = 2 * static_cast<float>(std::numbers::pi);

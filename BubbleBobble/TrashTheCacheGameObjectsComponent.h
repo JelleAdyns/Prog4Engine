@@ -22,6 +22,7 @@ public:
 	TrashTheCacheGameObjectsComponent& operator=(const TrashTheCacheGameObjectsComponent& other) = delete;
 	TrashTheCacheGameObjectsComponent& operator=(TrashTheCacheGameObjectsComponent&& other) = delete;
 
+	virtual void Start() override;
 	virtual void Update() override;
 	virtual void PrepareImGuiRender() override;
 private:

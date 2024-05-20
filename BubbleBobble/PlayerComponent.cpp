@@ -2,6 +2,7 @@
 #include "IdleState.h"
 #include "HitState.h"
 #include "SpriteComponent.h"
+#include "MovementComponent.h"
 #include <PhysicsComponent.h>
 #include <CollisionComponent.h>
 #include <KeyState.h>
@@ -9,29 +10,42 @@
 #include <Minigin.h>
 #include <InputCommandBinder.h>
 
-uint8_t PlayerComponent::m_NrOfPlayers{};
+
 
 PlayerComponent::PlayerComponent(dae::GameObject* pOwner):
 	dae::Component{pOwner},
-	m_pCurrState{}
+	m_pCurrState{},
+	m_pPosChecked{std::make_unique<dae::Subject<PlayerComponent>>()}
 {
-	m_PlayerIndex = m_NrOfPlayers;
-	++m_NrOfPlayers;
-
 	Respawn();
 }
 
 PlayerComponent::~PlayerComponent()
 {
-	--m_NrOfPlayers;
+
+	
+	for (dae::Subject<SpriteComponent>* pSpriteSubject : m_pVecObservedSpriteSubjects)
+	{
+		pSpriteSubject->RemoveObserver(this);
+	}
+
+	for (dae::Subject<EnemyComponent>* pEnemySubject : m_pVecObservedEnemySubjects)
+	{
+		pEnemySubject->RemoveObserver(this);
+	}
 }
 
-void PlayerComponent::Update()
+void PlayerComponent::Start()
 {
 	if (!m_pPhysicsComp) m_pPhysicsComp = GetOwner()->GetComponent<dae::PhysicsComponent>();
 	if (!m_pSpriteComp) m_pSpriteComp = GetOwner()->GetComponent<SpriteComponent>();
 	if (!m_pCollisionComp) m_pCollisionComp = GetOwner()->GetComponent<dae::CollisionComponent>();
+	if (!m_pMovementComp) m_pMovementComp = GetOwner()->GetComponent<MovementComponent>();
+}
 
+void PlayerComponent::Update()
+{
+	
 	if (m_IsInvincible)
 	{
 		m_InvincibilityTimer += dae::GameTime::GetInstance().GetDeltaTime();
@@ -42,7 +56,7 @@ void PlayerComponent::Update()
 			m_IsInvincible = false;
 		}
 	}
-
+	m_pPosChecked->NotifyObservers(this);
 	UpdateStates();
 
 	if (m_pPhysicsComp->GetVelocity().x < 0) m_pSpriteComp->LookLeft(true);
@@ -62,18 +76,6 @@ void PlayerComponent::Notify(SpriteComponent* pSubject)
 		m_IsShooting = false;
 		pSubject->SetStartRow(0);
 		pSubject->SetFrameTime(0.1f);
-	}
-	if (m_IsHit)
-	{
-
-		++m_SpriteRowcount;
-
-		if (m_SpriteRowcount == 3)
-		{
-			m_SpriteRowcount = 0;
-			m_HitAnimFinished = true;
-		}
-
 	}
 }
 
@@ -114,21 +116,26 @@ bool PlayerComponent::IsHit() const
 void PlayerComponent::Respawn()
 {
 	m_IsHit = false;
-	m_HitAnimFinished = false;
 	GetOwner()->SetLocalPos(24.f, dae::Minigin::GetWindowSize().y - 40.f);
 	m_IsInvincible = true;
 }
 
-bool PlayerComponent::HitAnimFinished()
+dae::Subject<PlayerComponent>* PlayerComponent::GetSubject() const
 {
-	return m_HitAnimFinished;
+	return m_pPosChecked.get();
 }
+
+glm::vec2 PlayerComponent::GetPos() const
+{
+	return GetOwner()->GetWorldPosition();
+}
+
 
 void PlayerComponent::UpdateStates()
 {
 	if (!m_pCurrState)
 	{
-		m_pCurrState = std::make_unique<IdleState>(GetOwner(), this);
+		m_pCurrState = std::make_unique<IdleState>(GetOwner(), this, m_pMovementComp);
 		m_pCurrState->OnEnter();
 	}
 

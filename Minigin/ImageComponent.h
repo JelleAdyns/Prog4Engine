@@ -19,6 +19,7 @@ namespace dae
 		ImageComponent& operator= (const ImageComponent&) = delete;
 		ImageComponent& operator= (ImageComponent&&) noexcept = delete;
 
+		virtual void Start() override;
 		virtual void Update() override;
 		virtual void PrepareImGuiRender() override;
 

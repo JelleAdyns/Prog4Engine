@@ -9,6 +9,10 @@ namespace dae
 		Component{ pOwner }, m_UseMiddle{useMiddleOfTextures}, m_Pos{}
 	{}
 
+	void RenderComponent::Start()
+	{
+	}
+
 	void RenderComponent::Update()
 	{
 		m_Pos = GetOwner()->GetWorldPosition();

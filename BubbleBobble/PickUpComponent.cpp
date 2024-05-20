@@ -9,6 +9,10 @@ PickUpComponent::PickUpComponent(dae::GameObject* pOwner, PickUpComponent::PickU
 	m_PickedUp->AddObserver(pObserver);
 }
 
+void PickUpComponent::Start()
+{
+}
+
 void PickUpComponent::Update()
 {
 }

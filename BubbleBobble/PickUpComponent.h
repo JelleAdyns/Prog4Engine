@@ -26,6 +26,7 @@ public:
 	PickUpComponent& operator= (const PickUpComponent&) = delete;
 	PickUpComponent& operator= (PickUpComponent&&) noexcept = delete;
 
+	virtual void Start() override;
 	virtual void Update() override;
 	virtual void PrepareImGuiRender() override;
 	void PickUp();

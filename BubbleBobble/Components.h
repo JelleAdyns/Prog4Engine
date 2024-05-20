@@ -24,5 +24,6 @@
 #include "FloorCheckingComponent.h"
 #include "PlayerComponent.h"
 #include "EnemyComponent.h"
+#include "MovementComponent.h"
 
 #endif // !COMPONENTS_H

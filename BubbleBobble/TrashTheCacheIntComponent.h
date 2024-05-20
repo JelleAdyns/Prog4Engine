@@ -21,6 +21,7 @@ public:
 	TrashTheCacheIntComponent& operator=(const TrashTheCacheIntComponent& other) = delete;
 	TrashTheCacheIntComponent& operator=(TrashTheCacheIntComponent&& other) = delete;
 
+	virtual void Start() override;
 	virtual void Update() override;
 	virtual void PrepareImGuiRender() override;
 private:

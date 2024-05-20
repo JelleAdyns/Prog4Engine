@@ -9,9 +9,13 @@ FPSComponent::FPSComponent(dae::GameObject* pOwner):
 {
 }
 
+void FPSComponent::Start()
+{
+	if (!m_pTextComponent) m_pTextComponent = GetOwner()->GetComponent<dae::TextComponent>();
+}
+
 void FPSComponent::Update()
 {
-	if(!m_pTextComponent) m_pTextComponent = GetOwner()->GetComponent<dae::TextComponent>();
 
 	m_UpdateTextDelay += dae::GameTime::GetInstance().GetDeltaTime();
 	++m_Count;

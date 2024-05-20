@@ -23,9 +23,14 @@ ScoreUIComponent::~ScoreUIComponent()
     }
 }
 
-void ScoreUIComponent::Update()
+void ScoreUIComponent::Start()
 {
 	if (!m_pTextComponent) m_pTextComponent = GetOwner()->GetComponent<dae::TextComponent>();
+}
+
+void ScoreUIComponent::Update()
+{
+	
 }
 void ScoreUIComponent::PrepareImGuiRender()
 {

@@ -37,6 +37,7 @@ namespace dae
 		void RemoveCommandImpl(ControllerButton button, KeyState keyState);
 		void RemoveAllCommandsImpl();
 
+		void VibrateImpl(int strengthPercentage);
 		glm::vec2 GetJoystickValueImpl(bool leftJoystick);
 		float GetTriggerValueImpl(bool leftJoystick);
 
@@ -52,6 +53,13 @@ namespace dae
 			ControllerButton button;
 			KeyState keyState;
 
+			bool operator>(const ControllerState other) const
+			{
+				if (button != other.button)
+					return button > other.button;
+				return keyState > other.keyState;
+			}
+
 			bool operator<(const ControllerState other) const
 			{
 				if (button != other.button)
@@ -63,10 +71,16 @@ namespace dae
 			{
 				return other.button == this->button && other.keyState == this->keyState;
 			}
+
+			bool operator!=(const ControllerState& other) const
+			{
+				return other.button != this->button || other.keyState != this->keyState;
+			}
 		};
 
 		std::map<ControllerState, std::shared_ptr<Command>> m_MapCommands{};
 
+		static float m_MaxVibrationValue;
 		static float m_MaxJoystickValue;
 		static float m_JoystickDeadZonePercentage;
 		static float m_MaxTriggerValue;
@@ -76,6 +90,7 @@ namespace dae
 	};
 
 
+	float Controller::ControllerImpl::m_MaxVibrationValue = static_cast<float>(USHRT_MAX);
 	float Controller::ControllerImpl::m_MaxJoystickValue = static_cast<float>(SHRT_MAX);
 	float Controller::ControllerImpl::m_JoystickDeadZonePercentage = 30.f;
 	float Controller::ControllerImpl::m_MaxTriggerValue = static_cast<float>(_UI8_MAX);
@@ -153,11 +168,7 @@ namespace dae
 		m_ButtonsReleasedThisFrame = buttonChanges & (~m_CurrentState.Gamepad.wButtons);
 		HandleInputImpl();
 
-		//XINPUT_VIBRATION vibration;
-		//ZeroMemory(&vibration, sizeof(XINPUT_VIBRATION));
-		//vibration.wLeftMotorSpeed = 32000; // use any value between 0-65535 here
-		//vibration.wRightMotorSpeed = 16000; // use any value between 0-65535 here
-		//XInputSetState(m_ControllerIndex, &vibration);
+		
 	}
 
 	bool Controller::ControllerImpl::IsDownThisFrameImpl(ControllerButton button) const
@@ -197,6 +208,15 @@ namespace dae
 		m_MapCommands.clear();
 	}
 
+
+	void Controller::ControllerImpl::VibrateImpl(int strengthPercentage)
+	{
+		XINPUT_VIBRATION vibration;
+		ZeroMemory(&vibration, sizeof(XINPUT_VIBRATION));
+		vibration.wLeftMotorSpeed = static_cast<WORD>(m_MaxVibrationValue / 100 * strengthPercentage); // use any value between 0-65535 here
+		vibration.wRightMotorSpeed = static_cast<WORD>(m_MaxVibrationValue / 100 * strengthPercentage); // use any value between 0-65535 here
+		XInputSetState(m_ControllerIndex, &vibration);
+	}
 
 	glm::vec2 Controller::ControllerImpl::GetJoystickValueImpl(bool leftJoystick)
 	{
@@ -276,6 +296,11 @@ namespace dae
 	void Controller::RemoveAllCommands()
 	{
 		m_pImpl->RemoveAllCommandsImpl();
+	}
+
+	void Controller::Vibrate(int strengthPrecantage)
+	{
+		m_pImpl->VibrateImpl(strengthPrecantage);
 	}
 
 	glm::vec2 Controller::GetJoystickValue(bool leftJoystick)

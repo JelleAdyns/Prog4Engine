@@ -23,6 +23,7 @@ public:
 	FloorCheckingComponent& operator= (const FloorCheckingComponent&) = delete;
 	FloorCheckingComponent& operator= (FloorCheckingComponent&&) noexcept = delete;
 
+	virtual void Start() override;
 	virtual void Update() override;
 	virtual void PrepareImGuiRender() override;
 

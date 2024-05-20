@@ -37,6 +37,15 @@ namespace dae
 			component.second->Update();
 		}
 	}
+	void GameObject::Start()
+	{
+		m_pWorldTransform->Start();
+		m_pLocalTransform->Start();
+		for (auto& component : m_pMapComponents)
+		{
+			component.second->Start();
+		}
+	}
 	void GameObject::PrepareImGuiRender()
 	{
 		m_pWorldTransform->PrepareImGuiRender();

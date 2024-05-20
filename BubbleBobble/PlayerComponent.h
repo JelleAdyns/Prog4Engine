@@ -14,6 +14,7 @@ namespace dae
 }
 
 class SpriteComponent;
+class MovementComponent;
 class EnemyComponent;
 class PlayerComponent final : public dae::Component, public dae::Observer<SpriteComponent>, public dae::Observer<EnemyComponent>
 {
@@ -26,6 +27,7 @@ public:
 	PlayerComponent& operator= (const PlayerComponent&) = delete;
 	PlayerComponent& operator= (PlayerComponent&&) noexcept = delete;
 
+	virtual void Start() override;
 	virtual void Update() override;
 	virtual void PrepareImGuiRender() override;
 
@@ -37,19 +39,17 @@ public:
 	void Shoot();
 	bool IsHit() const;
 	void Respawn();
-	bool HitAnimFinished();
 
+	dae::Subject<PlayerComponent>* GetSubject() const;
+	glm::vec2 GetPos() const;
 	float GetJumpVelocity() const { return m_JumpVelocity; }
 	float GetMoveVelocity() const { return m_MoveVelocity; }
-	uint8_t GetPlayerIndex() const { return m_PlayerIndex; }
-private:
 
-	uint8_t m_PlayerIndex{};
+private:
 
 	bool m_IsShooting{};
 	bool m_IsInvincible{};
 	bool m_IsHit{};
-	bool m_HitAnimFinished{};
 
 	int m_SpriteRowcount{0};
 	int m_Health{5};
@@ -63,11 +63,13 @@ private:
 	dae::PhysicsComponent* m_pPhysicsComp;
 	dae::CollisionComponent* m_pCollisionComp;
 	SpriteComponent* m_pSpriteComp;
+	MovementComponent* m_pMovementComp;
+
+	std::unique_ptr<dae::Subject<PlayerComponent>> m_pPosChecked;
 
 	std::vector<dae::Subject<SpriteComponent>*> m_pVecObservedSpriteSubjects;
 	std::vector<dae::Subject<EnemyComponent>*> m_pVecObservedEnemySubjects;
 
-	static uint8_t m_NrOfPlayers;
 
 	void UpdateStates();
 };

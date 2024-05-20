@@ -26,6 +26,7 @@ public:
 	ScoreUIComponent& operator= (const ScoreUIComponent&) = delete;
 	ScoreUIComponent& operator= (ScoreUIComponent&&) noexcept = delete;
 
+	virtual void Start() override;
 	virtual void Update() override;
 	virtual void PrepareImGuiRender() override;
 
