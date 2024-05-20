@@ -6,6 +6,7 @@
 #include "HitState.h"
 #include "SpriteComponent.h"
 #include "PlayerComponent.h"
+#include "MovementComponent.h"
 #include "Commands.h"
 #include <KeyState.h>
 #include <GameObject.h>
@@ -15,10 +16,11 @@
 class FallingState final : public PlayerState
 {
 public:
-	explicit FallingState(dae::GameObject* pPlayer, PlayerComponent* pPlayerComp) :
+	explicit FallingState(dae::GameObject* pPlayer, PlayerComponent* pPlayerComp, MovementComponent* pMovementComp) :
 		PlayerState{},
 		m_pPlayer{ pPlayer },
 		m_pPlayerComp{ pPlayerComp },
+		m_pMovementComp{ pMovementComp },
 		m_pFloorCheckingComp{pPlayer->GetComponent<FloorCheckingComponent>()}
 	{}
 	virtual ~FallingState() = default;
@@ -30,13 +32,13 @@ public:
 
 	virtual std::unique_ptr<PlayerState> Update() override
 	{
-		if (m_pPlayerComp->IsHit()) return std::make_unique<HitState>(m_pPlayer, m_pPlayerComp);
+		if (m_pPlayerComp->IsHit()) return std::make_unique<HitState>(m_pPlayer, m_pPlayerComp, m_pMovementComp);
 		 
 		if (m_pPlayer->GetWorldPosition().y > dae::Minigin::GetWindowSize().y) m_pPlayer->SetLocalPos(m_pPlayer->GetLocalPosition().x, -50);
 
 		if (m_pFloorCheckingComp->IsOnGround())
 		{
-			return std::make_unique<IdleState>(m_pPlayer, m_pPlayerComp);
+			return std::make_unique<IdleState>(m_pPlayer, m_pPlayerComp, m_pMovementComp);
 		}
 
 		return nullptr;
@@ -58,6 +60,7 @@ public:
 private:
 	dae::GameObject* m_pPlayer;
 	PlayerComponent* m_pPlayerComp;
+	MovementComponent* m_pMovementComp;
 	FloorCheckingComponent* m_pFloorCheckingComp;
 };
 

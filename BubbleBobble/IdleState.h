@@ -4,6 +4,7 @@
 #include "PlayerState.h"
 #include "SpriteComponent.h"
 #include "PlayerComponent.h"
+#include "MovementComponent.h"
 
 #include "Commands.h"
 #include <PhysicsComponent.h>
@@ -14,10 +15,11 @@
 class IdleState final : public PlayerState
 {
 public:
-	explicit IdleState(dae::GameObject* pPlayer, PlayerComponent* pPlayerComp) :
+	explicit IdleState(dae::GameObject* pPlayer, PlayerComponent* pPlayerComp, MovementComponent* pMovementComp) :
 		PlayerState{},
 		m_pPlayer{ pPlayer },
 		m_pPlayerComp{ pPlayerComp },
+		m_pMovementComp{ pMovementComp },
 		m_pPhysicsComp{ pPlayer->GetComponent<dae::PhysicsComponent>() }
 	{}
 	virtual ~IdleState() = default;
@@ -36,6 +38,7 @@ public:
 private:
 	dae::GameObject* m_pPlayer;
 	PlayerComponent* m_pPlayerComp;
+	MovementComponent* m_pMovementComp;
 	dae::PhysicsComponent* m_pPhysicsComp;
 
 	static const float m_NormalSpritesEndHeight;

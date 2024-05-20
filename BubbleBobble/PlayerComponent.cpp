@@ -2,6 +2,7 @@
 #include "IdleState.h"
 #include "HitState.h"
 #include "SpriteComponent.h"
+#include "MovementComponent.h"
 #include <PhysicsComponent.h>
 #include <CollisionComponent.h>
 #include <KeyState.h>
@@ -9,7 +10,6 @@
 #include <Minigin.h>
 #include <InputCommandBinder.h>
 
-uint8_t PlayerComponent::m_NrOfPlayers{};
 
 
 PlayerComponent::PlayerComponent(dae::GameObject* pOwner):
@@ -17,9 +17,6 @@ PlayerComponent::PlayerComponent(dae::GameObject* pOwner):
 	m_pCurrState{},
 	m_pPosChecked{std::make_unique<dae::Subject<PlayerComponent>>()}
 {
-	m_PlayerIndex = m_NrOfPlayers;
-	++m_NrOfPlayers;
-
 	Respawn();
 }
 
@@ -138,7 +135,7 @@ void PlayerComponent::UpdateStates()
 {
 	if (!m_pCurrState)
 	{
-		m_pCurrState = std::make_unique<IdleState>(GetOwner(), this);
+		m_pCurrState = std::make_unique<IdleState>(GetOwner(), this, m_pMovementComp);
 		m_pCurrState->OnEnter();
 	}
 

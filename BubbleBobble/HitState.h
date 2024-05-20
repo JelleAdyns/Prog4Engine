@@ -4,20 +4,22 @@
 #include "PlayerState.h"
 #include "SpriteComponent.h"
 #include "PlayerComponent.h"
+#include "MovementComponent.h"
 #include "Commands.h"
 #include <CollisionComponent.h>
 #include <KeyState.h>
 #include <Observer.h>
 #include <GameObject.h>
-#include <InputCommandBinder.h>
+
 
 class HitState final : public PlayerState, public dae::Observer<SpriteComponent>
 {
 public:
-	explicit HitState(dae::GameObject* pPlayer, PlayerComponent* pPlayerComp) :
+	explicit HitState(dae::GameObject* pPlayer, PlayerComponent* pPlayerComp, MovementComponent* pMovementComp) :
 		PlayerState{},
 		m_pPlayer{ pPlayer },
 		m_pPlayerComp{ pPlayerComp },
+		m_pMovementComp{ pMovementComp },
 		m_pSpriteComp{ pPlayer->GetComponent<SpriteComponent>()}
 	{}
 	virtual ~HitState() = default;
@@ -38,6 +40,7 @@ public:
 private:
 	dae::GameObject* m_pPlayer;
 	PlayerComponent* m_pPlayerComp;
+	MovementComponent* m_pMovementComp;
 	SpriteComponent* m_pSpriteComp;
 
 	std::vector<dae::Subject<SpriteComponent>*> m_pVecObservedSpriteSubjects;

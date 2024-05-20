@@ -101,6 +101,12 @@
     <ClCompile Include="ZenChanFallingState.cpp">
       <Filter>Source Files\States\EnemyState\ZenChanStates</Filter>
     </ClCompile>
+    <ClCompile Include="BubbleComponent.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="MovementComponent.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Achievements.h">
@@ -234,6 +240,12 @@
     </ClInclude>
     <ClInclude Include="ZenChanJumpState.h">
       <Filter>Source Files\States\EnemyState\ZenChanStates</Filter>
+    </ClInclude>
+    <ClInclude Include="BubbleComponent.h">
+      <Filter>Source Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="MovementComponent.h">
+      <Filter>Source Files\Components</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
