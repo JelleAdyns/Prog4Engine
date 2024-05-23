@@ -315,6 +315,12 @@ void Game::LoadLevelOne() const
 	MakePlayer(scene);
 
 
+	auto bubble = std::make_unique<dae::GameObject>(200, 200);
+	bubble->AddRenderComponent();
+	bubble->AddPhysicsComponent();
+	bubble->AddComponent<SpriteComponent>("Textures/Bubble.png", 3, 11, 0.1f, true, true);
+	bubble->AddComponent<BubbleComponent>();
+
 	auto info = std::make_unique<dae::GameObject>();
 	info->AddRenderComponent();
 	info->AddComponent<dae::TextComponent>(inputMan.IsKeyboardActive() ? "SPACE: Jump, A/D: Move, W: Shoot " : "Y: Jump, DPAD: Move, A: Shoot", "Fonts/Pixel_NES.otf", 10);
@@ -325,6 +331,7 @@ void Game::LoadLevelOne() const
 	inputMan.AddCommand_ChangingToKeyboard(std::move(setTextCommand2));
 
 	scene.AddGameObject(std::move(info));
+	scene.AddGameObject(std::move(bubble));
 
 }
 
@@ -408,9 +415,9 @@ void Game::MakePlayer(dae::Scene& scene) const
 	dae::PhysicsComponent::SetGravity(300);
 	player1->AddComponent<PlayerComponent>();
 	PlayerComponent* playerComp = player1->GetComponent<PlayerComponent>();
-	player1->AddComponent<SpriteComponent>("Textures/BubStates.png", 4, 4, 0.1f, true, false, playerComp);
+	player1->AddComponent<SpriteComponent>("Textures/BubStates.png", 4, 8, 0.1f, true, false, playerComp);
 	SpriteComponent* spriteComp = player1->GetComponent<SpriteComponent>();
-	spriteComp->SetHeightMarkers(0, 64);
+	spriteComp->SetHeightMarkers(0, 64*2);
 	const auto& destRctSize = spriteComp->GetDestRectSize();
 	player1->AddComponent<dae::CollisionComponent>(glm::vec2{}, destRctSize);
 	player1->AddComponent<WallCheckingComponent>(glm::vec2{ 0,destRctSize.y/4 }, glm::vec2{ destRctSize.x,destRctSize.y/2 });

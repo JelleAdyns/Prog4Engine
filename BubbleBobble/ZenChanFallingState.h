@@ -39,7 +39,7 @@ private:
 	FloorCheckingComponent* m_pFloorCheckingComp;
 
 
-	std::vector<dae::Subject<PlayerComponent>*> m_pVecObservedSpriteSubjects;
+	std::vector<dae::Subject<PlayerComponent>*> m_pVecObservedSubjects;
 };
 
 

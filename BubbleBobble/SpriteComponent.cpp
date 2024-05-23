@@ -16,7 +16,6 @@ SpriteComponent::SpriteComponent(dae::GameObject* pOwner, std::unique_ptr<dae::T
 	m_NeedsUpdate{ needsUpdate },
 	m_NeedsRowUpdate{ needsRowUpdate },
 	m_IsLookingLeft{ false },
-	//m_StartRow{0},
 	m_CurrentCol{ 0 },
 	m_CurrentRow{ 0 },
 	m_NrOfCols{ nrCols },
@@ -38,7 +37,6 @@ SpriteComponent::SpriteComponent(dae::GameObject* pOwner, std::unique_ptr<dae::T
 	m_pTexture->SetSrcRect(
 		glm::ivec2{},
 		static_cast<float>(m_pTexture->GetTextureSize().x / m_NrOfCols),
-		//static_cast<float>(m_pTexture->GetTextureSize().y / m_NrOfRows)
 		static_cast<float>((m_EndHeightMarker - m_StartHeightMarker) / m_NrOfRows)
 	);
 
@@ -74,7 +72,7 @@ void SpriteComponent::Update()
 			if (m_CurrentCol == m_NrOfCols - 1)
 			{
 				m_pRowFinished->NotifyObservers(this);
-				if (m_NeedsRowUpdate) ++m_CurrentRow %= m_NrOfRows /*+ m_StartRow*/;
+				if (m_NeedsRowUpdate) ++m_CurrentRow %= m_NrOfRows;
 			}
 
  			++m_CurrentCol %= m_NrOfCols;
@@ -95,7 +93,7 @@ void SpriteComponent::SetCol(int col)
 }
 void SpriteComponent::SetRow(int row)
 {
-	m_CurrentRow = /*m_StartRow + */row;
+	m_CurrentRow = row;
 	m_SpriteIsDirty = true;
 }
 
@@ -134,13 +132,6 @@ void SpriteComponent::SetUpdate(bool needsToUpdate)
 	m_NeedsUpdate = needsToUpdate;
 }
 
-//void SpriteComponent::SetStartRow(int startRow)
-//{
-//	m_StartRow = startRow;
-//	m_CurrentRow -= (m_CurrentRow - m_StartRow);
-//	m_SpriteIsDirty = true;
-//}
-
 void SpriteComponent::SetFrameTime(float frameTime)
 {
 	m_FrameTime = frameTime;
@@ -162,7 +153,7 @@ void SpriteComponent::Flip()
 	if (m_pRenderComponent) m_pRenderComponent->SetFlipped<ThisType>(m_IsLookingLeft);
 }
 
-void SpriteComponent::AddRow(int nrOfRowsToAdd)
+void SpriteComponent::AddRows(int nrOfRowsToAdd)
 {
 	m_CurrentRow += nrOfRowsToAdd;
 #ifndef NDEBUG
@@ -202,10 +193,8 @@ void SpriteComponent::UpdateSrcRect()
 
 	m_pTexture->SetSrcRect(
 		glm::ivec2{ static_cast<float>(m_pTexture->GetTextureSize().x) / m_NrOfCols * m_CurrentCol,
-		//static_cast<float>(m_pTexture->GetTextureSize().y) / m_NrOfRows * m_CurrentRow },
 		m_StartHeightMarker + (m_EndHeightMarker - m_StartHeightMarker) / m_NrOfRows * m_CurrentRow },
 		static_cast<float>(m_pTexture->GetTextureSize().x) / m_NrOfCols,
-		//static_cast<float>(m_pTexture->GetTextureSize().y) / m_NrOfRows);
 		(m_EndHeightMarker - m_StartHeightMarker) / m_NrOfRows);
 
 	m_pTexture->SetDstRect(

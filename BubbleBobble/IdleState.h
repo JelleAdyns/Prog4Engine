@@ -33,8 +33,10 @@ public:
 	virtual void OnEnter() override;
 	virtual void OnExit() override;
 	virtual void Shoot() override;
+	virtual void StopShooting() override;
 
 private:
+	static constexpr SpriteComponent::RowInfo m_IdleSpriteInfo{ .rowNumber = 0, .nrOfRows = 8, .frameTime{0.1f} };
 	dae::GameObject* m_pPlayer;
 	PlayerComponent* m_pPlayerComp;
 	MovementComponent* m_pMovementComp;

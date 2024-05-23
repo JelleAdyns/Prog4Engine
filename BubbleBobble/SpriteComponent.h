@@ -16,6 +16,16 @@ class PlayerComponent;
 class SpriteComponent final : public dae::Component
 {
 public:
+
+	struct RowInfo
+	{
+		bool rowUpdate{ false };
+		int rowNumber{ 0 };
+		int nrOfRows{ 1 };
+		float frameTime{ 1.f };
+	};
+
+
 	explicit SpriteComponent(dae::GameObject* pOwner, const std::string& texturePath, int nrCols, int nrRows, float frameTime, bool needsUpdate = true, bool needsRowUpdate = false, PlayerComponent* pObserver = nullptr);
 	explicit SpriteComponent(dae::GameObject* pOwner, std::unique_ptr<dae::Texture2D>&& pTexture, int nrCols, int nrRows, float frameTime, bool needsUpdate = true, bool needsRowUpdate = false, PlayerComponent* pObserver = nullptr);
 	virtual ~SpriteComponent() = default;
@@ -36,12 +46,11 @@ public:
 	void SetNrOfRows(int nrOfRows);
 	void SetRowUpdate(bool rowNeedsToUpdate);
 	void SetUpdate(bool needsToUpdate);
-	//void SetStartRow(int startRow);
 	void SetFrameTime(float frameTime);
 	void LookLeft(bool isLookingLeft);
 	void Flip();
 
-	void AddRow(int nrOfRowsToAdd);
+	void AddRows(int nrOfRowsToAdd);
 	void AddObserver(dae::Observer<SpriteComponent>* pObserver);
 
 	bool IsLookingLeft() const;
@@ -59,8 +68,6 @@ private:
 	bool m_NeedsUpdate;
 	bool m_NeedsRowUpdate;
 	bool m_IsLookingLeft;
-
-	//int m_StartRow;
 
 	int	m_CurrentCol;
 	int	m_CurrentRow;

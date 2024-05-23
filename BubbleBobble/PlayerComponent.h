@@ -47,16 +47,14 @@ public:
 
 private:
 
-	bool m_IsShooting{};
 	bool m_IsInvincible{};
 	bool m_IsHit{};
 
-	int m_SpriteRowcount{0};
 	int m_Health{5};
 	float m_JumpVelocity{ -160.f };
 	float m_MoveVelocity{ 60.f };
 	float m_InvincibilityTimer{};
-	float m_InvincibilityMaxTime{1.f};
+	float m_InvincibilityMaxTime{3.f};
 
 	std::unique_ptr<PlayerState> m_pCurrState{};
 	

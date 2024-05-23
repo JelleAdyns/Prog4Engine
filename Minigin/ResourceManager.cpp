@@ -24,7 +24,9 @@ std::unique_ptr<dae::Texture2D> dae::ResourceManager::LoadTexture(const std::str
 		auto texture = IMG_LoadTexture(Renderer::GetInstance().GetSDLRenderer(), fullPath.c_str());
 
 		if (texture == nullptr) throw std::runtime_error(std::string("Failed to load texture: ") + SDL_GetError());
-		m_pMapSDLTextures[file] = std::unique_ptr<SDL_Texture, SDLTextureDeleter>(texture);
+		//m_pMapSDLTextures[file] = std::unique_ptr<SDL_Texture, SDLTextureDeleter>(texture);
+		m_pMapSDLTextures[file] = nullptr;
+		m_pMapSDLTextures.at(file).reset(texture);
 	}
 	
 	return std::make_unique<dae::Texture2D>(m_pMapSDLTextures.at(file).get(), false);

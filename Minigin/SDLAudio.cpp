@@ -103,26 +103,32 @@ namespace dae
 	}
 	void SDLAudio::SDLAudioImpl::PauseSoundImpl(SoundID id) const
 	{
+		std::lock_guard<std::mutex> mapLock{ m_MapMutex };
 		Mix_Pause(id);
 	}
 	void SDLAudio::SDLAudioImpl::PauseAllSoundsImpl() const
 	{
+		std::lock_guard<std::mutex> mapLock{ m_MapMutex };
 		Mix_Pause(-1);
 	}
 	void SDLAudio::SDLAudioImpl::ResumeSoundImpl(SoundID id) const
 	{
+		std::lock_guard<std::mutex> mapLock{ m_MapMutex };
 		Mix_Resume(id);
 	}
 	void SDLAudio::SDLAudioImpl::ResumeAllSoundsImpl() const
 	{
+		std::lock_guard<std::mutex> mapLock{ m_MapMutex };
 		Mix_Resume(-1);
 	}
 	void SDLAudio::SDLAudioImpl::StopSoundImpl(SoundID id) const
 	{
+		std::lock_guard<std::mutex> mapLock{ m_MapMutex };
 		Mix_HaltChannel(id);
 	}
 	void SDLAudio::SDLAudioImpl::StopAllSoundsImpl() const
 	{
+		std::lock_guard<std::mutex> mapLock{ m_MapMutex };
 		Mix_HaltChannel(-1);
 	}
 

@@ -37,7 +37,7 @@ void ZenChanFallingState::OnExit()
 	else m_pPhysicsComp->SetVelocityX(m_pEnemyComp->GetSpeed());
 	
 
-	for (auto& pSubject : m_pVecObservedSpriteSubjects)
+	for (auto& pSubject : m_pVecObservedSubjects)
 	{
 		pSubject->RemoveObserver(this);
 	}
@@ -51,5 +51,5 @@ void ZenChanFallingState::Notify(PlayerComponent* pSubject)
 
 void ZenChanFallingState::AddSubjectPointer(dae::Subject<PlayerComponent>* pSubject)
 {
-	m_pVecObservedSpriteSubjects.push_back(pSubject);
+	m_pVecObservedSubjects.push_back(pSubject);
 }

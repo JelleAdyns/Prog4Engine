@@ -33,6 +33,7 @@ public:
 	virtual void OnEnter() override;
 	virtual void OnExit() override;
 	virtual void Shoot() override;
+	virtual void StopShooting() override;
 
 	virtual void Notify(SpriteComponent* pSpriteComp) override;
 	virtual void AddSubjectPointer(dae::Subject<SpriteComponent>* pSubject) override;
@@ -47,9 +48,9 @@ private:
 
 	std::vector<dae::Subject<SpriteComponent>*> m_pVecObservedSpriteSubjects;
 
-	const int m_NrOfRows{ 3 };
 	int m_RowCount{ };
 	static const float m_HitSpriteOffset;
+	static constexpr SpriteComponent::RowInfo m_HitSpriteInfo{ .rowNumber = 0, .nrOfRows = 3, .frameTime{0.2f} };
 };
 
 

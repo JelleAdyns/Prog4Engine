@@ -56,21 +56,38 @@ public:
 	}
 	virtual void OnEnter() override
 	{
-		m_pPlayer->GetComponent<SpriteComponent>()->AddRow(1);
+		m_pPlayer->GetComponent<SpriteComponent>()->AddRows(m_WalkingSpriteInfo.rowNumber);
 
 		m_pMovementComp->RegisterJumpCommand();
 
 	}
 	virtual void OnExit() override
 	{
-		m_pPlayer->GetComponent<SpriteComponent>()->AddRow(-1);
+		m_pPlayer->GetComponent<SpriteComponent>()->AddRows(-m_WalkingSpriteInfo.rowNumber);
 		m_pMovementComp->UnRegisterJumpCommand();
 	}
 	virtual void Shoot() override
 	{
+		SpriteComponent* pSpriteComp = m_pPlayer->GetComponent<SpriteComponent>();
+		if(pSpriteComp->GetCurrRow() < GetShootStartIndex())
+		{
+			//m_IsShooting = true;
+			pSpriteComp->SetFrameTime(0.2f);
+			//pSpriteComp->SetStartRow(4);
+			pSpriteComp->SetCol(0);
+			pSpriteComp->SetRow(GetShootStartIndex() + m_WalkingSpriteInfo.rowNumber);
+		}
+	}
 
+	virtual void StopShooting() override
+	{
+		SpriteComponent* pSpriteComp = m_pPlayer->GetComponent<SpriteComponent>();
+		pSpriteComp->SetNrOfRows(m_WalkingSpriteInfo.nrOfRows);
+		pSpriteComp->SetRow(m_WalkingSpriteInfo.rowNumber);
+		pSpriteComp->SetFrameTime(m_WalkingSpriteInfo.frameTime);
 	}
 private:
+	static constexpr SpriteComponent::RowInfo m_WalkingSpriteInfo{.rowNumber = 1, .nrOfRows = 8, .frameTime{0.1f} };
 	dae::GameObject* m_pPlayer;
 	PlayerComponent* m_pPlayerComp;
 	MovementComponent* m_pMovementComp;

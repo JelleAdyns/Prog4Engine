@@ -33,7 +33,7 @@ public:
 	void AddPlayerObserver(PlayerComponent* pObserver);
 
 	float GetSpeed() const { return m_Speed; }
-	const std::vector<dae::Subject<PlayerComponent>*>& GetPlayerSubjects() const { return m_SubjectsForRunState; }
+	const std::vector<dae::Subject<PlayerComponent>*>& GetPlayerSubjects() const { return m_SubjectsForState; }
 
 private:
 	void UpdateStates();
@@ -47,7 +47,7 @@ private:
 	SpriteComponent* m_pSpriteComp;
 	std::unique_ptr<dae::Subject<EnemyComponent>> m_pCollided;
 
-	std::vector<dae::Subject<PlayerComponent>*> m_SubjectsForRunState;
+	std::vector<dae::Subject<PlayerComponent>*> m_SubjectsForState;
 };
 
 

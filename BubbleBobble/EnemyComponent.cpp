@@ -11,7 +11,7 @@ EnemyComponent::EnemyComponent(dae::GameObject* pOwner, EnemyType enemyType):
 	m_pCollisionComp{},
 	m_pSpriteComp{},
 	m_pCollided{std::make_unique<dae::Subject<EnemyComponent>>()},
-	m_SubjectsForRunState{}
+	m_SubjectsForState{}
 {
 	//m_pCollided->AddObserver(pObserver);
 }
@@ -42,7 +42,7 @@ void EnemyComponent::PrepareImGuiRender()
 void EnemyComponent::AddPlayerObserver(PlayerComponent* pObserver)
 {
 	m_pCollided->AddObserver(pObserver);
-	m_SubjectsForRunState.push_back(pObserver->GetSubject());
+	m_SubjectsForState.push_back(pObserver->GetSubject());
 }
 
 void EnemyComponent::UpdateStates()

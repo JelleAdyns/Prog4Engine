@@ -46,7 +46,7 @@ namespace dae
         
         m_PosOffset = m_GeneralOffset;
         m_Size = m_GeneralSize;
-        /*if (m_HasPhysicsComponent) */CheckForCollision(CollisionType::Other);
+        if (m_HasPhysicsComponent) CheckForCollision(CollisionType::Other);
 
     }
 

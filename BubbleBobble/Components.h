@@ -25,5 +25,6 @@
 #include "PlayerComponent.h"
 #include "EnemyComponent.h"
 #include "MovementComponent.h"
+#include "BubbleComponent.h"
 
 #endif // !COMPONENTS_H

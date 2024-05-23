@@ -25,13 +25,11 @@ std::unique_ptr<PlayerState> IdleState::Update()
 }
 void IdleState::OnEnter()
 {
-	int nrOfRows{ 8 };
-
 
 	SpriteComponent* pSpriteComp = m_pPlayer->GetComponent<SpriteComponent>();
 	pSpriteComp->SetHeightMarkers(0, HitState::GetHitSpriteOffset());
-	pSpriteComp->SetNrOfRows(nrOfRows);
-	pSpriteComp->SetRowUpdate(false);
+	pSpriteComp->SetNrOfRows(m_IdleSpriteInfo.nrOfRows);
+	pSpriteComp->SetRowUpdate(m_IdleSpriteInfo.rowUpdate);
 
 	m_pPhysicsComp->SetVelocityX(0);
 	m_pPhysicsComp->SetVelocityY(0);
@@ -45,4 +43,22 @@ void IdleState::OnExit()
 
 void IdleState::Shoot()
 {
+
+	SpriteComponent* pSpriteComp = m_pPlayer->GetComponent<SpriteComponent>();
+	if (pSpriteComp->GetCurrRow() < GetShootStartIndex())
+	{
+		//m_IsShooting = true;
+		pSpriteComp->SetFrameTime(0.2f);
+		//pSpriteComp->SetStartRow(4);
+		pSpriteComp->SetCol(0);
+		pSpriteComp->SetRow(GetShootStartIndex() + m_IdleSpriteInfo.rowNumber);
+	}
+}
+
+void IdleState::StopShooting()
+{
+	SpriteComponent* pSpriteComp = m_pPlayer->GetComponent<SpriteComponent>();
+	pSpriteComp->SetNrOfRows(m_IdleSpriteInfo.nrOfRows);
+	pSpriteComp->SetRow(m_IdleSpriteInfo.rowNumber);
+	pSpriteComp->SetFrameTime(m_IdleSpriteInfo.frameTime);
 }
