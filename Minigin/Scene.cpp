@@ -4,12 +4,6 @@
 
 using namespace dae;
 
-unsigned int Scene::m_IdCounter = 0;
-
-Scene::Scene() { ++m_IdCounter; }
-
-Scene::~Scene() { --m_IdCounter; }
-
 void Scene::AddGameObject(std::unique_ptr<GameObject>&& object)
 {
 	m_pObjects.emplace_back(std::move(object));

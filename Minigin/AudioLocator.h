@@ -12,7 +12,6 @@ namespace dae
 	public:
 
 		AudioLocator() = delete;
-		~AudioLocator() = delete;
 
 		AudioLocator(const AudioLocator&) = delete;
 		AudioLocator(AudioLocator&&) noexcept = delete;

@@ -6,11 +6,11 @@
 #include <string>
 #include <memory>
 #include "Singleton.h"
+#include "Scene.h"
 
-class Game;
 namespace dae
 {
-	class Scene;
+	//class Scene;
 	class SceneManager final : public Singleton<SceneManager>
 	{
 	public:
@@ -40,7 +40,7 @@ namespace dae
 
 		std::string m_ActiveScene;
 		std::vector<std::string> m_KeysToDestroy;
-		std::unordered_map <std::string, std::shared_ptr <Scene>> m_pMapScenes;
+		std::unordered_map <std::string, std::unique_ptr <Scene>> m_pMapScenes;
 	};
 }
 #endif // !SCENEMANAGER_H

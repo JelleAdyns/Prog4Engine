@@ -36,7 +36,7 @@ void dae::SceneManager::FixedUpdate()
 
 void dae::SceneManager::CheckForDestroyedScenes()
 {
-	std::for_each(m_pMapScenes.begin(), m_pMapScenes.end(), [&](const std::pair<std::string, std::shared_ptr<Scene>>& pair)
+	std::for_each(m_pMapScenes.cbegin(), m_pMapScenes.cend(), [&](const std::pair<const std::string, std::unique_ptr<Scene>>& pair)
 		{
 			if (pair.second->IsDestroyed()) m_KeysToDestroy.push_back(pair.first);
 		});
@@ -49,12 +49,12 @@ void dae::SceneManager::CheckForDestroyedScenes()
 
 dae::Scene& dae::SceneManager::CreateScene(const std::string& name)
 {
-	const auto& pScene = std::shared_ptr<Scene>{ new Scene{} };
+	auto pScene = std::make_unique<Scene>();
 
 	if (m_pMapScenes.contains(name)) std::cout << "This name ("<<name<<") for the new scene already exists, overwriting now.\n";
-	m_pMapScenes[name] = pScene;
+	m_pMapScenes[name] = std::move(pScene);
 	SetActiveScene(name);
-	return *pScene;
+	return *m_pMapScenes.at(name);
 }
 
 void dae::SceneManager::RemoveScene(const std::string& name)
@@ -65,7 +65,7 @@ void dae::SceneManager::RemoveScene(const std::string& name)
 void dae::SceneManager::RemoveNonActiveScenes()
 {
 	 
-	std::for_each(m_pMapScenes.cbegin(), m_pMapScenes.cend(), [&](const std::pair<std::string, std::shared_ptr<Scene>>& pair)
+	std::for_each(m_pMapScenes.cbegin(), m_pMapScenes.cend(), [&](const std::pair<const std::string, std::unique_ptr<Scene>>& pair)
 		{
 			if(pair.first != m_ActiveScene)	pair.second->SetDestroyed();
 		});
