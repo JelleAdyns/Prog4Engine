@@ -16,10 +16,13 @@ namespace dae
 	{}
 
 	GameObject::GameObject(float x, float y) :
+		GameObject{ glm::vec2{ x,y } }
+	{}
+	GameObject::GameObject(const glm::vec2& pos):
 		m_IsDead{},
 		m_IsPosDirty{ true },
-		m_pLocalTransform{ std::make_unique<TransformComponent>(this, glm::vec2{ x, y }) },
-		m_pWorldTransform{ std::make_unique<TransformComponent>(this, glm::vec2{ x, y }) },
+		m_pLocalTransform{ std::make_unique<TransformComponent>(this, pos)},
+		m_pWorldTransform{ std::make_unique<TransformComponent>(this, pos) },
 		m_pParent{ nullptr },
 		m_pVecChildren{},
 		m_pRenderComponent{ nullptr },
@@ -28,15 +31,6 @@ namespace dae
 	{
 	}
 
-	void GameObject::Update()
-	{
-		m_pWorldTransform->Update();
-		m_pLocalTransform->Update();
-		for (auto& component: m_pMapComponents)
-		{
-			component.second->Update();
-		}
-	}
 	void GameObject::Start()
 	{
 		m_pWorldTransform->Start();
@@ -44,6 +38,15 @@ namespace dae
 		for (auto& component : m_pMapComponents)
 		{
 			component.second->Start();
+		}
+	}
+	void GameObject::Update()
+	{
+		m_pWorldTransform->Update();
+		m_pLocalTransform->Update();
+		for (auto& component: m_pMapComponents)
+		{
+			component.second->Update();
 		}
 	}
 	void GameObject::PrepareImGuiRender()
@@ -65,6 +68,14 @@ namespace dae
 		if (m_pPhysicsComponent) m_pPhysicsComponent->FixedUpdate();
 	}
 
+	void GameObject::MarkDead()
+	{
+		m_IsDead = true;
+		std::for_each(m_pVecChildren.begin(), m_pVecChildren.end(), [&](GameObject* pChild)
+			{
+				pChild->MarkDead();
+			});
+	}
 	bool GameObject::IsDead() const
 	{
 		return m_IsDead;
@@ -94,10 +105,7 @@ namespace dae
 		return std::find(m_pVecChildren.cbegin(), m_pVecChildren.cend(), pGameObject.get()) != m_pVecChildren.cend();
 	}
 
-	void GameObject::SetLocalPos(float x, float y)
-	{
-		SetLocalPos(glm::vec2{ x,y });
-	}
+	void GameObject::SetLocalPos(float x, float y) { SetLocalPos(glm::vec2{ x,y }); }
 	void GameObject::SetLocalPos(const glm::vec2& newLocalPos)
 	{
 		m_pLocalTransform->SetPosition(newLocalPos);

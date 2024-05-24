@@ -18,6 +18,7 @@ namespace dae
 		void RemoveScene(const std::string& name);
 		void RemoveNonActiveScenes();
 
+		Scene* GetActiveScene() const;
 		void SetActiveScene(const std::string& sceneToActivate);
 
 		virtual ~SceneManager() = default;

@@ -25,6 +25,7 @@ namespace dae
 		GameObject();
 		GameObject(int x, int y);
 		GameObject(float x, float y);
+		GameObject(const glm::vec2& pos);
 
 		~GameObject() = default;
 		GameObject(const GameObject& other) = delete;
@@ -38,6 +39,7 @@ namespace dae
 		void Render() const;
 		void FixedUpdate();
 
+		void MarkDead();
 		bool IsDead() const;
 
 		void SetParent(const std::unique_ptr<GameObject>& pParent, bool keepWorldPosition);
@@ -50,6 +52,7 @@ namespace dae
 	
 
 		template <typename T, typename ...Args>
+			requires std::derived_from<T, Component>
 		void AddComponent(Args&&... args)
 		{
 			assert((typeid(T) != typeid(TransformComponent)) && "Type passed to 'AddComponent' was a TransformComponent");
@@ -74,12 +77,14 @@ namespace dae
 		}
 
 		template <typename T>
+			requires std::derived_from<T, Component>
 		void RemoveComponent()
 		{
 			if (HasComponent<T>()) m_pMapComponents.erase(typeid(T));
 		}
 
 		template <typename T>
+			requires std::derived_from<T, Component>
 		T* GetComponent() const
 		{
 			if (HasComponent<T>()) return dynamic_cast<T*>(m_pMapComponents.at(typeid(T)).get());
@@ -87,6 +92,7 @@ namespace dae
 		}
 
 		template <typename T>
+			requires std::derived_from<T, Component>
 		bool HasComponent() const
 		{
 			return m_pMapComponents.contains(typeid(T));

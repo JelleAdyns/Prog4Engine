@@ -193,9 +193,12 @@
     <ClInclude Include="Achievements.h" />
     <ClInclude Include="ActivateButtonCommand.h" />
     <ClInclude Include="BubbleComponent.h" />
+    <ClInclude Include="BubbleSpawner.h" />
+    <ClInclude Include="CollisionTags.h" />
     <ClInclude Include="EnemyComponent.h" />
     <ClInclude Include="EnemyState.h" />
     <ClInclude Include="MovementComponent.h" />
+    <ClInclude Include="ZenChanCaughtState.h" />
     <ClInclude Include="ZenChanJumpState.h" />
     <ClInclude Include="MaitaRunState.h" />
     <ClInclude Include="MaitaState.h" />

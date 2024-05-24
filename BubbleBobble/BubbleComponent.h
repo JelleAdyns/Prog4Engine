@@ -5,6 +5,7 @@
 #include <Component.h>
 #include <Observer.h>
 
+
 namespace dae
 {
 	class PhysicsComponent;
@@ -12,10 +13,11 @@ namespace dae
 
 class EnemyComponent;
 class SpriteComponent;
-class BubbleComponent final : public dae::Component, public dae::Observer<EnemyComponent>, public dae::Observer<SpriteComponent>
+class WallCheckingComponent;
+class BubbleComponent final : public dae::Component, public dae::Observer<SpriteComponent>
 {
 public:
-	explicit BubbleComponent(dae::GameObject* pOwner);
+	explicit BubbleComponent(dae::GameObject* pOwner, bool left);
 	virtual ~BubbleComponent();
 
 	BubbleComponent(const BubbleComponent&) = delete;
@@ -27,8 +29,6 @@ public:
 	virtual void Update() override;
 	virtual void PrepareImGuiRender() override;
 
-	virtual void Notify(EnemyComponent* pSpriteComp) override;
-	virtual void AddSubjectPointer(dae::Subject<EnemyComponent>* pSubject) override;
 
 	virtual void Notify(SpriteComponent* pSpriteComp) override;
 	virtual void AddSubjectPointer(dae::Subject<SpriteComponent>* pSubject) override;
@@ -40,12 +40,19 @@ private:
 		Popped
 	};
 
+	static constexpr int m_MaxHeight{ 50 };
+	static constexpr float m_XVelocity{ 120.f };
+
+	bool m_Left{};
+	int m_RowCount{};
+
 	float m_TimeBeforePop{};
-	float m_TimeToPop{5.f};
+	float m_TimeToPop{10.f};
 	BubbleState m_CurrState;
 	SpriteComponent* m_pSpriteComp;
+	WallCheckingComponent* m_pWallComp;
 	dae::PhysicsComponent* m_pPhysicsComp;
-	std::vector<dae::Subject<EnemyComponent>*> m_pVecObservedEnemySubjects;
+
 	std::vector<dae::Subject<SpriteComponent>*> m_pVecObservedSpriteSubjects;
 
 };

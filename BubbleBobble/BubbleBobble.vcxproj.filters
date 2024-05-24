@@ -247,5 +247,14 @@
     <ClInclude Include="MovementComponent.h">
       <Filter>Source Files\Components</Filter>
     </ClInclude>
+    <ClInclude Include="BubbleSpawner.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionTags.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ZenChanCaughtState.h">
+      <Filter>Source Files\States\EnemyState\ZenChanStates</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

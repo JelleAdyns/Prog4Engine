@@ -50,7 +50,8 @@ void ZenChanRunState::Notify(PlayerComponent* pSubject)
 	auto enemyPos = m_pEnemy->GetWorldPosition();
 	if (subjectPos.y < enemyPos.y)
 	{
-		if (subjectPos.x > enemyPos.x && subjectPos.x < enemyPos.x + m_pSpriteComp->GetDestRectSize().x)
+		float subjectMiddleX{ subjectPos.x + pSubject->GetDestRectSize().x / 2 };
+		if (subjectMiddleX > enemyPos.x && subjectMiddleX < enemyPos.x + m_pSpriteComp->GetDestRectSize().x)
 		{
 			m_HasToJump = true;
 		}

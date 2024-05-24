@@ -72,6 +72,10 @@ void dae::SceneManager::RemoveNonActiveScenes()
 	
 }
 
+dae::Scene* dae::SceneManager::GetActiveScene() const
+{
+	return m_pMapScenes.at(m_ActiveScene).get();
+}
 void dae::SceneManager::SetActiveScene(const std::string& sceneToActivate)
 {
 	if (m_pMapScenes.contains(sceneToActivate)) m_ActiveScene = sceneToActivate;
