@@ -8,6 +8,7 @@
 
 #include "Commands.h"
 #include <PhysicsComponent.h>
+#include <CollisionComponent.h>
 #include <KeyState.h>
 #include <GameObject.h>
 #include <InputCommandBinder.h>
@@ -20,7 +21,9 @@ public:
 		m_pPlayer{ pPlayer },
 		m_pPlayerComp{ pPlayerComp },
 		m_pMovementComp{ pMovementComp },
-		m_pPhysicsComp{ pPlayer->GetComponent<dae::PhysicsComponent>() }
+		m_pSpriteComp{ pPlayer->GetComponent<SpriteComponent>() },
+		m_pPhysicsComp{ pPlayer->GetComponent<dae::PhysicsComponent>() },
+		m_pCollisionComp{ pPlayer->GetComponent<dae::CollisionComponent>() }
 	{}
 	virtual ~IdleState() = default;
 
@@ -36,12 +39,13 @@ public:
 	virtual void StopShooting() override;
 
 private:
-	static constexpr SpriteComponent::RowInfo m_IdleSpriteInfo{ .rowNumber = 0, .nrOfRows = 8, .frameTime{0.1f} };
+	static constexpr SpriteComponent::RowInfo m_IdleSpriteInfo{ .rowNumber = 0, .nrOfRows = 8, .frameTime{0.25f} };
 	dae::GameObject* m_pPlayer;
 	PlayerComponent* m_pPlayerComp;
 	MovementComponent* m_pMovementComp;
+	SpriteComponent* m_pSpriteComp;
 	dae::PhysicsComponent* m_pPhysicsComp;
-
+	dae::CollisionComponent* m_pCollisionComp;
 };
 
 

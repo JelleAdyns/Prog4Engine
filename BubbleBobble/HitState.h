@@ -6,7 +6,6 @@
 #include "PlayerComponent.h"
 #include "MovementComponent.h"
 #include "Commands.h"
-#include <CollisionComponent.h>
 #include <KeyState.h>
 #include <Observer.h>
 #include <GameObject.h>

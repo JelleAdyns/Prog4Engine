@@ -11,6 +11,7 @@
 #include "GameObject.h"
 #include "Achievements.h"
 #include "LevelLoader.h"
+#include "CollisionTags.h"
 #include <Minigin.h>
 #include <SceneManager.h>
 #include <functional>
@@ -315,12 +316,6 @@ void Game::LoadLevelOne() const
 	MakePlayer(scene);
 
 
-	auto bubble = std::make_unique<dae::GameObject>(200, 200);
-	bubble->AddRenderComponent();
-	bubble->AddPhysicsComponent();
-	bubble->AddComponent<SpriteComponent>("Textures/Bubble.png", 3, 11, 0.1f, true, true);
-	bubble->AddComponent<BubbleComponent>();
-
 	auto info = std::make_unique<dae::GameObject>();
 	info->AddRenderComponent();
 	info->AddComponent<dae::TextComponent>(inputMan.IsKeyboardActive() ? "SPACE: Jump, A/D: Move, W: Shoot " : "Y: Jump, DPAD: Move, A: Shoot", "Fonts/Pixel_NES.otf", 10);
@@ -331,7 +326,6 @@ void Game::LoadLevelOne() const
 	inputMan.AddCommand_ChangingToKeyboard(std::move(setTextCommand2));
 
 	scene.AddGameObject(std::move(info));
-	scene.AddGameObject(std::move(bubble));
 
 }
 
@@ -419,7 +413,7 @@ void Game::MakePlayer(dae::Scene& scene) const
 	SpriteComponent* spriteComp = player1->GetComponent<SpriteComponent>();
 	spriteComp->SetHeightMarkers(0, 64*2);
 	const auto& destRctSize = spriteComp->GetDestRectSize();
-	player1->AddComponent<dae::CollisionComponent>(glm::vec2{}, destRctSize);
+	player1->AddComponent<dae::CollisionComponent>(glm::vec2{}, destRctSize, collisionTags::playerTag);
 	player1->AddComponent<WallCheckingComponent>(glm::vec2{ 0,destRctSize.y/4 }, glm::vec2{ destRctSize.x,destRctSize.y/2 });
 	player1->AddComponent<FloorCheckingComponent>(glm::vec2{ destRctSize.x/4,0 }, glm::vec2{ destRctSize.x/2,destRctSize.y });
 
@@ -435,7 +429,7 @@ void Game::MakePlayer(dae::Scene& scene) const
 	enemy->AddComponent<SpriteComponent>("Textures/Zen-ChanStates.png", 4, 7, 0.1f);
 	SpriteComponent* enemySpriteComp = enemy->GetComponent<SpriteComponent>();
 	const auto& enemyDestRctSize = enemySpriteComp->GetDestRectSize();
-	enemy->AddComponent<dae::CollisionComponent>(glm::vec2{}, enemyDestRctSize);
+	enemy->AddComponent<dae::CollisionComponent>(glm::vec2{}, enemyDestRctSize, collisionTags::enemyTag);
 	enemy->AddComponent<WallCheckingComponent>(glm::vec2{ 0,enemyDestRctSize.y/4 }, glm::vec2{ enemyDestRctSize.x,enemyDestRctSize.y/2 });
 	enemy->AddComponent<FloorCheckingComponent>(glm::vec2{ enemyDestRctSize.x/4,0 }, glm::vec2{ enemyDestRctSize.x/2,enemyDestRctSize.y });
 

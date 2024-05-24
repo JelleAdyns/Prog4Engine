@@ -8,8 +8,10 @@
 #include "HitState.h"
 #include "FallingState.h"
 #include "Commands.h"
+#include "BubbleSpawner.h"
 #include <KeyState.h>
 #include <GameObject.h>
+#include <CollisionComponent.h>
 #include <InputCommandBinder.h>
 
 class JumpingState final : public PlayerState
@@ -20,7 +22,9 @@ public:
 		m_pPlayer{ pPlayer },
 		m_pPlayerComp{ pPlayerComp },
 		m_pMovementComp{ pMovementComp },
-		m_pPhysicsComp{pPlayer->GetComponent<dae::PhysicsComponent>()}
+		m_pSpriteComp{ pPlayer->GetComponent<SpriteComponent>() },
+		m_pPhysicsComp{pPlayer->GetComponent<dae::PhysicsComponent>()},
+		m_pCollisionComp{ pPlayer->GetComponent<dae::CollisionComponent>() }
 	{}
 	virtual ~JumpingState() = default;
 
@@ -31,7 +35,14 @@ public:
 
 	virtual std::unique_ptr<PlayerState> Update() override
 	{
-		if (m_pPlayerComp->IsHit()) return std::make_unique<HitState>(m_pPlayer, m_pPlayerComp, m_pMovementComp);
+		if (!m_pPlayerComp->IsInvincible())
+		{
+			m_pCollisionComp->CheckForCollision(collisionTags::enemyTag);
+			if (m_pCollisionComp->GetCollisionFlags() > 0) return std::make_unique<HitState>(m_pPlayer, m_pPlayerComp, m_pMovementComp);
+
+			m_pCollisionComp->CheckForCollision(collisionTags::projectileTag);
+			if (m_pCollisionComp->GetCollisionFlags() > 0) return std::make_unique<HitState>(m_pPlayer, m_pPlayerComp, m_pMovementComp);
+		}
 
 		if (m_pPhysicsComp->GetVelocity().y > 0.f)
 		{
@@ -52,29 +63,29 @@ public:
 	virtual void Shoot() override
 	{
 
-		SpriteComponent* pSpriteComp = m_pPlayer->GetComponent<SpriteComponent>();
-		if (pSpriteComp->GetCurrRow() < GetShootStartIndex())
+		if (m_pSpriteComp->GetCurrRow() < GetShootStartIndex())
 		{
-			//m_IsShooting = true;
-			pSpriteComp->SetFrameTime(0.2f);
-			//pSpriteComp->SetStartRow(4);
-			pSpriteComp->SetCol(0);
-			pSpriteComp->SetRow(GetShootStartIndex() + m_JumpingSpriteInfo.rowNumber);
+			m_pSpriteComp->SetFrameTime(0.2f);
+			m_pSpriteComp->SetCol(0);
+			m_pSpriteComp->SetRow(GetShootStartIndex() + m_JumpingSpriteInfo.rowNumber);
+
+			bubbleSpawner::SpawnBubble(m_pPlayer->GetWorldPosition(), m_pSpriteComp->IsLookingLeft());
 		}
 	}
 	virtual void StopShooting() override
 	{
-		SpriteComponent* pSpriteComp = m_pPlayer->GetComponent<SpriteComponent>();
-		pSpriteComp->SetNrOfRows(m_JumpingSpriteInfo.nrOfRows);
-		pSpriteComp->SetRow(m_JumpingSpriteInfo.rowNumber);
-		pSpriteComp->SetFrameTime(m_JumpingSpriteInfo.frameTime);
+		m_pSpriteComp->SetNrOfRows(m_JumpingSpriteInfo.nrOfRows);
+		m_pSpriteComp->SetRow(m_JumpingSpriteInfo.rowNumber);
+		m_pSpriteComp->SetFrameTime(m_JumpingSpriteInfo.frameTime);
 	}
 private:
 	static constexpr SpriteComponent::RowInfo m_JumpingSpriteInfo{ .rowNumber = 2, .nrOfRows = 8, .frameTime{0.1f} };
 	dae::GameObject* m_pPlayer;
 	PlayerComponent* m_pPlayerComp;
 	MovementComponent* m_pMovementComp;
+	SpriteComponent* m_pSpriteComp;
 	dae::PhysicsComponent* m_pPhysicsComp;
+	dae::CollisionComponent* m_pCollisionComp;
 };
 
 

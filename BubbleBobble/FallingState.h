@@ -8,6 +8,7 @@
 #include "PlayerComponent.h"
 #include "MovementComponent.h"
 #include "Commands.h"
+#include "BubbleSpawner.h"
 #include <KeyState.h>
 #include <GameObject.h>
 #include <Minigin.h>
@@ -22,7 +23,8 @@ public:
 		m_pPlayerComp{ pPlayerComp },
 		m_pMovementComp{ pMovementComp },
 		m_pFloorCheckingComp{pPlayer->GetComponent<FloorCheckingComponent>()},
-		m_pSpriteComp{pPlayer->GetComponent<SpriteComponent>()}
+		m_pSpriteComp{pPlayer->GetComponent<SpriteComponent>()},
+		m_pCollisionComp{ pPlayer->GetComponent<dae::CollisionComponent>() }
 	{}
 	virtual ~FallingState() = default;
 
@@ -33,7 +35,14 @@ public:
 
 	virtual std::unique_ptr<PlayerState> Update() override
 	{
-		if (m_pPlayerComp->IsHit()) return std::make_unique<HitState>(m_pPlayer, m_pPlayerComp, m_pMovementComp);
+		if (!m_pPlayerComp->IsInvincible())
+		{
+			m_pCollisionComp->CheckForCollision(collisionTags::enemyTag);
+			if (m_pCollisionComp->GetCollisionFlags() > 0) return std::make_unique<HitState>(m_pPlayer, m_pPlayerComp, m_pMovementComp);
+
+			m_pCollisionComp->CheckForCollision(collisionTags::projectileTag);
+			if (m_pCollisionComp->GetCollisionFlags() > 0) return std::make_unique<HitState>(m_pPlayer, m_pPlayerComp, m_pMovementComp);
+		}
 		 
 		if (m_pPlayer->GetWorldPosition().y > dae::Minigin::GetWindowSize().y) m_pPlayer->SetLocalPos(m_pPlayer->GetLocalPosition().x, -50);
 
@@ -61,11 +70,11 @@ public:
 	{
 		if (m_pSpriteComp->GetCurrRow() < GetShootStartIndex())
 		{
-			//m_IsShooting = true;
 			m_pSpriteComp->SetFrameTime(0.2f);
-			//m_pSpriteComp->SetStartRow(4);
 			m_pSpriteComp->SetCol(0);
 			m_pSpriteComp->SetRow(GetShootStartIndex() + m_FallingSpriteInfo.rowNumber);
+
+			bubbleSpawner::SpawnBubble(m_pPlayer->GetWorldPosition(), m_pSpriteComp->IsLookingLeft());
 		}
 	}
 	virtual void StopShooting() override
@@ -82,6 +91,7 @@ private:
 	MovementComponent* m_pMovementComp;
 	FloorCheckingComponent* m_pFloorCheckingComp;
 	SpriteComponent* m_pSpriteComp;
+	dae::CollisionComponent* m_pCollisionComp;
 };
 
 

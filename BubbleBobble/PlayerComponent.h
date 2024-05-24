@@ -16,7 +16,7 @@ namespace dae
 class SpriteComponent;
 class MovementComponent;
 class EnemyComponent;
-class PlayerComponent final : public dae::Component, public dae::Observer<SpriteComponent>, public dae::Observer<EnemyComponent>
+class PlayerComponent final : public dae::Component, public dae::Observer<SpriteComponent>
 {
 public:
 	explicit PlayerComponent(dae::GameObject* pOwner);
@@ -33,22 +33,22 @@ public:
 
 	virtual void Notify(SpriteComponent* pSubject) override;
 	virtual void AddSubjectPointer(dae::Subject<SpriteComponent>* pSubject) override;
-	virtual void Notify(EnemyComponent* pSubject) override;
-	virtual void AddSubjectPointer(dae::Subject<EnemyComponent>* pSubject) override;
 
 	void Shoot();
-	bool IsHit() const;
+
+	bool IsInvincible() const;
 	void Respawn();
 
 	dae::Subject<PlayerComponent>* GetSubject() const;
 	glm::vec2 GetPos() const;
+	glm::vec2 GetDestRectSize() const;
 	float GetJumpVelocity() const { return m_JumpVelocity; }
 	float GetMoveVelocity() const { return m_MoveVelocity; }
 
 private:
 
 	bool m_IsInvincible{};
-	bool m_IsHit{};
+	//bool m_IsHit{};
 
 	int m_Health{5};
 	float m_JumpVelocity{ -160.f };
@@ -66,7 +66,6 @@ private:
 	std::unique_ptr<dae::Subject<PlayerComponent>> m_pPosChecked;
 
 	std::vector<dae::Subject<SpriteComponent>*> m_pVecObservedSpriteSubjects;
-	std::vector<dae::Subject<EnemyComponent>*> m_pVecObservedEnemySubjects;
 
 
 	void UpdateStates();

@@ -31,8 +31,9 @@ void EnemyComponent::Update()
 	if (m_pPhysicsComp->GetVelocity().x < 0) m_pSpriteComp->LookLeft(true);
 	if (m_pPhysicsComp->GetVelocity().x > 0) m_pSpriteComp->LookLeft(false);
 
+	m_pCollisionComp->CheckForCollision(collisionTags::playerTag);
 	if (m_pCollisionComp->GetCollisionFlags() > 0) m_pCollided->NotifyObservers(this);
-
+	
 }
 
 void EnemyComponent::PrepareImGuiRender()

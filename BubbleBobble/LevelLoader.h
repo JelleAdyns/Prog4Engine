@@ -12,6 +12,7 @@
 #include <Minigin.h>
 #include <filesystem>
 #include "Components.h"
+#include "CollisionTags.h"
 
 static void LoadLevel(const std::string& filename, dae::Scene& scene, int levelNumber)
 {
@@ -48,7 +49,7 @@ static void LoadLevel(const std::string& filename, dae::Scene& scene, int levelN
 					{
 						auto tile = std::make_unique<dae::GameObject>(8.f * col, 8.f * row);
 						tile->AddRenderComponent();
-						tile->AddComponent<dae::CollisionComponent>(glm::vec2{ 0,0 }, glm::vec2{ 8.f,8.f }, dae::CollisionComponent::CollisionType::Platform);
+						tile->AddComponent<dae::CollisionComponent>(glm::vec2{ 0,0 }, glm::vec2{ 8.f,8.f }, collisionTags::platformTag);
 						tile->AddComponent<SpriteComponent>("Textures/Tiles.png", 3, 1, 0.1f, false);
 
 						tile->GetComponent<SpriteComponent>()->SetCol(levelNumber - 1);
@@ -60,7 +61,7 @@ static void LoadLevel(const std::string& filename, dae::Scene& scene, int levelN
 					{
 						auto tile = std::make_unique<dae::GameObject>(8.f * col, 8.f * row);
 						tile->AddRenderComponent();
-						tile->AddComponent<dae::CollisionComponent>(glm::vec2{ 0,0 }, glm::vec2{ 8.f,8.f }, dae::CollisionComponent::CollisionType::Wall);
+						tile->AddComponent<dae::CollisionComponent>(glm::vec2{ 0,0 }, glm::vec2{ 8.f,8.f }, collisionTags::wallTag);
 						tile->AddComponent<SpriteComponent>("Textures/Tiles.png", 3, 1, 0.1f, false);
 
 						tile->GetComponent<SpriteComponent>()->SetCol(levelNumber - 1);
@@ -85,10 +86,10 @@ static void LoadLevel(const std::string& filename, dae::Scene& scene, int levelN
 		}
 
 		auto tile = std::make_unique<dae::GameObject>();
-		tile->AddComponent<dae::CollisionComponent>(glm::vec2{ 0, 0 }, glm::vec2{ 16.f, 16.f }, dae::CollisionComponent::CollisionType::Wall);
+		tile->AddComponent<dae::CollisionComponent>(glm::vec2{ 0, 0 }, glm::vec2{ 16.f, 16.f }, collisionTags::wallTag);
 		scene.AddGameObject(std::move(tile));
 		tile = std::make_unique<dae::GameObject>(dae::Minigin::GetWindowSize().x - 16.f, 0.f);
-		tile->AddComponent<dae::CollisionComponent>(glm::vec2{ 0, 0 }, glm::vec2{ 16.f, 16.f }, dae::CollisionComponent::CollisionType::Wall);
+		tile->AddComponent<dae::CollisionComponent>(glm::vec2{ 0, 0 }, glm::vec2{ 16.f, 16.f }, collisionTags::wallTag);
 		scene.AddGameObject(std::move(tile));
 	}
 	else { std::cout << "Couldn't open file: " << filename << '\n'; }

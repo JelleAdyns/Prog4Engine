@@ -10,21 +10,19 @@ namespace dae
 {
     std::vector<CollisionComponent*> CollisionComponent::m_pVecAllCollisionComponents{};
 
-    CollisionComponent::CollisionComponent(GameObject* pOwner, CollisionType collisionType):
-        CollisionComponent(pOwner, glm::vec2{}, glm::vec2{}, collisionType)
+    CollisionComponent::CollisionComponent(GameObject* pOwner, const std::string& collisionTag):
+        CollisionComponent(pOwner, glm::vec2{}, glm::vec2{}, collisionTag)
     {
     }
 
-    CollisionComponent::CollisionComponent(GameObject* pOwner, const glm::vec2& posOffset, const glm::vec2& size, CollisionType collisionType) :
+    CollisionComponent::CollisionComponent(GameObject* pOwner, const glm::vec2& posOffset, const glm::vec2& size, const std::string& collisionTag) :
         Component{ pOwner },
-        m_CollisionType{collisionType},
+        m_CollisionTag{collisionTag},
         m_HasPhysicsComponent{ nullptr},
         m_CollisionOn{true},
         m_CollisionFlags{},
         m_PosOffset{ posOffset },
-        m_Size{ size },
-        m_GeneralOffset{posOffset},
-        m_GeneralSize{size}
+        m_Size{ size }
     {
         m_pVecAllCollisionComponents.push_back(this);
     }
@@ -44,37 +42,26 @@ namespace dae
     void CollisionComponent::Update()
     {
         
-        m_PosOffset = m_GeneralOffset;
-        m_Size = m_GeneralSize;
-        if (m_HasPhysicsComponent) CheckForCollision(CollisionType::Other);
+        //if (m_HasPhysicsComponent) CheckForCollision(CollisionType::Other);
 
     }
 
     void CollisionComponent::PrepareImGuiRender()
     {
+#ifndef NDEBUG
         auto scale = Minigin::GetWindowScale();
 
         ImGui::Begin("Collision");
        // ImGui::SetWindowSize(ImVec2{ float( Minigin::GetWindowSize().x* scale), float( Minigin::GetWindowSize().y*scale )});
        // ImGui::SetWindowPos(ImVec2{});
-        float top = GetOwner()->GetWorldPosition().y + m_GeneralOffset.y;
-        float left = GetOwner()->GetWorldPosition().x + m_GeneralOffset.x;
+        float top = GetOwner()->GetWorldPosition().y + m_PosOffset.y;
+        float left = GetOwner()->GetWorldPosition().x + m_PosOffset.x;
         ImGui::GetWindowDrawList()->AddRect(
             ImVec2(left * scale, top * scale),
-            ImVec2((left + m_GeneralSize.x) * scale, (top + m_GeneralSize.y) * scale),
+            ImVec2((left + m_Size.x) * scale, (top + m_Size.y) * scale),
             IM_COL32(255, 0, 0, 255));
         ImGui::End();
-    }
-
-
-    void CollisionComponent::SetOffset(const glm::vec2& newOffset)
-    {
-        m_PosOffset = newOffset;
-    }
-
-    void CollisionComponent::SetSize(const glm::vec2& newSize)
-    {
-        m_Size = newSize;
+#endif //!NDEBUG
     }
 
     void CollisionComponent::SetCollision(bool collisionOn)
@@ -82,31 +69,19 @@ namespace dae
         m_CollisionOn = collisionOn;
     }
 
-    /*const glm::vec2 CollisionComponent::GetCollisionPos()
+    void CollisionComponent::CheckForCollision(const std::string& collisionTag)
     {
-        const auto& pos = GetOwner()->GetWorldPosition();
-        return glm::vec2{ pos.x + m_PosOffset.x, pos.y + m_PosOffset.y };
-    }*/
-
-    //const glm::vec2& CollisionComponent::GetOffset()
-    //{
-    //    return m_PosOffset;
-    //}
-
-    /*const glm::vec2& CollisionComponent::GetCollisionSize()
-    {
-        return m_Size;
-    }*/
-
-    void CollisionComponent::CheckForCollision(CollisionType typeToCheck)
+        CheckForCollision(m_PosOffset, m_Size, collisionTag);
+    }
+    void CollisionComponent::CheckForCollision(const glm::vec2& alternativeOffset, const glm::vec2& alternativeSize, const std::string& collisionTag)
     {
         const auto& worldPos = GetOwner()->GetWorldPosition();
 
         Box box{};
-        box.top = worldPos.y + m_PosOffset.y;
-        box.left = worldPos.x + m_PosOffset.x;
-        box.bottom = box.top + m_Size.y;
-        box.right = box.left + m_Size.x;
+        box.top = worldPos.y + alternativeOffset.y;
+        box.left = worldPos.x + alternativeOffset.x;
+        box.bottom = box.top + alternativeSize.y;
+        box.right = box.left + alternativeSize.x;
 
         m_CollisionFlags = 0;
         m_OverlappedDistance = {};
@@ -114,7 +89,7 @@ namespace dae
         std::for_each(m_pVecAllCollisionComponents.cbegin(), m_pVecAllCollisionComponents.cend(), [&](CollisionComponent* pCollComponent)
             {
                 if( pCollComponent != this &&
-                    typeToCheck == pCollComponent->m_CollisionType &&
+                    collisionTag == pCollComponent->m_CollisionTag &&
                     m_CollisionOn)
                 {
                     const auto& otherWorldPos = pCollComponent->GetOwner()->GetWorldPosition();
@@ -147,6 +122,7 @@ namespace dae
                         m_CollisionFlags |= static_cast<char>(CollidingSide::Right);
                         m_OverlappedDistance.x = box.right - otherBox.left;
                     }
+                    return;
                 }
 
             });

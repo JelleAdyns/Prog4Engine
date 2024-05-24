@@ -3,6 +3,7 @@
 #include "HitState.h"
 #include "SpriteComponent.h"
 #include "MovementComponent.h"
+#include "CollisionTags.h"
 #include <PhysicsComponent.h>
 #include <CollisionComponent.h>
 #include <KeyState.h>
@@ -22,16 +23,9 @@ PlayerComponent::PlayerComponent(dae::GameObject* pOwner):
 
 PlayerComponent::~PlayerComponent()
 {
-
-	
 	for (dae::Subject<SpriteComponent>* pSpriteSubject : m_pVecObservedSpriteSubjects)
 	{
 		pSpriteSubject->RemoveObserver(this);
-	}
-
-	for (dae::Subject<EnemyComponent>* pEnemySubject : m_pVecObservedEnemySubjects)
-	{
-		pEnemySubject->RemoveObserver(this);
 	}
 }
 
@@ -45,6 +39,7 @@ void PlayerComponent::Start()
 
 void PlayerComponent::Update()
 {
+	m_pCollisionComp->CheckForCollision(collisionTags::enemyTag);
 	
 	if (m_IsInvincible)
 	{
@@ -56,6 +51,7 @@ void PlayerComponent::Update()
 			m_IsInvincible = false;
 		}
 	}
+
 	m_pPosChecked->NotifyObservers(this);
 	UpdateStates();
 
@@ -79,27 +75,20 @@ void PlayerComponent::AddSubjectPointer(dae::Subject<SpriteComponent>* pSubject)
 	m_pVecObservedSpriteSubjects.emplace_back(pSubject);
 }
 
-void PlayerComponent::Notify(EnemyComponent*)
-{	
-	if(!m_IsHit && !m_IsInvincible) m_IsHit = true;
-}
-void PlayerComponent::AddSubjectPointer(dae::Subject<EnemyComponent>* pSubject)
-{
-	m_pVecObservedEnemySubjects.emplace_back(pSubject);
-}
 void PlayerComponent::Shoot()
 {
 	m_pCurrState->Shoot();
 }
 
-bool PlayerComponent::IsHit() const
+
+bool PlayerComponent::IsInvincible() const
 {
-	return m_IsHit;
+	return m_IsInvincible;
 }
 
 void PlayerComponent::Respawn()
 {
-	m_IsHit = false;
+
 	GetOwner()->SetLocalPos(24.f, dae::Minigin::GetWindowSize().y - 40.f);
 	m_IsInvincible = true;
 }
@@ -112,6 +101,11 @@ dae::Subject<PlayerComponent>* PlayerComponent::GetSubject() const
 glm::vec2 PlayerComponent::GetPos() const
 {
 	return GetOwner()->GetWorldPosition();
+}
+
+glm::vec2 PlayerComponent::GetDestRectSize() const
+{
+	return m_pSpriteComp->GetDestRectSize();
 }
 
 

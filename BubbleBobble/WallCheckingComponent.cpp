@@ -1,5 +1,6 @@
 #include "WallCheckingComponent.h"
 #include "CollisionComponent.h"
+#include "CollisionTags.h"
 #include "PhysicsComponent.h"
 #include "GameObject.h"
 #include "Minigin.h"
@@ -23,10 +24,7 @@ void WallCheckingComponent::Start()
 void WallCheckingComponent::Update()
 {
 	
-	m_pCollisionComponent->SetOffset(m_Offset);
-	m_pCollisionComponent->SetSize(m_Size);
-	
-	m_pCollisionComponent->CheckForCollision(dae::CollisionComponent::CollisionType::Wall);
+	m_pCollisionComponent->CheckForCollision(m_Offset, m_Size, collisionTags::wallTag);
 
 	auto flags = m_pCollisionComponent->GetCollisionFlags();
 
@@ -44,7 +42,6 @@ void WallCheckingComponent::Update()
 		auto localPos = GetOwner()->GetLocalPosition();
 
 		GetOwner()->SetLocalPos(localPos.x + overlappedDistance.x, localPos.y);
-		//m_pPhysicsComponent->SetVelocityX(0);
 		m_CollidingLeft = true;
 	}
 	if ((flags & rightFlag) == rightFlag)
@@ -52,7 +49,6 @@ void WallCheckingComponent::Update()
 		auto localPos = GetOwner()->GetLocalPosition();
 
 		GetOwner()->SetLocalPos(localPos.x - overlappedDistance.x, localPos.y);
-		//m_pPhysicsComponent->SetVelocityX(0);
 		m_CollidingRight = true;
 	}
 
@@ -60,6 +56,7 @@ void WallCheckingComponent::Update()
 
 void WallCheckingComponent::PrepareImGuiRender()
 {
+#ifndef NDEBUG
 	auto scale = dae::Minigin::GetWindowScale();
 
 	ImGui::Begin("Collision");
@@ -72,6 +69,7 @@ void WallCheckingComponent::PrepareImGuiRender()
 		ImVec2((left + m_Size.x) * scale, (top + m_Size.y) * scale),
 		IM_COL32(0, 255, 0, 255));
 	ImGui::End();
+#endif //!NDEBUG
 }
 
 bool WallCheckingComponent::CollidingWithLeft() const

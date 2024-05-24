@@ -68,9 +68,6 @@
     <ClInclude Include="KeyState.h">
       <Filter>Engine Files</Filter>
     </ClInclude>
-    <ClInclude Include="EditorCommand.h">
-      <Filter>Engine Files\Commands</Filter>
-    </ClInclude>
     <ClInclude Include="InputCommandBinder.h">
       <Filter>Engine Files\Singletons</Filter>
     </ClInclude>

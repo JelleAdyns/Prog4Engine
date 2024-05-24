@@ -20,15 +20,8 @@ namespace dae
             Right = 0b1000
         };
 
-        enum class CollisionType
-        {
-            Platform,
-            Wall,
-            Other
-        };
-
-        explicit CollisionComponent(GameObject* pOwner, CollisionType collisionType = CollisionType::Other);
-        explicit CollisionComponent(GameObject* pOwner, const glm::vec2& posOffset, const glm::vec2& size, CollisionType collisionType = CollisionType::Other);
+        explicit CollisionComponent(GameObject* pOwner, const std::string& collisionTag);
+        explicit CollisionComponent(GameObject* pOwner, const glm::vec2& posOffset, const glm::vec2& size, const std::string& collisionTag);
         virtual ~CollisionComponent();
 
         CollisionComponent(const CollisionComponent&) = delete;
@@ -46,10 +39,9 @@ namespace dae
         const glm::vec2& GetOffset() const;
         const glm::vec2& GetSize() const;
 
-        void SetOffset(const glm::vec2& newOffset);
-        void SetSize(const glm::vec2& newSize);
         void SetCollision(bool collisionOn);
-        void CheckForCollision(CollisionType typeToCheck);
+        void CheckForCollision(const std::string& collisionTag);
+        void CheckForCollision(const glm::vec2& alternativeOffset, const glm::vec2& alternativeSize, const std::string& collisionTag);
 
     private:
         //const glm::vec2& GetOffset();
@@ -64,8 +56,7 @@ namespace dae
 
         bool IsColliding(const Box& box, const Box& otherBox, CollidingSide sideToTest);
 
-
-        CollisionType m_CollisionType;
+        const std::string m_CollisionTag{};
 
         bool m_HasPhysicsComponent;
         bool m_CollisionOn;
@@ -73,9 +64,6 @@ namespace dae
 
         glm::vec2 m_PosOffset;
         glm::vec2 m_Size;
-
-        glm::vec2 m_GeneralOffset;
-        glm::vec2 m_GeneralSize;
 
         glm::vec2 m_OverlappedDistance;
 
