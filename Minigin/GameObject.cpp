@@ -83,7 +83,11 @@ namespace dae
 
 	void GameObject::SetParent(const std::unique_ptr<GameObject>& pParent, bool keepWorldPosition)
 	{
-		if (pParent.get() == this || pParent.get() == m_pParent || IsChild(pParent))
+		SetParent(pParent.get(), keepWorldPosition);
+	}
+	void GameObject::SetParent(GameObject* pParent, bool keepWorldPosition)
+	{
+		if (pParent == this || pParent == m_pParent || IsChild(pParent))
 		{
 			throw std::runtime_error{ "New Parent is not valid" };
 		}
@@ -96,13 +100,17 @@ namespace dae
 		}
 
 		if (m_pParent) m_pParent->m_pVecChildren.erase(std::remove(m_pParent->m_pVecChildren.begin(), m_pParent->m_pVecChildren.end(), this));
-		m_pParent = pParent.get();
+		m_pParent = pParent;
 		if (m_pParent) m_pParent->m_pVecChildren.emplace_back(this);
 	}
 
 	bool GameObject::IsChild(const std::unique_ptr<GameObject>& pGameObject) const
 	{
-		return std::find(m_pVecChildren.cbegin(), m_pVecChildren.cend(), pGameObject.get()) != m_pVecChildren.cend();
+		return IsChild(pGameObject.get());
+	}
+	bool GameObject::IsChild(GameObject* pGameObject) const
+	{
+		return std::find(m_pVecChildren.cbegin(), m_pVecChildren.cend(), pGameObject) != m_pVecChildren.cend();
 	}
 
 	void GameObject::SetLocalPos(float x, float y) { SetLocalPos(glm::vec2{ x,y }); }

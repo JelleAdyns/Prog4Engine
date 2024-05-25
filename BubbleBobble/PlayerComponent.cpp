@@ -6,6 +6,7 @@
 #include "CollisionTags.h"
 #include <PhysicsComponent.h>
 #include <CollisionComponent.h>
+#include <RenderComponent.h>
 #include <KeyState.h>
 #include <GameTime.h>
 #include <Minigin.h>
@@ -34,6 +35,7 @@ void PlayerComponent::Start()
 	if (!m_pPhysicsComp) m_pPhysicsComp = GetOwner()->GetComponent<dae::PhysicsComponent>();
 	if (!m_pSpriteComp) m_pSpriteComp = GetOwner()->GetComponent<SpriteComponent>();
 	if (!m_pCollisionComp) m_pCollisionComp = GetOwner()->GetComponent<dae::CollisionComponent>();
+	if (!m_pRenderComp) m_pRenderComp = GetOwner()->GetComponent<dae::RenderComponent>();
 	if (!m_pMovementComp) m_pMovementComp = GetOwner()->GetComponent<MovementComponent>();
 }
 
@@ -43,12 +45,21 @@ void PlayerComponent::Update()
 	
 	if (m_IsInvincible)
 	{
-		m_InvincibilityTimer += dae::GameTime::GetInstance().GetDeltaTime();
+		const auto& deltaTime = dae::GameTime::GetInstance().GetDeltaTime();
+		m_InvincibilityTimer += deltaTime;
+		m_RenderTimer += deltaTime;
+
+		if (m_RenderTimer >= 0.07f)
+		{
+			m_pRenderComp->ToggleNeedToRender();
+			m_RenderTimer = 0.f;
+		}
 
 		if(m_InvincibilityTimer >= m_InvincibilityMaxTime)
 		{
 			m_InvincibilityTimer = 0.f;
 			m_IsInvincible = false;
+			m_pRenderComp->SetNeedToRender(true);
 		}
 	}
 

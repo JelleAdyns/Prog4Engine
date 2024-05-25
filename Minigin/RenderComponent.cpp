@@ -26,25 +26,36 @@ namespace dae
 
 	void RenderComponent::Render() const
 	{
-		const auto& renderer = Renderer::GetInstance();
-		
-		for (auto& pair : m_pMapTexturesToRender)
+		if(m_Render)
 		{
-			auto& textureAndBoolPair = pair.second;
+			const auto& renderer = Renderer::GetInstance();
 
-			if (m_UseMiddle)
+			for (auto& pair : m_pMapTexturesToRender)
 			{
-				glm::ivec2 pos
-				{
-					static_cast<int>(m_Pos.x - textureAndBoolPair.first->GetDstRect().w / 2.f),
-					static_cast<int>(m_Pos.y - textureAndBoolPair.first->GetDstRect().h / 2.f)
-				};
-				textureAndBoolPair.first->SetDstRect(pos);
-			}
+				auto& textureAndBoolPair = pair.second;
 
-			renderer.RenderTexture(*(textureAndBoolPair.first), textureAndBoolPair.first->GetSrcRect(), textureAndBoolPair.first->GetDstRect(), textureAndBoolPair.second);
-				
+				if (m_UseMiddle)
+				{
+					glm::ivec2 pos
+					{
+						static_cast<int>(m_Pos.x - textureAndBoolPair.first->GetDstRect().w / 2.f),
+						static_cast<int>(m_Pos.y - textureAndBoolPair.first->GetDstRect().h / 2.f)
+					};
+					textureAndBoolPair.first->SetDstRect(pos);
+				}
+
+				renderer.RenderTexture(*(textureAndBoolPair.first), textureAndBoolPair.first->GetSrcRect(), textureAndBoolPair.first->GetDstRect(), textureAndBoolPair.second);
+
+			}
 		}
 		
+	}
+	void RenderComponent::SetNeedToRender(bool render)
+	{
+		m_Render = render;
+	}
+	void RenderComponent::ToggleNeedToRender()
+	{
+		m_Render = !m_Render;
 	}
 }

@@ -435,6 +435,22 @@ void Game::MakePlayer(dae::Scene& scene) const
 
 	scene.AddGameObject(std::move(enemy));
 
+	auto enemy2 = std::make_unique<dae::GameObject>(200, 120);
+	enemy2->AddRenderComponent();
+	enemy2->AddPhysicsComponent();
+	enemy2->AddComponent<EnemyComponent>(EnemyComponent::EnemyType::ZenChan);
+	//enemy2->AddComponent<MovementComponent>(-160.f, 60.f);
+	EnemyComponent* enemy2Comp = enemy2->GetComponent<EnemyComponent>();
+	enemy2Comp->AddPlayerObserver(playerComp);
+	enemy2->AddComponent<SpriteComponent>("Textures/Zen-ChanStates.png", 4, 7, 0.1f);
+	SpriteComponent* enemy2SpriteComp = enemy2->GetComponent<SpriteComponent>();
+	const auto& enemy2DestRctSize = enemy2SpriteComp->GetDestRectSize();
+	enemy2->AddComponent<dae::CollisionComponent>(glm::vec2{}, enemy2DestRctSize, collisionTags::enemyTag);
+	enemy2->AddComponent<WallCheckingComponent>(glm::vec2{ 0,enemy2DestRctSize.y / 4 }, glm::vec2{ enemy2DestRctSize.x,enemy2DestRctSize.y / 2 });
+	enemy2->AddComponent<FloorCheckingComponent>(glm::vec2{ enemy2DestRctSize.x / 4,0 }, glm::vec2{ enemy2DestRctSize.x / 2,enemy2DestRctSize.y });
+
+	scene.AddGameObject(std::move(enemy2));
+
 
 	//uint8_t playerIndex = playerComp->GetPlayerIndex();
 

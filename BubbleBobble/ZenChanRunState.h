@@ -5,6 +5,7 @@
 #include "SpriteComponent.h"
 #include "EnemyComponent.h"
 #include <PhysicsComponent.h>
+#include <CollisionComponent.h>
 #include <GameObject.h>
 #include <Observer.h>
 
@@ -36,6 +37,7 @@ private:
 	SpriteComponent* m_pSpriteComp;
 	WallCheckingComponent* m_pWallCheckingComp;
 	FloorCheckingComponent* m_pFloorCheckingComp;
+	dae::CollisionComponent* m_pCollisionComp;
 
 	std::vector<dae::Subject<PlayerComponent>*> m_pVecObservedSpriteSubjects;
 };

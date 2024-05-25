@@ -69,11 +69,11 @@ namespace dae
         m_CollisionOn = collisionOn;
     }
 
-    void CollisionComponent::CheckForCollision(const std::string& collisionTag)
+    GameObject* CollisionComponent::CheckForCollision(const std::string& collisionTag)
     {
-        CheckForCollision(m_PosOffset, m_Size, collisionTag);
+        return CheckForCollision(m_PosOffset, m_Size, collisionTag);
     }
-    void CollisionComponent::CheckForCollision(const glm::vec2& alternativeOffset, const glm::vec2& alternativeSize, const std::string& collisionTag)
+    GameObject* CollisionComponent::CheckForCollision(const glm::vec2& alternativeOffset, const glm::vec2& alternativeSize, const std::string& collisionTag)
     {
         const auto& worldPos = GetOwner()->GetWorldPosition();
 
@@ -86,10 +86,13 @@ namespace dae
         m_CollisionFlags = 0;
         m_OverlappedDistance = {};
 
+        GameObject* pCollidedObject{ nullptr };
+
         std::for_each(m_pVecAllCollisionComponents.cbegin(), m_pVecAllCollisionComponents.cend(), [&](CollisionComponent* pCollComponent)
             {
                 if( pCollComponent != this &&
                     collisionTag == pCollComponent->m_CollisionTag &&
+                    pCollComponent->m_CollisionOn &&
                     m_CollisionOn)
                 {
                     const auto& otherWorldPos = pCollComponent->GetOwner()->GetWorldPosition();
@@ -105,27 +108,32 @@ namespace dae
                     if (IsColliding(box, otherBox, CollidingSide::Top))
                     {
                         m_CollisionFlags |= static_cast<char>(CollidingSide::Top);
-                        m_OverlappedDistance.y = otherBox.bottom - box.top ;
+                        m_OverlappedDistance.y = otherBox.bottom - box.top;
+                        pCollidedObject = pCollComponent->GetOwner();
                     }
                     if (IsColliding(box, otherBox, CollidingSide::Left))
                     {
                         m_CollisionFlags |= static_cast<char>(CollidingSide::Left);
                         m_OverlappedDistance.x = otherBox.right - box.left;
+                        pCollidedObject = pCollComponent->GetOwner();
                     }
                     if (IsColliding(box, otherBox, CollidingSide::Bottom))
                     {
                         m_CollisionFlags |= static_cast<char>(CollidingSide::Bottom);
                         m_OverlappedDistance.y = box.bottom - otherBox.top;
+                        pCollidedObject = pCollComponent->GetOwner();
                     }
                     if (IsColliding(box, otherBox, CollidingSide::Right))
                     {
                         m_CollisionFlags |= static_cast<char>(CollidingSide::Right);
                         m_OverlappedDistance.x = box.right - otherBox.left;
-                    }
-                    return;
+                        pCollidedObject = pCollComponent->GetOwner();
+                    } 
                 }
 
             });
+
+        return pCollidedObject;
     }
 
     uint8_t CollisionComponent::GetCollisionFlags() const

@@ -10,10 +10,8 @@ EnemyComponent::EnemyComponent(dae::GameObject* pOwner, EnemyType enemyType):
 	m_pPhysicsComp{},
 	m_pCollisionComp{},
 	m_pSpriteComp{},
-	m_pCollided{std::make_unique<dae::Subject<EnemyComponent>>()},
 	m_SubjectsForState{}
 {
-	//m_pCollided->AddObserver(pObserver);
 }
 
 void EnemyComponent::Start()
@@ -30,9 +28,6 @@ void EnemyComponent::Update()
 
 	if (m_pPhysicsComp->GetVelocity().x < 0) m_pSpriteComp->LookLeft(true);
 	if (m_pPhysicsComp->GetVelocity().x > 0) m_pSpriteComp->LookLeft(false);
-
-	m_pCollisionComp->CheckForCollision(collisionTags::playerTag);
-	if (m_pCollisionComp->GetCollisionFlags() > 0) m_pCollided->NotifyObservers(this);
 	
 }
 
@@ -40,10 +35,9 @@ void EnemyComponent::PrepareImGuiRender()
 {
 }
 
-void EnemyComponent::AddPlayerObserver(PlayerComponent* pObserver)
+void EnemyComponent::AddPlayerObserver(PlayerComponent* pSubject)
 {
-	m_pCollided->AddObserver(pObserver);
-	m_SubjectsForState.push_back(pObserver->GetSubject());
+	m_SubjectsForState.push_back(pSubject->GetSubject());
 }
 
 void EnemyComponent::UpdateStates()

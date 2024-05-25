@@ -186,6 +186,7 @@
     <ClCompile Include="TrashTheCacheGameObjectsComponent.cpp" />
     <ClCompile Include="TrashTheCacheIntComponent.cpp" />
     <ClCompile Include="WallCheckingComponent.cpp" />
+    <ClCompile Include="ZenChanCaughtState.cpp" />
     <ClCompile Include="ZenChanFallingState.cpp" />
     <ClCompile Include="ZenChanRunState.cpp" />
   </ItemGroup>

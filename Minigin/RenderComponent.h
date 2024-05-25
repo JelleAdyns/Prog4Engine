@@ -24,6 +24,8 @@ namespace dae
 		virtual void PrepareImGuiRender() override;
 
 		void Render() const;
+		void SetNeedToRender(bool render);
+		void ToggleNeedToRender();
 
 		template <typename T>
 			requires std::derived_from<T, Component>
@@ -40,7 +42,8 @@ namespace dae
 
 	private:
 
-		bool m_UseMiddle;
+		bool m_Render{ true };
+		bool m_UseMiddle{ false };
 		glm::vec2 m_Pos;
 
 		std::map<std::type_index, std::pair<Texture2D*, bool>> m_pMapTexturesToRender;

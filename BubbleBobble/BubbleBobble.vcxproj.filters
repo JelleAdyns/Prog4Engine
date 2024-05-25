@@ -107,6 +107,9 @@
     <ClCompile Include="MovementComponent.cpp">
       <Filter>Source Files\Components</Filter>
     </ClCompile>
+    <ClCompile Include="ZenChanCaughtState.cpp">
+      <Filter>Source Files\States\EnemyState\ZenChanStates</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Achievements.h">

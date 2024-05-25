@@ -8,6 +8,8 @@
 
 FloorCheckingComponent::FloorCheckingComponent(dae::GameObject* pOwner, const glm::vec2& offset, const glm::vec2& size):
 	dae::Component{ pOwner },
+	m_IsOnGround{false},
+	m_HandleCollision{true},
 	m_Offset{ offset },
 	m_Size{ size },
 	m_pCollisionComponent{},
@@ -29,7 +31,7 @@ void FloorCheckingComponent::Update()
 		GetOwner()->SetLocalPos(localPos.x, -50);
 	}
 
-	HandleCollision();
+	if(m_HandleCollision) HandleCollision();
 	
 }
 
@@ -55,6 +57,11 @@ void FloorCheckingComponent::PrepareImGuiRender()
 bool FloorCheckingComponent::IsOnGround() const
 {
 	return m_IsOnGround;
+}
+
+void FloorCheckingComponent::SetHandleCollison(bool handleCollision)
+{
+	m_HandleCollision = handleCollision;
 }
 
 void FloorCheckingComponent::HandleCollision()

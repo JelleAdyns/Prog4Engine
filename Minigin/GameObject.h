@@ -43,7 +43,9 @@ namespace dae
 		bool IsDead() const;
 
 		void SetParent(const std::unique_ptr<GameObject>& pParent, bool keepWorldPosition);
+		void SetParent(GameObject* pParent, bool keepWorldPosition);
 		bool IsChild(const std::unique_ptr<GameObject>& pGameObject) const;
+		bool IsChild(GameObject* pGameObject) const;
 		void SetLocalPos(float x, float y);
 		void SetLocalPos(const glm::vec2& newLocalPos);
 		void SetPosDirty();

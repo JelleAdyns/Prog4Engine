@@ -19,7 +19,6 @@ public:
 		m_pEnemy{ pEnemy },
 		m_pEnemyComp{ pEnemyComp },
 		m_pPhysicsComp{ pEnemy->GetComponent<dae::PhysicsComponent>() },
-		m_pFloorCheckingComp{ pEnemy->GetComponent<FloorCheckingComponent>() },
 		m_pSpriteComp{ pEnemy->GetComponent<SpriteComponent>() }
 	{};
 	virtual ~ZenChanJumpState() = default;
@@ -88,7 +87,6 @@ private:
 	dae::GameObject* m_pEnemy;
 	EnemyComponent* m_pEnemyComp;
 	dae::PhysicsComponent* m_pPhysicsComp;
-	FloorCheckingComponent* m_pFloorCheckingComp;
 	SpriteComponent* m_pSpriteComp;
 };
 

@@ -28,11 +28,13 @@ public:
 	virtual void PrepareImGuiRender() override;
 
 	bool IsOnGround() const;
+	void SetHandleCollison(bool handleCollision);
 private:
 
 	void HandleCollision();
 
 	bool m_IsOnGround;
+	bool m_HandleCollision;
 	glm::vec2 m_Offset;
 	glm::vec2 m_Size;
 	dae::CollisionComponent* m_pCollisionComponent;

@@ -11,6 +11,7 @@ namespace dae
 	class GameObject;
 	class PhysicsComponent;
 	class CollisionComponent;
+	class RenderComponent;
 }
 
 class SpriteComponent;
@@ -54,12 +55,14 @@ private:
 	float m_JumpVelocity{ -160.f };
 	float m_MoveVelocity{ 60.f };
 	float m_InvincibilityTimer{};
+	float m_RenderTimer{};
 	float m_InvincibilityMaxTime{3.f};
 
 	std::unique_ptr<PlayerState> m_pCurrState{};
 	
 	dae::PhysicsComponent* m_pPhysicsComp;
 	dae::CollisionComponent* m_pCollisionComp;
+	dae::RenderComponent* m_pRenderComp;
 	SpriteComponent* m_pSpriteComp;
 	MovementComponent* m_pMovementComp;
 

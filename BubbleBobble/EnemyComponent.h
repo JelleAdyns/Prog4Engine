@@ -30,7 +30,7 @@ public:
 	virtual void Update() override;
 	virtual void PrepareImGuiRender() override;
 
-	void AddPlayerObserver(PlayerComponent* pObserver);
+	void AddPlayerObserver(PlayerComponent* pSubject);
 
 	float GetSpeed() const { return m_Speed; }
 	const std::vector<dae::Subject<PlayerComponent>*>& GetPlayerSubjects() const { return m_SubjectsForState; }
@@ -45,7 +45,6 @@ private:
 	dae::PhysicsComponent* m_pPhysicsComp;
 	dae::CollisionComponent* m_pCollisionComp;
 	SpriteComponent* m_pSpriteComp;
-	std::unique_ptr<dae::Subject<EnemyComponent>> m_pCollided;
 
 	std::vector<dae::Subject<PlayerComponent>*> m_SubjectsForState;
 };

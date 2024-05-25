@@ -1,6 +1,7 @@
 #include "ZenChanRunState.h"
 #include "ZenChanFallingState.h"
 #include "ZenChanJumpState.h"
+#include "ZenChanCaughtState.h"
 #include <GameTime.h>
 
 ZenChanRunState::ZenChanRunState(dae::GameObject* pEnemy, EnemyComponent* pEnemyComp) :
@@ -10,16 +11,22 @@ ZenChanRunState::ZenChanRunState(dae::GameObject* pEnemy, EnemyComponent* pEnemy
 	m_pPhysicsComp{ pEnemy->GetComponent<dae::PhysicsComponent>() },
 	m_pSpriteComp{ pEnemy->GetComponent<SpriteComponent>() },
 	m_pWallCheckingComp{ pEnemy->GetComponent<WallCheckingComponent>() },
-	m_pFloorCheckingComp{ pEnemy->GetComponent<FloorCheckingComponent>() }
+	m_pFloorCheckingComp{ pEnemy->GetComponent<FloorCheckingComponent>() },
+	m_pCollisionComp{ pEnemy->GetComponent<dae::CollisionComponent>() }
 {}
 std::unique_ptr<EnemyState> ZenChanRunState::Update()
 {
-
-	if (m_HasToJump)
+	dae::GameObject* pCollidedObject = m_pCollisionComp->CheckForCollision(collisionTags::bubbleTag);
+	if (pCollidedObject)
 	{
-		return std::make_unique<ZenChanJumpState>(m_pEnemy, m_pEnemyComp);
+		if(!pCollidedObject->GetComponent<BubbleComponent>()->IsOccupied())
+		{
+			return std::make_unique<ZenChanCaughtState>(m_pEnemy, pCollidedObject);
+		}
 	}
 
+	if (m_HasToJump) return std::make_unique<ZenChanJumpState>(m_pEnemy, m_pEnemyComp);
+	
 	if (!m_pFloorCheckingComp->IsOnGround()) return std::make_unique<ZenChanFallingState>(m_pEnemy, m_pEnemyComp);
 
 	if (m_pWallCheckingComp->CollidingWithLeft()) m_pPhysicsComp->SetVelocityX(m_pEnemyComp->GetSpeed());

@@ -3,12 +3,14 @@
 
 #include <vector>
 #include <Component.h>
-#include <Observer.h>
+#include <Subject.h>
 
 
 namespace dae
 {
 	class PhysicsComponent;
+	class CollisionComponent;
+	class RenderComponent;
 }
 
 class EnemyComponent;
@@ -17,8 +19,17 @@ class WallCheckingComponent;
 class BubbleComponent final : public dae::Component, public dae::Observer<SpriteComponent>
 {
 public:
+	enum class FloatingStage
+	{
+		ShooterColor,
+		Pink,
+		Red,
+	};
+
+
 	explicit BubbleComponent(dae::GameObject* pOwner, bool left);
 	virtual ~BubbleComponent();
+
 
 	BubbleComponent(const BubbleComponent&) = delete;
 	BubbleComponent(BubbleComponent&&) noexcept = delete;
@@ -29,9 +40,14 @@ public:
 	virtual void Update() override;
 	virtual void PrepareImGuiRender() override;
 
-
 	virtual void Notify(SpriteComponent* pSpriteComp) override;
 	virtual void AddSubjectPointer(dae::Subject<SpriteComponent>* pSubject) override;
+
+	void AddObserver(dae::Observer<BubbleComponent>* pObserver);
+	void SetOccupied();
+	bool IsOccupied();
+	FloatingStage GetFloatingStage() const;
+
 private:
 	enum class BubbleState
 	{
@@ -40,18 +56,29 @@ private:
 		Popped
 	};
 
-	static constexpr int m_MaxHeight{ 50 };
-	static constexpr float m_XVelocity{ 120.f };
+	void HandleShotState();
+	void HandleFloatingState();
+	void HandlePoppedState();
 
+	static constexpr int m_MaxHeight{ 24 };
+	static constexpr float m_XSpeed{ 120.f };
+	static constexpr float m_YVelocity{ -20.f };
+
+	bool m_IsOccupied{ false };
 	bool m_Left{};
 	int m_RowCount{};
 
+	FloatingStage m_FloatingStage{FloatingStage::ShooterColor};
 	float m_TimeBeforePop{};
 	float m_TimeToPop{10.f};
 	BubbleState m_CurrState;
 	SpriteComponent* m_pSpriteComp;
 	WallCheckingComponent* m_pWallComp;
+	dae::CollisionComponent* m_pCollisionComp;
 	dae::PhysicsComponent* m_pPhysicsComp;
+	dae::RenderComponent* m_pRenderComp;
+	
+	std::unique_ptr<dae::Subject<BubbleComponent>> m_pTimerTick;
 
 	std::vector<dae::Subject<SpriteComponent>*> m_pVecObservedSpriteSubjects;
 

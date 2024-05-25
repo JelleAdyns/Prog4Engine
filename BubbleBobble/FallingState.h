@@ -37,7 +37,7 @@ public:
 	{
 		if (!m_pPlayerComp->IsInvincible())
 		{
-			m_pCollisionComp->CheckForCollision(collisionTags::enemyTag);
+			 m_pCollisionComp->CheckForCollision(collisionTags::enemyTag);
 			if (m_pCollisionComp->GetCollisionFlags() > 0) return std::make_unique<HitState>(m_pPlayer, m_pPlayerComp, m_pMovementComp);
 
 			m_pCollisionComp->CheckForCollision(collisionTags::projectileTag);

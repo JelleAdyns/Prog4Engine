@@ -12,6 +12,7 @@
 #include "ZenChanState.h"
 #include "ZenChanRunState.h"
 #include "ZenChanFallingState.h"
+#include "ZenChanCaughtState.h"
 #include "MaitaState.h"
 #include "MaitaRunState.h"
 

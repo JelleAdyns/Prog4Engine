@@ -40,8 +40,8 @@ namespace dae
         const glm::vec2& GetSize() const;
 
         void SetCollision(bool collisionOn);
-        void CheckForCollision(const std::string& collisionTag);
-        void CheckForCollision(const glm::vec2& alternativeOffset, const glm::vec2& alternativeSize, const std::string& collisionTag);
+        GameObject* CheckForCollision(const std::string& collisionTag);
+        GameObject* CheckForCollision(const glm::vec2& alternativeOffset, const glm::vec2& alternativeSize, const std::string& collisionTag);
 
     private:
         //const glm::vec2& GetOffset();
