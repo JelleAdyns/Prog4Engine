@@ -71,6 +71,8 @@ namespace dae
 	void GameObject::MarkDead()
 	{
 		m_IsDead = true;
+		if(m_pParent != nullptr) SetParent(nullptr, true);
+
 		std::for_each(m_pVecChildren.begin(), m_pVecChildren.end(), [&](GameObject* pChild)
 			{
 				pChild->MarkDead();

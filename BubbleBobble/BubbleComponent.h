@@ -46,6 +46,7 @@ public:
 	void AddObserver(dae::Observer<BubbleComponent>* pObserver);
 	void SetOccupied();
 	bool IsOccupied();
+	bool IsPoppedByPlayer();
 	FloatingStage GetFloatingStage() const;
 
 private:
@@ -60,10 +61,11 @@ private:
 	void HandleFloatingState();
 	void HandlePoppedState();
 
-	static constexpr int m_MaxHeight{ 24 };
+	static constexpr int m_MaxHeight{ 30 };
 	static constexpr float m_XSpeed{ 120.f };
 	static constexpr float m_YVelocity{ -20.f };
 
+	bool m_PoppedByPlayer{ false };
 	bool m_IsOccupied{ false };
 	bool m_Left{};
 	int m_RowCount{};

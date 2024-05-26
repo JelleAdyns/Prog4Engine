@@ -1,6 +1,6 @@
 #include "EnemyComponent.h"
 #include "PlayerComponent.h"
-#include <CollisionComponent.h>
+#include <PhysicsComponent.h>
 #include <GameObject.h>
 
 EnemyComponent::EnemyComponent(dae::GameObject* pOwner, EnemyType enemyType):
@@ -8,7 +8,6 @@ EnemyComponent::EnemyComponent(dae::GameObject* pOwner, EnemyType enemyType):
 	m_EnemyType{enemyType},
 	m_pCurrState{},
 	m_pPhysicsComp{},
-	m_pCollisionComp{},
 	m_pSpriteComp{},
 	m_SubjectsForState{}
 {
@@ -18,7 +17,6 @@ void EnemyComponent::Start()
 {
 	if (!m_pPhysicsComp) m_pPhysicsComp = GetOwner()->GetComponent<dae::PhysicsComponent>();
 	if (!m_pSpriteComp) m_pSpriteComp = GetOwner()->GetComponent<SpriteComponent>();
-	if (!m_pCollisionComp) m_pCollisionComp = GetOwner()->GetComponent<dae::CollisionComponent>();
 }
 
 void EnemyComponent::Update()

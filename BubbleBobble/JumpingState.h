@@ -8,7 +8,7 @@
 #include "HitState.h"
 #include "FallingState.h"
 #include "Commands.h"
-#include "BubbleSpawner.h"
+#include "Spawners.h"
 #include <KeyState.h>
 #include <GameObject.h>
 #include <CollisionComponent.h>
@@ -69,7 +69,7 @@ public:
 			m_pSpriteComp->SetCol(0);
 			m_pSpriteComp->SetRow(GetShootStartIndex() + m_JumpingSpriteInfo.rowNumber);
 
-			bubbleSpawner::SpawnBubble(m_pPlayer->GetWorldPosition(), m_pSpriteComp->IsLookingLeft());
+			spawners::SpawnBubble(m_pPlayer->GetWorldPosition(), m_pSpriteComp->IsLookingLeft());
 		}
 	}
 	virtual void StopShooting() override

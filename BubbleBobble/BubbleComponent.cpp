@@ -14,7 +14,9 @@ BubbleComponent::BubbleComponent(dae::GameObject* pOwner, bool left):
 	m_Left{left},
 	m_pSpriteComp{},
 	m_pWallComp{},
+	m_pCollisionComp{},
 	m_pPhysicsComp{},
+	m_pRenderComp{},
 	m_pTimerTick{std::make_unique<dae::Subject<BubbleComponent>>()},
 	m_pVecObservedSpriteSubjects{}
 {
@@ -114,6 +116,11 @@ bool BubbleComponent::IsOccupied()
 	return m_IsOccupied;
 }
 
+bool BubbleComponent::IsPoppedByPlayer()
+{
+	return m_PoppedByPlayer;
+}
+
 BubbleComponent::FloatingStage BubbleComponent::GetFloatingStage() const
 {
 	return m_FloatingStage;
@@ -161,6 +168,16 @@ void BubbleComponent::HandleFloatingState()
 
 	if (GetOwner()->GetWorldPosition().y < m_MaxHeight) m_pPhysicsComp->SetVelocityY(0);
 
+
+	m_pCollisionComp->CheckForCollision(collisionTags::playerTag);
+	if (m_pCollisionComp->GetCollisionFlags() > 0)
+	{
+		m_PoppedByPlayer = true;
+		m_CurrState = BubbleState::Popped;
+		m_FloatingStage = FloatingStage::Red;
+		m_pSpriteComp->SetRow(8);
+		m_pTimerTick->NotifyObservers(this);	
+	}
 
 	m_TimeBeforePop += dae::GameTime::GetInstance().GetDeltaTime();
 

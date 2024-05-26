@@ -7,7 +7,7 @@
 
 namespace dae
 {
-	class CollisionComponent;
+	class PhysicsComponent;
 }
 class PlayerComponent;
 class EnemyComponent final : public dae::Component
@@ -32,18 +32,15 @@ public:
 
 	void AddPlayerObserver(PlayerComponent* pSubject);
 
-	float GetSpeed() const { return m_Speed; }
 	const std::vector<dae::Subject<PlayerComponent>*>& GetPlayerSubjects() const { return m_SubjectsForState; }
 
 private:
 	void UpdateStates();
 
-	float m_Speed{ 60.f };
 	const EnemyType m_EnemyType;
 	std::unique_ptr<EnemyState> m_pCurrState;
 
 	dae::PhysicsComponent* m_pPhysicsComp;
-	dae::CollisionComponent* m_pCollisionComp;
 	SpriteComponent* m_pSpriteComp;
 
 	std::vector<dae::Subject<PlayerComponent>*> m_SubjectsForState;

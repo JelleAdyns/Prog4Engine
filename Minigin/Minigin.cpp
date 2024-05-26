@@ -63,6 +63,8 @@ namespace dae
 
 	dae::Minigin::Minigin(const std::string& dataPath, int windowScale, float fixedTimeStep, int FPSGoal)
 	{
+		srand(unsigned int(time(nullptr)));
+
 		m_WindowScale = windowScale;
 
 		PrintSDLVersion();

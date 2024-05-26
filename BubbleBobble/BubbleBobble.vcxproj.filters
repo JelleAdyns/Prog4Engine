@@ -181,9 +181,6 @@
     <ClInclude Include="SetTextCommand.h">
       <Filter>Source Files\Commands</Filter>
     </ClInclude>
-    <ClInclude Include="JumpCommand.h">
-      <Filter>Source Files\Commands</Filter>
-    </ClInclude>
     <ClInclude Include="WallCheckingComponent.h">
       <Filter>Source Files\Components</Filter>
     </ClInclude>
@@ -250,13 +247,19 @@
     <ClInclude Include="MovementComponent.h">
       <Filter>Source Files\Components</Filter>
     </ClInclude>
-    <ClInclude Include="BubbleSpawner.h">
+    <ClInclude Include="Spawners.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="CollisionTags.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="ZenChanCaughtState.h">
+      <Filter>Source Files\States\EnemyState\ZenChanStates</Filter>
+    </ClInclude>
+    <ClInclude Include="ZenChanPoppedState.h">
+      <Filter>Source Files\States\EnemyState\ZenChanStates</Filter>
+    </ClInclude>
+    <ClInclude Include="ZenChanAngryState.h">
       <Filter>Source Files\States\EnemyState\ZenChanStates</Filter>
     </ClInclude>
   </ItemGroup>

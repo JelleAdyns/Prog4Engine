@@ -3,15 +3,18 @@
 
 #include "ZenChanState.h"
 #include "SpriteComponent.h"
-#include "EnemyComponent.h"
-#include "FloorCheckingComponent.h"
-#include <PhysicsComponent.h>
-#include <CollisionComponent.h>
-#include <GameObject.h>
-#include <Minigin.h>
-#include <GameTime.h>
 #include <Observer.h>
 
+namespace dae
+{
+	class GameObject;
+	class CollisionComponent;
+	class PhysicsComponent;
+}
+
+class EnemyComponent;
+class FloorCheckingComponent;
+class BubbleComponent;
 
 class ZenChanCaughtState final : public ZenChanState, public dae::Observer<BubbleComponent>
 {
@@ -33,7 +36,13 @@ public:
 
 private:
 
-	bool m_Pop{ false };
+	enum class NextState
+	{
+		Caught,
+		Popped,
+		Free
+	};
+	NextState m_NextState{NextState::Caught};
 	static constexpr SpriteComponent::RowInfo m_CaughtInfo{ .rowNumber{3} };
 
 	dae::GameObject* m_pEnemy;;

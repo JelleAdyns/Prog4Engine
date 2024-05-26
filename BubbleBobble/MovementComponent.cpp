@@ -1,5 +1,4 @@
 #include "MovementComponent.h"
-#include "JumpCommand.h"
 #include "MovementCommands.h"
 #include "ShootCommand.h"
 #include <InputCommandBinder.h>
@@ -23,6 +22,13 @@ MovementComponent::~MovementComponent()
 
 void MovementComponent::Start()
 {
+
+	m_pJumpCommand = std::make_shared<JumpCommand>(GetOwner(), m_JumpVelocity);
+	m_MoveRightCommand = std::make_shared<MoveCommand>(GetOwner(), m_MoveSpeed);
+	m_MoveLeftCommand = std::make_shared<MoveCommand>(GetOwner(), -m_MoveSpeed);
+	m_StopMovingCommand = std::make_shared<StopMovingCommand>(GetOwner());
+	m_AttackCommand = std::make_shared<ShootCommand>(GetOwner());
+
 	RegisterMoveCommands();
 	RegisterAttackCommand();
 }
@@ -38,9 +44,9 @@ void MovementComponent::PrepareImGuiRender()
 void MovementComponent::RegisterJumpCommand() const
 {
 	auto& inputMan = dae::InputCommandBinder::GetInstance();
-	auto pCommand = std::make_shared<JumpCommand>(GetOwner(), m_JumpVelocity);
-	inputMan.AddKeyCommand(pCommand, SDL_SCANCODE_SPACE, dae::KeyState::Pressed);
-	inputMan.AddControllerCommand(pCommand, dae::ControllerButton::Y, dae::KeyState::Pressed, m_PlayerIndex);
+
+	inputMan.AddKeyCommand(m_pJumpCommand, SDL_SCANCODE_SPACE, dae::KeyState::Pressed);
+	inputMan.AddControllerCommand(m_pJumpCommand, dae::ControllerButton::Y, dae::KeyState::Pressed, m_PlayerIndex);
 }
 
 void MovementComponent::UnRegisterJumpCommand() const
@@ -56,21 +62,17 @@ void MovementComponent::RegisterMoveCommands() const
 {
 	auto& inputMan = dae::InputCommandBinder::GetInstance();
 
-	std::shared_ptr<dae::Command> moveCommand = std::make_shared<MoveCommand>(GetOwner(), m_MoveSpeed);
-	inputMan.AddKeyCommand(moveCommand, SDL_SCANCODE_D, dae::KeyState::Pressed);
-	inputMan.AddControllerCommand(moveCommand, dae::ControllerButton::DpadRight, dae::KeyState::Pressed, m_PlayerIndex);
+	inputMan.AddKeyCommand(m_MoveRightCommand, SDL_SCANCODE_D, dae::KeyState::Pressed);
+	inputMan.AddControllerCommand(m_MoveRightCommand, dae::ControllerButton::DpadRight, dae::KeyState::Pressed, m_PlayerIndex);
 
-	moveCommand = std::make_shared<MoveCommand>(GetOwner(), -m_MoveSpeed);
-	inputMan.AddKeyCommand(moveCommand, SDL_SCANCODE_A, dae::KeyState::Pressed);
-	inputMan.AddControllerCommand(moveCommand, dae::ControllerButton::DpadLeft, dae::KeyState::Pressed, m_PlayerIndex);
+	inputMan.AddKeyCommand(m_MoveLeftCommand, SDL_SCANCODE_A, dae::KeyState::Pressed);
+	inputMan.AddControllerCommand(m_MoveLeftCommand, dae::ControllerButton::DpadLeft, dae::KeyState::Pressed, m_PlayerIndex);
 
-	std::shared_ptr<dae::Command> stopMovingCommand = std::make_shared<StopMovingCommand>(GetOwner());
-	inputMan.AddKeyCommand(stopMovingCommand, SDL_SCANCODE_D, dae::KeyState::UpThisFrame);
-	inputMan.AddControllerCommand(stopMovingCommand, dae::ControllerButton::DpadRight, dae::KeyState::UpThisFrame, m_PlayerIndex);
+	inputMan.AddKeyCommand(m_StopMovingCommand, SDL_SCANCODE_D, dae::KeyState::UpThisFrame);
+	inputMan.AddControllerCommand(m_StopMovingCommand, dae::ControllerButton::DpadRight, dae::KeyState::UpThisFrame, m_PlayerIndex);
 
-	stopMovingCommand = std::make_shared<StopMovingCommand>(GetOwner());
-	inputMan.AddKeyCommand(stopMovingCommand, SDL_SCANCODE_A, dae::KeyState::UpThisFrame);
-	inputMan.AddControllerCommand(stopMovingCommand, dae::ControllerButton::DpadLeft, dae::KeyState::UpThisFrame, m_PlayerIndex);
+	inputMan.AddKeyCommand(m_StopMovingCommand, SDL_SCANCODE_A, dae::KeyState::UpThisFrame);
+	inputMan.AddControllerCommand(m_StopMovingCommand, dae::ControllerButton::DpadLeft, dae::KeyState::UpThisFrame, m_PlayerIndex);
 }
 
 void MovementComponent::UnRegisterMoveCommands() const
@@ -92,9 +94,8 @@ void MovementComponent::RegisterAttackCommand() const
 {
 	auto& inputMan = dae::InputCommandBinder::GetInstance();
 
-	std::shared_ptr<dae::Command> shootCommand = std::make_shared<ShootCommand>(GetOwner());
-	inputMan.AddKeyCommand(shootCommand, SDL_SCANCODE_W, dae::KeyState::DownThisFrame);
-	inputMan.AddControllerCommand(shootCommand, dae::ControllerButton::A, dae::KeyState::DownThisFrame, m_PlayerIndex);
+	inputMan.AddKeyCommand(m_AttackCommand, SDL_SCANCODE_W, dae::KeyState::DownThisFrame);
+	inputMan.AddControllerCommand(m_AttackCommand, dae::ControllerButton::A, dae::KeyState::DownThisFrame, m_PlayerIndex);
 }
 
 void MovementComponent::UnRegisterAttackCommand() const

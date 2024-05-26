@@ -1,5 +1,5 @@
-#ifndef ZENCHANRUNSTATE_H
-#define ZENCHANRUNSTATE_H
+#ifndef ZENCHANANGRYSTATE_H
+#define ZENCHANANGRYSTATE_H
 
 #include "ZenChanState.h"
 #include "PlayerComponent.h"
@@ -16,31 +16,36 @@ class EnemyComponent;
 class SpriteComponent;
 class WallCheckingComponent;
 class FloorCheckingComponent;
-class ZenChanRunState final : public ZenChanState, public dae::Observer<PlayerComponent>
+class ZenChanAngryState final : public ZenChanState, public dae::Observer<PlayerComponent>
 {
 public:
-	explicit ZenChanRunState(dae::GameObject* pEnemy, EnemyComponent* pEnemyComp, bool isAngry = false);
-	virtual ~ZenChanRunState() = default;
+	explicit ZenChanAngryState(dae::GameObject* pEnemy, EnemyComponent* pEnemyComp);
+	virtual ~ZenChanAngryState() = default;
 
-	ZenChanRunState(const ZenChanRunState&) = delete;
-	ZenChanRunState(ZenChanRunState&&) noexcept = delete;
-	ZenChanRunState& operator= (const ZenChanRunState&) = delete;
-	ZenChanRunState& operator= (ZenChanRunState&&) noexcept = delete;
+	ZenChanAngryState(const ZenChanAngryState&) = delete;
+	ZenChanAngryState(ZenChanAngryState&&) noexcept = delete;
+	ZenChanAngryState& operator= (const ZenChanAngryState&) = delete;
+	ZenChanAngryState& operator= (ZenChanAngryState&&) noexcept = delete;
 
-	virtual std::unique_ptr<EnemyState> Update() override;
-	virtual void OnEnter() override;
-	virtual void OnExit() override;
-	
+	virtual std::unique_ptr<EnemyState> Update() override
+	{
+
+	}
+	virtual void OnEnter() override
+	{
+
+	}
+	virtual void OnExit() override
+	{
+
+	}
+
 	virtual void Notify(PlayerComponent* pSubject) override;
 	virtual void AddSubjectPointer(dae::Subject<PlayerComponent>* pSubject) override;
 
 private:
 
-	static constexpr float m_GeneralSpeed{40.f};
-	float m_Speed;
-
 	bool m_HasToJump{ false };
-	bool m_IsAngry;
 
 	dae::GameObject* m_pEnemy;
 	EnemyComponent* m_pEnemyComp;
@@ -54,4 +59,4 @@ private:
 };
 
 
-#endif // !ZENCHANRUNSTATE_H
+#endif // !ZENCHANANGRYSTATE_H

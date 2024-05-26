@@ -194,16 +194,18 @@
     <ClInclude Include="Achievements.h" />
     <ClInclude Include="ActivateButtonCommand.h" />
     <ClInclude Include="BubbleComponent.h" />
-    <ClInclude Include="BubbleSpawner.h" />
+    <ClInclude Include="Spawners.h" />
     <ClInclude Include="CollisionTags.h" />
     <ClInclude Include="EnemyComponent.h" />
     <ClInclude Include="EnemyState.h" />
     <ClInclude Include="MovementComponent.h" />
+    <ClInclude Include="ZenChanAngryState.h" />
     <ClInclude Include="ZenChanCaughtState.h" />
     <ClInclude Include="ZenChanJumpState.h" />
     <ClInclude Include="MaitaRunState.h" />
     <ClInclude Include="MaitaState.h" />
     <ClInclude Include="ZenChanFallingState.h" />
+    <ClInclude Include="ZenChanPoppedState.h" />
     <ClInclude Include="ZenChanRunState.h" />
     <ClInclude Include="ZenChanState.h" />
     <ClInclude Include="ShootCommand.h" />
@@ -218,7 +220,6 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="HitState.h" />
     <ClInclude Include="IdleState.h" />
-    <ClInclude Include="JumpCommand.h" />
     <ClInclude Include="JumpingState.h" />
     <ClInclude Include="Killcommand.h" />
     <ClInclude Include="LevelLoader.h" />

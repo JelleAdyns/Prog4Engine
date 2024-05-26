@@ -10,7 +10,6 @@
 #include "SelectButtonCommand.h"
 #include "ActivateButtonCommand.h"
 #include "SetTextCommand.h"
-#include "JumpCommand.h"
 #include "ShootCommand.h"
 
 #endif // !COMMANDS_H

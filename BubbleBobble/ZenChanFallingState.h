@@ -2,19 +2,23 @@
 #define ZENCHANFALLINGSTATE_H
 
 #include "ZenChanState.h"
-
-#include "SpriteComponent.h"
-#include "EnemyComponent.h"
-#include <PhysicsComponent.h>
-#include <GameObject.h>
-#include <Minigin.h>
+#include "PlayerComponent.h"
 #include <Observer.h>
 
+namespace dae
+{
+	class GameObject;
+	class PhysicsComponent;
+	class CollisionComponent;
+}
 
+class EnemyComponent;
+class SpriteComponent;
+class FloorCheckingComponent;
 class ZenChanFallingState final : public ZenChanState, public dae::Observer<PlayerComponent>
 {
 public:
-	explicit ZenChanFallingState(dae::GameObject* pEnemy, EnemyComponent* pEnemyComp);
+	explicit ZenChanFallingState(dae::GameObject* pEnemy, EnemyComponent* pEnemyComp, bool isAngry);
 	virtual ~ZenChanFallingState() = default;
 
 	ZenChanFallingState(const ZenChanFallingState&) = delete;
@@ -31,11 +35,13 @@ public:
 
 private:
 
+	bool m_IsAngry;
 	float m_PlayerXPos{};
 
 	dae::GameObject* m_pEnemy;
 	EnemyComponent* m_pEnemyComp;
 	dae::PhysicsComponent* m_pPhysicsComp;
+	dae::CollisionComponent* m_pCollisionComp;
 	FloorCheckingComponent* m_pFloorCheckingComp;
 
 

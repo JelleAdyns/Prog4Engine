@@ -8,7 +8,7 @@
 #include "IdleState.h"
 #include "HitState.h"
 #include "Commands.h"
-#include "BubbleSpawner.h"
+#include "Spawners.h"
 #include <PhysicsComponent.h>
 #include <CollisionComponent.h>
 #include <KeyState.h>
@@ -87,7 +87,7 @@ public:
 			m_pSpriteComp->SetCol(0);
 			m_pSpriteComp->SetRow(GetShootStartIndex() + m_WalkingSpriteInfo.rowNumber);
 
-			bubbleSpawner::SpawnBubble(m_pPlayer->GetWorldPosition(), m_pSpriteComp->IsLookingLeft());
+			spawners::SpawnBubble(m_pPlayer->GetWorldPosition(), m_pSpriteComp->IsLookingLeft());
 		}
 	}
 

@@ -2,6 +2,7 @@
 #define MOVEMENTCOMPONENT_H
 
 #include <Component.h>
+#include <Command.h>
 
 class MovementComponent final : public dae::Component
 {
@@ -31,6 +32,12 @@ private:
 
 	float m_JumpVelocity;
 	float m_MoveSpeed;
+
+	std::shared_ptr<dae::Command> m_pJumpCommand;
+	std::shared_ptr<dae::Command> m_MoveRightCommand;
+	std::shared_ptr<dae::Command> m_MoveLeftCommand;
+	std::shared_ptr<dae::Command> m_StopMovingCommand;
+	std::shared_ptr<dae::Command> m_AttackCommand;
 
 	static uint8_t m_NrOfPlayers;
 };

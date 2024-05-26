@@ -402,6 +402,8 @@ void Game::MakePlayer(dae::Scene& scene) const
 
 	scoreDisplay->SetParent(livesDisplay, false);*/
 
+	const float collisionOffset{ 3.f };
+
 	auto player1 = std::make_unique<dae::GameObject>(38.f, 50.f);
 	player1->AddRenderComponent();
 	player1->AddPhysicsComponent();
@@ -412,8 +414,14 @@ void Game::MakePlayer(dae::Scene& scene) const
 	player1->AddComponent<SpriteComponent>("Textures/BubStates.png", 4, 8, 0.1f, true, false, playerComp);
 	SpriteComponent* spriteComp = player1->GetComponent<SpriteComponent>();
 	spriteComp->SetHeightMarkers(0, 64*2);
+
 	const auto& destRctSize = spriteComp->GetDestRectSize();
-	player1->AddComponent<dae::CollisionComponent>(glm::vec2{}, destRctSize, collisionTags::playerTag);
+
+	player1->AddComponent<dae::CollisionComponent>(
+		glm::vec2{ collisionOffset ,collisionOffset }, 
+		glm::vec2{ destRctSize.x - collisionOffset *2 ,destRctSize.y - collisionOffset * 2 },
+		collisionTags::playerTag);
+
 	player1->AddComponent<WallCheckingComponent>(glm::vec2{ 0,destRctSize.y/4 }, glm::vec2{ destRctSize.x,destRctSize.y/2 });
 	player1->AddComponent<FloorCheckingComponent>(glm::vec2{ destRctSize.x/4,0 }, glm::vec2{ destRctSize.x/2,destRctSize.y });
 
@@ -428,8 +436,14 @@ void Game::MakePlayer(dae::Scene& scene) const
 	enemyComp->AddPlayerObserver(playerComp);
 	enemy->AddComponent<SpriteComponent>("Textures/Zen-ChanStates.png", 4, 7, 0.1f);
 	SpriteComponent* enemySpriteComp = enemy->GetComponent<SpriteComponent>();
+
 	const auto& enemyDestRctSize = enemySpriteComp->GetDestRectSize();
-	enemy->AddComponent<dae::CollisionComponent>(glm::vec2{}, enemyDestRctSize, collisionTags::enemyTag);
+
+	enemy->AddComponent<dae::CollisionComponent>(
+		glm::vec2{ collisionOffset ,collisionOffset },
+		glm::vec2{ enemyDestRctSize.x - collisionOffset * 2 ,enemyDestRctSize.y - collisionOffset * 2 },
+		collisionTags::enemyTag);
+
 	enemy->AddComponent<WallCheckingComponent>(glm::vec2{ 0,enemyDestRctSize.y/4 }, glm::vec2{ enemyDestRctSize.x,enemyDestRctSize.y/2 });
 	enemy->AddComponent<FloorCheckingComponent>(glm::vec2{ enemyDestRctSize.x/4,0 }, glm::vec2{ enemyDestRctSize.x/2,enemyDestRctSize.y });
 
@@ -444,12 +458,40 @@ void Game::MakePlayer(dae::Scene& scene) const
 	enemy2Comp->AddPlayerObserver(playerComp);
 	enemy2->AddComponent<SpriteComponent>("Textures/Zen-ChanStates.png", 4, 7, 0.1f);
 	SpriteComponent* enemy2SpriteComp = enemy2->GetComponent<SpriteComponent>();
+
 	const auto& enemy2DestRctSize = enemy2SpriteComp->GetDestRectSize();
-	enemy2->AddComponent<dae::CollisionComponent>(glm::vec2{}, enemy2DestRctSize, collisionTags::enemyTag);
+
+	enemy2->AddComponent<dae::CollisionComponent>(
+		glm::vec2{ collisionOffset ,collisionOffset },
+		glm::vec2{ enemy2DestRctSize.x - collisionOffset * 2 ,enemy2DestRctSize.y - collisionOffset * 2 },
+		collisionTags::enemyTag);
+
 	enemy2->AddComponent<WallCheckingComponent>(glm::vec2{ 0,enemy2DestRctSize.y / 4 }, glm::vec2{ enemy2DestRctSize.x,enemy2DestRctSize.y / 2 });
 	enemy2->AddComponent<FloorCheckingComponent>(glm::vec2{ enemy2DestRctSize.x / 4,0 }, glm::vec2{ enemy2DestRctSize.x / 2,enemy2DestRctSize.y });
 
 	scene.AddGameObject(std::move(enemy2));
+
+	auto enemy3 = std::make_unique<dae::GameObject>(220, 120);
+	enemy3->AddRenderComponent();
+	enemy3->AddPhysicsComponent();
+	enemy3->AddComponent<EnemyComponent>(EnemyComponent::EnemyType::ZenChan);
+	//enemy3->AddComponent<MovementComponent>(-160.f, 60.f);
+	EnemyComponent* enemy3Comp = enemy3->GetComponent<EnemyComponent>();
+	enemy3Comp->AddPlayerObserver(playerComp);
+	enemy3->AddComponent<SpriteComponent>("Textures/Zen-ChanStates.png", 4, 7, 0.1f);
+	SpriteComponent* enemy3SpriteComp = enemy3->GetComponent<SpriteComponent>();
+
+	const auto& enemy3DestRctSize = enemy3SpriteComp->GetDestRectSize();
+
+	enemy3->AddComponent<dae::CollisionComponent>(
+		glm::vec2{ collisionOffset ,collisionOffset },
+		glm::vec2{ enemy3DestRctSize.x - collisionOffset * 2 ,enemy3DestRctSize.y - collisionOffset * 2 },
+		collisionTags::enemyTag);
+
+	enemy3->AddComponent<WallCheckingComponent>(glm::vec2{ 0,enemy3DestRctSize.y / 4 }, glm::vec2{ enemy3DestRctSize.x,enemy3DestRctSize.y / 2 });
+	enemy3->AddComponent<FloorCheckingComponent>(glm::vec2{ enemy3DestRctSize.x / 4,0 }, glm::vec2{ enemy3DestRctSize.x / 2,enemy3DestRctSize.y });
+
+	scene.AddGameObject(std::move(enemy3));
 
 
 	//uint8_t playerIndex = playerComp->GetPlayerIndex();

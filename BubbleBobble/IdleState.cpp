@@ -1,7 +1,7 @@
 #include "IdleState.h"
 #include "HitState.h"
 #include "States.h"
-#include "BubbleSpawner.h"
+#include "Spawners.h"
 
 
 std::unique_ptr<PlayerState> IdleState::Update()
@@ -56,7 +56,7 @@ void IdleState::Shoot()
 		m_pSpriteComp->SetCol(0);
 		m_pSpriteComp->SetRow(GetShootStartIndex() + m_IdleSpriteInfo.rowNumber);
 
-		bubbleSpawner::SpawnBubble(m_pPlayer->GetWorldPosition(), m_pSpriteComp->IsLookingLeft());
+		spawners::SpawnBubble(m_pPlayer->GetWorldPosition(), m_pSpriteComp->IsLookingLeft());
 	}
 }
 

@@ -64,6 +64,11 @@ namespace dae
 #endif //!NDEBUG
     }
 
+    void CollisionComponent::SetTag(const std::string& newTag)
+    {
+        m_CollisionTag = newTag;
+    }
+
     void CollisionComponent::SetCollision(bool collisionOn)
     {
         m_CollisionOn = collisionOn;

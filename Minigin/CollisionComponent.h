@@ -39,6 +39,7 @@ namespace dae
         const glm::vec2& GetOffset() const;
         const glm::vec2& GetSize() const;
 
+        void SetTag(const std::string& newTag);
         void SetCollision(bool collisionOn);
         GameObject* CheckForCollision(const std::string& collisionTag);
         GameObject* CheckForCollision(const glm::vec2& alternativeOffset, const glm::vec2& alternativeSize, const std::string& collisionTag);
@@ -56,7 +57,7 @@ namespace dae
 
         bool IsColliding(const Box& box, const Box& otherBox, CollidingSide sideToTest);
 
-        const std::string m_CollisionTag{};
+        std::string m_CollisionTag{};
 
         bool m_HasPhysicsComponent;
         bool m_CollisionOn;

@@ -1,5 +1,13 @@
 #include "ZenChanCaughtState.h"
-#include "ZenChanRunState.h"
+#include "ZenChanPoppedState.h"
+#include "EnemyComponent.h"
+#include "FloorCheckingComponent.h"
+#include "BubbleComponent.h"
+#include <PhysicsComponent.h>
+#include <CollisionComponent.h>
+#include <GameObject.h>
+#include <Minigin.h>
+#include <GameTime.h>
 
 ZenChanCaughtState::ZenChanCaughtState(dae::GameObject* pEnemy, dae::GameObject* pBubble) :
 	ZenChanState{},
@@ -38,13 +46,22 @@ ZenChanCaughtState::ZenChanCaughtState(dae::GameObject* pEnemy, dae::GameObject*
 
 std::unique_ptr<EnemyState> ZenChanCaughtState::Update()
 {
-	if (m_Pop)
-		return std::make_unique<ZenChanRunState>(m_pEnemy, m_pEnemy->GetComponent<EnemyComponent>());
+	switch (m_NextState)
+	{
+	case ZenChanCaughtState::NextState::Popped:
+		return std::make_unique<ZenChanPoppedState>(m_pEnemy);
+		break;
+	case ZenChanCaughtState::NextState::Free:
+		return std::make_unique<ZenChanRunState>(m_pEnemy, m_pEnemy->GetComponent<EnemyComponent>(), true);
+		break;
+	}
+	
 	return nullptr;
 }
 void ZenChanCaughtState::OnEnter()
 {
 	m_pEnemy->GetComponent<FloorCheckingComponent>()->SetHandleCollison(false);
+	m_pCollisionComp->SetTag(collisionTags::caughtEnemyTag);
 	m_pEnemy->SetLocalPos(0.f, 0.f);
 	m_pPhysicsComp->SetVelocityX(0);
 	m_pPhysicsComp->SetVelocityY(0);
@@ -54,8 +71,11 @@ void ZenChanCaughtState::OnEnter()
 void ZenChanCaughtState::OnExit()
 {
 	m_pEnemy->GetComponent<FloorCheckingComponent>()->SetHandleCollison(true);
+	m_pCollisionComp->SetTag(collisionTags::enemyTag);
 
 	m_pPhysicsComp->StartGravity();
+
+	m_pObservedSubject->RemoveObserver(this);
 }
 
 void ZenChanCaughtState::Notify(BubbleComponent* pSubject)
@@ -70,7 +90,8 @@ void ZenChanCaughtState::Notify(BubbleComponent* pSubject)
 		break;
 	case BubbleComponent::FloatingStage::Red:
 		m_pEnemy->SetParent(nullptr, true);
-		m_Pop = true;
+		if(pSubject->IsPoppedByPlayer()) m_NextState = NextState::Popped;
+		else m_NextState = NextState::Free;
 		break;
 	}
 }
