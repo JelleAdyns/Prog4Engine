@@ -74,8 +74,6 @@ void ZenChanCaughtState::OnExit()
 	m_pCollisionComp->SetTag(collisionTags::enemyTag);
 
 	m_pPhysicsComp->StartGravity();
-
-	m_pObservedSubject->RemoveObserver(this);
 }
 
 void ZenChanCaughtState::Notify(BubbleComponent* pSubject)
@@ -98,4 +96,9 @@ void ZenChanCaughtState::Notify(BubbleComponent* pSubject)
 void ZenChanCaughtState::AddSubjectPointer(dae::Subject<BubbleComponent>* pSubject)
 {
 	m_pObservedSubject = pSubject;
+}
+
+void ZenChanCaughtState::SetSubjectPointersInvalid()
+{
+	m_pObservedSubject = nullptr;
 }

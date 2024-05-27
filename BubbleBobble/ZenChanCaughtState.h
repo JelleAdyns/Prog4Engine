@@ -20,7 +20,10 @@ class ZenChanCaughtState final : public ZenChanState, public dae::Observer<Bubbl
 {
 public:
 	explicit ZenChanCaughtState(dae::GameObject* pEnemy, dae::GameObject* pBubble);
-	virtual ~ZenChanCaughtState() = default;
+	virtual ~ZenChanCaughtState()
+	{
+		if (m_pObservedSubject) m_pObservedSubject->RemoveObserver(this);
+	}
 
 	ZenChanCaughtState(const ZenChanCaughtState&) = delete;
 	ZenChanCaughtState(ZenChanCaughtState&&) noexcept = delete;
@@ -33,6 +36,7 @@ public:
 
 	virtual void Notify(BubbleComponent* pSubject) override;
 	virtual void AddSubjectPointer(dae::Subject<BubbleComponent>* pSubject) override;
+	virtual void SetSubjectPointersInvalid() override;
 
 private:
 

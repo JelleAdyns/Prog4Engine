@@ -57,11 +57,6 @@ void ZenChanFallingState::OnExit()
 	if (m_PlayerXPos < m_pEnemy->GetWorldPosition().x) pSpriteComp->LookLeft(true);
 	else pSpriteComp->LookLeft(false);
 	
-
-	for (auto& pSubject : m_pVecObservedSubjects)
-	{
-		pSubject->RemoveObserver(this);
-	}
 }
 
 void ZenChanFallingState::Notify(PlayerComponent* pSubject)
@@ -73,4 +68,12 @@ void ZenChanFallingState::Notify(PlayerComponent* pSubject)
 void ZenChanFallingState::AddSubjectPointer(dae::Subject<PlayerComponent>* pSubject)
 {
 	m_pVecObservedSubjects.push_back(pSubject);
+}
+
+void ZenChanFallingState::SetSubjectPointersInvalid()
+{
+	for (auto& pSubject : m_pVecObservedSubjects)
+	{
+		pSubject = nullptr;
+	}
 }

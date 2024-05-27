@@ -26,7 +26,7 @@ PlayerComponent::~PlayerComponent()
 {
 	for (dae::Subject<SpriteComponent>* pSpriteSubject : m_pVecObservedSpriteSubjects)
 	{
-		pSpriteSubject->RemoveObserver(this);
+		if(pSpriteSubject) pSpriteSubject->RemoveObserver(this);
 	}
 }
 
@@ -84,6 +84,14 @@ void PlayerComponent::Notify(SpriteComponent*)
 void PlayerComponent::AddSubjectPointer(dae::Subject<SpriteComponent>* pSubject)
 {
 	m_pVecObservedSpriteSubjects.emplace_back(pSubject);
+}
+
+void PlayerComponent::SetSubjectPointersInvalid()
+{
+	for (auto& pSubject : m_pVecObservedSpriteSubjects)
+	{
+		pSubject = nullptr;
+	}
 }
 
 void PlayerComponent::Shoot()

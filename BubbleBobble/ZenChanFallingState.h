@@ -19,7 +19,13 @@ class ZenChanFallingState final : public ZenChanState, public dae::Observer<Play
 {
 public:
 	explicit ZenChanFallingState(dae::GameObject* pEnemy, EnemyComponent* pEnemyComp, bool isAngry);
-	virtual ~ZenChanFallingState() = default;
+	virtual ~ZenChanFallingState()
+	{
+		for (dae::Subject<PlayerComponent>* pSpriteSubject : m_pVecObservedSubjects)
+		{
+			if (pSpriteSubject) pSpriteSubject->RemoveObserver(this);
+		}
+	}
 
 	ZenChanFallingState(const ZenChanFallingState&) = delete;
 	ZenChanFallingState(ZenChanFallingState&&) noexcept = delete;
@@ -32,6 +38,7 @@ public:
 
 	virtual void Notify(PlayerComponent* pSubject) override;
 	virtual void AddSubjectPointer(dae::Subject<PlayerComponent>* pSubject) override;
+	virtual void SetSubjectPointersInvalid() override;
 
 private:
 

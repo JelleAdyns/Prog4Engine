@@ -33,6 +33,8 @@ public:
 
 	virtual void Notify(LivesComponent* pSubject) override;
 	virtual void AddSubjectPointer(dae::Subject<LivesComponent>* pSubject) override;
+	virtual void SetSubjectPointersInvalid() override;
+
 private:
 
 	dae::TextComponent* m_pTextComponent;

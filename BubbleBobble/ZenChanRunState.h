@@ -20,7 +20,13 @@ class ZenChanRunState final : public ZenChanState, public dae::Observer<PlayerCo
 {
 public:
 	explicit ZenChanRunState(dae::GameObject* pEnemy, EnemyComponent* pEnemyComp, bool isAngry = false);
-	virtual ~ZenChanRunState() = default;
+	virtual ~ZenChanRunState()
+	{
+		for (dae::Subject<PlayerComponent>* pSpriteSubject : m_pVecObservedSpriteSubjects)
+		{
+			if (pSpriteSubject) pSpriteSubject->RemoveObserver(this);
+		}
+	}
 
 	ZenChanRunState(const ZenChanRunState&) = delete;
 	ZenChanRunState(ZenChanRunState&&) noexcept = delete;
@@ -33,6 +39,7 @@ public:
 	
 	virtual void Notify(PlayerComponent* pSubject) override;
 	virtual void AddSubjectPointer(dae::Subject<PlayerComponent>* pSubject) override;
+	virtual void SetSubjectPointersInvalid() override;
 
 private:
 

@@ -35,6 +35,7 @@ public:
 
 	virtual std::unique_ptr<PlayerState> Update() override
 	{
+
 		if (!m_pPlayerComp->IsInvincible())
 		{
 			 m_pCollisionComp->CheckForCollision(collisionTags::enemyTag);

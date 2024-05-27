@@ -51,11 +51,6 @@ void HitState::OnEnter()
 void HitState::OnExit()
 {
 
-	for (dae::Subject<SpriteComponent>* pSpriteSubject : m_pVecObservedSpriteSubjects)
-	{
-		pSpriteSubject->RemoveObserver(this);
-	}
-
 	m_pPlayer->GetComponent<dae::PhysicsComponent>()->StartGravity();
 
 	m_pMovementComp->RegisterAttackCommand();
@@ -95,6 +90,14 @@ void HitState::Notify(SpriteComponent*)
 void HitState::AddSubjectPointer(dae::Subject<SpriteComponent>* pSubject)
 {
 	m_pVecObservedSpriteSubjects.emplace_back(pSubject);
+}
+
+void HitState::SetSubjectPointersInvalid()
+{
+	for (auto& pSubject : m_pVecObservedSpriteSubjects)
+	{
+		pSubject = nullptr;
+	}
 }
 
 float HitState::GetHitSpriteOffset()

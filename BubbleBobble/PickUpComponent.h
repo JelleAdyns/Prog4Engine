@@ -7,6 +7,7 @@
 namespace dae
 {
 	class GameObject;
+	class CollisionComponent;
 }
 
 class ScoreUIComponent;
@@ -33,6 +34,9 @@ public:
 	PickUpType GetPickUpType() const;
 private:
 	PickUpType m_PickUpType;
+
+	dae::CollisionComponent* m_pCollisionComp;
+
 	std::unique_ptr<dae::Subject<PickUpComponent>> m_PickedUp;
 };
 

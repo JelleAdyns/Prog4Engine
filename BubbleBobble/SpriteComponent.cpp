@@ -5,12 +5,12 @@
 #include <ResourceManager.h>
 #include <GameTime.h>
 
-SpriteComponent::SpriteComponent(dae::GameObject* pOwner, const std::string& texturePath, int nrCols, int nrRows, float frameTime, bool needsUpdate, bool needsRowUpdate, PlayerComponent* pObserver) :
-	SpriteComponent{pOwner, std::move(dae::ResourceManager::GetInstance().LoadTexture(texturePath)), nrCols, nrRows, frameTime, needsUpdate, needsRowUpdate, pObserver}
+SpriteComponent::SpriteComponent(dae::GameObject* pOwner, const std::string& texturePath, int nrCols, int nrRows, float frameTime, bool needsUpdate, bool needsRowUpdate) :
+	SpriteComponent{pOwner, std::move(dae::ResourceManager::GetInstance().LoadTexture(texturePath)), nrCols, nrRows, frameTime, needsUpdate, needsRowUpdate}
 {
 
 }
-SpriteComponent::SpriteComponent(dae::GameObject* pOwner, std::unique_ptr<dae::Texture2D>&& pTexture, int nrCols, int nrRows, float frameTime, bool needsUpdate, bool needsRowUpdate, PlayerComponent* pObserver):
+SpriteComponent::SpriteComponent(dae::GameObject* pOwner, std::unique_ptr<dae::Texture2D>&& pTexture, int nrCols, int nrRows, float frameTime, bool needsUpdate, bool needsRowUpdate):
 	dae::Component{ pOwner },
 	m_SpriteIsDirty{false},
 	m_NeedsUpdate{ needsUpdate },
@@ -30,7 +30,7 @@ SpriteComponent::SpriteComponent(dae::GameObject* pOwner, std::unique_ptr<dae::T
 {
 
 
-	m_pRowFinished->AddObserver(pObserver);
+	//m_pRowFinished->AddObserver(pObserver);
 
 	m_EndHeightMarker = static_cast<float>(m_pTexture->GetTextureSize().y);
 

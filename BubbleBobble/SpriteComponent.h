@@ -26,8 +26,8 @@ public:
 	};
 
 
-	explicit SpriteComponent(dae::GameObject* pOwner, const std::string& texturePath, int nrCols, int nrRows, float frameTime, bool needsUpdate = true, bool needsRowUpdate = false, PlayerComponent* pObserver = nullptr);
-	explicit SpriteComponent(dae::GameObject* pOwner, std::unique_ptr<dae::Texture2D>&& pTexture, int nrCols, int nrRows, float frameTime, bool needsUpdate = true, bool needsRowUpdate = false, PlayerComponent* pObserver = nullptr);
+	explicit SpriteComponent(dae::GameObject* pOwner, const std::string& texturePath, int nrCols, int nrRows, float frameTime, bool needsUpdate = true, bool needsRowUpdate = false);
+	explicit SpriteComponent(dae::GameObject* pOwner, std::unique_ptr<dae::Texture2D>&& pTexture, int nrCols, int nrRows, float frameTime, bool needsUpdate = true, bool needsRowUpdate = false);
 	virtual ~SpriteComponent() = default;
 
 

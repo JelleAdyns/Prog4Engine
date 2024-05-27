@@ -259,8 +259,5 @@
     <ClInclude Include="ZenChanPoppedState.h">
       <Filter>Source Files\States\EnemyState\ZenChanStates</Filter>
     </ClInclude>
-    <ClInclude Include="ZenChanAngryState.h">
-      <Filter>Source Files\States\EnemyState\ZenChanStates</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

@@ -14,7 +14,7 @@ LivesUIComponent::~LivesUIComponent()
 {
     for (auto& pSubject : m_pVecObservedSubjects)
     {
-        pSubject->RemoveObserver(this);
+        if(pSubject) pSubject->RemoveObserver(this);
     }
 }
 void LivesUIComponent::Start()
@@ -38,4 +38,12 @@ void LivesUIComponent::Notify(LivesComponent* pSubject)
 void LivesUIComponent::AddSubjectPointer(dae::Subject<LivesComponent>* pSubject)
 {
     m_pVecObservedSubjects.emplace_back( pSubject );
+}
+
+void LivesUIComponent::SetSubjectPointersInvalid()
+{
+    for (auto& pSubject : m_pVecObservedSubjects)
+    {
+        pSubject = nullptr;
+    }
 }

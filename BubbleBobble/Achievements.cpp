@@ -19,7 +19,7 @@ Achievements::~Achievements()
 {
     for (auto& pSubject : m_pVecObservedSubjects)
     {
-        pSubject->RemoveObserver(this);
+        if(pSubject) pSubject->RemoveObserver(this);
     }
 }
 
@@ -35,6 +35,14 @@ void Achievements::Notify(ScoreUIComponent* pScoreUIComponent)
 void Achievements::AddSubjectPointer(dae::Subject<ScoreUIComponent>* pScoreUIComponent)
 {
     m_pVecObservedSubjects.emplace_back(pScoreUIComponent);
+}
+
+void Achievements::SetSubjectPointersInvalid()
+{
+	for (auto& pSubject : m_pVecObservedSubjects)
+	{
+		pSubject = nullptr;
+	}
 }
 
 /*void Achievements::SetSteamAchievements(CSteamAchievements* pSteamAchievements)

@@ -32,6 +32,7 @@ public:
 
 	virtual void Notify(PickUpComponent* pSubject) override;
 	virtual void AddSubjectPointer(dae::Subject<PickUpComponent>* pSubject) override;
+	virtual void SetSubjectPointersInvalid() override;
 
 	int GetScore() const;
 

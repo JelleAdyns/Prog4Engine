@@ -1,5 +1,8 @@
 #include "PickUpComponent.h"
 #include "ScoreUIComponent.h"
+#include "CollisionTags.h"
+#include <CollisionComponent.h>
+#include <GameObject.h>
 
 PickUpComponent::PickUpComponent(dae::GameObject* pOwner, PickUpComponent::PickUpType pickUpType, ScoreUIComponent* pObserver):
 	dae::Component{pOwner},
@@ -11,10 +14,13 @@ PickUpComponent::PickUpComponent(dae::GameObject* pOwner, PickUpComponent::PickU
 
 void PickUpComponent::Start()
 {
+	if (!m_pCollisionComp) m_pCollisionComp = GetOwner()->GetComponent<dae::CollisionComponent>();
 }
 
 void PickUpComponent::Update()
 {
+	m_pCollisionComp->CheckForCollision(collisionTags::playerTag);
+	
 }
 
 void PickUpComponent::PrepareImGuiRender()
@@ -24,6 +30,7 @@ void PickUpComponent::PrepareImGuiRender()
 void PickUpComponent::PickUp()
 {
 	m_PickedUp->NotifyObservers(this);
+	GetOwner()->MarkDead();
 }
 
 PickUpComponent::PickUpType PickUpComponent::GetPickUpType() const

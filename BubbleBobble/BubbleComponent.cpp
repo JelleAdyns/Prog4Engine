@@ -26,7 +26,7 @@ BubbleComponent::~BubbleComponent()
 {
 	for (auto& pSubject : m_pVecObservedSpriteSubjects)
 	{
-		pSubject->RemoveObserver(this);
+		if(pSubject) pSubject->RemoveObserver(this);
 	}
 }
 
@@ -99,6 +99,14 @@ void BubbleComponent::Notify(SpriteComponent* )
 void BubbleComponent::AddSubjectPointer(dae::Subject<SpriteComponent>* pSubject)
 {
 	m_pVecObservedSpriteSubjects.push_back(pSubject);
+}
+
+void BubbleComponent::SetSubjectPointersInvalid()
+{
+	for (auto& pSubject : m_pVecObservedSpriteSubjects)
+	{
+		pSubject = nullptr;
+	}
 }
 
 void BubbleComponent::AddObserver(dae::Observer<BubbleComponent>* pObserver)

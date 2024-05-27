@@ -21,7 +21,13 @@ public:
 		m_pMovementComp{ pMovementComp },
 		m_pSpriteComp{ pPlayer->GetComponent<SpriteComponent>()}
 	{}
-	virtual ~HitState() = default;
+	virtual ~HitState()
+	{
+		for (dae::Subject<SpriteComponent>* pSpriteSubject : m_pVecObservedSpriteSubjects)
+		{
+			if(pSpriteSubject) pSpriteSubject->RemoveObserver(this);
+		}
+	}
 
 	HitState(const HitState&) = delete;
 	HitState(HitState&&) noexcept = delete;
@@ -36,6 +42,7 @@ public:
 
 	virtual void Notify(SpriteComponent* pSpriteComp) override;
 	virtual void AddSubjectPointer(dae::Subject<SpriteComponent>* pSubject) override;
+	virtual void SetSubjectPointersInvalid() override;
 
 
 	static float GetHitSpriteOffset();

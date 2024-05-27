@@ -59,10 +59,7 @@ void ZenChanRunState::OnEnter()
 }
 void ZenChanRunState::OnExit()
 {
-	for (dae::Subject<PlayerComponent>* pSubject : m_pVecObservedSpriteSubjects)
-	{
-		pSubject->RemoveObserver(this);
-	}
+
 }
 
 void ZenChanRunState::Notify(PlayerComponent* pSubject)
@@ -83,4 +80,12 @@ void ZenChanRunState::Notify(PlayerComponent* pSubject)
 void ZenChanRunState::AddSubjectPointer(dae::Subject<PlayerComponent>* pSubject)
 {
 	m_pVecObservedSpriteSubjects.push_back(pSubject);
+}
+
+void ZenChanRunState::SetSubjectPointersInvalid()
+{
+	for (auto& pSubject : m_pVecObservedSpriteSubjects)
+	{
+		pSubject = nullptr;
+	}
 }

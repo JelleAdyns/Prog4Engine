@@ -13,7 +13,13 @@ namespace dae
 	{
 	public:
 		Subject() = default;
-		~Subject() = default;
+		~Subject()
+		{
+			for (Observer<T>* pObserver : m_pVecObservers)
+			{
+				pObserver->SetSubjectPointersInvalid();
+			}
+		}
 
 		Subject(const Subject&) = delete;
 		Subject(Subject&&) noexcept = delete;

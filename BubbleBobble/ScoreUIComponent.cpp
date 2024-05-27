@@ -19,7 +19,7 @@ ScoreUIComponent::~ScoreUIComponent()
 {
     for (auto& pSubject : m_pVecObservedSubjects)
     {
-        pSubject->RemoveObserver(this);
+        if(pSubject) pSubject->RemoveObserver(this);
     }
 }
 
@@ -53,6 +53,14 @@ void ScoreUIComponent::Notify(PickUpComponent* pSubject)
 void ScoreUIComponent::AddSubjectPointer(dae::Subject<PickUpComponent>* pSubject)
 {
     m_pVecObservedSubjects.emplace_back(pSubject);
+}
+
+void ScoreUIComponent::SetSubjectPointersInvalid()
+{
+	for (auto& pSubject : m_pVecObservedSubjects)
+	{
+		pSubject = nullptr;
+	}
 }
 
 int ScoreUIComponent::GetScore() const

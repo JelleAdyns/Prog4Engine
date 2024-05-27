@@ -42,6 +42,7 @@ public:
 
 	virtual void Notify(SpriteComponent* pSpriteComp) override;
 	virtual void AddSubjectPointer(dae::Subject<SpriteComponent>* pSubject) override;
+	virtual void SetSubjectPointersInvalid() override;
 
 	void AddObserver(dae::Observer<BubbleComponent>* pObserver);
 	void SetOccupied();
