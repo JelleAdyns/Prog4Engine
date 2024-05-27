@@ -1,16 +1,16 @@
-#include "ZenChanFallingState.h"
-#include "ZenChanRunState.h"
+#include "MaitaFallingState.h"
+#include "MaitaRunState.h"
 #include "SpriteComponent.h"
-#include "ZenChanComponent.h"
 #include "FloorCheckingComponent.h"
+#include "MaitaComponent.h"
 #include <PhysicsComponent.h>
 #include <CollisionComponent.h>
 #include <GameObject.h>
 #include <Minigin.h>
 
-ZenChanFallingState::ZenChanFallingState(dae::GameObject* pEnemy, ZenChanComponent* pEnemyComp, bool isAngry) :
-	ZenChanState{},
-	m_IsAngry{isAngry},
+MaitaFallingState::MaitaFallingState(dae::GameObject* pEnemy, MaitaComponent* pEnemyComp, bool isAngry) :
+	MaitaState{},
+	m_IsAngry{ isAngry },
 	m_pEnemy{ pEnemy },
 	m_pEnemyComp{ pEnemyComp },
 	m_pPhysicsComp{ pEnemy->GetComponent<dae::PhysicsComponent>() },
@@ -19,29 +19,29 @@ ZenChanFallingState::ZenChanFallingState(dae::GameObject* pEnemy, ZenChanCompone
 {}
 
 
-std::unique_ptr<ZenChanState> ZenChanFallingState::Update()
+std::unique_ptr<MaitaState> MaitaFallingState::Update()
 {
-	dae::GameObject* pCollidedObject = m_pCollisionComp->CheckForCollision(collisionTags::bubbleTag);
-	if (pCollidedObject)
-	{
-		if (!pCollidedObject->GetComponent<BubbleComponent>()->IsOccupied())
-		{
-			return std::make_unique<ZenChanCaughtState>(m_pEnemy, pCollidedObject);
-		}
-	}
+	//dae::GameObject* pCollidedObject = m_pCollisionComp->CheckForCollision(collisionTags::bubbleTag);
+	//if (pCollidedObject)
+	//{
+	//	if (!pCollidedObject->GetComponent<BubbleComponent>()->IsOccupied())
+	//	{
+	//		return std::make_unique<MaitaCaughtState>(m_pEnemy, pCollidedObject);
+	//	}
+	//}
 
-	if (m_pEnemy->GetWorldPosition().y > dae::Minigin::GetWindowSize().y) 
+	if (m_pEnemy->GetWorldPosition().y > dae::Minigin::GetWindowSize().y)
 	{
 		m_pEnemy->SetLocalPos(m_pEnemy->GetLocalPosition().x, -50);
 	}
 	if (m_pFloorCheckingComp->IsOnGround())
 	{
-		return std::make_unique<ZenChanRunState>(m_pEnemy, m_pEnemyComp, m_IsAngry);
+		return std::make_unique<MaitaRunState>(m_pEnemy, m_pEnemyComp, m_IsAngry);
 	}
 
 	return nullptr;
 }
-void ZenChanFallingState::OnEnter()
+void MaitaFallingState::OnEnter()
 {
 	for (dae::Subject<PlayerComponent>* pSubject : m_pEnemyComp->GetPlayerSubjects())
 	{
@@ -49,28 +49,28 @@ void ZenChanFallingState::OnEnter()
 	}
 	m_pPhysicsComp->SetVelocityX(0);
 }
-void ZenChanFallingState::OnExit()
+void MaitaFallingState::OnExit()
 {
 
 	SpriteComponent* pSpriteComp = m_pEnemy->GetComponent<SpriteComponent>();
 
 	if (m_PlayerXPos < m_pEnemy->GetWorldPosition().x) pSpriteComp->LookLeft(true);
 	else pSpriteComp->LookLeft(false);
-	
+
 }
 
-void ZenChanFallingState::Notify(PlayerComponent* pSubject)
+void MaitaFallingState::Notify(PlayerComponent* pSubject)
 {
 	auto subjectPos = pSubject->GetPos();
 	m_PlayerXPos = subjectPos.x;
 }
 
-void ZenChanFallingState::AddSubjectPointer(dae::Subject<PlayerComponent>* pSubject)
+void MaitaFallingState::AddSubjectPointer(dae::Subject<PlayerComponent>* pSubject)
 {
 	m_pVecObservedSubjects.push_back(pSubject);
 }
 
-void ZenChanFallingState::SetSubjectPointersInvalid()
+void MaitaFallingState::SetSubjectPointersInvalid()
 {
 	for (auto& pSubject : m_pVecObservedSubjects)
 	{

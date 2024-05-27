@@ -411,8 +411,9 @@ void Game::MakePlayer(dae::Scene& scene) const
 	dae::PhysicsComponent::SetGravity(300);
 	player1->AddComponent<PlayerComponent>();
 	PlayerComponent* playerComp = player1->GetComponent<PlayerComponent>();
-	player1->AddComponent<SpriteComponent>("Textures/BubStates.png", 4, 8, 0.1f, true, false, playerComp);
+	player1->AddComponent<SpriteComponent>("Textures/BubStates.png", 4, 8, 0.1f, true, false);
 	SpriteComponent* spriteComp = player1->GetComponent<SpriteComponent>();
+	spriteComp->AddObserver(playerComp);
 	spriteComp->SetHeightMarkers(0, 64*2);
 
 	const auto& destRctSize = spriteComp->GetDestRectSize();
@@ -430,9 +431,9 @@ void Game::MakePlayer(dae::Scene& scene) const
 	auto enemy = std::make_unique<dae::GameObject>(128, 120);
 	enemy->AddRenderComponent();
 	enemy->AddPhysicsComponent();
-	enemy->AddComponent<EnemyComponent>(EnemyComponent::EnemyType::ZenChan);
+	enemy->AddComponent<ZenChanComponent>();
 	//enemy->AddComponent<MovementComponent>(-160.f, 60.f);
-	EnemyComponent* enemyComp = enemy->GetComponent<EnemyComponent>();
+	ZenChanComponent* enemyComp = enemy->GetComponent<ZenChanComponent>();
 	enemyComp->AddPlayerObserver(playerComp);
 	enemy->AddComponent<SpriteComponent>("Textures/Zen-ChanStates.png", 4, 7, 0.1f);
 	SpriteComponent* enemySpriteComp = enemy->GetComponent<SpriteComponent>();
@@ -452,9 +453,9 @@ void Game::MakePlayer(dae::Scene& scene) const
 	auto enemy2 = std::make_unique<dae::GameObject>(200, 120);
 	enemy2->AddRenderComponent();
 	enemy2->AddPhysicsComponent();
-	enemy2->AddComponent<EnemyComponent>(EnemyComponent::EnemyType::ZenChan);
+	enemy2->AddComponent<ZenChanComponent>();
 	//enemy2->AddComponent<MovementComponent>(-160.f, 60.f);
-	EnemyComponent* enemy2Comp = enemy2->GetComponent<EnemyComponent>();
+	ZenChanComponent* enemy2Comp = enemy2->GetComponent<ZenChanComponent>();
 	enemy2Comp->AddPlayerObserver(playerComp);
 	enemy2->AddComponent<SpriteComponent>("Textures/Zen-ChanStates.png", 4, 7, 0.1f);
 	SpriteComponent* enemy2SpriteComp = enemy2->GetComponent<SpriteComponent>();
@@ -474,14 +475,15 @@ void Game::MakePlayer(dae::Scene& scene) const
 	auto enemy3 = std::make_unique<dae::GameObject>(220, 120);
 	enemy3->AddRenderComponent();
 	enemy3->AddPhysicsComponent();
-	enemy3->AddComponent<EnemyComponent>(EnemyComponent::EnemyType::ZenChan);
+	enemy3->AddComponent<MaitaComponent>();
 	//enemy3->AddComponent<MovementComponent>(-160.f, 60.f);
-	EnemyComponent* enemy3Comp = enemy3->GetComponent<EnemyComponent>();
+	MaitaComponent* enemy3Comp = enemy3->GetComponent<MaitaComponent>();
 	enemy3Comp->AddPlayerObserver(playerComp);
-	enemy3->AddComponent<SpriteComponent>("Textures/Zen-ChanStates.png", 4, 7, 0.1f);
+	enemy3->AddComponent<SpriteComponent>("Textures/MaitaStates.png", 5, 9, 0.1f);
 	SpriteComponent* enemy3SpriteComp = enemy3->GetComponent<SpriteComponent>();
 
-	const auto& enemy3DestRctSize = enemy3SpriteComp->GetDestRectSize();
+	auto enemy3DestRctSize = enemy3SpriteComp->GetDestRectSize();
+	enemy3DestRctSize.x = 16;
 
 	enemy3->AddComponent<dae::CollisionComponent>(
 		glm::vec2{ collisionOffset ,collisionOffset },

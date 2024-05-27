@@ -168,7 +168,6 @@
     <ClCompile Include="ButtonComponent.cpp" />
     <ClCompile Include="ButtonHandlerComponent.cpp" />
     <ClCompile Include="CacheExperimentComponent.cpp" />
-    <ClCompile Include="EnemyComponent.cpp" />
     <ClCompile Include="FloorCheckingComponent.cpp" />
     <ClCompile Include="FPSComponent.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -177,6 +176,9 @@
     <ClCompile Include="LivesComponent.cpp" />
     <ClCompile Include="LivesUIComponent.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="MaitaComponent.cpp" />
+    <ClCompile Include="MaitaFallingState.cpp" />
+    <ClCompile Include="MaitaRunState.cpp" />
     <ClCompile Include="MovementComponent.cpp" />
     <ClCompile Include="PickUpComponent.cpp" />
     <ClCompile Include="PlayerComponent.cpp" />
@@ -187,6 +189,7 @@
     <ClCompile Include="TrashTheCacheIntComponent.cpp" />
     <ClCompile Include="WallCheckingComponent.cpp" />
     <ClCompile Include="ZenChanCaughtState.cpp" />
+    <ClCompile Include="ZenChanComponent.cpp" />
     <ClCompile Include="ZenChanFallingState.cpp" />
     <ClCompile Include="ZenChanRunState.cpp" />
   </ItemGroup>
@@ -194,12 +197,14 @@
     <ClInclude Include="Achievements.h" />
     <ClInclude Include="ActivateButtonCommand.h" />
     <ClInclude Include="BubbleComponent.h" />
+    <ClInclude Include="MaitaComponent.h" />
+    <ClInclude Include="MaitaFallingState.h" />
+    <ClInclude Include="MaitaJumpState.h" />
     <ClInclude Include="Spawners.h" />
     <ClInclude Include="CollisionTags.h" />
-    <ClInclude Include="EnemyComponent.h" />
-    <ClInclude Include="EnemyState.h" />
     <ClInclude Include="MovementComponent.h" />
     <ClInclude Include="ZenChanCaughtState.h" />
+    <ClInclude Include="ZenChanComponent.h" />
     <ClInclude Include="ZenChanJumpState.h" />
     <ClInclude Include="MaitaRunState.h" />
     <ClInclude Include="MaitaState.h" />
@@ -226,7 +231,6 @@
     <ClInclude Include="LivesUIComponent.h" />
     <ClInclude Include="LoadSceneCommand.h" />
     <ClInclude Include="MovementCommands.h" />
-    <ClInclude Include="PickUpCommand.h" />
     <ClInclude Include="PickUpComponent.h" />
     <ClInclude Include="PlayerComponent.h" />
     <ClInclude Include="PlayerState.h" />

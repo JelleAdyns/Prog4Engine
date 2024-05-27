@@ -13,7 +13,6 @@ namespace dae
 	class RenderComponent;
 }
 
-class EnemyComponent;
 class SpriteComponent;
 class WallCheckingComponent;
 class BubbleComponent final : public dae::Component, public dae::Observer<SpriteComponent>

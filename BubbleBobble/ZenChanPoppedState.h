@@ -2,9 +2,10 @@
 #define ZENCHANPOPPEDSTATE_H
 
 #include "ZenChanState.h"
+#include "Spawners.h"
 #include "SpriteComponent.h"
-#include "EnemyComponent.h"
 #include "FloorCheckingComponent.h"
+#include "WallCheckingComponent.h"
 #include <PhysicsComponent.h>
 #include <CollisionComponent.h>
 #include <GameObject.h>
@@ -31,9 +32,13 @@ public:
 	ZenChanPoppedState& operator= (const ZenChanPoppedState&) = delete;
 	ZenChanPoppedState& operator= (ZenChanPoppedState&&) noexcept = delete;
 
-	virtual std::unique_ptr<EnemyState> Update() override
+	virtual std::unique_ptr<ZenChanState> Update() override
 	{
-		if (m_pFloorComp->IsOnGround()) m_pEnemy->MarkDead();
+		if (m_pFloorComp->IsOnGround())
+		{
+			spawners::SpawnPickUp(m_pEnemy->GetWorldPosition(), PickUpComponent::PickUpType::Melon);
+			m_pEnemy->MarkDead();
+		}
 		if (m_pWallComp->CollidingWithLeft()) m_pPhysicsComp->SetVelocityX(m_Speed);
 		if (m_pWallComp->CollidingWithRight()) m_pPhysicsComp->SetVelocityX(-m_Speed);
 		return nullptr;

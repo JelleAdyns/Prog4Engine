@@ -8,9 +8,11 @@ namespace dae
 {
 	class GameObject;
 	class CollisionComponent;
+	class RenderComponent;
 }
 
 class ScoreUIComponent;
+class SpriteComponent;
 class PickUpComponent final : public dae::Component
 {
 public:
@@ -30,12 +32,23 @@ public:
 	virtual void Start() override;
 	virtual void Update() override;
 	virtual void PrepareImGuiRender() override;
-	void PickUp();
+
 	PickUpType GetPickUpType() const;
 private:
+	void HandleTimers();
+
 	PickUpType m_PickUpType;
 
+	float m_Timer{};
+	static constexpr float m_MaxTimeAlive{ 10.f };
+	static constexpr float m_TimeToFlicker{ m_MaxTimeAlive - 3.f };
+
+	float m_FlickerTimer{};
+	static constexpr float m_FlickerDelay{ 0.2f };
+
 	dae::CollisionComponent* m_pCollisionComp;
+	dae::RenderComponent* m_pRenderComp;
+	SpriteComponent* m_pSpriteComp;
 
 	std::unique_ptr<dae::Subject<PickUpComponent>> m_PickedUp;
 };

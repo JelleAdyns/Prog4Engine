@@ -2,7 +2,9 @@
 #include "MovementCommands.h"
 #include "ShootCommand.h"
 #include <InputCommandBinder.h>
+#include <Controller.h>
 #include <KeyState.h>
+
 
 uint8_t MovementComponent::m_NrOfPlayers{};
 

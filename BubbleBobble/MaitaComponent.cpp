@@ -1,11 +1,10 @@
-#include "EnemyComponent.h"
+#include "MaitaComponent.h"
 #include "PlayerComponent.h"
 #include <PhysicsComponent.h>
 #include <GameObject.h>
 
-EnemyComponent::EnemyComponent(dae::GameObject* pOwner, EnemyType enemyType):
-	dae::Component{pOwner},
-	m_EnemyType{enemyType},
+MaitaComponent::MaitaComponent(dae::GameObject* pOwner) :
+	dae::Component{ pOwner },
 	m_pCurrState{},
 	m_pPhysicsComp{},
 	m_pSpriteComp{},
@@ -13,45 +12,36 @@ EnemyComponent::EnemyComponent(dae::GameObject* pOwner, EnemyType enemyType):
 {
 }
 
-void EnemyComponent::Start()
+void MaitaComponent::Start()
 {
 	if (!m_pPhysicsComp) m_pPhysicsComp = GetOwner()->GetComponent<dae::PhysicsComponent>();
 	if (!m_pSpriteComp) m_pSpriteComp = GetOwner()->GetComponent<SpriteComponent>();
 }
 
-void EnemyComponent::Update()
+void MaitaComponent::Update()
 {
-	
+
 	UpdateStates();
 
 	if (m_pPhysicsComp->GetVelocity().x < 0) m_pSpriteComp->LookLeft(true);
 	if (m_pPhysicsComp->GetVelocity().x > 0) m_pSpriteComp->LookLeft(false);
-	
+
 }
 
-void EnemyComponent::PrepareImGuiRender()
+void MaitaComponent::PrepareImGuiRender()
 {
 }
 
-void EnemyComponent::AddPlayerObserver(PlayerComponent* pSubject)
+void MaitaComponent::AddPlayerObserver(PlayerComponent* pSubject)
 {
 	m_SubjectsForState.push_back(pSubject->GetSubject());
 }
 
-void EnemyComponent::UpdateStates()
+void MaitaComponent::UpdateStates()
 {
 	if (!m_pCurrState)
 	{
-		switch (m_EnemyType)
-		{
-		case EnemyType::ZenChan:
-			m_pCurrState = std::make_unique<ZenChanRunState>(GetOwner(), this);
-			break;
-		case EnemyType::Maita:
-			m_pCurrState = std::make_unique<MaitaRunState>(GetOwner(), this);
-			break;
-		}
-
+		m_pCurrState = std::make_unique<MaitaRunState>(GetOwner(), this);
 		m_pCurrState->OnEnter();
 	}
 

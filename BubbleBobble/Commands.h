@@ -5,7 +5,6 @@
 #include <GameObjectCommand.h>
 #include "MovementCommands.h"
 #include "KillCommand.h"
-#include "PickUpCommand.h"
 #include "LoadSceneCommand.h"
 #include "SelectButtonCommand.h"
 #include "ActivateButtonCommand.h"

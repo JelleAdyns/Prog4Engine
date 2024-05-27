@@ -1,7 +1,7 @@
 #include "BubbleComponent.h"
-#include "EnemyComponent.h"
 #include "WallCheckingComponent.h"
 #include "SpriteComponent.h"
+#include "CollisionTags.h"
 #include <GameObject.h>
 #include <PhysicsComponent.h>
 #include <CollisionComponent.h>

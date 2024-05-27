@@ -16,7 +16,6 @@ namespace dae
 
 class SpriteComponent;
 class MovementComponent;
-class EnemyComponent;
 class PlayerComponent final : public dae::Component, public dae::Observer<SpriteComponent>
 {
 public:

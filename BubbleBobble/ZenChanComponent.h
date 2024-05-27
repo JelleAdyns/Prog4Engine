@@ -1,5 +1,5 @@
-#ifndef ENEMYCOMPONENT_H
-#define ENEMYCOMPONENT_H
+#ifndef ZENCHANCOMPONENT_H
+#define ZENCHANCOMPONENT_H
 
 #include <Component.h>
 #include <Subject.h>
@@ -10,21 +10,16 @@ namespace dae
 	class PhysicsComponent;
 }
 class PlayerComponent;
-class EnemyComponent final : public dae::Component
+class ZenChanComponent final : public dae::Component
 {
 public:
-	enum class EnemyType
-	{
-		ZenChan,
-		Maita
-	};
 
-	explicit EnemyComponent(dae::GameObject* pOwner, EnemyType enemyType);
-	virtual ~EnemyComponent() = default;
-	EnemyComponent(const EnemyComponent&) = delete;
-	EnemyComponent(EnemyComponent&&) noexcept = delete;
-	EnemyComponent& operator= (const EnemyComponent&) = delete;
-	EnemyComponent& operator= (EnemyComponent&&) noexcept = delete;
+	explicit ZenChanComponent(dae::GameObject* pOwner);
+	virtual ~ZenChanComponent() = default;
+	ZenChanComponent(const ZenChanComponent&) = delete;
+	ZenChanComponent(ZenChanComponent&&) noexcept = delete;
+	ZenChanComponent& operator= (const ZenChanComponent&) = delete;
+	ZenChanComponent& operator= (ZenChanComponent&&) noexcept = delete;
 
 	virtual void Start() override;
 	virtual void Update() override;
@@ -37,8 +32,7 @@ public:
 private:
 	void UpdateStates();
 
-	const EnemyType m_EnemyType;
-	std::unique_ptr<EnemyState> m_pCurrState;
+	std::unique_ptr<ZenChanState> m_pCurrState;
 
 	dae::PhysicsComponent* m_pPhysicsComp;
 	SpriteComponent* m_pSpriteComp;
@@ -48,4 +42,4 @@ private:
 
 
 
-#endif // !ENEMYCOMPONENT_H
+#endif // !ZENCHANCOMPONENT_H

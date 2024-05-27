@@ -1,6 +1,6 @@
 #include "ZenChanCaughtState.h"
 #include "ZenChanPoppedState.h"
-#include "EnemyComponent.h"
+#include "ZenChanComponent.h"
 #include "FloorCheckingComponent.h"
 #include "BubbleComponent.h"
 #include <PhysicsComponent.h>
@@ -44,7 +44,7 @@ ZenChanCaughtState::ZenChanCaughtState(dae::GameObject* pEnemy, dae::GameObject*
 };
 
 
-std::unique_ptr<EnemyState> ZenChanCaughtState::Update()
+std::unique_ptr<ZenChanState> ZenChanCaughtState::Update()
 {
 	switch (m_NextState)
 	{
@@ -52,7 +52,7 @@ std::unique_ptr<EnemyState> ZenChanCaughtState::Update()
 		return std::make_unique<ZenChanPoppedState>(m_pEnemy);
 		break;
 	case ZenChanCaughtState::NextState::Free:
-		return std::make_unique<ZenChanRunState>(m_pEnemy, m_pEnemy->GetComponent<EnemyComponent>(), true);
+		return std::make_unique<ZenChanRunState>(m_pEnemy, m_pEnemy->GetComponent<ZenChanComponent>(), true);
 		break;
 	}
 	

@@ -12,7 +12,7 @@ namespace dae
 	class PhysicsComponent;
 }
 
-class EnemyComponent;
+class MaitaComponent;
 class FloorCheckingComponent;
 class BubbleComponent;
 
@@ -30,7 +30,7 @@ public:
 	ZenChanCaughtState& operator= (const ZenChanCaughtState&) = delete;
 	ZenChanCaughtState& operator= (ZenChanCaughtState&&) noexcept = delete;
 
-	virtual std::unique_ptr<EnemyState> Update() override;
+	virtual std::unique_ptr<ZenChanState> Update() override;
 	virtual void OnEnter() override;
 	virtual void OnExit() override;
 

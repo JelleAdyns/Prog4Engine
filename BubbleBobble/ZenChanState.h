@@ -1,14 +1,12 @@
 #ifndef ZENCHANSTATE_H
 #define ZENCHANSTATE_H
 
-#include "EnemyState.h"
+#include <memory>
 
-class ZenChanState : public EnemyState
+class ZenChanState
 {
 public:
-	ZenChanState() :
-		EnemyState{} 
-	{}
+	ZenChanState() = default;
 	virtual ~ZenChanState() = default;
 
 	ZenChanState(const ZenChanState&) = delete;
@@ -16,7 +14,7 @@ public:
 	ZenChanState& operator= (const ZenChanState&) = delete;
 	ZenChanState& operator= (ZenChanState&&) noexcept = delete;
 
-	virtual std::unique_ptr<EnemyState> Update() = 0;
+	virtual std::unique_ptr<ZenChanState> Update() = 0;
 	virtual void OnEnter() = 0;
 	virtual void OnExit() = 0;
 

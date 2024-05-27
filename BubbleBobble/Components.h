@@ -23,7 +23,8 @@
 #include "WallCheckingComponent.h"
 #include "FloorCheckingComponent.h"
 #include "PlayerComponent.h"
-#include "EnemyComponent.h"
+#include "ZenChanComponent.h"
+#include "MaitaComponent.h"
 #include "MovementComponent.h"
 #include "BubbleComponent.h"
 

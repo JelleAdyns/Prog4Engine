@@ -1,20 +1,13 @@
-#include "ZenChanRunState.h"
-#include "ZenChanFallingState.h"
-#include "ZenChanJumpState.h"
-#include "ZenChanCaughtState.h"
-#include "ZenChanComponent.h"
+#include "MaitaRunState.h"
 #include "SpriteComponent.h"
-#include "WallCheckingComponent.h"
-#include "FloorCheckingComponent.h"
-#include <GameTime.h>
-#include <GameObject.h>
+#include "MaitaComponent.h"
 #include <PhysicsComponent.h>
-#include <CollisionComponent.h>
+#include <GameObject.h>
 
-ZenChanRunState::ZenChanRunState(dae::GameObject* pEnemy, ZenChanComponent* pEnemyComp, bool isAngry) :
-	ZenChanState{},
+MaitaRunState::MaitaRunState(dae::GameObject* pEnemy, MaitaComponent* pEnemyComp, bool isAngry) :
+	MaitaState{},
 	m_Speed{ isAngry ? m_GeneralSpeed * 2.f : m_GeneralSpeed },
-	m_IsAngry{isAngry},
+	m_IsAngry{ false },
 	m_pEnemy{ pEnemy },
 	m_pEnemyComp{ pEnemyComp },
 	m_pPhysicsComp{ pEnemy->GetComponent<dae::PhysicsComponent>() },
@@ -23,27 +16,20 @@ ZenChanRunState::ZenChanRunState(dae::GameObject* pEnemy, ZenChanComponent* pEne
 	m_pFloorCheckingComp{ pEnemy->GetComponent<FloorCheckingComponent>() },
 	m_pCollisionComp{ pEnemy->GetComponent<dae::CollisionComponent>() }
 {}
-std::unique_ptr<ZenChanState> ZenChanRunState::Update()
-{
-	dae::GameObject* pCollidedObject = m_pCollisionComp->CheckForCollision(collisionTags::bubbleTag);
-	if (pCollidedObject)
-	{
-		if(!pCollidedObject->GetComponent<BubbleComponent>()->IsOccupied())
-		{
-			return std::make_unique<ZenChanCaughtState>(m_pEnemy, pCollidedObject);
-		}
-	}
 
-	if (m_HasToJump) return std::make_unique<ZenChanJumpState>(m_pEnemy, m_pEnemyComp, m_IsAngry);
-	
-	if (!m_pFloorCheckingComp->IsOnGround()) return std::make_unique<ZenChanFallingState>(m_pEnemy, m_pEnemyComp, m_IsAngry);
+std::unique_ptr<MaitaState> MaitaRunState::Update()
+{
+	if (m_HasToJump) return std::make_unique<MaitaJumpState>(m_pEnemy, m_pEnemyComp, m_IsAngry);
+
+	if (!m_pFloorCheckingComp->IsOnGround()) return std::make_unique<MaitaFallingState>(m_pEnemy, m_pEnemyComp, m_IsAngry);
 
 	if (m_pWallCheckingComp->CollidingWithLeft()) m_pPhysicsComp->SetVelocityX(m_Speed);
 	if (m_pWallCheckingComp->CollidingWithRight()) m_pPhysicsComp->SetVelocityX(-m_Speed);
 
 	return nullptr;
 }
-void ZenChanRunState::OnEnter()
+
+void MaitaRunState::OnEnter()
 {
 	for (dae::Subject<PlayerComponent>* pSubject : m_pEnemyComp->GetPlayerSubjects())
 	{
@@ -52,20 +38,18 @@ void ZenChanRunState::OnEnter()
 	if (m_pSpriteComp->IsLookingLeft()) m_pPhysicsComp->SetVelocityX(-m_Speed);
 	else m_pPhysicsComp->SetVelocityX(m_Speed);
 
-	if(m_IsAngry) m_pSpriteComp->SetRow(1);
+	if (m_IsAngry) m_pSpriteComp->SetRow(1);
 	else m_pSpriteComp->SetRow(0);
-
-	
 }
-void ZenChanRunState::OnExit()
+
+void MaitaRunState::OnExit()
 {
-
 }
 
-void ZenChanRunState::Notify(PlayerComponent* pSubject)
+void MaitaRunState::Notify(PlayerComponent* pSubject)
 {
 	auto subjectPos = pSubject->GetPos();
-	auto enemyPos = m_pEnemy->GetWorldPosition();
+	/*auto enemyPos = m_pEnemy->GetWorldPosition();
 	if (subjectPos.y < enemyPos.y)
 	{
 		float subjectMiddleX{ subjectPos.x + pSubject->GetDestRectSize().x / 2 };
@@ -73,16 +57,16 @@ void ZenChanRunState::Notify(PlayerComponent* pSubject)
 		{
 			m_HasToJump = true;
 		}
-	}
-	
+	}*/
+
 }
 
-void ZenChanRunState::AddSubjectPointer(dae::Subject<PlayerComponent>* pSubject)
+void MaitaRunState::AddSubjectPointer(dae::Subject<PlayerComponent>* pSubject)
 {
 	m_pVecObservedSpriteSubjects.push_back(pSubject);
 }
 
-void ZenChanRunState::SetSubjectPointersInvalid()
+void MaitaRunState::SetSubjectPointersInvalid()
 {
 	for (auto& pSubject : m_pVecObservedSpriteSubjects)
 	{

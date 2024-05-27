@@ -7,11 +7,12 @@
 #include "CollisionTags.h"
 #include "BubbleComponent.h"
 #include "SpriteComponent.h"
+#include "PickUpComponent.h"
 #include "WallCheckingComponent.h"
 
 namespace spawners
 {
-	static void SpawnBubble(const glm::vec2& spawnPos, bool left)
+	inline static void SpawnBubble(const glm::vec2& spawnPos, bool left)
 	{
 		dae::Scene* pScene = dae::SceneManager::GetInstance().GetActiveScene();
 
@@ -30,24 +31,22 @@ namespace spawners
 		pScene->AddGameObject(std::move(pBubble));
 	}
 
-	/*static void SpawnPickUp(const glm::vec2& spawnPos, bool left)
+	inline static void SpawnPickUp(const glm::vec2& spawnPos, PickUpComponent::PickUpType pickUpType)
 	{
 		dae::Scene* pScene = dae::SceneManager::GetInstance().GetActiveScene();
 
-		auto pBubble = std::make_unique<dae::GameObject>(spawnPos);
-		pBubble->AddRenderComponent();
-		pBubble->AddPhysicsComponent();
-		pBubble->AddComponent<BubbleComponent>(left);
-		pBubble->AddComponent<SpriteComponent>("Textures/Bubble.png", 3, 11, 0.1f, true, true);
-		SpriteComponent* pSpriteComp = pBubble->GetComponent<SpriteComponent>();
+		auto pPickUp = std::make_unique<dae::GameObject>(spawnPos);
+		pPickUp->AddRenderComponent();
+		pPickUp->AddComponent<SpriteComponent>("Textures/PickUps.png", 2, 3, 0.1f, false, false);
+		SpriteComponent* pSpriteComp = pPickUp->GetComponent<SpriteComponent>();
 		auto destRectSize = pSpriteComp->GetDestRectSize();
-		pBubble->AddComponent<dae::CollisionComponent>(glm::vec2{}, destRectSize, collisionTags::bubbleTag);
-		pBubble->AddComponent<WallCheckingComponent>(glm::vec2{ 0, destRectSize.y / 4 }, glm::vec2{ destRectSize.x, destRectSize.y / 2 });
+		pPickUp->AddComponent<dae::CollisionComponent>(glm::vec2{}, destRectSize, collisionTags::pickUp);
+		pPickUp->AddComponent<PickUpComponent>(pickUpType, nullptr);
 
-		pBubble->Start();
+		pPickUp->Start();
 
-		pScene->AddGameObject(std::move(pBubble));
-	}*/
+		pScene->AddGameObject(std::move(pPickUp));
+	}
 }
 
 #endif // !SPAWNERS_H

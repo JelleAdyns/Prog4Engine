@@ -1,7 +1,7 @@
-#ifndef ZENCHANFALLINGSTATE_H
-#define ZENCHANFALLINGSTATE_H
+#ifndef MAITAFALLINGSTATE_H
+#define MAITAFALLINGSTATE_H
 
-#include "ZenChanState.h"
+#include "MaitaState.h"
 #include "PlayerComponent.h"
 #include <Observer.h>
 
@@ -12,14 +12,14 @@ namespace dae
 	class CollisionComponent;
 }
 
-class ZenChanComponent;
+class MaitaComponent;
 class SpriteComponent;
 class FloorCheckingComponent;
-class ZenChanFallingState final : public ZenChanState, public dae::Observer<PlayerComponent>
+class MaitaFallingState final : public MaitaState, public dae::Observer<PlayerComponent>
 {
 public:
-	explicit ZenChanFallingState(dae::GameObject* pEnemy, ZenChanComponent* pEnemyComp, bool isAngry);
-	virtual ~ZenChanFallingState()
+	explicit MaitaFallingState(dae::GameObject* pEnemy, MaitaComponent* pEnemyComp, bool isAngry);
+	virtual ~MaitaFallingState()
 	{
 		for (dae::Subject<PlayerComponent>* pSpriteSubject : m_pVecObservedSubjects)
 		{
@@ -27,12 +27,12 @@ public:
 		}
 	}
 
-	ZenChanFallingState(const ZenChanFallingState&) = delete;
-	ZenChanFallingState(ZenChanFallingState&&) noexcept = delete;
-	ZenChanFallingState& operator= (const ZenChanFallingState&) = delete;
-	ZenChanFallingState& operator= (ZenChanFallingState&&) noexcept = delete;
+	MaitaFallingState(const MaitaFallingState&) = delete;
+	MaitaFallingState(MaitaFallingState&&) noexcept = delete;
+	MaitaFallingState& operator= (const MaitaFallingState&) = delete;
+	MaitaFallingState& operator= (MaitaFallingState&&) noexcept = delete;
 
-	virtual std::unique_ptr<ZenChanState> Update() override;
+	virtual std::unique_ptr<MaitaState> Update() override;
 	virtual void OnEnter() override;
 	virtual void OnExit() override;
 
@@ -46,7 +46,7 @@ private:
 	float m_PlayerXPos{};
 
 	dae::GameObject* m_pEnemy;
-	ZenChanComponent* m_pEnemyComp;
+	MaitaComponent* m_pEnemyComp;
 	dae::PhysicsComponent* m_pPhysicsComp;
 	dae::CollisionComponent* m_pCollisionComp;
 	FloorCheckingComponent* m_pFloorCheckingComp;
@@ -56,4 +56,4 @@ private:
 };
 
 
-#endif // !ZENCHANFALLINGSTATE_H
+#endif // !MAITAFALLINGSTATE_H
