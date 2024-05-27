@@ -68,7 +68,6 @@ public:
 	{
 		m_pSpriteComp->AddRows(m_WalkingSpriteInfo.rowNumber);
 		m_pSpriteComp->SetNrOfRows(m_WalkingSpriteInfo.nrOfRows);
-		m_pSpriteComp->SetRow(m_WalkingSpriteInfo.rowNumber);
 		m_pSpriteComp->SetFrameTime(m_WalkingSpriteInfo.frameTime);
 
 		m_pMovementComp->RegisterJumpCommand();
@@ -98,7 +97,7 @@ public:
 		m_pSpriteComp->SetFrameTime(m_WalkingSpriteInfo.frameTime);
 	}
 private:
-	static constexpr SpriteComponent::RowInfo m_WalkingSpriteInfo{.rowNumber = 1, .nrOfRows = 8, .frameTime{0.1f} };
+	static constexpr SpriteComponent::RowInfo m_WalkingSpriteInfo{.rowNumber = 1, .nrOfRows = 8, .frameTime = 0.1f };
 	dae::GameObject* m_pPlayer;
 	PlayerComponent* m_pPlayerComp;
 	MovementComponent* m_pMovementComp;

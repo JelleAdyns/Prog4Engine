@@ -80,63 +80,72 @@ namespace dae
     }
     GameObject* CollisionComponent::CheckForCollision(const glm::vec2& alternativeOffset, const glm::vec2& alternativeSize, const std::string& collisionTag)
     {
-        const auto& worldPos = GetOwner()->GetWorldPosition();
-
-        Box box{};
-        box.top = worldPos.y + alternativeOffset.y;
-        box.left = worldPos.x + alternativeOffset.x;
-        box.bottom = box.top + alternativeSize.y;
-        box.right = box.left + alternativeSize.x;
+        
+        GameObject* pCollidedObject{ nullptr };
 
         m_CollisionFlags = 0;
         m_OverlappedDistance = {};
 
-        GameObject* pCollidedObject{ nullptr };
+        if(m_CollisionOn)
+        {
+            const auto& worldPos = GetOwner()->GetWorldPosition();
 
-        std::for_each(m_pVecAllCollisionComponents.cbegin(), m_pVecAllCollisionComponents.cend(), [&](CollisionComponent* pCollComponent)
-            {
-                if( pCollComponent != this &&
-                    collisionTag == pCollComponent->m_CollisionTag &&
-                    pCollComponent->m_CollisionOn &&
-                    m_CollisionOn)
+            Box box{};
+            box.top = worldPos.y + alternativeOffset.y;
+            box.left = worldPos.x + alternativeOffset.x;
+            box.bottom = box.top + alternativeSize.y;
+            box.right = box.left + alternativeSize.x;
+
+           
+
+            
+
+            std::for_each(m_pVecAllCollisionComponents.cbegin(), m_pVecAllCollisionComponents.cend(), [&](CollisionComponent* pCollComponent)
                 {
-                    const auto& otherWorldPos = pCollComponent->GetOwner()->GetWorldPosition();
-                    const auto& otherOffset = pCollComponent->m_PosOffset;
-                    const auto& otherSize = pCollComponent->m_Size;
 
-                    Box otherBox{};
-                    otherBox.top = otherWorldPos.y + otherOffset.y;
-                    otherBox.left = otherWorldPos.x + otherOffset.x;
-                    otherBox.bottom = otherBox.top + otherSize.y;
-                    otherBox.right = otherBox.left + otherSize.x;
+                    if (pCollComponent->m_CollisionOn &&                    // check if collision is needed
+                        m_CollisionFlags == 0 &&                            // already collided with something
+                        pCollComponent != this &&                           // don't check for itself
+                        collisionTag == pCollComponent->m_CollisionTag)     // check for correct collision tag
+                    {
+                        const auto& otherWorldPos = pCollComponent->GetOwner()->GetWorldPosition();
+                        const auto& otherOffset = pCollComponent->m_PosOffset;
+                        const auto& otherSize = pCollComponent->m_Size;
 
-                    if (IsColliding(box, otherBox, CollidingSide::Top))
-                    {
-                        m_CollisionFlags |= static_cast<char>(CollidingSide::Top);
-                        m_OverlappedDistance.y = otherBox.bottom - box.top;
-                        pCollidedObject = pCollComponent->GetOwner();
-                    }
-                    if (IsColliding(box, otherBox, CollidingSide::Left))
-                    {
-                        m_CollisionFlags |= static_cast<char>(CollidingSide::Left);
-                        m_OverlappedDistance.x = otherBox.right - box.left;
-                        pCollidedObject = pCollComponent->GetOwner();
-                    }
-                    if (IsColliding(box, otherBox, CollidingSide::Bottom))
-                    {
-                        m_CollisionFlags |= static_cast<char>(CollidingSide::Bottom);
-                        m_OverlappedDistance.y = box.bottom - otherBox.top;
-                        pCollidedObject = pCollComponent->GetOwner();
-                    }
-                    if (IsColliding(box, otherBox, CollidingSide::Right))
-                    {
-                        m_CollisionFlags |= static_cast<char>(CollidingSide::Right);
-                        m_OverlappedDistance.x = box.right - otherBox.left;
-                        pCollidedObject = pCollComponent->GetOwner();
-                    } 
-                }
+                        Box otherBox{};
+                        otherBox.top = otherWorldPos.y + otherOffset.y;
+                        otherBox.left = otherWorldPos.x + otherOffset.x;
+                        otherBox.bottom = otherBox.top + otherSize.y;
+                        otherBox.right = otherBox.left + otherSize.x;
 
-            });
+                        if (IsColliding(box, otherBox, CollidingSide::Top))
+                        {
+                            m_CollisionFlags |= static_cast<char>(CollidingSide::Top);
+                            m_OverlappedDistance.y = otherBox.bottom - box.top;
+                            pCollidedObject = pCollComponent->GetOwner();
+                        }
+                        if (IsColliding(box, otherBox, CollidingSide::Left))
+                        {
+                            m_CollisionFlags |= static_cast<char>(CollidingSide::Left);
+                            m_OverlappedDistance.x = otherBox.right - box.left;
+                            pCollidedObject = pCollComponent->GetOwner();
+                        }
+                        if (IsColliding(box, otherBox, CollidingSide::Bottom))
+                        {
+                            m_CollisionFlags |= static_cast<char>(CollidingSide::Bottom);
+                            m_OverlappedDistance.y = box.bottom - otherBox.top;
+                            pCollidedObject = pCollComponent->GetOwner();
+                        }
+                        if (IsColliding(box, otherBox, CollidingSide::Right))
+                        {
+                            m_CollisionFlags |= static_cast<char>(CollidingSide::Right);
+                            m_OverlappedDistance.x = box.right - otherBox.left;
+                            pCollidedObject = pCollComponent->GetOwner();
+                        }
+                    }
+
+                });
+        }
 
         return pCollidedObject;
     }

@@ -11,6 +11,7 @@ namespace collisionTags
 	static const std::string enemyTag{ "Enemy" };
 	static const std::string caughtEnemyTag{ "CaughtEnemy" };
 	static const std::string projectileTag{ "Projectile" };
+	static const std::string pickUp{ "PickUp" };
 	static const std::string bubbleTag{ "Bubble" };
 }
 
