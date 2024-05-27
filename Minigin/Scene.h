@@ -35,8 +35,10 @@ namespace dae
 
 	private: 
 		
+		void RemoveDead();
+
 		bool m_IsDestroyed{ false };
-		std::vector < std::unique_ptr<GameObject>> m_pObjects{};
+		std::vector < std::pair<std::unique_ptr<GameObject>, bool>> m_pObjects{};
 	};
 
 }

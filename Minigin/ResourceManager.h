@@ -4,6 +4,7 @@
 #include <string>
 #include <map>
 #include <memory>
+#include <iostream>
 #include "Singleton.h"
 #include "Font.h"
 #include "Texture2D.h"
@@ -16,7 +17,7 @@ namespace dae
 	{
 	public:
 
-		virtual ~ResourceManager() = default;
+		virtual ~ResourceManager();
 
 		ResourceManager(const ResourceManager&) = delete;
 		ResourceManager(ResourceManager&&) noexcept = delete;

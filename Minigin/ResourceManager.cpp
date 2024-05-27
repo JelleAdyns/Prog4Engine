@@ -5,6 +5,17 @@
 #include "Renderer.h"
 #include "Minigin.h"
 
+dae::ResourceManager::~ResourceManager()
+{
+#ifndef NDEBUG
+	std::cout << "Destroying ResourceManager with textures:" << std::endl;
+	for (const auto& pair : m_pMapSDLTextures)
+	{
+		std::cout << "Texture: " << pair.first << " Address: " << pair.second.get() << std::endl;
+	}
+#endif // !NDEBUG
+}
+
 void dae::ResourceManager::Init(const std::string& dataPath)
 {
 	m_DataPath = dataPath;

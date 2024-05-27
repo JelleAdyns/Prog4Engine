@@ -17,18 +17,18 @@ namespace dae
 		~Texture2D();
 
 		Texture2D(const Texture2D& other) = delete;
-		Texture2D(Texture2D&& other) noexcept = delete;
-		//Texture2D(Texture2D&& other) noexcept:
-		//	m_Texture{ other.m_Texture },
-		//	m_SrcRect {other.m_SrcRect},
-		//	m_DstRect {other.m_DstRect},
-		//	m_UsesFont {other.m_UsesFont}
-		//{
-		//	other.m_Texture = nullptr;
-		//};
+		//Texture2D(Texture2D&& other) noexcept = delete;
+		Texture2D(Texture2D&& other) noexcept:
+			m_Texture{ other.m_Texture },
+			m_SrcRect {other.m_SrcRect},
+			m_DstRect {other.m_DstRect},
+			m_UsesFont {other.m_UsesFont}
+		{
+			other.m_Texture = nullptr;
+		};
 		Texture2D& operator= (const Texture2D& other) = delete;
-		Texture2D& operator= (Texture2D&& other) noexcept = delete;
-		/*Texture2D& operator= (Texture2D&& other) noexcept
+		//Texture2D& operator= (Texture2D&& other) noexcept = delete;
+		Texture2D& operator= (Texture2D&& other) noexcept
 		{
 			if (&other != this)
 			{
@@ -39,7 +39,7 @@ namespace dae
 				m_UsesFont = other.m_UsesFont;
 			}
 			return *this;
-		};*/
+		};
 
 		void SetSrcRect(const glm::ivec2& offset, const float width, const float height);
 		void SetSrcRect(const glm::ivec2& offset);

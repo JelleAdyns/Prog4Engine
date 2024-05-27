@@ -6,12 +6,15 @@ using namespace dae;
 
 void Scene::AddGameObject(std::unique_ptr<GameObject>&& object)
 {
-	m_pObjects.emplace_back(std::move(object));
+	m_pObjects.emplace_back(std::make_pair(std::move(object), false));
 }
 
 void Scene::Remove(std::unique_ptr<GameObject> object)
 {
-	m_pObjects.erase(std::remove(m_pObjects.begin(), m_pObjects.end(), object), m_pObjects.end());
+	m_pObjects.erase(
+		std::remove_if(m_pObjects.begin(), m_pObjects.end(), [&](const std::pair<std::unique_ptr<GameObject>, bool>& pObject) 
+			{ return pObject.first == object; }),
+		m_pObjects.end());
 }
 
 void Scene::RemoveAll()
@@ -22,56 +25,60 @@ void Scene::RemoveAll()
 
 void dae::Scene::Start()
 {
-	for (auto& object : m_pObjects)
+	for (auto& pair : m_pObjects)
 	{
-		object->Start();
+		pair.second = true;
+	}
+	for (auto& pair : m_pObjects)
+	{
+		if(pair.second)
+		pair.first->Start();
 	}
 }
 
 void Scene::Update()
 {
-	for(auto& object : m_pObjects)
+	for (auto& pair : m_pObjects)
 	{
-		object->Update();
+		pair.second = true;
 	}
 
-	m_pObjects.erase(
-		std::remove_if(m_pObjects.begin(), m_pObjects.end(),
-			[&](const std::unique_ptr<GameObject>& pObject) {return pObject->IsDead(); }
-		), 
-		m_pObjects.cend()
-	);
+	for(auto& pair : m_pObjects)
+	{
+		if(pair.second)
+		pair.first->Update();
+	}
+
+	RemoveDead();
 }
 
 void dae::Scene::PrepareImGuiRender()
 {
-	for (auto& object : m_pObjects)
+	for (auto& pair : m_pObjects)
 	{
-		object->PrepareImGuiRender();
+		if(pair.second)
+		pair.first->PrepareImGuiRender();
 	}
 }
 
 void Scene::Render() const
 {
-	for (const auto& object : m_pObjects)
+	for (const auto& pair : m_pObjects)
 	{
-		object->Render();
+		if(pair.second)
+		pair.first->Render();
 	}
 }
 
 void dae::Scene::FixedUpdate()
 {
-	for (const auto& object : m_pObjects)
+	for (const auto& pair : m_pObjects)
 	{
-		object->FixedUpdate();
+		if(pair.second)
+		pair.first->FixedUpdate();
 	}
 
-	m_pObjects.erase(
-		std::remove_if(m_pObjects.begin(), m_pObjects.end(),
-			[&](const std::unique_ptr<GameObject>& pObject) {return pObject->IsDead(); }
-		),
-		m_pObjects.cend()
-	);
+	RemoveDead();
 }
 
 bool dae::Scene::IsDestroyed() const
@@ -82,5 +89,15 @@ bool dae::Scene::IsDestroyed() const
 void dae::Scene::SetDestroyed()
 {
 	m_IsDestroyed = true;
+}
+
+void dae::Scene::RemoveDead()
+{
+	m_pObjects.erase(
+		std::remove_if(m_pObjects.begin(), m_pObjects.end(),
+			[&](const std::pair<std::unique_ptr<GameObject>, bool>& pObject) {return pObject.first->IsDead(); }
+		),
+		m_pObjects.cend()
+	);
 }
 
