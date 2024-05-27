@@ -7,7 +7,7 @@
 
 namespace dae
 {
-	class AudioLocator
+	class AudioLocator final
 	{
 	public:
 

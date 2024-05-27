@@ -25,28 +25,24 @@ void Scene::RemoveAll()
 
 void dae::Scene::Start()
 {
-	for (auto& pair : m_pObjects)
+	ActivateAllObjects();
+
+	for (auto& [pObject, active] : m_pObjects)
 	{
-		pair.second = true;
-	}
-	for (auto& pair : m_pObjects)
-	{
-		if(pair.second)
-		pair.first->Start();
+		if (active)
+			pObject->Start();
 	}
 }
 
 void Scene::Update()
 {
-	for (auto& pair : m_pObjects)
-	{
-		pair.second = true;
-	}
+	
+	ActivateAllObjects();
 
-	for(auto& pair : m_pObjects)
+	for (auto& [pObject, active] : m_pObjects)
 	{
-		if(pair.second)
-		pair.first->Update();
+		if (active)
+			pObject->Update();
 	}
 
 	RemoveDead();
@@ -54,28 +50,30 @@ void Scene::Update()
 
 void dae::Scene::PrepareImGuiRender()
 {
-	for (auto& pair : m_pObjects)
+	for (auto& [pObject, active] : m_pObjects)
 	{
-		if(pair.second)
-		pair.first->PrepareImGuiRender();
+		if (active)
+			pObject->PrepareImGuiRender();
 	}
 }
 
 void Scene::Render() const
 {
-	for (const auto& pair : m_pObjects)
+	for (const auto& [pObject, active] : m_pObjects)
 	{
-		if(pair.second)
-		pair.first->Render();
+		if (active)
+			pObject->Render();
 	}
 }
 
 void dae::Scene::FixedUpdate()
 {
-	for (const auto& pair : m_pObjects)
+	ActivateAllObjects();
+
+	for (const auto& [pObject, active] : m_pObjects)
 	{
-		if(pair.second)
-		pair.first->FixedUpdate();
+		if(active)
+			pObject->FixedUpdate();
 	}
 
 	RemoveDead();
@@ -91,6 +89,8 @@ void dae::Scene::SetDestroyed()
 	m_IsDestroyed = true;
 }
 
+
+
 void dae::Scene::RemoveDead()
 {
 	m_pObjects.erase(
@@ -99,5 +99,13 @@ void dae::Scene::RemoveDead()
 		),
 		m_pObjects.cend()
 	);
+}
+
+void dae::Scene::ActivateAllObjects()
+{
+	for (auto& [pObject, active] : m_pObjects)
+	{
+		active = true;
+	}
 }
 

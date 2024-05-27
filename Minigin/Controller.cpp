@@ -98,22 +98,21 @@ namespace dae
 
 	void Controller::ControllerImpl::HandleInputImpl() const
 	{
-		for (const auto& pair : m_MapCommands)
+		for (const auto& [controllerState, pCommand] : m_MapCommands)
 		{
-			auto& pCommand = pair.second;
-			switch (pair.first.keyState)
+			switch (controllerState.keyState)
 			{
 			case KeyState::DownThisFrame:
-				if (IsDownThisFrameImpl(pair.first.button)) pCommand->Execute();
+				if (IsDownThisFrameImpl(controllerState.button)) pCommand->Execute();
 				break;
 			case KeyState::UpThisFrame:
-				if (IsUpThisFrameImpl(pair.first.button)) pCommand->Execute();
+				if (IsUpThisFrameImpl(controllerState.button)) pCommand->Execute();
 				break;
 			case KeyState::Pressed:
-				if (IsPressedImpl(pair.first.button)) pCommand->Execute();
+				if (IsPressedImpl(controllerState.button)) pCommand->Execute();
 				break;
 			case KeyState::NotPressed:
-				if (!IsPressedImpl(pair.first.button)) pCommand->Execute();
+				if (!IsPressedImpl(controllerState.button)) pCommand->Execute();
 				break;
 			}
 		}

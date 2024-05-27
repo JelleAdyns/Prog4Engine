@@ -41,21 +41,15 @@ namespace dae
 
 			if(m_IsKeyboardActive)
 			{
-				/*if (event.key.keysym.sym == SDLK_SPACE)
+				for (const auto& [keyBoardState, pCommand] : m_MapKeyCommands)
 				{
-					GameTime::GetInstance().ToggleUseFPSGoal();
-				}*/
-
-				for (const auto& pair : m_MapKeyCommands)
-				{
-					auto& pCommand = pair.second;
-					switch (pair.first.keyState)
+					switch (keyBoardState.keyState)
 					{
 					case KeyState::DownThisFrame:
-						if (KeyDownThisFrame(event, pair.first.key)) pCommand->Execute();
+						if (KeyDownThisFrame(event, keyBoardState.key)) pCommand->Execute();
 						break;
 					case KeyState::UpThisFrame:
-						if (KeyUpThisFrame(event, pair.first.key)) pCommand->Execute();
+						if (KeyUpThisFrame(event, keyBoardState.key)) pCommand->Execute();
 						break;
 					}
 				}
@@ -66,16 +60,15 @@ namespace dae
 
 		if (m_IsKeyboardActive)
 		{
-			for (const auto& pair : m_MapKeyCommands)
+			for (const auto& [keyBoardState, pCommand] : m_MapKeyCommands)
 			{
-				auto& pCommand = pair.second;
-				switch (pair.first.keyState)
+				switch (keyBoardState.keyState)
 				{
 				case KeyState::Pressed:
-					if (KeyPressed(pair.first.key)) pCommand->Execute();
+					if (KeyPressed(keyBoardState.key)) pCommand->Execute();
 					break;
 				case KeyState::NotPressed:
-					if (!KeyPressed(pair.first.key)) pCommand->Execute();
+					if (!KeyPressed(keyBoardState.key)) pCommand->Execute();
 					break;
 				}
 			}
