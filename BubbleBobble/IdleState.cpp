@@ -1,8 +1,22 @@
 #include "IdleState.h"
-#include "HitState.h"
 #include "States.h"
-#include "Spawners.h"
 
+#include "Spawners.h"
+#include "PlayerComponent.h"
+#include "MovementComponent.h"
+#include <GameObject.h>
+#include <PhysicsComponent.h>
+#include <CollisionComponent.h>
+
+IdleState::IdleState(dae::GameObject* pPlayer, PlayerComponent* pPlayerComp, MovementComponent* pMovementComp) :
+	PlayerState{},
+	m_pPlayer{ pPlayer },
+	m_pPlayerComp{ pPlayerComp },
+	m_pMovementComp{ pMovementComp },
+	m_pSpriteComp{ pPlayer->GetComponent<SpriteComponent>() },
+	m_pPhysicsComp{ pPlayer->GetComponent<dae::PhysicsComponent>() },
+	m_pCollisionComp{ pPlayer->GetComponent<dae::CollisionComponent>() }
+{}
 
 std::unique_ptr<PlayerState> IdleState::Update()
 {

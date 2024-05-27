@@ -3,24 +3,19 @@
 
 #include "PlayerState.h"
 #include "SpriteComponent.h"
-#include "PlayerComponent.h"
-#include "MovementComponent.h"
-#include "Commands.h"
-#include <KeyState.h>
 #include <Observer.h>
-#include <GameObject.h>
 
+namespace dae
+{
+	class GameObject;
+}
 
+class PlayerComponent;
+class MovementComponent;
 class HitState final : public PlayerState, public dae::Observer<SpriteComponent>
 {
 public:
-	explicit HitState(dae::GameObject* pPlayer, PlayerComponent* pPlayerComp, MovementComponent* pMovementComp) :
-		PlayerState{},
-		m_pPlayer{ pPlayer },
-		m_pPlayerComp{ pPlayerComp },
-		m_pMovementComp{ pMovementComp },
-		m_pSpriteComp{ pPlayer->GetComponent<SpriteComponent>()}
-	{}
+	explicit HitState(dae::GameObject* pPlayer, PlayerComponent* pPlayerComp, MovementComponent* pMovementComp);
 	virtual ~HitState()
 	{
 		for (dae::Subject<SpriteComponent>* pSpriteSubject : m_pVecObservedSpriteSubjects)

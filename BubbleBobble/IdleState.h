@@ -3,28 +3,20 @@
 
 #include "PlayerState.h"
 #include "SpriteComponent.h"
-#include "PlayerComponent.h"
-#include "MovementComponent.h"
 
-#include "Commands.h"
-#include <PhysicsComponent.h>
-#include <CollisionComponent.h>
-#include <KeyState.h>
-#include <GameObject.h>
-#include <InputCommandBinder.h>
+namespace dae
+{
+	class GameObject;
+	class PhysicsComponent;
+	class CollisionComponent;
+}
 
+class PlayerComponent;
+class MovementComponent;
 class IdleState final : public PlayerState
 {
 public:
-	explicit IdleState(dae::GameObject* pPlayer, PlayerComponent* pPlayerComp, MovementComponent* pMovementComp) :
-		PlayerState{},
-		m_pPlayer{ pPlayer },
-		m_pPlayerComp{ pPlayerComp },
-		m_pMovementComp{ pMovementComp },
-		m_pSpriteComp{ pPlayer->GetComponent<SpriteComponent>() },
-		m_pPhysicsComp{ pPlayer->GetComponent<dae::PhysicsComponent>() },
-		m_pCollisionComp{ pPlayer->GetComponent<dae::CollisionComponent>() }
-	{}
+	explicit IdleState(dae::GameObject* pPlayer, PlayerComponent* pPlayerComp, MovementComponent* pMovementComp);
 	virtual ~IdleState() = default;
 
 	IdleState(const IdleState&) = delete;

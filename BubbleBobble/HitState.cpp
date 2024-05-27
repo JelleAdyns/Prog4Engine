@@ -1,10 +1,21 @@
 #include "HitState.h"
 #include "States.h"
+#include "PlayerComponent.h"
+#include "MovementComponent.h"
+#include <GameObject.h>
 #include <PhysicsComponent.h>
 #include <Minigin.h>
 #include <InputCommandBinder.h>
 
 const float HitState::m_HitSpriteOffset{ 128.f };
+
+HitState::HitState(dae::GameObject* pPlayer, PlayerComponent* pPlayerComp, MovementComponent* pMovementComp) :
+	PlayerState{},
+	m_pPlayer{ pPlayer },
+	m_pPlayerComp{ pPlayerComp },
+	m_pMovementComp{ pMovementComp },
+	m_pSpriteComp{ pPlayer->GetComponent<SpriteComponent>() }
+{}
 
 std::unique_ptr<PlayerState> HitState::Update()
 {
@@ -28,7 +39,6 @@ void HitState::OnEnter()
 
 	m_pSpriteComp->SetNrOfRows(m_HitSpriteInfo.nrOfRows);
 	m_pSpriteComp->SetHeightMarkers(m_HitSpriteOffset, static_cast<float>(m_pSpriteComp->GetTextureSize().y));
-	//m_pSpriteComp->SetStartRow(0);
 	m_pSpriteComp->SetRow(m_HitSpriteInfo.rowNumber);
 	m_pSpriteComp->SetCol(0);
 	m_pSpriteComp->SetFrameTime(m_HitSpriteInfo.frameTime);

@@ -1,17 +1,14 @@
 #include "PlayerComponent.h"
 #include "IdleState.h"
-#include "HitState.h"
 #include "SpriteComponent.h"
 #include "MovementComponent.h"
 #include "CollisionTags.h"
+#include <GameObject.h>
 #include <PhysicsComponent.h>
 #include <CollisionComponent.h>
 #include <RenderComponent.h>
-#include <KeyState.h>
 #include <GameTime.h>
 #include <Minigin.h>
-#include <InputCommandBinder.h>
-
 
 
 PlayerComponent::PlayerComponent(dae::GameObject* pOwner):
