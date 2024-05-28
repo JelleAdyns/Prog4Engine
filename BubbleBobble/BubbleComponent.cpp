@@ -176,8 +176,8 @@ void BubbleComponent::HandleFloatingState()
 
 	if (GetOwner()->GetWorldPosition().y < m_MaxHeight) m_pPhysicsComp->SetVelocityY(0);
 
-
-	m_pCollisionComp->CheckForCollision(collisionTags::playerTag);
+	const static float offset{ 3.f };
+	m_pCollisionComp->CheckForCollision(glm::vec2{0, offset}, glm::vec2{ m_pSpriteComp->GetDestRectSize().x, m_pSpriteComp->GetDestRectSize().y - offset}, collisionTags::playerTag);
 	if (m_pCollisionComp->GetCollisionFlags() > 0)
 	{
 		m_PoppedByPlayer = true;

@@ -3,7 +3,9 @@
 
 #include <GameObjectCommand.h>
 #include <PhysicsComponent.h>
+#include <CollisionComponent.h>
 #include <GameTime.h>
+#include "CollisionTags.h"
 #include <AudioLocator.h>
 #include "WallCheckingComponent.h"
 #include "FloorCheckingComponent.h"
@@ -81,14 +83,16 @@ private:
 class JumpCommand final : public dae::GameObjectCommand
 {
 public:
-	JumpCommand(const std::unique_ptr<dae::GameObject>& pObject, float jumpVelocity) :
-		JumpCommand{ pObject.get(), jumpVelocity }
+	JumpCommand(const std::unique_ptr<dae::GameObject>& pObject, float jumpVelocity, bool checkForBubble = false) :
+		JumpCommand{ pObject.get(), jumpVelocity, checkForBubble }
 	{}
-	JumpCommand(dae::GameObject* pObject, float jumpVelocity) :
+	JumpCommand(dae::GameObject* pObject, float jumpVelocity, bool checkForBubble = false) :
 		dae::GameObjectCommand{ pObject },
+		m_CheckForBubble{checkForBubble},
 		m_JumpVelocity{ jumpVelocity }
 	{
 		m_pPhysicsComponent = GetGameObject()->GetComponent<dae::PhysicsComponent>();
+		m_pCollisionComponent = GetGameObject()->GetComponent<dae::CollisionComponent>();
 		m_pFloorCheckingComponent = GetGameObject()->GetComponent<FloorCheckingComponent>();
 	};
 	virtual ~JumpCommand() = default;
@@ -100,18 +104,41 @@ public:
 
 	virtual void Execute() const override
 	{
-		if (m_pFloorCheckingComponent->IsOnGround())
+		if (m_CheckForBubble)
 		{
-			m_pPhysicsComponent->SetVelocityY(m_JumpVelocity);
+			m_pCollisionComponent->CheckForCollision(collisionTags::bubbleTag);
 
-			//this code is in here purely for demonstration purposes
-			dae::AudioLocator::GetAudioService().AddSound("Sounds/Jump.wav", static_cast<dae::SoundID>(Game::SoundEvent::Jump));
-			dae::AudioLocator::GetAudioService().PlaySoundClip(static_cast<dae::SoundID>(Game::SoundEvent::Jump), 120, false);
+			auto flags = m_pCollisionComponent->GetCollisionFlags();
+			const auto bottomFlag = static_cast<char>(dae::CollisionComponent::CollidingSide::Bottom);
+
+			//auto overlappedDistance = m_pCollisionComponent->GetOverlappedDistance();
+
+			if ((flags & bottomFlag) == bottomFlag)
+			{
+				//const auto& currentPos = GetGameObject()->GetLocalPosition();
+				//GetGameObject()->SetLocalPos(currentPos.x, currentPos.y - overlappedDistance.y - 10);
+
+				m_pPhysicsComponent->SetVelocityY(m_JumpVelocity);
+			}
 		}
+		else
+		{
+			if (m_pFloorCheckingComponent->IsOnGround())
+			{
+				m_pPhysicsComponent->SetVelocityY(m_JumpVelocity);
+
+				//this code is in here purely for demonstration purposes
+				dae::AudioLocator::GetAudioService().AddSound("Sounds/Jump.wav", static_cast<dae::SoundID>(Game::SoundEvent::Jump));
+				dae::AudioLocator::GetAudioService().PlaySoundClip(static_cast<dae::SoundID>(Game::SoundEvent::Jump), 120, false);
+			}
+		}
+		
 	}
 private:
+	const bool m_CheckForBubble;
 	const float m_JumpVelocity;
 	dae::PhysicsComponent* m_pPhysicsComponent;
+	dae::CollisionComponent* m_pCollisionComponent;
 	FloorCheckingComponent* m_pFloorCheckingComponent;
 };
 

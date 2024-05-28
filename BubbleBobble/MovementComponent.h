@@ -21,6 +21,8 @@ public:
 
 	void RegisterJumpCommand() const;
 	void UnRegisterJumpCommand() const;
+	void RegisterJumpOnBubbleCommand() const;
+	void UnRegisterJumpOnBubbleCommand() const;
 	void RegisterMoveCommands() const;
 	void UnRegisterMoveCommands() const;
 	void RegisterAttackCommand() const;
@@ -34,6 +36,7 @@ private:
 	float m_MoveSpeed;
 
 	std::shared_ptr<dae::Command> m_pJumpCommand;
+	std::shared_ptr<dae::Command> m_pJumpOnBubbleCommand;
 	std::shared_ptr<dae::Command> m_MoveRightCommand;
 	std::shared_ptr<dae::Command> m_MoveLeftCommand;
 	std::shared_ptr<dae::Command> m_StopMovingCommand;

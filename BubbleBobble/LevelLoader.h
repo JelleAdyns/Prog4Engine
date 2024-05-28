@@ -85,11 +85,12 @@ static void LoadLevel(const std::string& filename, dae::Scene& scene, int levelN
 			++row;
 		}
 
-		auto tile = std::make_unique<dae::GameObject>();
-		tile->AddComponent<dae::CollisionComponent>(glm::vec2{ 0, 0 }, glm::vec2{ 16.f, 16.f }, collisionTags::wallTag);
+		float extraHeightToBeSafe{ 100.f };
+		auto tile = std::make_unique<dae::GameObject>(0.f, -extraHeightToBeSafe);
+		tile->AddComponent<dae::CollisionComponent>(glm::vec2{ 0, 0 }, glm::vec2{ 16.f,extraHeightToBeSafe + 16.f }, collisionTags::wallTag);
 		scene.AddGameObject(std::move(tile));
-		tile = std::make_unique<dae::GameObject>(dae::Minigin::GetWindowSize().x - 16.f, 0.f);
-		tile->AddComponent<dae::CollisionComponent>(glm::vec2{ 0, 0 }, glm::vec2{ 16.f, 16.f }, collisionTags::wallTag);
+		tile = std::make_unique<dae::GameObject>(dae::Minigin::GetWindowSize().x - 16.f, -extraHeightToBeSafe);
+		tile->AddComponent<dae::CollisionComponent>(glm::vec2{ 0, 0 }, glm::vec2{ 16.f, extraHeightToBeSafe + 16.f }, collisionTags::wallTag);
 		scene.AddGameObject(std::move(tile));
 	}
 	else { std::cout << "Couldn't open file: " << filename << '\n'; }

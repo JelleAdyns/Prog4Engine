@@ -60,10 +60,12 @@ public:
 		m_pSpriteComp->SetNrOfRows(m_FallingSpriteInfo.nrOfRows);
 		m_pSpriteComp->SetFrameTime(m_FallingSpriteInfo.frameTime);
 
+		m_pMovementComp->RegisterJumpOnBubbleCommand();
 	}
 	virtual void OnExit() override
 	{
 
+		m_pMovementComp->UnRegisterJumpOnBubbleCommand();
 		m_pSpriteComp->AddRows(-m_FallingSpriteInfo.rowNumber);
 	}
 

@@ -26,6 +26,7 @@ void MovementComponent::Start()
 {
 
 	m_pJumpCommand = std::make_shared<JumpCommand>(GetOwner(), m_JumpVelocity);
+	m_pJumpOnBubbleCommand = std::make_shared<JumpCommand>(GetOwner(), m_JumpVelocity, true);
 	m_MoveRightCommand = std::make_shared<MoveCommand>(GetOwner(), m_MoveSpeed);
 	m_MoveLeftCommand = std::make_shared<MoveCommand>(GetOwner(), -m_MoveSpeed);
 	m_StopMovingCommand = std::make_shared<StopMovingCommand>(GetOwner());
@@ -54,6 +55,21 @@ void MovementComponent::RegisterJumpCommand() const
 void MovementComponent::UnRegisterJumpCommand() const
 {
 
+	auto& inputMan = dae::InputCommandBinder::GetInstance();
+
+	inputMan.RemoveKeyCommand(SDL_SCANCODE_SPACE, dae::KeyState::Pressed);
+	inputMan.RemoveControllerCommand(dae::ControllerButton::Y, dae::KeyState::Pressed, m_PlayerIndex);
+}
+
+void MovementComponent::RegisterJumpOnBubbleCommand() const
+{
+	auto& inputMan = dae::InputCommandBinder::GetInstance();
+
+	inputMan.AddKeyCommand(m_pJumpOnBubbleCommand, SDL_SCANCODE_SPACE, dae::KeyState::Pressed);
+	inputMan.AddControllerCommand(m_pJumpOnBubbleCommand, dae::ControllerButton::Y, dae::KeyState::Pressed, m_PlayerIndex);
+}
+void MovementComponent::UnRegisterJumpOnBubbleCommand() const
+{
 	auto& inputMan = dae::InputCommandBinder::GetInstance();
 
 	inputMan.RemoveKeyCommand(SDL_SCANCODE_SPACE, dae::KeyState::Pressed);
