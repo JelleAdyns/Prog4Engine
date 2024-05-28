@@ -137,7 +137,7 @@ BubbleComponent::FloatingStage BubbleComponent::GetFloatingStage() const
 void BubbleComponent::HandleShotState()
 {
 	
-	static constexpr SpriteComponent::RowInfo shotInfo{ .rowUpdate{true}, .frameTime{0.1f } };
+	static constexpr SpriteComponent::SpriteInfo shotInfo{ .rowUpdate{true}, .frameTime{0.1f } };
 
 	m_pSpriteComp->SetRowUpdate(shotInfo.rowUpdate);
 	m_pSpriteComp->SetFrameTime(shotInfo.frameTime);
@@ -166,7 +166,7 @@ void BubbleComponent::HandleShotState()
 
 void BubbleComponent::HandleFloatingState()
 {
-	static constexpr SpriteComponent::RowInfo floatInfo{ .rowUpdate{false}, .rowNumber{6}, .frameTime{0.1f} };
+	static constexpr SpriteComponent::SpriteInfo floatInfo{ .rowUpdate{false}, .rowNumber{6}, .frameTime{0.1f} };
 
 	m_pSpriteComp->SetRowUpdate(floatInfo.rowUpdate);
 	m_pSpriteComp->SetFrameTime(floatInfo.frameTime);

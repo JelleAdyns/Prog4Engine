@@ -31,7 +31,7 @@ public:
 	virtual void StopShooting() override;
 
 private:
-	static constexpr SpriteComponent::RowInfo m_IdleSpriteInfo{ .rowNumber = 0, .nrOfRows = 8, .frameTime{0.25f} };
+	static constexpr SpriteComponent::SpriteInfo m_IdleSpriteInfo{ .rowNumber = 0, .nrOfRows = 8, .frameTime{0.25f} };
 	dae::GameObject* m_pPlayer;
 	PlayerComponent* m_pPlayerComp;
 	MovementComponent* m_pMovementComp;

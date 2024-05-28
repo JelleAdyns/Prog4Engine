@@ -11,32 +11,32 @@
 #include <PhysicsComponent.h>
 #include <CollisionComponent.h>
 
-ZenChanRunState::ZenChanRunState(dae::GameObject* pEnemy, ZenChanComponent* pEnemyComp, bool isAngry) :
+ZenChanRunState::ZenChanRunState(dae::GameObject* pZenChan, ZenChanComponent* pZenChanComp, bool isAngry) :
 	ZenChanState{},
 	m_Speed{ isAngry ? m_GeneralSpeed * 2.f : m_GeneralSpeed },
-	m_IsAngry{isAngry},
-	m_pEnemy{ pEnemy },
-	m_pEnemyComp{ pEnemyComp },
-	m_pPhysicsComp{ pEnemy->GetComponent<dae::PhysicsComponent>() },
-	m_pSpriteComp{ pEnemy->GetComponent<SpriteComponent>() },
-	m_pWallCheckingComp{ pEnemy->GetComponent<WallCheckingComponent>() },
-	m_pFloorCheckingComp{ pEnemy->GetComponent<FloorCheckingComponent>() },
-	m_pCollisionComp{ pEnemy->GetComponent<dae::CollisionComponent>() }
+	m_IsAngry{ isAngry },
+	m_pZenChan{ pZenChan },
+	m_pZenChanComp{ pZenChanComp },
+	m_pPhysicsComp{ pZenChan->GetComponent<dae::PhysicsComponent>() },
+	m_pSpriteComp{ pZenChan->GetComponent<SpriteComponent>() },
+	m_pWallCheckingComp{ pZenChan->GetComponent<WallCheckingComponent>() },
+	m_pFloorCheckingComp{ pZenChan->GetComponent<FloorCheckingComponent>() },
+	m_pCollisionComp{ pZenChan->GetComponent<dae::CollisionComponent>() }
 {}
 std::unique_ptr<ZenChanState> ZenChanRunState::Update()
 {
 	dae::GameObject* pCollidedObject = m_pCollisionComp->CheckForCollision(collisionTags::bubbleTag);
 	if (pCollidedObject)
 	{
-		if(!pCollidedObject->GetComponent<BubbleComponent>()->IsOccupied())
+		if (!pCollidedObject->GetComponent<BubbleComponent>()->IsOccupied())
 		{
-			return std::make_unique<ZenChanCaughtState>(m_pEnemy, pCollidedObject);
+			return std::make_unique<ZenChanCaughtState>(m_pZenChan, pCollidedObject);
 		}
 	}
 
-	if (m_HasToJump) return std::make_unique<ZenChanJumpState>(m_pEnemy, m_pEnemyComp, m_IsAngry);
-	
-	if (!m_pFloorCheckingComp->IsOnGround()) return std::make_unique<ZenChanFallingState>(m_pEnemy, m_pEnemyComp, m_IsAngry);
+	if (m_HasToJump) return std::make_unique<ZenChanJumpState>(m_pZenChan, m_pZenChanComp, m_IsAngry);
+
+	if (!m_pFloorCheckingComp->IsOnGround()) return std::make_unique<ZenChanFallingState>(m_pZenChan, m_pZenChanComp, m_IsAngry);
 
 	if (m_pWallCheckingComp->CollidingWithLeft()) m_pPhysicsComp->SetVelocityX(m_Speed);
 	if (m_pWallCheckingComp->CollidingWithRight()) m_pPhysicsComp->SetVelocityX(-m_Speed);
@@ -45,17 +45,17 @@ std::unique_ptr<ZenChanState> ZenChanRunState::Update()
 }
 void ZenChanRunState::OnEnter()
 {
-	for (dae::Subject<PlayerComponent>* pSubject : m_pEnemyComp->GetPlayerSubjects())
+	for (dae::Subject<PlayerComponent>* pSubject : m_pZenChanComp->GetPlayerSubjects())
 	{
 		pSubject->AddObserver(this);
 	}
 	if (m_pSpriteComp->IsLookingLeft()) m_pPhysicsComp->SetVelocityX(-m_Speed);
 	else m_pPhysicsComp->SetVelocityX(m_Speed);
 
-	if(m_IsAngry) m_pSpriteComp->SetRow(1);
+	if (m_IsAngry) m_pSpriteComp->SetRow(1);
 	else m_pSpriteComp->SetRow(0);
 
-	
+
 }
 void ZenChanRunState::OnExit()
 {
@@ -65,7 +65,7 @@ void ZenChanRunState::OnExit()
 void ZenChanRunState::Notify(PlayerComponent* pSubject)
 {
 	auto subjectPos = pSubject->GetPos();
-	auto enemyPos = m_pEnemy->GetWorldPosition();
+	auto enemyPos = m_pZenChan->GetWorldPosition();
 	if (subjectPos.y < enemyPos.y)
 	{
 		float subjectMiddleX{ subjectPos.x + pSubject->GetDestRectSize().x / 2 };

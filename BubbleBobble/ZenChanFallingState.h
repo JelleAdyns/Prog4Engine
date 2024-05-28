@@ -18,7 +18,7 @@ class FloorCheckingComponent;
 class ZenChanFallingState final : public ZenChanState, public dae::Observer<PlayerComponent>
 {
 public:
-	explicit ZenChanFallingState(dae::GameObject* pEnemy, ZenChanComponent* pEnemyComp, bool isAngry);
+	explicit ZenChanFallingState(dae::GameObject* pZenChan, ZenChanComponent* pZenChanComp, bool isAngry);
 	virtual ~ZenChanFallingState()
 	{
 		for (dae::Subject<PlayerComponent>* pSpriteSubject : m_pVecObservedSubjects)
@@ -45,8 +45,8 @@ private:
 	bool m_IsAngry;
 	float m_PlayerXPos{};
 
-	dae::GameObject* m_pEnemy;
-	ZenChanComponent* m_pEnemyComp;
+	dae::GameObject* m_pZenChan;
+	ZenChanComponent* m_pZenChanComp;
 	dae::PhysicsComponent* m_pPhysicsComp;
 	dae::CollisionComponent* m_pCollisionComp;
 	FloorCheckingComponent* m_pFloorCheckingComp;

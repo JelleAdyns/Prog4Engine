@@ -27,5 +27,6 @@
 #include "MaitaComponent.h"
 #include "MovementComponent.h"
 #include "BubbleComponent.h"
+#include "ProjectileComponent.h"
 
 #endif // !COMPONENTS_H

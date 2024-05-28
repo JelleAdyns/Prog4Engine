@@ -19,7 +19,7 @@ class FloorCheckingComponent;
 class ZenChanRunState final : public ZenChanState, public dae::Observer<PlayerComponent>
 {
 public:
-	explicit ZenChanRunState(dae::GameObject* pEnemy, ZenChanComponent* pEnemyComp, bool isAngry = false);
+	explicit ZenChanRunState(dae::GameObject* pZenChan, ZenChanComponent* pZenChanComp, bool isAngry = false);
 	virtual ~ZenChanRunState()
 	{
 		for (dae::Subject<PlayerComponent>* pSpriteSubject : m_pVecObservedSpriteSubjects)
@@ -49,8 +49,8 @@ private:
 	bool m_HasToJump{ false };
 	bool m_IsAngry;
 
-	dae::GameObject* m_pEnemy;
-	ZenChanComponent* m_pEnemyComp;
+	dae::GameObject* m_pZenChan;
+	ZenChanComponent* m_pZenChanComp;
 	dae::PhysicsComponent* m_pPhysicsComp;
 	SpriteComponent* m_pSpriteComp;
 	WallCheckingComponent* m_pWallCheckingComp;

@@ -71,7 +71,7 @@ public:
 	{
 		if (m_pSpriteComp->GetCurrRow() < GetShootStartIndex())
 		{
-			m_pSpriteComp->SetFrameTime(0.2f);
+			m_pSpriteComp->SetFrameTime(0.1f);
 			m_pSpriteComp->SetCol(0);
 			m_pSpriteComp->SetRow(GetShootStartIndex() + m_FallingSpriteInfo.rowNumber);
 
@@ -85,7 +85,7 @@ public:
 		m_pSpriteComp->SetFrameTime(m_FallingSpriteInfo.frameTime);
 	}
 private:
-	static constexpr SpriteComponent::RowInfo m_FallingSpriteInfo{ .rowNumber = 3, .nrOfRows = 8, .frameTime{0.1f} };
+	static constexpr SpriteComponent::SpriteInfo m_FallingSpriteInfo{ .rowNumber = 3, .nrOfRows = 8, .frameTime{0.1f} };
 
 	dae::GameObject* m_pPlayer;
 	PlayerComponent* m_pPlayerComp;

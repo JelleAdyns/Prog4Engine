@@ -65,7 +65,7 @@ public:
 
 		if (m_pSpriteComp->GetCurrRow() < GetShootStartIndex())
 		{
-			m_pSpriteComp->SetFrameTime(0.2f);
+			m_pSpriteComp->SetFrameTime(0.1f);
 			m_pSpriteComp->SetCol(0);
 			m_pSpriteComp->SetRow(GetShootStartIndex() + m_JumpingSpriteInfo.rowNumber);
 
@@ -79,7 +79,7 @@ public:
 		m_pSpriteComp->SetFrameTime(m_JumpingSpriteInfo.frameTime);
 	}
 private:
-	static constexpr SpriteComponent::RowInfo m_JumpingSpriteInfo{ .rowNumber = 2, .nrOfRows = 8, .frameTime{0.1f} };
+	static constexpr SpriteComponent::SpriteInfo m_JumpingSpriteInfo{ .rowNumber = 2, .nrOfRows = 8, .frameTime{0.1f} };
 	dae::GameObject* m_pPlayer;
 	PlayerComponent* m_pPlayerComp;
 	MovementComponent* m_pMovementComp;

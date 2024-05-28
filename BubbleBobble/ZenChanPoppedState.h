@@ -16,15 +16,7 @@
 class ZenChanPoppedState final : public ZenChanState
 {
 public:
-	explicit ZenChanPoppedState(dae::GameObject* pEnemy):
-	ZenChanState{},
-		m_pEnemy{ pEnemy },
-		m_pPhysicsComp{ pEnemy->GetComponent<dae::PhysicsComponent>() },
-		m_pCollisionComp{ pEnemy->GetComponent<dae::CollisionComponent>() },
-		m_pFloorComp{ pEnemy->GetComponent<FloorCheckingComponent>() },
-		m_pWallComp{ pEnemy->GetComponent<WallCheckingComponent>() },
-		m_pSpriteComp{ pEnemy->GetComponent<SpriteComponent>() }
-	{}
+	explicit ZenChanPoppedState(dae::GameObject* pEnemy);
 	virtual ~ZenChanPoppedState() = default;
 
 	ZenChanPoppedState(const ZenChanPoppedState&) = delete;
@@ -32,38 +24,15 @@ public:
 	ZenChanPoppedState& operator= (const ZenChanPoppedState&) = delete;
 	ZenChanPoppedState& operator= (ZenChanPoppedState&&) noexcept = delete;
 
-	virtual std::unique_ptr<ZenChanState> Update() override
-	{
-		if (m_pFloorComp->IsOnGround())
-		{
-			spawners::SpawnPickUp(m_pEnemy->GetWorldPosition(), PickUpComponent::PickUpType::Melon);
-			m_pEnemy->MarkDead();
-		}
-		if (m_pWallComp->CollidingWithLeft()) m_pPhysicsComp->SetVelocityX(m_Speed);
-		if (m_pWallComp->CollidingWithRight()) m_pPhysicsComp->SetVelocityX(-m_Speed);
-		return nullptr;
-	}
-	virtual void OnEnter() override
-	{
-		//m_pCollisionComp->SetCollision(false);
-		m_pCollisionComp->SetTag(collisionTags::caughtEnemyTag);
-		m_pSpriteComp->SetRow(m_PoppedInfo.rowNumber);
-		m_pSpriteComp->SetFrameTime(m_PoppedInfo.frameTime);
-
-		m_pPhysicsComp->SetVelocityX((rand() + 1) % 2 ? m_Speed : -m_Speed);
-		m_pPhysicsComp->SetVelocityY(-m_Speed);
-	}
-	
-	virtual void OnExit() override
-	{
-
-	}
+	virtual std::unique_ptr<ZenChanState> Update() override;
+	virtual void OnEnter() override;
+	virtual void OnExit() override;
 
 private:
 
-	static constexpr SpriteComponent::RowInfo m_PoppedInfo{ .rowNumber{2}, .frameTime{0.06f}};
+	static constexpr SpriteComponent::SpriteInfo m_PoppedInfo{ .rowNumber{2}, .frameTime{0.06f}};
 
-	float m_Speed{ 120.f };
+	const float m_Speed{ 120.f };
 
 	dae::GameObject* m_pEnemy;
 	dae::PhysicsComponent* m_pPhysicsComp;

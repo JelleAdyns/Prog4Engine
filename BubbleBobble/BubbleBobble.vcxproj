@@ -176,12 +176,17 @@
     <ClCompile Include="LivesComponent.cpp" />
     <ClCompile Include="LivesUIComponent.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="MaitaAttackState.cpp" />
+    <ClCompile Include="MaitaCaughtState.cpp" />
     <ClCompile Include="MaitaComponent.cpp" />
     <ClCompile Include="MaitaFallingState.cpp" />
+    <ClCompile Include="MaitaJumpState.cpp" />
+    <ClCompile Include="MaitaPoppedState.cpp" />
     <ClCompile Include="MaitaRunState.cpp" />
     <ClCompile Include="MovementComponent.cpp" />
     <ClCompile Include="PickUpComponent.cpp" />
     <ClCompile Include="PlayerComponent.cpp" />
+    <ClCompile Include="ProjectileComponent.cpp" />
     <ClCompile Include="RotatorComponent.cpp" />
     <ClCompile Include="ScoreUIComponent.cpp" />
     <ClCompile Include="SpriteComponent.cpp" />
@@ -191,15 +196,21 @@
     <ClCompile Include="ZenChanCaughtState.cpp" />
     <ClCompile Include="ZenChanComponent.cpp" />
     <ClCompile Include="ZenChanFallingState.cpp" />
+    <ClCompile Include="ZenChanJumpState.cpp" />
+    <ClCompile Include="ZenChanPoppedState.cpp" />
     <ClCompile Include="ZenChanRunState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Achievements.h" />
     <ClInclude Include="ActivateButtonCommand.h" />
     <ClInclude Include="BubbleComponent.h" />
+    <ClInclude Include="MaitaAttackState.h" />
+    <ClInclude Include="MaitaCaughtState.h" />
     <ClInclude Include="MaitaComponent.h" />
     <ClInclude Include="MaitaFallingState.h" />
     <ClInclude Include="MaitaJumpState.h" />
+    <ClInclude Include="MaitaPoppedState.h" />
+    <ClInclude Include="ProjectileComponent.h" />
     <ClInclude Include="Spawners.h" />
     <ClInclude Include="CollisionTags.h" />
     <ClInclude Include="MovementComponent.h" />

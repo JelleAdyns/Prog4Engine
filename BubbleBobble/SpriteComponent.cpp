@@ -116,10 +116,16 @@ void SpriteComponent::SetHeightMarkers(float startHeight, float endHeight)
 	m_SpriteIsDirty = true;
 }
 
-void SpriteComponent::SetNrOfRows(int nrOfRows)
+void SpriteComponent::SetNrOfRows(int nrOfRows, bool updateSrcRect)
 {
 	m_NrOfRows = nrOfRows;
-	m_SpriteIsDirty = true;
+	if (updateSrcRect) m_SpriteIsDirty = true;
+}
+
+void SpriteComponent::SetNrOfCols(int nrOfCols, bool updateSrcRect)
+{
+	m_NrOfCols = nrOfCols;
+	if(updateSrcRect) m_SpriteIsDirty = true;
 }
 
 void SpriteComponent::SetRowUpdate(bool rowNeedsToUpdate)
@@ -192,9 +198,9 @@ void SpriteComponent::UpdateSrcRect()
 {
 
 	m_pTexture->SetSrcRect(
-		glm::ivec2{ static_cast<float>(m_pTexture->GetTextureSize().x) / m_NrOfCols * m_CurrentCol,
+		glm::ivec2{ static_cast<float>(m_pTexture->GetSrcRect().w) * m_CurrentCol,
 		m_StartHeightMarker + (m_EndHeightMarker - m_StartHeightMarker) / m_NrOfRows * m_CurrentRow },
-		static_cast<float>(m_pTexture->GetTextureSize().x) / m_NrOfCols,
+		static_cast<float>(m_pTexture->GetSrcRect().w),
 		(m_EndHeightMarker - m_StartHeightMarker) / m_NrOfRows);
 
 	m_pTexture->SetDstRect(

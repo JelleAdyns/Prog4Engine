@@ -22,6 +22,17 @@ void PickUpComponent::Start()
 	if (!m_pCollisionComp) m_pCollisionComp = GetOwner()->GetComponent<dae::CollisionComponent>();
 	if (!m_pRenderComp) m_pRenderComp = GetOwner()->GetComponent<dae::RenderComponent>();
 	if (!m_pSpriteComp) m_pSpriteComp = GetOwner()->GetComponent<SpriteComponent>();
+
+	switch (m_PickUpType)
+	{
+	case PickUpComponent::PickUpType::Melon:
+		m_pSpriteComp->SetCol(0);
+		break;
+	case PickUpComponent::PickUpType::Fries:
+		m_pSpriteComp->SetCol(1);
+		break;
+	}
+
 }
  
 void PickUpComponent::Update()

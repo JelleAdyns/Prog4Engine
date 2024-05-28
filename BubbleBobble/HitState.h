@@ -51,7 +51,7 @@ private:
 
 	int m_RowCount{ };
 	static const float m_HitSpriteOffset;
-	static constexpr SpriteComponent::RowInfo m_HitSpriteInfo{ .rowNumber = 0, .nrOfRows = 3, .frameTime{0.2f} };
+	static constexpr SpriteComponent::SpriteInfo m_HitSpriteInfo{ .rowNumber = 0, .nrOfRows = 3, .frameTime{0.2f} };
 };
 
 

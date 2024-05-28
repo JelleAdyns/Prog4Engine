@@ -1,7 +1,7 @@
-#ifndef ZENCHANCAUGHTSTATE_H
-#define ZENCHANCAUGHTSTATE_H
+#ifndef MAITACAUGHTSTATE_H
+#define MAITACAUGHTSTATE_H
 
-#include "ZenChanState.h"
+#include "MaitaState.h"
 #include "SpriteComponent.h"
 #include <Observer.h>
 
@@ -16,21 +16,21 @@ class MaitaComponent;
 class FloorCheckingComponent;
 class BubbleComponent;
 
-class ZenChanCaughtState final : public ZenChanState, public dae::Observer<BubbleComponent>
+class MaitaCaughtState final : public MaitaState, public dae::Observer<BubbleComponent>
 {
 public:
-	explicit ZenChanCaughtState(dae::GameObject* pZenChan, dae::GameObject* pBubble);
-	virtual ~ZenChanCaughtState()
+	explicit MaitaCaughtState(dae::GameObject* pMaita, dae::GameObject* pBubble);
+	virtual ~MaitaCaughtState()
 	{
 		if (m_pObservedSubject) m_pObservedSubject->RemoveObserver(this);
 	}
 
-	ZenChanCaughtState(const ZenChanCaughtState&) = delete;
-	ZenChanCaughtState(ZenChanCaughtState&&) noexcept = delete;
-	ZenChanCaughtState& operator= (const ZenChanCaughtState&) = delete;
-	ZenChanCaughtState& operator= (ZenChanCaughtState&&) noexcept = delete;
+	MaitaCaughtState(const MaitaCaughtState&) = delete;
+	MaitaCaughtState(MaitaCaughtState&&) noexcept = delete;
+	MaitaCaughtState& operator= (const MaitaCaughtState&) = delete;
+	MaitaCaughtState& operator= (MaitaCaughtState&&) noexcept = delete;
 
-	virtual std::unique_ptr<ZenChanState> Update() override;
+	virtual std::unique_ptr<MaitaState> Update() override;
 	virtual void OnEnter() override;
 	virtual void OnExit() override;
 
@@ -47,15 +47,17 @@ private:
 		Free
 	};
 	NextState m_NextState{ NextState::Caught };
-	static constexpr SpriteComponent::SpriteInfo m_CaughtInfo{ .rowNumber{3} };
+	static constexpr SpriteComponent::SpriteInfo m_CaughtInfo{ .rowNumber{5}, .nrOfCols{4} };
 
-	dae::GameObject* m_pZenChan;;
+	dae::GameObject* m_pMaita;
 	dae::PhysicsComponent* m_pPhysicsComp;
 	dae::CollisionComponent* m_pCollisionComp;
 	SpriteComponent* m_pSpriteComp;
+
+	BubbleComponent* m_pOccupiedBubble;
 
 	dae::Subject<BubbleComponent>* m_pObservedSubject;
 };
 
 
-#endif // !ZENCHANCAUGHTSTATE_H
+#endif // !MAITACAUGHTSTATE_H

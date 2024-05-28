@@ -14,6 +14,7 @@
 #include <KeyState.h>
 #include <GameObject.h>
 #include <InputCommandBinder.h>
+#include "JumpingState.h"
 
 class WalkingState final : public PlayerState
 {
@@ -82,7 +83,7 @@ public:
 	{
 		if(m_pSpriteComp->GetCurrRow() < GetShootStartIndex())
 		{
-			m_pSpriteComp->SetFrameTime(0.2f);
+			m_pSpriteComp->SetFrameTime(0.1f);
 			m_pSpriteComp->SetCol(0);
 			m_pSpriteComp->SetRow(GetShootStartIndex() + m_WalkingSpriteInfo.rowNumber);
 
@@ -97,7 +98,7 @@ public:
 		m_pSpriteComp->SetFrameTime(m_WalkingSpriteInfo.frameTime);
 	}
 private:
-	static constexpr SpriteComponent::RowInfo m_WalkingSpriteInfo{.rowNumber = 1, .nrOfRows = 8, .frameTime = 0.1f };
+	static constexpr SpriteComponent::SpriteInfo m_WalkingSpriteInfo{.rowNumber = 1, .nrOfRows = 8, .frameTime = 0.1f };
 	dae::GameObject* m_pPlayer;
 	PlayerComponent* m_pPlayerComp;
 	MovementComponent* m_pMovementComp;

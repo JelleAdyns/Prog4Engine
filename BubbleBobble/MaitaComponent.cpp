@@ -1,6 +1,9 @@
 #include "MaitaComponent.h"
+#include "MaitaRunState.h"
 #include "PlayerComponent.h"
+#include "SpriteComponent.h"
 #include <PhysicsComponent.h>
+#include <CollisionComponent.h>
 #include <GameObject.h>
 
 MaitaComponent::MaitaComponent(dae::GameObject* pOwner) :
@@ -15,6 +18,7 @@ MaitaComponent::MaitaComponent(dae::GameObject* pOwner) :
 void MaitaComponent::Start()
 {
 	if (!m_pPhysicsComp) m_pPhysicsComp = GetOwner()->GetComponent<dae::PhysicsComponent>();
+	if (!m_pCollisionComp) m_pCollisionComp = GetOwner()->GetComponent<dae::CollisionComponent>();
 	if (!m_pSpriteComp) m_pSpriteComp = GetOwner()->GetComponent<SpriteComponent>();
 }
 
@@ -23,8 +27,16 @@ void MaitaComponent::Update()
 
 	UpdateStates();
 
-	if (m_pPhysicsComp->GetVelocity().x < 0) m_pSpriteComp->LookLeft(true);
-	if (m_pPhysicsComp->GetVelocity().x > 0) m_pSpriteComp->LookLeft(false);
+	if (m_pPhysicsComp->GetVelocity().x < 0)
+	{
+		m_pSpriteComp->LookLeft(true);
+		//m_pCollisionComp->SetAdditionalOffset({ m_MaitaOffset,0.f });
+	}
+	if (m_pPhysicsComp->GetVelocity().x > 0)
+	{
+		m_pSpriteComp->LookLeft(false);
+		//m_pCollisionComp->SetAdditionalOffset({ });
+	}
 
 }
 

@@ -18,7 +18,7 @@ class FloorCheckingComponent;
 class MaitaFallingState final : public MaitaState, public dae::Observer<PlayerComponent>
 {
 public:
-	explicit MaitaFallingState(dae::GameObject* pEnemy, MaitaComponent* pEnemyComp, bool isAngry);
+	explicit MaitaFallingState(dae::GameObject* pMaita, MaitaComponent* pMaitaComp, bool isAngry);
 	virtual ~MaitaFallingState()
 	{
 		for (dae::Subject<PlayerComponent>* pSpriteSubject : m_pVecObservedSubjects)
@@ -45,8 +45,8 @@ private:
 	bool m_IsAngry;
 	float m_PlayerXPos{};
 
-	dae::GameObject* m_pEnemy;
-	MaitaComponent* m_pEnemyComp;
+	dae::GameObject* m_pMaita;
+	MaitaComponent* m_pMaitaComp;
 	dae::PhysicsComponent* m_pPhysicsComp;
 	dae::CollisionComponent* m_pCollisionComp;
 	FloorCheckingComponent* m_pFloorCheckingComp;

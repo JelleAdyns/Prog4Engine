@@ -66,7 +66,7 @@ void IdleState::Shoot()
 
 	if (m_pSpriteComp->GetCurrRow() < GetShootStartIndex())
 	{
-		m_pSpriteComp->SetFrameTime(0.2f);
+		m_pSpriteComp->SetFrameTime(0.1f);
 		m_pSpriteComp->SetCol(0);
 		m_pSpriteComp->SetRow(GetShootStartIndex() + m_IdleSpriteInfo.rowNumber);
 

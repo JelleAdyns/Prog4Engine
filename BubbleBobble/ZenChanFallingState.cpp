@@ -8,14 +8,14 @@
 #include <GameObject.h>
 #include <Minigin.h>
 
-ZenChanFallingState::ZenChanFallingState(dae::GameObject* pEnemy, ZenChanComponent* pEnemyComp, bool isAngry) :
+ZenChanFallingState::ZenChanFallingState(dae::GameObject* pZenChan, ZenChanComponent* pZenChanComp, bool isAngry) :
 	ZenChanState{},
-	m_IsAngry{isAngry},
-	m_pEnemy{ pEnemy },
-	m_pEnemyComp{ pEnemyComp },
-	m_pPhysicsComp{ pEnemy->GetComponent<dae::PhysicsComponent>() },
-	m_pCollisionComp{ pEnemy->GetComponent<dae::CollisionComponent>() },
-	m_pFloorCheckingComp{ pEnemy->GetComponent<FloorCheckingComponent>() }
+	m_IsAngry{ isAngry },
+	m_pZenChan{ pZenChan },
+	m_pZenChanComp{ pZenChanComp },
+	m_pPhysicsComp{ pZenChan->GetComponent<dae::PhysicsComponent>() },
+	m_pCollisionComp{ pZenChan->GetComponent<dae::CollisionComponent>() },
+	m_pFloorCheckingComp{ pZenChan->GetComponent<FloorCheckingComponent>() }
 {}
 
 
@@ -26,24 +26,24 @@ std::unique_ptr<ZenChanState> ZenChanFallingState::Update()
 	{
 		if (!pCollidedObject->GetComponent<BubbleComponent>()->IsOccupied())
 		{
-			return std::make_unique<ZenChanCaughtState>(m_pEnemy, pCollidedObject);
+			return std::make_unique<ZenChanCaughtState>(m_pZenChan, pCollidedObject);
 		}
 	}
 
-	if (m_pEnemy->GetWorldPosition().y > dae::Minigin::GetWindowSize().y) 
+	if (m_pZenChan->GetWorldPosition().y > dae::Minigin::GetWindowSize().y)
 	{
-		m_pEnemy->SetLocalPos(m_pEnemy->GetLocalPosition().x, -50);
+		m_pZenChan->SetLocalPos(m_pZenChan->GetLocalPosition().x, -50);
 	}
 	if (m_pFloorCheckingComp->IsOnGround())
 	{
-		return std::make_unique<ZenChanRunState>(m_pEnemy, m_pEnemyComp, m_IsAngry);
+		return std::make_unique<ZenChanRunState>(m_pZenChan, m_pZenChanComp, m_IsAngry);
 	}
 
 	return nullptr;
 }
 void ZenChanFallingState::OnEnter()
 {
-	for (dae::Subject<PlayerComponent>* pSubject : m_pEnemyComp->GetPlayerSubjects())
+	for (dae::Subject<PlayerComponent>* pSubject : m_pZenChanComp->GetPlayerSubjects())
 	{
 		pSubject->AddObserver(this);
 	}
@@ -52,9 +52,9 @@ void ZenChanFallingState::OnEnter()
 void ZenChanFallingState::OnExit()
 {
 
-	SpriteComponent* pSpriteComp = m_pEnemy->GetComponent<SpriteComponent>();
+	SpriteComponent* pSpriteComp = m_pZenChan->GetComponent<SpriteComponent>();
 
-	if (m_PlayerXPos < m_pEnemy->GetWorldPosition().x) pSpriteComp->LookLeft(true);
+	if (m_PlayerXPos < m_pZenChan->GetWorldPosition().x) pSpriteComp->LookLeft(true);
 	else pSpriteComp->LookLeft(false);
 	
 }

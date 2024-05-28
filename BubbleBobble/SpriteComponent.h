@@ -17,11 +17,12 @@ class SpriteComponent final : public dae::Component
 {
 public:
 
-	struct RowInfo
+	struct SpriteInfo
 	{
 		bool rowUpdate{ false };
 		int rowNumber{ 0 };
 		int nrOfRows{ 1 };
+		int nrOfCols{ 1 };
 		float frameTime{ 1.f };
 	};
 
@@ -43,7 +44,8 @@ public:
 	void SetCol(int col);
 	void SetRow(int row);
 	void SetHeightMarkers(float startHeight, float endHeight);
-	void SetNrOfRows(int nrOfRows);
+	void SetNrOfRows(int nrOfRows, bool updateSrcRect = true);
+	void SetNrOfCols(int nrOfCols, bool updateSrcRect = true);
 	void SetRowUpdate(bool rowNeedsToUpdate);
 	void SetUpdate(bool needsToUpdate);
 	void SetFrameTime(float frameTime);
@@ -73,7 +75,7 @@ private:
 	int	m_CurrentRow;
 
 	int m_NrOfRows;
-	const int m_NrOfCols;
+	int m_NrOfCols;
 	float m_FrameTime;
 
 	float m_PassedTime;

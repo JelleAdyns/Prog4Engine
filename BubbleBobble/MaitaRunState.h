@@ -3,6 +3,7 @@
 
 #include "MaitaState.h"
 #include "PlayerComponent.h"
+#include "SpriteComponent.h"
 #include <Observer.h>
 namespace dae
 {
@@ -12,13 +13,12 @@ namespace dae
 }
 
 class MaitaComponent;
-class SpriteComponent;
 class WallCheckingComponent;
 class FloorCheckingComponent;
 class MaitaRunState final : public MaitaState, public dae::Observer<PlayerComponent>
 {
 public:
-	explicit MaitaRunState(dae::GameObject* pEnemy, MaitaComponent* pEnemyComp, bool isAngry = false);
+	explicit MaitaRunState(dae::GameObject* pMaita, MaitaComponent* pMaitaComp, bool isAngry = false);
 	virtual ~MaitaRunState()
 	{
 		for (dae::Subject<PlayerComponent>* pSpriteSubject : m_pVecObservedSpriteSubjects)
@@ -41,14 +41,21 @@ public:
 	virtual void SetSubjectPointersInvalid() override;
 
 private:
+
+
+	static constexpr SpriteComponent::SpriteInfo m_RunInfo{ .rowUpdate{false}, .rowNumber{0}, .nrOfCols{5}, .frameTime{0.1f} };
 	static constexpr float m_GeneralSpeed{ 50.f };
 	const float m_Speed;
 
+	float m_AttackDelayTimer{};
+	const float m_AttackDelay{ 0.7f };
+
 	bool m_HasToJump{ false };
+	bool m_HasToAttack{ false };
 	bool m_IsAngry;
 
-	dae::GameObject* m_pEnemy;
-	MaitaComponent* m_pEnemyComp;
+	dae::GameObject* m_pMaita;
+	MaitaComponent* m_pMaitaComp;
 	dae::PhysicsComponent* m_pPhysicsComp;
 	SpriteComponent* m_pSpriteComp;
 	WallCheckingComponent* m_pWallCheckingComp;

@@ -9,16 +9,16 @@
 #include <Minigin.h>
 #include <GameTime.h>
 
-ZenChanCaughtState::ZenChanCaughtState(dae::GameObject* pEnemy, dae::GameObject* pBubble) :
+ZenChanCaughtState::ZenChanCaughtState(dae::GameObject* pZenChan, dae::GameObject* pBubble) :
 	ZenChanState{},
-	m_pEnemy{ pEnemy },
-	m_pPhysicsComp{ pEnemy->GetComponent<dae::PhysicsComponent>() },
-	m_pCollisionComp{ pEnemy->GetComponent<dae::CollisionComponent>() },
-	m_pSpriteComp{ pEnemy->GetComponent<SpriteComponent>() },
-	m_pObservedSubject{nullptr}
+	m_pZenChan{ pZenChan },
+	m_pPhysicsComp{ pZenChan->GetComponent<dae::PhysicsComponent>() },
+	m_pCollisionComp{ pZenChan->GetComponent<dae::CollisionComponent>() },
+	m_pSpriteComp{ pZenChan->GetComponent<SpriteComponent>() },
+	m_pObservedSubject{ nullptr }
 {
 	assert(pBubble->HasComponent<BubbleComponent>() && "The passed GameObject didn't have a BubbleComponent. Not good!");
-	m_pEnemy->SetParent(pBubble, false);
+	m_pZenChan->SetParent(pBubble, false);
 
 	dae::RenderComponent* pRenderComp = pBubble->GetComponent<dae::RenderComponent>();
 	pRenderComp->SetNeedToRender(false);
@@ -49,20 +49,20 @@ std::unique_ptr<ZenChanState> ZenChanCaughtState::Update()
 	switch (m_NextState)
 	{
 	case ZenChanCaughtState::NextState::Popped:
-		return std::make_unique<ZenChanPoppedState>(m_pEnemy);
+		return std::make_unique<ZenChanPoppedState>(m_pZenChan);
 		break;
 	case ZenChanCaughtState::NextState::Free:
-		return std::make_unique<ZenChanRunState>(m_pEnemy, m_pEnemy->GetComponent<ZenChanComponent>(), true);
+		return std::make_unique<ZenChanRunState>(m_pZenChan, m_pZenChan->GetComponent<ZenChanComponent>(), true);
 		break;
 	}
-	
+
 	return nullptr;
 }
 void ZenChanCaughtState::OnEnter()
 {
-	m_pEnemy->GetComponent<FloorCheckingComponent>()->SetHandleCollison(false);
+	m_pZenChan->GetComponent<FloorCheckingComponent>()->SetHandleCollison(false);
 	m_pCollisionComp->SetTag(collisionTags::caughtEnemyTag);
-	m_pEnemy->SetLocalPos(0.f, 0.f);
+	m_pZenChan->SetLocalPos(0.f, 0.f);
 	m_pPhysicsComp->SetVelocityX(0);
 	m_pPhysicsComp->SetVelocityY(0);
 	m_pPhysicsComp->StopGravity();
@@ -70,7 +70,7 @@ void ZenChanCaughtState::OnEnter()
 }
 void ZenChanCaughtState::OnExit()
 {
-	m_pEnemy->GetComponent<FloorCheckingComponent>()->SetHandleCollison(true);
+	m_pZenChan->GetComponent<FloorCheckingComponent>()->SetHandleCollison(true);
 	m_pCollisionComp->SetTag(collisionTags::enemyTag);
 
 	m_pPhysicsComp->StartGravity();
@@ -87,7 +87,7 @@ void ZenChanCaughtState::Notify(BubbleComponent* pSubject)
 		m_pSpriteComp->AddRows(1);
 		break;
 	case BubbleComponent::FloatingStage::Red:
-		m_pEnemy->SetParent(nullptr, true);
+		m_pZenChan->SetParent(nullptr, true);
 		if(pSubject->IsPoppedByPlayer()) m_NextState = NextState::Popped;
 		else m_NextState = NextState::Free;
 		break;
