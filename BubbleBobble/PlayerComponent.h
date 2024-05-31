@@ -38,6 +38,7 @@ public:
 	void Shoot();
 
 	bool IsInvincible() const;
+	void SetInvincible();
 	void Respawn();
 
 	dae::Subject<PlayerComponent>* GetSubject() const;

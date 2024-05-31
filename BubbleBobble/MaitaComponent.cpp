@@ -46,7 +46,7 @@ void MaitaComponent::PrepareImGuiRender()
 
 void MaitaComponent::AddPlayerObserver(PlayerComponent* pSubject)
 {
-	m_SubjectsForState.push_back(pSubject->GetSubject());
+	if(pSubject) m_SubjectsForState.push_back(pSubject->GetSubject());
 }
 
 void MaitaComponent::UpdateStates()

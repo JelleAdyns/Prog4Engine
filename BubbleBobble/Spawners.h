@@ -3,9 +3,12 @@
 
 #include "PickUpComponent.h"
 
+class PlayerComponent;
 namespace spawners
 {
-	void SpawnEnemy(const glm::vec2& spawnPos);
+	void SpawnZenChan(const glm::vec2& spawnPos, PlayerComponent* pPlayerOne, PlayerComponent* pPlayerTwo);
+	
+	void SpawnMaita(const glm::vec2& spawnPos, PlayerComponent* pPlayerOne, PlayerComponent* pPlayerTwo);
 
 	void SpawnBubble(const glm::vec2& spawnPos, bool left);
 

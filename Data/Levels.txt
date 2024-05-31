@@ -33,6 +33,7 @@ w = wall, p = platform, f = false tile
 ZenChan 64 48
 ZenChan 128 48
 ZenChan 192 48
+Maita 128 96
 :
 -
 
@@ -68,6 +69,10 @@ w = wall, p = platform, f = false tile
 27ww                            ww
 28wwppppppppppppppppppppppppppppww
 :
+ZenChan 64 48
+ZenChan 128 48
+ZenChan 192 48
+Maita 128 96
 :
 -
 
@@ -103,5 +108,9 @@ w = wall, p = platform, f = false tile
 27ww                            ww
 28wwppppppp    pppppp    pppppppww
 :
+ZenChan 64 48
+ZenChan 128 48
+ZenChan 192 48
+Maita 128 96
 :
 -

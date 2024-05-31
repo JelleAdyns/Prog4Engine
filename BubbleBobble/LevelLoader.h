@@ -2,6 +2,7 @@
 #define LEVELLOADER_H
 
 #include <string>
+#include"LevelState.h"
 
 namespace levelLoader
 {

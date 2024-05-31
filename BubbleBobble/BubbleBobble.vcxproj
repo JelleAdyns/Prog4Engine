@@ -217,6 +217,7 @@
     <ClInclude Include="MaitaFallingState.h" />
     <ClInclude Include="MaitaJumpState.h" />
     <ClInclude Include="MaitaPoppedState.h" />
+    <ClInclude Include="NextLevelCommand.h" />
     <ClInclude Include="ProjectileComponent.h" />
     <ClInclude Include="SceneState.h" />
     <ClInclude Include="Spawners.h" />

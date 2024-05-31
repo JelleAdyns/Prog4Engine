@@ -70,7 +70,7 @@ namespace levelLoader
 		std::stringstream levelStream{ level };
 		std::string line{};
 
-		dae::Scene* activeScene = dae::SceneManager::GetInstance().GetActiveScene();
+		dae::Scene* activeScene = dae::SceneManager::GetInstance().GetNextScene();
 
 		int row{};
 		while (std::getline(levelStream, line))
@@ -148,7 +148,7 @@ namespace levelLoader
 
 				enemyStream >> pos.x >> pos.y;
 
-				spawners::SpawnEnemy(pos);
+				//spawners::SpawnZenChan(pos);
 			}
 
 			std::string maita{ "Maita" };
@@ -161,7 +161,7 @@ namespace levelLoader
 
 				enemyStream >> pos.x >> pos.y;
 
-				spawners::SpawnEnemy(pos);
+				//spawners::SpawnMaita(pos);
 			}
 		}
 	}

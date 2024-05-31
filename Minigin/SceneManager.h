@@ -19,6 +19,7 @@ namespace dae
 		void RemoveNonActiveScenes();
 
 		Scene* GetActiveScene() const;
+		Scene* GetNextScene() const;
 		void SetNextScene(const std::string& sceneToActivate);
 		void SetActiveScene();
 

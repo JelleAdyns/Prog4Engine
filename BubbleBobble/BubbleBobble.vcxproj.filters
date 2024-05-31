@@ -334,5 +334,8 @@
     <ClInclude Include="LevelState.h">
       <Filter>Source Files\States\SceneState</Filter>
     </ClInclude>
+    <ClInclude Include="NextLevelCommand.h">
+      <Filter>Source Files\Commands</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

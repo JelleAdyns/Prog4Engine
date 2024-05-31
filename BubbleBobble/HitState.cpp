@@ -62,6 +62,7 @@ void HitState::OnExit()
 {
 
 	m_pPlayer->GetComponent<dae::PhysicsComponent>()->StartGravity();
+	m_pPlayerComp->SetInvincible();
 
 	m_pMovementComp->RegisterAttackCommand();
 	m_pMovementComp->RegisterMoveCommands();

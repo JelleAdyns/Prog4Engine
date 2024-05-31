@@ -11,42 +11,75 @@
 #include "WallCheckingComponent.h"
 #include "FloorCheckingComponent.h"
 #include "ProjectileComponent.h"
+#include "PlayerComponent.h"
 #include "LevelState.h"
 
 namespace spawners
 {
 
-	void SpawnEnemy(const glm::vec2& spawnPos)
+	void SpawnZenChan(const glm::vec2& spawnPos, PlayerComponent* pPlayerOne, PlayerComponent* pPlayerTwo)
 	{
-		dae::Scene* pScene = dae::SceneManager::GetInstance().GetActiveScene();
+		dae::Scene* pScene = dae::SceneManager::GetInstance().GetNextScene();
 
-		auto enemy = std::make_unique<dae::GameObject>(spawnPos);
-		enemy->AddRenderComponent();
-		enemy->AddPhysicsComponent();
-		enemy->AddComponent<ZenChanComponent>();
-		//enemy->AddComponent<MovementComponent>(-160.f, 60.f);
-		ZenChanComponent* enemyComp = enemy->GetComponent<ZenChanComponent>();
-		enemyComp->AddPlayerObserver(LevelState::GetPlayerOne()->GetComponent<PlayerComponent>());
-		enemy->AddComponent<SpriteComponent>("Textures/Zen-ChanStates.png", 4, 7, 0.1f);
-		SpriteComponent* enemySpriteComp = enemy->GetComponent<SpriteComponent>();
+		auto zenChan = std::make_unique<dae::GameObject>(spawnPos);
+		zenChan->AddRenderComponent();
+		zenChan->AddPhysicsComponent();
+		zenChan->AddComponent<ZenChanComponent>();
+		//zenChan->AddComponent<MovementComponent>(-160.f, 60.f);
+		ZenChanComponent* zenChanComp = zenChan->GetComponent<ZenChanComponent>();
+		zenChanComp->AddPlayerObserver(pPlayerOne);
+		zenChanComp->AddPlayerObserver(pPlayerTwo);
+		zenChan->AddComponent<SpriteComponent>("Textures/Zen-ChanStates.png", 4, 7, 0.1f);
+		SpriteComponent* zenChanSpriteComp = zenChan->GetComponent<SpriteComponent>();
 
-		const auto& enemyDestRctSize = enemySpriteComp->GetDestRectSize();
+		const auto& zenChanDestRctSize = zenChanSpriteComp->GetDestRectSize();
 		float collisionOffset{ LevelState::GetCollisionOffset() };
 
-		enemy->AddComponent<dae::CollisionComponent>(
+		zenChan->AddComponent<dae::CollisionComponent>(
 			glm::vec2{ collisionOffset ,collisionOffset },
-			glm::vec2{ enemyDestRctSize.x - collisionOffset * 2 ,enemyDestRctSize.y - collisionOffset * 2 },
+			glm::vec2{ zenChanDestRctSize.x - collisionOffset * 2 ,zenChanDestRctSize.y - collisionOffset * 2 },
 			collisionTags::enemyTag);
 
-		enemy->AddComponent<WallCheckingComponent>(glm::vec2{ 0,enemyDestRctSize.y / 4 }, glm::vec2{ enemyDestRctSize.x,enemyDestRctSize.y / 2 });
-		enemy->AddComponent<FloorCheckingComponent>(glm::vec2{ enemyDestRctSize.x / 4,0 }, glm::vec2{ enemyDestRctSize.x / 2,enemyDestRctSize.y });
+		zenChan->AddComponent<WallCheckingComponent>(glm::vec2{ 0,zenChanDestRctSize.y / 4 }, glm::vec2{ zenChanDestRctSize.x,zenChanDestRctSize.y / 2 });
+		zenChan->AddComponent<FloorCheckingComponent>(glm::vec2{ zenChanDestRctSize.x / 4,0 }, glm::vec2{ zenChanDestRctSize.x / 2,zenChanDestRctSize.y });
 
-		pScene->AddGameObject(std::move(enemy));
+		pScene->AddGameObject(std::move(zenChan));
+	}
+
+	void SpawnMaita(const glm::vec2& spawnPos, PlayerComponent* pPlayerOne, PlayerComponent* pPlayerTwo)
+	{
+		dae::Scene* pScene = dae::SceneManager::GetInstance().GetNextScene();
+
+		auto maita = std::make_unique<dae::GameObject>(spawnPos);
+		maita->AddRenderComponent();
+		maita->AddPhysicsComponent();
+		maita->AddComponent<MaitaComponent>();
+		float maitaOffset = MaitaComponent::GetMaitaOffset();
+		//maita->AddComponent<MovementComponent>(-160.f, 60.f);
+		MaitaComponent* maitaComp = maita->GetComponent<MaitaComponent>();
+		maitaComp->AddPlayerObserver(pPlayerOne);
+		maitaComp->AddPlayerObserver(pPlayerTwo);
+		maita->AddComponent<SpriteComponent>("Textures/MaitaStates.png", 5, 9, 0.1f);
+		SpriteComponent* maitaSpriteComp = maita->GetComponent<SpriteComponent>();
+
+		auto maitaDestRctSize = maitaSpriteComp->GetDestRectSize();
+		float collisionOffset{ LevelState::GetCollisionOffset() };
+
+		maita->AddComponent<dae::CollisionComponent>(
+			glm::vec2{ maitaOffset + collisionOffset  ,collisionOffset },
+			glm::vec2{ maitaDestRctSize.x - collisionOffset * 2 - maitaOffset * 2 ,maitaDestRctSize.y - collisionOffset * 2 },
+			collisionTags::enemyTag);
+
+		maita->AddComponent<WallCheckingComponent>(glm::vec2{ maitaOffset ,maitaDestRctSize.y / 4 }, glm::vec2{ maitaDestRctSize.x - maitaOffset * 2,maitaDestRctSize.y / 2 });
+		maita->AddComponent<FloorCheckingComponent>(glm::vec2{ (maitaDestRctSize.x - maitaOffset * 2) / 4 + maitaOffset, 0 }, glm::vec2{ (maitaDestRctSize.x - maitaOffset * 2) / 2,maitaDestRctSize.y });
+
+		pScene->AddGameObject(std::move(maita));
+		
 	}
 
 	void SpawnBubble(const glm::vec2& spawnPos, bool left)
 	{
-		dae::Scene* pScene = dae::SceneManager::GetInstance().GetActiveScene();
+		dae::Scene* pScene = dae::SceneManager::GetInstance().GetNextScene();
 
 		auto pBubble = std::make_unique<dae::GameObject>(spawnPos);
 		pBubble->AddRenderComponent();
@@ -65,7 +98,7 @@ namespace spawners
 
 	void SpawnPickUp(const glm::vec2& spawnPos, PickUpComponent::PickUpType pickUpType)
 	{
-		dae::Scene* pScene = dae::SceneManager::GetInstance().GetActiveScene();
+		dae::Scene* pScene = dae::SceneManager::GetInstance().GetNextScene();
 
 		auto pPickUp = std::make_unique<dae::GameObject>(spawnPos);
 		pPickUp->AddRenderComponent();
@@ -84,7 +117,7 @@ namespace spawners
 
 	void SpawnProjectile(const glm::vec2& spawnPos, bool left)
 	{
-		dae::Scene* pScene = dae::SceneManager::GetInstance().GetActiveScene();
+		dae::Scene* pScene = dae::SceneManager::GetInstance().GetNextScene();
 
 		auto pBoulder = std::make_unique<dae::GameObject>(spawnPos);
 		pBoulder->AddRenderComponent();

@@ -97,6 +97,11 @@ void PlayerComponent::Shoot()
 }
 
 
+void PlayerComponent::SetInvincible()
+{
+	m_IsInvincible = true;
+}
+
 bool PlayerComponent::IsInvincible() const
 {
 	return m_IsInvincible;
@@ -104,9 +109,7 @@ bool PlayerComponent::IsInvincible() const
 
 void PlayerComponent::Respawn()
 {
-
 	GetOwner()->SetLocalPos(24.f, dae::Minigin::GetWindowSize().y - 40.f);
-	m_IsInvincible = true;
 }
 
 dae::Subject<PlayerComponent>* PlayerComponent::GetSubject() const

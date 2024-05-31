@@ -19,6 +19,10 @@ MovementComponent::MovementComponent(dae::GameObject* pOwner, float jumpVelocity
 MovementComponent::~MovementComponent()
 {
 	--m_NrOfPlayers;
+
+	UnRegisterMoveCommands();
+	UnRegisterAttackCommand();
+	UnRegisterJumpCommand();
 }
 
 void MovementComponent::Start()

@@ -68,12 +68,17 @@ void dae::SceneManager::RemoveNonActiveScenes()
 	 
 	std::for_each(m_pMapScenes.cbegin(), m_pMapScenes.cend(), [&](const std::pair<const std::string, std::unique_ptr<Scene>>& pair)
 		{
-			if(pair.first != m_ActiveScene)	pair.second->SetDestroyed();
+			const auto& [key, pScene] = pair;
+			if(key != m_ActiveScene) pScene->SetDestroyed();
 		});
 	
 }
 
 dae::Scene* dae::SceneManager::GetActiveScene() const
+{
+	return m_pMapScenes.at(m_ActiveScene).get();
+}
+dae::Scene* dae::SceneManager::GetNextScene() const
 {
 	return m_pMapScenes.at(m_NextScene).get();
 }
@@ -84,11 +89,9 @@ void dae::SceneManager::SetNextScene(const std::string& sceneToActivate)
 
 void dae::SceneManager::SetActiveScene()
 {
-	bool sceneCahnged{ m_NextScene != m_ActiveScene };
-	
-	if (m_pMapScenes.contains(m_NextScene)) m_ActiveScene = m_NextScene;
-	if (sceneCahnged)
+	if (m_NextScene != m_ActiveScene)
 	{
+		if (m_pMapScenes.contains(m_NextScene)) m_ActiveScene = m_NextScene;
 		RemoveNonActiveScenes();
 		Start();
 	}
