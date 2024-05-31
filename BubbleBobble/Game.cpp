@@ -12,6 +12,8 @@
 #include "Achievements.h"
 #include "LevelLoader.h"
 #include "CollisionTags.h"
+#include "MainMenuState.h"
+#include "LevelState.h"
 #include <Minigin.h>
 #include <SceneManager.h>
 #include <functional>
@@ -30,7 +32,19 @@
 
 void Game::StartGame()
 {
-	SetScene(CurrScene::TitleScreen);
+
+#ifndef NDEBUG
+	dae::AudioLocator::RegisterAudioService(std::make_unique<dae::LogAudio>(std::make_unique<dae::SDLAudio>()));
+#else
+	dae::AudioLocator::RegisterAudioService(std::make_unique<dae::SDLAudio>());
+#endif // !NDEBUG
+
+
+	m_CurrScene = std::make_unique<TitleScreenState>();
+	m_CurrScene->OnEnter();
+
+	//dae::SceneManager::GetInstance().Start();
+	//SetScene(CurrScene::TitleScreen);
 }
 
 void Game::SetScene(Game::CurrScene newScene)
@@ -39,27 +53,30 @@ void Game::SetScene(Game::CurrScene newScene)
 	switch (m_ActiveScene)
 	{
 	case CurrScene::TitleScreen:
-		LoadTitleScreen();
+		//LoadTitleScreen();
+		m_CurrScene->OnExit();
+		m_CurrScene = std::make_unique<TitleScreenState>();
+		m_CurrScene->OnEnter();
 		break;
-	case CurrScene::Menu:		
-		LoadMainMenu();
+	case CurrScene::Menu:
+		//LoadMainMenu();
+		m_CurrScene->OnExit();
+		m_CurrScene = std::make_unique<MainMenuState>();
+		m_CurrScene->OnEnter();
 		break;
-	case CurrScene::Level1:
-		LoadLevelOne();
-		break;
-	case CurrScene::Level2:
-		LoadLevelTwo();
-		break;
-	case CurrScene::Level3:
-		LoadLevelThree();
+	case CurrScene::Level:
+		//LoadLevelOne();
+		m_CurrScene->OnExit();
+		m_CurrScene = std::make_unique<LevelState>();
+		m_CurrScene->OnEnter();
 		break;
 	case CurrScene::HighScore:
 		break;
 	}
 
-	dae::SceneManager::GetInstance().RemoveNonActiveScenes();
+	//dae::SceneManager::GetInstance().RemoveNonActiveScenes();
 
-	dae::SceneManager::GetInstance().Start();
+	//dae::SceneManager::GetInstance().Start();
 }
 
 void Game::LoadTitleScreen() const
@@ -143,7 +160,7 @@ void Game::LoadMainMenu() const
 	const auto& handlerComponent = buttonHandler->GetComponent<ButtonHandlerComponent>();
 	
 
-	std::unique_ptr<dae::Command> loadCommand = std::make_unique<LoadSceneCommand>(CurrScene::Level1);
+	std::unique_ptr<dae::Command> loadCommand = std::make_unique<LoadSceneCommand>(CurrScene::Level);
 
 	auto button1 = std::make_unique<dae::GameObject>(0.f, 30.f);
 	button1->AddRenderComponent(false);
@@ -154,7 +171,7 @@ void Game::LoadMainMenu() const
 	handlerComponent->AddButton(button1->GetComponent<ButtonComponent>());
 
 
-	std::unique_ptr<dae::Command> loadCommand2 = std::make_unique<LoadSceneCommand>(CurrScene::Level2);
+	std::unique_ptr<dae::Command> loadCommand2 = std::make_unique<LoadSceneCommand>(CurrScene::Level);
 
 	auto button2 = std::make_unique<dae::GameObject>(0.f, 30.f);
 	button2->AddRenderComponent(false);
@@ -164,7 +181,7 @@ void Game::LoadMainMenu() const
 
 	handlerComponent->AddButton(button2->GetComponent<ButtonComponent>());
 
-	std::unique_ptr<dae::Command> loadCommand3 = std::make_unique<LoadSceneCommand>(CurrScene::Level3);
+	std::unique_ptr<dae::Command> loadCommand3 = std::make_unique<LoadSceneCommand>(CurrScene::TitleScreen);
 
 	auto button3 = std::make_unique<dae::GameObject>(0.f, 30.f);
 	button3->AddRenderComponent(false);
@@ -233,8 +250,8 @@ void Game::LoadLevelOne() const
 
 	auto& scene = sceneManager.CreateScene("Level1");
 
-
-	LoadLevel("Levels.txt", scene, 1);
+	MakePlayer(scene);
+	levelLoader::LoadLevel("Levels.txt", 1);
 
 
 	////Info
@@ -313,7 +330,7 @@ void Game::LoadLevelOne() const
 	//}
 
 	//Input Objects
-	MakePlayer(scene);
+
 
 
 	auto info = std::make_unique<dae::GameObject>();
@@ -340,7 +357,7 @@ void Game::LoadLevelTwo() const
 	auto& scene = sceneManager.CreateScene("Level2");
 
 
-	LoadLevel("Levels.txt", scene, 2);
+	levelLoader::LoadLevel("Levels.txt", 2);
 
 	MakePlayer(scene);
 
@@ -366,7 +383,7 @@ void Game::LoadLevelThree() const
 	auto& scene = sceneManager.CreateScene("Level3");
 
 
-	LoadLevel("Levels.txt", scene, 3);
+	levelLoader::LoadLevel("Levels.txt", 3);
 
 	MakePlayer(scene);
 	
@@ -428,72 +445,72 @@ void Game::MakePlayer(dae::Scene& scene) const
 
 
 
-	auto enemy = std::make_unique<dae::GameObject>(128, 120);
-	enemy->AddRenderComponent();
-	enemy->AddPhysicsComponent();
-	enemy->AddComponent<ZenChanComponent>();
-	//enemy->AddComponent<MovementComponent>(-160.f, 60.f);
-	ZenChanComponent* enemyComp = enemy->GetComponent<ZenChanComponent>();
-	enemyComp->AddPlayerObserver(playerComp);
-	enemy->AddComponent<SpriteComponent>("Textures/Zen-ChanStates.png", 4, 7, 0.1f);
-	SpriteComponent* enemySpriteComp = enemy->GetComponent<SpriteComponent>();
+	//auto enemy = std::make_unique<dae::GameObject>(128, 120);
+	//enemy->AddRenderComponent();
+	//enemy->AddPhysicsComponent();
+	//enemy->AddComponent<ZenChanComponent>();
+	////enemy->AddComponent<MovementComponent>(-160.f, 60.f);
+	//ZenChanComponent* enemyComp = enemy->GetComponent<ZenChanComponent>();
+	//enemyComp->AddPlayerObserver(playerComp);
+	//enemy->AddComponent<SpriteComponent>("Textures/Zen-ChanStates.png", 4, 7, 0.1f);
+	//SpriteComponent* enemySpriteComp = enemy->GetComponent<SpriteComponent>();
 
-	const auto& enemyDestRctSize = enemySpriteComp->GetDestRectSize();
+	//const auto& enemyDestRctSize = enemySpriteComp->GetDestRectSize();
 
-	enemy->AddComponent<dae::CollisionComponent>(
-		glm::vec2{ collisionOffset ,collisionOffset },
-		glm::vec2{ enemyDestRctSize.x - collisionOffset * 2 ,enemyDestRctSize.y - collisionOffset * 2 },
-		collisionTags::enemyTag);
+	//enemy->AddComponent<dae::CollisionComponent>(
+	//	glm::vec2{ collisionOffset ,collisionOffset },
+	//	glm::vec2{ enemyDestRctSize.x - collisionOffset * 2 ,enemyDestRctSize.y - collisionOffset * 2 },
+	//	collisionTags::enemyTag);
 
-	enemy->AddComponent<WallCheckingComponent>(glm::vec2{ 0,enemyDestRctSize.y/4 }, glm::vec2{ enemyDestRctSize.x,enemyDestRctSize.y/2 });
-	enemy->AddComponent<FloorCheckingComponent>(glm::vec2{ enemyDestRctSize.x/4,0 }, glm::vec2{ enemyDestRctSize.x/2,enemyDestRctSize.y });
+	//enemy->AddComponent<WallCheckingComponent>(glm::vec2{ 0,enemyDestRctSize.y/4 }, glm::vec2{ enemyDestRctSize.x,enemyDestRctSize.y/2 });
+	//enemy->AddComponent<FloorCheckingComponent>(glm::vec2{ enemyDestRctSize.x/4,0 }, glm::vec2{ enemyDestRctSize.x/2,enemyDestRctSize.y });
 
-	scene.AddGameObject(std::move(enemy));
+	//scene.AddGameObject(std::move(enemy));
 
-	auto enemy2 = std::make_unique<dae::GameObject>(200, 120);
-	enemy2->AddRenderComponent();
-	enemy2->AddPhysicsComponent();
-	enemy2->AddComponent<ZenChanComponent>();
-	//enemy2->AddComponent<MovementComponent>(-160.f, 60.f);
-	ZenChanComponent* enemy2Comp = enemy2->GetComponent<ZenChanComponent>();
-	enemy2Comp->AddPlayerObserver(playerComp);
-	enemy2->AddComponent<SpriteComponent>("Textures/Zen-ChanStates.png", 4, 7, 0.1f);
-	SpriteComponent* enemy2SpriteComp = enemy2->GetComponent<SpriteComponent>();
+	//auto enemy2 = std::make_unique<dae::GameObject>(200, 120);
+	//enemy2->AddRenderComponent();
+	//enemy2->AddPhysicsComponent();
+	//enemy2->AddComponent<ZenChanComponent>();
+	////enemy2->AddComponent<MovementComponent>(-160.f, 60.f);
+	//ZenChanComponent* enemy2Comp = enemy2->GetComponent<ZenChanComponent>();
+	//enemy2Comp->AddPlayerObserver(playerComp);
+	//enemy2->AddComponent<SpriteComponent>("Textures/Zen-ChanStates.png", 4, 7, 0.1f);
+	//SpriteComponent* enemy2SpriteComp = enemy2->GetComponent<SpriteComponent>();
 
-	const auto& enemy2DestRctSize = enemy2SpriteComp->GetDestRectSize();
+	//const auto& enemy2DestRctSize = enemy2SpriteComp->GetDestRectSize();
 
-	enemy2->AddComponent<dae::CollisionComponent>(
-		glm::vec2{ collisionOffset ,collisionOffset },
-		glm::vec2{ enemy2DestRctSize.x - collisionOffset * 2 ,enemy2DestRctSize.y - collisionOffset * 2 },
-		collisionTags::enemyTag);
+	//enemy2->AddComponent<dae::CollisionComponent>(
+	//	glm::vec2{ collisionOffset ,collisionOffset },
+	//	glm::vec2{ enemy2DestRctSize.x - collisionOffset * 2 ,enemy2DestRctSize.y - collisionOffset * 2 },
+	//	collisionTags::enemyTag);
 
-	enemy2->AddComponent<WallCheckingComponent>(glm::vec2{ 0,enemy2DestRctSize.y / 4 }, glm::vec2{ enemy2DestRctSize.x,enemy2DestRctSize.y / 2 });
-	enemy2->AddComponent<FloorCheckingComponent>(glm::vec2{ enemy2DestRctSize.x / 4,0 }, glm::vec2{ enemy2DestRctSize.x / 2,enemy2DestRctSize.y });
+	//enemy2->AddComponent<WallCheckingComponent>(glm::vec2{ 0,enemy2DestRctSize.y / 4 }, glm::vec2{ enemy2DestRctSize.x,enemy2DestRctSize.y / 2 });
+	//enemy2->AddComponent<FloorCheckingComponent>(glm::vec2{ enemy2DestRctSize.x / 4,0 }, glm::vec2{ enemy2DestRctSize.x / 2,enemy2DestRctSize.y });
 
-	scene.AddGameObject(std::move(enemy2));
+	//scene.AddGameObject(std::move(enemy2));
 
-	auto enemy3 = std::make_unique<dae::GameObject>(220, 120);
-	enemy3->AddRenderComponent();
-	enemy3->AddPhysicsComponent();
-	enemy3->AddComponent<MaitaComponent>();
-	float maitaOffset = MaitaComponent::GetMaitaOffset();
-	//enemy3->AddComponent<MovementComponent>(-160.f, 60.f);
-	MaitaComponent* enemy3Comp = enemy3->GetComponent<MaitaComponent>();
-	enemy3Comp->AddPlayerObserver(playerComp);
-	enemy3->AddComponent<SpriteComponent>("Textures/MaitaStates.png", 5, 9, 0.1f);
-	SpriteComponent* enemy3SpriteComp = enemy3->GetComponent<SpriteComponent>();
+	//auto enemy3 = std::make_unique<dae::GameObject>(220, 120);
+	//enemy3->AddRenderComponent();
+	//enemy3->AddPhysicsComponent();
+	//enemy3->AddComponent<MaitaComponent>();
+	//float maitaOffset = MaitaComponent::GetMaitaOffset();
+	////enemy3->AddComponent<MovementComponent>(-160.f, 60.f);
+	//MaitaComponent* enemy3Comp = enemy3->GetComponent<MaitaComponent>();
+	//enemy3Comp->AddPlayerObserver(playerComp);
+	//enemy3->AddComponent<SpriteComponent>("Textures/MaitaStates.png", 5, 9, 0.1f);
+	//SpriteComponent* enemy3SpriteComp = enemy3->GetComponent<SpriteComponent>();
 
-	auto enemy3DestRctSize = enemy3SpriteComp->GetDestRectSize();
-	
-	enemy3->AddComponent<dae::CollisionComponent>(
-		glm::vec2{ maitaOffset + collisionOffset  ,collisionOffset },
-		glm::vec2{ enemy3DestRctSize.x - collisionOffset * 2 - maitaOffset *2 ,enemy3DestRctSize.y - collisionOffset * 2 },
-		collisionTags::enemyTag);
+	//auto enemy3DestRctSize = enemy3SpriteComp->GetDestRectSize();
+	//
+	//enemy3->AddComponent<dae::CollisionComponent>(
+	//	glm::vec2{ maitaOffset + collisionOffset  ,collisionOffset },
+	//	glm::vec2{ enemy3DestRctSize.x - collisionOffset * 2 - maitaOffset *2 ,enemy3DestRctSize.y - collisionOffset * 2 },
+	//	collisionTags::enemyTag);
 
-	enemy3->AddComponent<WallCheckingComponent>(glm::vec2{ maitaOffset ,enemy3DestRctSize.y / 4 }, glm::vec2{ enemy3DestRctSize.x - maitaOffset * 2,enemy3DestRctSize.y / 2 });
-	enemy3->AddComponent<FloorCheckingComponent>(glm::vec2{ (enemy3DestRctSize.x - maitaOffset * 2) / 4 + maitaOffset, 0 }, glm::vec2{ (enemy3DestRctSize.x - maitaOffset * 2) / 2,enemy3DestRctSize.y });
+	//enemy3->AddComponent<WallCheckingComponent>(glm::vec2{ maitaOffset ,enemy3DestRctSize.y / 4 }, glm::vec2{ enemy3DestRctSize.x - maitaOffset * 2,enemy3DestRctSize.y / 2 });
+	//enemy3->AddComponent<FloorCheckingComponent>(glm::vec2{ (enemy3DestRctSize.x - maitaOffset * 2) / 4 + maitaOffset, 0 }, glm::vec2{ (enemy3DestRctSize.x - maitaOffset * 2) / 2,enemy3DestRctSize.y });
 
-	scene.AddGameObject(std::move(enemy3));
+	//scene.AddGameObject(std::move(enemy3));
 
 
 	//uint8_t playerIndex = playerComp->GetPlayerIndex();

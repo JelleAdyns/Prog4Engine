@@ -13,8 +13,7 @@ MovementComponent::MovementComponent(dae::GameObject* pOwner, float jumpVelocity
 	m_JumpVelocity{jumpVelocity},
 	m_MoveSpeed{moveSpeed}
 {
-	m_PlayerIndex = m_NrOfPlayers;
-	++m_NrOfPlayers;
+	m_PlayerIndex = m_NrOfPlayers++;
 }
 
 MovementComponent::~MovementComponent()

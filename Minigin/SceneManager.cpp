@@ -15,6 +15,7 @@ void dae::SceneManager::Update()
 	m_pMapScenes.at(m_ActiveScene)->Update();
 
 	CheckForDestroyedScenes();
+
 }
 
 void dae::SceneManager::PrepareImGuiRender()
@@ -53,7 +54,7 @@ dae::Scene& dae::SceneManager::CreateScene(const std::string& name)
 
 	if (m_pMapScenes.contains(name)) std::cout << "This name ("<<name<<") for the new scene already exists, overwriting now.\n";
 	m_pMapScenes[name] = std::move(pScene);
-	SetActiveScene(name);
+	SetNextScene(name);
 	return *m_pMapScenes.at(name);
 }
 
@@ -74,9 +75,21 @@ void dae::SceneManager::RemoveNonActiveScenes()
 
 dae::Scene* dae::SceneManager::GetActiveScene() const
 {
-	return m_pMapScenes.at(m_ActiveScene).get();
+	return m_pMapScenes.at(m_NextScene).get();
 }
-void dae::SceneManager::SetActiveScene(const std::string& sceneToActivate)
+void dae::SceneManager::SetNextScene(const std::string& sceneToActivate)
 {
-	if (m_pMapScenes.contains(sceneToActivate)) m_ActiveScene = sceneToActivate;
+	if (m_pMapScenes.contains(sceneToActivate)) m_NextScene = sceneToActivate;
+}
+
+void dae::SceneManager::SetActiveScene()
+{
+	bool sceneCahnged{ m_NextScene != m_ActiveScene };
+	
+	if (m_pMapScenes.contains(m_NextScene)) m_ActiveScene = m_NextScene;
+	if (sceneCahnged)
+	{
+		RemoveNonActiveScenes();
+		Start();
+	}
 }

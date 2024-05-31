@@ -1,4 +1,5 @@
 #include "ZenChanPoppedState.h"
+#include "CollisionTags.h"
 
 
 ZenChanPoppedState::ZenChanPoppedState(dae::GameObject* pEnemy) :

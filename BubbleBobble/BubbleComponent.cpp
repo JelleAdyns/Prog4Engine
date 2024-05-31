@@ -134,6 +134,11 @@ BubbleComponent::FloatingStage BubbleComponent::GetFloatingStage() const
 	return m_FloatingStage;
 }
 
+bool BubbleComponent::IsFloating() const
+{
+	return m_CurrState == BubbleState::Floating;
+}
+
 void BubbleComponent::HandleShotState()
 {
 	

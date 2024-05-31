@@ -19,7 +19,8 @@ namespace dae
 		void RemoveNonActiveScenes();
 
 		Scene* GetActiveScene() const;
-		void SetActiveScene(const std::string& sceneToActivate);
+		void SetNextScene(const std::string& sceneToActivate);
+		void SetActiveScene();
 
 		virtual ~SceneManager() = default;
 
@@ -28,7 +29,6 @@ namespace dae
 		SceneManager& operator= (const SceneManager&) = delete;
 		SceneManager& operator= (SceneManager&&) noexcept = delete;
 
-		void Start();
 		void Update();
 		void PrepareImGuiRender();
 		void Render() const;
@@ -36,10 +36,12 @@ namespace dae
 	private:
 		friend class Singleton<SceneManager>;
 		SceneManager() = default;
+		void Start();
 
 		void CheckForDestroyedScenes();
 
 		std::string m_ActiveScene;
+		std::string m_NextScene;
 		std::vector<std::string> m_KeysToDestroy;
 		std::unordered_map <std::string, std::unique_ptr <Scene>> m_pMapScenes;
 	};

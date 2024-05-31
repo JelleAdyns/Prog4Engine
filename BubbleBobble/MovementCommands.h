@@ -9,6 +9,7 @@
 #include <AudioLocator.h>
 #include "WallCheckingComponent.h"
 #include "FloorCheckingComponent.h"
+#include "BubbleComponent.h"
 #include "Game.h"
 //--------------------------
 // Moving
@@ -106,19 +107,18 @@ public:
 	{
 		if (m_CheckForBubble)
 		{
-			m_pCollisionComponent->CheckForCollision(collisionTags::bubbleTag);
+			dae::GameObject* bubble = m_pCollisionComponent->CheckForCollision(collisionTags::bubbleTag);
 
-			auto flags = m_pCollisionComponent->GetCollisionFlags();
-			const auto bottomFlag = static_cast<char>(dae::CollisionComponent::CollidingSide::Bottom);
-
-			//auto overlappedDistance = m_pCollisionComponent->GetOverlappedDistance();
-
-			if ((flags & bottomFlag) == bottomFlag)
+			if(bubble)
 			{
-				//const auto& currentPos = GetGameObject()->GetLocalPosition();
-				//GetGameObject()->SetLocalPos(currentPos.x, currentPos.y - overlappedDistance.y - 10);
+				auto flags = m_pCollisionComponent->GetCollisionFlags();
+				const auto bottomFlag = static_cast<char>(dae::CollisionComponent::CollidingSide::Bottom);
 
-				m_pPhysicsComponent->SetVelocityY(m_JumpVelocity);
+				if ((flags & bottomFlag) == bottomFlag)
+				{
+					if (bubble->GetComponent<BubbleComponent>()->IsFloating())
+						m_pPhysicsComponent->SetVelocityY(m_JumpVelocity);
+				}
 			}
 		}
 		else

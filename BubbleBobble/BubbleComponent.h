@@ -48,6 +48,7 @@ public:
 	bool IsOccupied();
 	bool IsPoppedByPlayer();
 	FloatingStage GetFloatingStage() const;
+	bool IsFloating() const;
 
 private:
 	enum class BubbleState

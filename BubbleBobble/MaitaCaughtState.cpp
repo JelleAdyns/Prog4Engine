@@ -4,6 +4,7 @@
 #include "MaitaComponent.h"
 #include "FloorCheckingComponent.h"
 #include "BubbleComponent.h"
+#include "CollisionTags.h"
 #include <PhysicsComponent.h>
 #include <CollisionComponent.h>
 #include <GameObject.h>

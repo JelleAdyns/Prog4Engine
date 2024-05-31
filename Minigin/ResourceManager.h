@@ -40,6 +40,7 @@ namespace dae
 		{
 			void operator()(SDL_Texture* pTexture) { SDL_DestroyTexture(pTexture);}
 		};
+		SDLTextureDeleter m_Deleter;
 		std::map<std::string, std::unique_ptr<SDL_Texture, SDLTextureDeleter>> m_pMapSDLTextures;
 	};
 }

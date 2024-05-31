@@ -1,4 +1,5 @@
 #include "MaitaPoppedState.h"
+#include "CollisionTags.h"
 
 
 MaitaPoppedState::MaitaPoppedState(dae::GameObject* pMaita) :

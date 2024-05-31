@@ -3,7 +3,7 @@
 
 #include <Singleton.h>
 #include <AudioService.h>
-
+#include "TitleScreenState.h"
 namespace dae
 {
 	class Scene;
@@ -24,13 +24,14 @@ public:
 	{
 		TitleScreen,
 		Menu,
-		Level1,
-		Level2,
-		Level3,
-		HighScore
+		Level,
+		PauseScreen,
+		HighScore,
+		DeathScene,
+		WelcomeScreen
 	};
 
-	// I've got this idea of making sure it corresponds to SoundID from Wout Firlefyn
+	// I've got this idea of making sure the underlying type is SoundID from Wout Firlefyn
 	enum class SoundEvent : dae::SoundID
 	{
 		MainTheme,
@@ -50,6 +51,7 @@ private:
 	void MakePlayer(dae::Scene& scene) const;
 
 	CurrScene m_ActiveScene{ CurrScene::TitleScreen };
+	std::unique_ptr<SceneState> m_CurrScene{ nullptr };
 
 	friend class dae::Singleton<Game>;
 	Game() = default;

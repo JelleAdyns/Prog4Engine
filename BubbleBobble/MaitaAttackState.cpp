@@ -2,7 +2,9 @@
 #include "MaitaRunState.h"
 #include "MaitaCaughtState.h"
 #include "MaitaComponent.h"
+#include "BubbleComponent.h"
 #include "Spawners.h"
+#include "CollisionTags.h"
 #include <PhysicsComponent.h>
 #include <CollisionComponent.h>
 #include <GameObject.h>

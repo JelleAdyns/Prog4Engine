@@ -123,6 +123,8 @@ namespace dae
 			prevTime = currTime;
 			lag += gameTime.GetDeltaTime();
 
+			sceneManager.SetActiveScene();
+
 			//SteamAPI_RunCallbacks();
 			doContinue = input.ProcessInput();
 
