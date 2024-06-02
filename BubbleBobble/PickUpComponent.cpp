@@ -1,5 +1,5 @@
 #include "PickUpComponent.h"
-#include "ScoreUIComponent.h"
+#include "InventoryComponent.h"
 #include "CollisionTags.h"
 #include "spawners.h"
 #include <CollisionComponent.h>
@@ -7,14 +7,13 @@
 #include <GameObject.h>
 #include <GameTime.h>
 
-PickUpComponent::PickUpComponent(dae::GameObject* pOwner, PickUpComponent::PickUpType pickUpType, ScoreUIComponent* pObserver):
+PickUpComponent::PickUpComponent(dae::GameObject* pOwner, PickUpComponent::PickUpType pickUpType):
 	dae::Component{pOwner},
 	m_PickUpType{pickUpType},
 	m_pCollisionComp{},
-	m_pSpriteComp{},
-	m_PickedUp{std::make_unique<dae::Subject<PickUpComponent>>()}
+	m_pSpriteComp{}
 {
-	m_PickedUp->AddObserver(pObserver);
+
 }
 
 PickUpComponent::~PickUpComponent()
@@ -47,15 +46,15 @@ void PickUpComponent::Update()
 {
 	HandleTimers();
 
-	//if(m_Timer < m_MaxTimeAlive)
-	//{
-	//	dae::GameObject* pPlayer = m_pCollisionComp->CheckForCollision(collisionTags::playerTag);
-	//	if (pPlayer)
-	//	{
-	//		m_PickedUp->NotifyObservers(this);
-	//		GetOwner()->MarkDead();
-	//	}
-	//}
+	if(m_Timer < m_MaxTimeAlive)
+	{
+		dae::GameObject* pPlayer = m_pCollisionComp->CheckForCollision(collisionTags::playerTag);
+		if (pPlayer)
+		{
+			pPlayer->GetComponent<InventoryComponent>()->AddItem(m_PickUpType, GetOwner()->GetWorldPosition());
+			GetOwner()->MarkDead();
+		}
+	}
 }
 
 void PickUpComponent::PrepareImGuiRender()
@@ -80,11 +79,11 @@ void PickUpComponent::SetSubjectPointersInvalid()
 	}
 }
 
-void PickUpComponent::PickUp(PlayerComponent::PlayerType playerType)
-{
-	spawners::SpawnFloatingScore(GetOwner()->GetWorldPosition(), m_PickUpType, playerType);
-	GetOwner()->MarkDead();
-}
+//void PickUpComponent::PickUp(PlayerComponent::PlayerType playerType)
+//{
+//
+//	GetOwner()->MarkDead();
+//}
 
 PickUpComponent::PickUpType PickUpComponent::GetPickUpType() const
 {

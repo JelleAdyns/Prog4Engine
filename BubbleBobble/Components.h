@@ -29,5 +29,6 @@
 #include "BubbleComponent.h"
 #include "ProjectileComponent.h"
 #include "ScoreComponent.h"
+#include "InventoryComponent.h"
 
 #endif // !COMPONENTS_H

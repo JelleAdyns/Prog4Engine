@@ -19,6 +19,7 @@
 #include "HitState.h"
 #include "Spawners.h"
 #include "ActivateButtonCommand.h"
+#include "Achievements.h"
 
 const std::string LevelState::m_SceneName{ "Level" };
 
@@ -61,12 +62,13 @@ void LevelState::AdvanceLevel()
 	}	
 }
 
-void LevelState::MakePlayer(const std::unique_ptr<dae::GameObject>& pPlayer, PlayerComponent::PlayerType playerType)
+void LevelState::MakePlayer(const std::unique_ptr<dae::GameObject>& pPlayer, PlayerComponent::PlayerType playerType, ScoreUIComponent* scoreDisplay)
 {
 
 	pPlayer->AddRenderComponent();
 	pPlayer->AddPhysicsComponent();
 	pPlayer->AddComponent<MovementComponent>(-160.f, 60.f);
+	pPlayer->AddComponent<InventoryComponent>(scoreDisplay);
 	dae::PhysicsComponent::SetGravity(300);
 	pPlayer->AddComponent<PlayerComponent>(playerType);
 	PlayerComponent* playerComp = pPlayer->GetComponent<PlayerComponent>();
@@ -116,26 +118,29 @@ void LevelState::UploadScene()
 	scene.AddGameObject(std::move(pButtonHandler));
 	scene.AddGameObject(std::move(pButton));
 
+	auto pScoreDisplayText = std::make_unique<dae::GameObject>(dae::Minigin::GetWindowSize().x / 4.f, 4.f);
+	pScoreDisplayText->AddRenderComponent(true);
+	pScoreDisplayText->AddComponent<dae::TextComponent>("1UP", "Fonts/Pixel_NES.otf", 8, glm::u8vec4{ 0,255,0,255 });
+
+	auto pScoreDisplay = std::make_unique<dae::GameObject>(0, 8);
+	pScoreDisplay->AddRenderComponent(true);
+	pScoreDisplay->AddComponent<dae::TextComponent>("0", "Fonts/Pixel_NES.otf", 8);
+	pScoreDisplay->AddComponent<ScoreUIComponent>(&Achievements::GetInstance());
+
+	pScoreDisplay->SetParent(pScoreDisplayText, false);
+
+	ScoreUIComponent* pScoreUIComp = pScoreDisplay->GetComponent<ScoreUIComponent>();
+	
 
 	auto pPlayer = std::make_unique<dae::GameObject>();
-	MakePlayer(pPlayer, PlayerComponent::PlayerType::Green);
+	MakePlayer(pPlayer, PlayerComponent::PlayerType::Green, pScoreUIComp);
 
 	LoadLevel("Levels.txt");
 
 	scene.AddGameObject(std::move(pPlayer));
-	
-	auto pScoreDisplayText = std::make_unique<dae::GameObject>(dae::Minigin::GetWindowSize().x/4.f, 4.f);
-	pScoreDisplayText->AddRenderComponent(true);
-	pScoreDisplayText->AddComponent<dae::TextComponent>("1UP", "Fonts/Pixel_NES.otf", 8, glm::u8vec4{ 0,255,0,255 });
-
-	auto pScoreDisplay = std::make_unique<dae::GameObject>(0,8);
-	pScoreDisplay->AddRenderComponent(true);
-	pScoreDisplay->AddComponent<dae::TextComponent>("0", "Fonts/Pixel_NES.otf", 8);
-
-	pScoreDisplay->SetParent(pScoreDisplayText, false);
-
 	scene.AddGameObject(std::move(pScoreDisplayText));
 	scene.AddGameObject(std::move(pScoreDisplay));
+	
 }
 
 void LevelState::LoadLevel(const std::string& filename)

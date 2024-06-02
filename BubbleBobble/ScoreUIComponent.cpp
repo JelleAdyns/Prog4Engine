@@ -1,14 +1,16 @@
 #include "ScoreUIComponent.h"
 #include "PickUpComponent.h"
 #include "TextComponent.h"
+#include "InventoryComponent.h"
 #include "Achievements.h"
+#include "Spawners.h"
 #include "GameObject.h"
 
 
 ScoreUIComponent::ScoreUIComponent(dae::GameObject* pOwner, Achievements* pObserver):
 	dae::Component{pOwner},
 	Observer{},
-	m_Score{},
+	m_TotalScore{},
 	m_pTextComponent{},
 	m_pScoreChanged{std::make_unique<dae::Subject<ScoreUIComponent>>()},
     m_pVecObservedSubjects{}
@@ -35,22 +37,28 @@ void ScoreUIComponent::Update()
 void ScoreUIComponent::PrepareImGuiRender()
 {
 }
-void ScoreUIComponent::Notify(PickUpComponent* pSubject)
+void ScoreUIComponent::Notify(InventoryComponent* pSubject)
 {
-	switch (pSubject->GetPickUpType())
+	auto [pickUpType, pickUpPos] = pSubject->GetLastAddedItem();
+	int earnedsScore{};
+	switch (pickUpType)
 	{
 	case PickUpComponent::PickUpType::Melon:
-		m_Score += 50;
+		earnedsScore = 100;
 		break;
 	case PickUpComponent::PickUpType::Fries:
-		m_Score += 100;
+		earnedsScore = 200;
 		break;
 	}
+
+	m_TotalScore += earnedsScore;
+	spawners::SpawnFloatingScore(pickUpPos, earnedsScore, pSubject->GetPlayerType());
+
 	m_pScoreChanged->NotifyObservers(this);
-	m_pTextComponent->SetText("Score: " + std::to_string(m_Score));
+	m_pTextComponent->SetText( std::to_string(m_TotalScore));
 }
 
-void ScoreUIComponent::AddSubjectPointer(dae::Subject<PickUpComponent>* pSubject)
+void ScoreUIComponent::AddSubjectPointer(dae::Subject<InventoryComponent>* pSubject)
 {
     m_pVecObservedSubjects.emplace_back(pSubject);
 }
@@ -65,6 +73,6 @@ void ScoreUIComponent::SetSubjectPointersInvalid()
 
 int ScoreUIComponent::GetScore() const
 {
-	return m_Score;
+	return m_TotalScore;
 }
 

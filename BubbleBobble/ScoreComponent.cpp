@@ -3,24 +3,9 @@
 #include <GameObject.h>
 #include <Gametime.h>
 
-ScoreComponent::ScoreComponent(dae::GameObject* pOwner, PickUpComponent::PickUpType pickUpType, PlayerComponent::PlayerType playerType):
+ScoreComponent::ScoreComponent(dae::GameObject* pOwner, int score, PlayerComponent::PlayerType playerType):
 	dae::Component{pOwner},
-	m_Score
-	{ 
-		[pickUpType]()->int	
-		{
-		switch (pickUpType)
-			{
-			case PickUpComponent::PickUpType::Melon:
-				return 100;
-			case PickUpComponent::PickUpType::Fries:
-				return 200;
-			default:
-				return 0;
-			}
-		
-		}()	
-	},
+	m_Score{ score },
 	m_PlayerWhoScored{playerType},
 	m_pSpriteComp{}
 {

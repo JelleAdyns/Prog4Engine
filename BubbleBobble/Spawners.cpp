@@ -105,7 +105,7 @@ namespace spawners
 		auto pPickUp = std::make_unique<dae::GameObject>(spawnPos);
 		pPickUp->AddRenderComponent();
 		pPickUp->AddPhysicsComponent();
-		pPickUp->AddComponent<PickUpComponent>(pickUpType, nullptr);
+		pPickUp->AddComponent<PickUpComponent>(pickUpType);
 		PickUpComponent* pPickUpComp = pPickUp->GetComponent<PickUpComponent>();
 		pPickUp->AddComponent<SpriteComponent>("Textures/PickUps.png", 5, 1, 0.2f, false, false);
 		SpriteComponent* pSpriteComp = pPickUp->GetComponent<SpriteComponent>();
@@ -138,13 +138,13 @@ namespace spawners
 		pScene->AddGameObject(std::move(pBoulder));
 	}
 
-	void SpawnFloatingScore(const glm::vec2& spawnPos, PickUpComponent::PickUpType pickUpType, PlayerComponent::PlayerType playerType)
+	void SpawnFloatingScore(const glm::vec2& spawnPos, int score, PlayerComponent::PlayerType playerType)
 	{
 		dae::Scene* pScene = dae::SceneManager::GetInstance().GetActiveScene();
 
 		auto pScore = std::make_unique<dae::GameObject>(spawnPos);
 		pScore->AddRenderComponent();
-		pScore->AddComponent<ScoreComponent>(pickUpType, playerType);
+		pScore->AddComponent<ScoreComponent>(score, playerType);
 		pScore->AddComponent<SpriteComponent>("Textures/Scores.png", 2, 2, 0.1f, false, false);
 
 		pScore->Start();

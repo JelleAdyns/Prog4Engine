@@ -49,6 +49,7 @@ public:
 	void Respawn();
 
 	dae::Subject<PlayerComponent>* GetSubject() const;
+	PlayerType GetPlayerType() const;
 	glm::vec2 GetPos() const;
 	glm::vec2 GetDestRectSize() const;
 	float GetJumpVelocity() const { return m_JumpVelocity; }

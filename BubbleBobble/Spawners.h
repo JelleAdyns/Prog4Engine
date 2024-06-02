@@ -17,7 +17,7 @@ namespace spawners
 
 	void SpawnProjectile(const glm::vec2& spawnPos, bool left);
 
-	void SpawnFloatingScore(const glm::vec2& spawnPos, PickUpComponent::PickUpType pickUpType, PlayerComponent::PlayerType playerType);
+	void SpawnFloatingScore(const glm::vec2& spawnPos, int score, PlayerComponent::PlayerType playerType);
 }
 
 #endif // !SPAWNERS_H

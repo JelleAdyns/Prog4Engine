@@ -46,11 +46,11 @@ void PlayerComponent::Start()
 
 void PlayerComponent::Update()
 {
-	dae::GameObject* pPickUp = m_pCollisionComp->CheckForCollision(collisionTags::pickUp);
-	if (m_pCollisionComp->GetCollisionFlags() > 0)
-	{
-		pPickUp->GetComponent<PickUpComponent>()->PickUp(m_PlayerType);
-	}
+	//dae::GameObject* pPickUp = m_pCollisionComp->CheckForCollision(collisionTags::pickUp);
+	//if (m_pCollisionComp->GetCollisionFlags() > 0)
+	//{
+	//	pPickUp->GetComponent<PickUpComponent>()->PickUp(m_PlayerType);
+	//}
 	
 	if (m_IsInvincible)
 	{
@@ -127,6 +127,11 @@ void PlayerComponent::Respawn()
 dae::Subject<PlayerComponent>* PlayerComponent::GetSubject() const
 {
 	return m_pPosChecked.get();
+}
+
+PlayerComponent::PlayerType PlayerComponent::GetPlayerType() const
+{
+	return m_PlayerType;
 }
 
 glm::vec2 PlayerComponent::GetPos() const

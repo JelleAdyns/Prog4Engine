@@ -13,7 +13,6 @@ namespace dae
 	class RenderComponent;
 }
 
-class ScoreUIComponent;
 class PickUpComponent final : public dae::Component, public dae::Observer<SpriteComponent>
 {
 public:
@@ -22,7 +21,7 @@ public:
 		Melon,
 		Fries
 	};
-	explicit PickUpComponent(dae::GameObject* pOwner, PickUpComponent::PickUpType pickUpType, ScoreUIComponent* pObserver);
+	explicit PickUpComponent(dae::GameObject* pOwner, PickUpComponent::PickUpType pickUpType);
 	virtual ~PickUpComponent();
 
 	PickUpComponent(const PickUpComponent&) = delete;
@@ -38,7 +37,7 @@ public:
 	virtual void AddSubjectPointer(dae::Subject<SpriteComponent>* pSubject) override;
 	virtual void SetSubjectPointersInvalid() override;
 
-	void PickUp(PlayerComponent::PlayerType playerType);
+	//void PickUp(PlayerComponent::PlayerType playerType);
 
 	PickUpType GetPickUpType() const;
 private:
@@ -56,8 +55,6 @@ private:
 	dae::CollisionComponent* m_pCollisionComp;
 	dae::RenderComponent* m_pRenderComp;
 	SpriteComponent* m_pSpriteComp;
-
-	std::unique_ptr<dae::Subject<PickUpComponent>> m_PickedUp;
 
 	std::vector<dae::Subject<SpriteComponent>*> m_pVecObservedSubjects;
 };

@@ -8,6 +8,7 @@
 #include "SceneState.h"
 #include "PlayerComponent.h"
 
+class ScoreUIComponent;
 class LevelState final : public SceneState
 {
 public:
@@ -37,7 +38,7 @@ private:
 		int m_Health{};
 	};
 
-	void MakePlayer(const std::unique_ptr<dae::GameObject>& pPlayer, PlayerComponent::PlayerType playerType);
+	void MakePlayer(const std::unique_ptr<dae::GameObject>& pPlayer, PlayerComponent::PlayerType playerType, ScoreUIComponent* scoreDisplay);
 	void UploadScene();
 	void LoadLevel(const std::string& filename);
 	void ParseLevelInfo(int levelNumber, std::ifstream& file, std::stringstream& levelInfoStream);

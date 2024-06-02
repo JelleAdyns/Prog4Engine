@@ -175,6 +175,7 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="HitState.cpp" />
     <ClCompile Include="IdleState.cpp" />
+    <ClCompile Include="InventoryComponent.cpp" />
     <ClCompile Include="LevelLoader.cpp" />
     <ClCompile Include="LevelState.cpp" />
     <ClCompile Include="LivesComponent.cpp" />
@@ -213,6 +214,7 @@
     <ClInclude Include="EnemyComponent.h" />
     <ClInclude Include="EnemyCounterComponent.h" />
     <ClInclude Include="EnemyState.h" />
+    <ClInclude Include="InventoryComponent.h" />
     <ClInclude Include="LevelState.h" />
     <ClInclude Include="MainMenuState.h" />
     <ClInclude Include="MaitaAttackState.h" />

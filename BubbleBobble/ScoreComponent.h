@@ -12,7 +12,7 @@ class ScoreComponent final : public dae::Component
 {
 public:
 
-	explicit ScoreComponent(dae::GameObject* pOwner, PickUpComponent::PickUpType pickUpType, PlayerComponent::PlayerType playerType);
+	explicit ScoreComponent(dae::GameObject* pOwner, int score, PlayerComponent::PlayerType playerType);
 	virtual ~ScoreComponent() = default;
 
 
