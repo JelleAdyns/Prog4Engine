@@ -12,21 +12,23 @@
 #include "FloorCheckingComponent.h"
 #include "ProjectileComponent.h"
 #include "PlayerComponent.h"
+#include "EnemyComponent.h"
+#include "EnemyCounterComponent.h"
 #include "LevelState.h"
 
 namespace spawners
 {
 
-	void SpawnZenChan(const glm::vec2& spawnPos, PlayerComponent* pPlayerOne, PlayerComponent* pPlayerTwo)
+	void SpawnZenChan(const glm::vec2& spawnPos, PlayerComponent* pPlayerOne, PlayerComponent* pPlayerTwo, EnemyCounterComponent* pObserver)
 	{
 		dae::Scene* pScene = dae::SceneManager::GetInstance().GetNextScene();
 
 		auto zenChan = std::make_unique<dae::GameObject>(spawnPos);
 		zenChan->AddRenderComponent();
 		zenChan->AddPhysicsComponent();
-		zenChan->AddComponent<ZenChanComponent>();
+		zenChan->AddComponent<EnemyComponent>(EnemyComponent::EnemyType::ZenChan, pObserver);
 		//zenChan->AddComponent<MovementComponent>(-160.f, 60.f);
-		ZenChanComponent* zenChanComp = zenChan->GetComponent<ZenChanComponent>();
+		EnemyComponent* zenChanComp = zenChan->GetComponent<EnemyComponent>();
 		zenChanComp->AddPlayerObserver(pPlayerOne);
 		zenChanComp->AddPlayerObserver(pPlayerTwo);
 		zenChan->AddComponent<SpriteComponent>("Textures/Zen-ChanStates.png", 4, 7, 0.1f);
@@ -46,17 +48,17 @@ namespace spawners
 		pScene->AddGameObject(std::move(zenChan));
 	}
 
-	void SpawnMaita(const glm::vec2& spawnPos, PlayerComponent* pPlayerOne, PlayerComponent* pPlayerTwo)
+	void SpawnMaita(const glm::vec2& spawnPos, PlayerComponent* pPlayerOne, PlayerComponent* pPlayerTwo, EnemyCounterComponent* pObserver)
 	{
 		dae::Scene* pScene = dae::SceneManager::GetInstance().GetNextScene();
 
 		auto maita = std::make_unique<dae::GameObject>(spawnPos);
 		maita->AddRenderComponent();
 		maita->AddPhysicsComponent();
-		maita->AddComponent<MaitaComponent>();
-		float maitaOffset = MaitaComponent::GetMaitaOffset();
+		maita->AddComponent<EnemyComponent>(EnemyComponent::EnemyType::Maita, pObserver);
+		float maitaOffset = EnemyComponent::GetMaitaOffset();
 		//maita->AddComponent<MovementComponent>(-160.f, 60.f);
-		MaitaComponent* maitaComp = maita->GetComponent<MaitaComponent>();
+		EnemyComponent* maitaComp = maita->GetComponent<EnemyComponent>();
 		maitaComp->AddPlayerObserver(pPlayerOne);
 		maitaComp->AddPlayerObserver(pPlayerTwo);
 		maita->AddComponent<SpriteComponent>("Textures/MaitaStates.png", 5, 9, 0.1f);
@@ -103,12 +105,14 @@ namespace spawners
 		auto pPickUp = std::make_unique<dae::GameObject>(spawnPos);
 		pPickUp->AddRenderComponent();
 		pPickUp->AddPhysicsComponent();
-		pPickUp->AddComponent<SpriteComponent>("Textures/PickUps.png", 2, 3, 0.1f, false, false);
+		pPickUp->AddComponent<PickUpComponent>(pickUpType, nullptr);
+		PickUpComponent* pPickUpComp = pPickUp->GetComponent<PickUpComponent>();
+		pPickUp->AddComponent<SpriteComponent>("Textures/PickUpsWithPop.png", 5, 1, 0.2f, false, false);
 		SpriteComponent* pSpriteComp = pPickUp->GetComponent<SpriteComponent>();
 		auto destRectSize = pSpriteComp->GetDestRectSize();
+		pSpriteComp->AddObserver(pPickUpComp);
 		pPickUp->AddComponent<dae::CollisionComponent>(glm::vec2{}, destRectSize, collisionTags::pickUp);
 		pPickUp->AddComponent<FloorCheckingComponent>(glm::vec2{ destRectSize.x / 4, 0.f }, glm::vec2{ destRectSize.x / 2, destRectSize.y });
-		pPickUp->AddComponent<PickUpComponent>(pickUpType, nullptr);
 
 		pPickUp->Start();
 

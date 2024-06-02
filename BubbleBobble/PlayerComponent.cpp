@@ -34,6 +34,12 @@ void PlayerComponent::Start()
 	if (!m_pCollisionComp) m_pCollisionComp = GetOwner()->GetComponent<dae::CollisionComponent>();
 	if (!m_pRenderComp) m_pRenderComp = GetOwner()->GetComponent<dae::RenderComponent>();
 	if (!m_pMovementComp) m_pMovementComp = GetOwner()->GetComponent<MovementComponent>();
+
+	if (!m_pCurrState)
+	{
+		m_pCurrState = std::make_unique<IdleState>(GetOwner(), this, m_pMovementComp);
+		m_pCurrState->OnEnter();
+	}
 }
 
 void PlayerComponent::Update()
@@ -130,11 +136,6 @@ glm::vec2 PlayerComponent::GetDestRectSize() const
 
 void PlayerComponent::UpdateStates()
 {
-	if (!m_pCurrState)
-	{
-		m_pCurrState = std::make_unique<IdleState>(GetOwner(), this, m_pMovementComp);
-		m_pCurrState->OnEnter();
-	}
 
 	auto newState = m_pCurrState->Update();
 

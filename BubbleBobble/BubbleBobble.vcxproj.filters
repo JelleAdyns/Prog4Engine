@@ -116,12 +116,6 @@
     <ClCompile Include="MaitaFallingState.cpp">
       <Filter>Source Files\States\EnemyState\MaitaStates</Filter>
     </ClCompile>
-    <ClCompile Include="ZenChanComponent.cpp">
-      <Filter>Source Files\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="MaitaComponent.cpp">
-      <Filter>Source Files\Components</Filter>
-    </ClCompile>
     <ClCompile Include="MaitaCaughtState.cpp">
       <Filter>Source Files\States\EnemyState\MaitaStates</Filter>
     </ClCompile>
@@ -157,6 +151,12 @@
     </ClCompile>
     <ClCompile Include="LevelLoader.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyComponent.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyCounterComponent.cpp">
+      <Filter>Source Files\Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -304,12 +304,6 @@
     <ClInclude Include="MaitaFallingState.h">
       <Filter>Source Files\States\EnemyState\MaitaStates</Filter>
     </ClInclude>
-    <ClInclude Include="ZenChanComponent.h">
-      <Filter>Source Files\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="MaitaComponent.h">
-      <Filter>Source Files\Components</Filter>
-    </ClInclude>
     <ClInclude Include="MaitaCaughtState.h">
       <Filter>Source Files\States\EnemyState\MaitaStates</Filter>
     </ClInclude>
@@ -336,6 +330,15 @@
     </ClInclude>
     <ClInclude Include="NextLevelCommand.h">
       <Filter>Source Files\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyComponent.h">
+      <Filter>Source Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyState.h">
+      <Filter>Source Files\States\EnemyState</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyCounterComponent.h">
+      <Filter>Source Files\Components</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

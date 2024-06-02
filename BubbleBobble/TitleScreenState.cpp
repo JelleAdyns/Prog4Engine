@@ -8,6 +8,9 @@
 #include "Components.h"
 #include "LoadSceneCommand.h"
 #include "Game.h"
+#include "ActivateButtonCommand.h"
+#include <KeyState.h>
+#include "SetTextCommand.h"
 
 const std::string TitleScreenState::m_SceneName{ "TitleScreen" };
 
@@ -18,8 +21,8 @@ void TitleScreenState::OnEnter()
 	inputMan.AddController();
 
 	auto& ss2 = dae::AudioLocator::GetAudioService();
-	ss2.AddSound("Sounds/MainTheme.mp3", static_cast<dae::SoundID>(Game::SoundEvent::MainTheme));
-	ss2.PlaySoundClip(static_cast<dae::SoundID>(Game::SoundEvent::MainTheme), 80, true);
+	ss2.AddSound("Sounds/TitleScreen.wav", static_cast<dae::SoundID>(Game::SoundEvent::TitleScreen));
+	ss2.PlaySoundClip(static_cast<dae::SoundID>(Game::SoundEvent::TitleScreen), 80, false);
 
 
 	LoadTitleScreen();
@@ -34,6 +37,10 @@ void TitleScreenState::OnExit()
 {
 	auto& inputMan = dae::InputCommandBinder::GetInstance();
 	inputMan.RemoveAllCommands();
+
+	auto& ss2 = dae::AudioLocator::GetAudioService();
+	ss2.AddSound("Sounds/Select.wav", static_cast<dae::SoundID>(Game::SoundEvent::Select));
+	ss2.PlaySoundClip(static_cast<dae::SoundID>(Game::SoundEvent::Select), 80, false);
 }
 
 void TitleScreenState::OnSuspend()

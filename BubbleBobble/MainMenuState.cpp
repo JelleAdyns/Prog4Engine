@@ -8,6 +8,10 @@
 #include "Components.h"
 #include "LoadSceneCommand.h"
 #include "Game.h"
+#include "SelectButtonCommand.h"
+#include <KeyState.h>
+#include "ActivateButtonCommand.h"
+#include "SetTextCommand.h"
 
 const std::string MainMenuState::m_SceneName{ "MainMenu" };
 

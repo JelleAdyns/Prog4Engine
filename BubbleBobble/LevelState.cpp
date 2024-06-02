@@ -3,6 +3,7 @@
 #include "NextLevelCommand.h"
 #include <SceneManager.h>
 #include <ResourceManager.h>
+#include <InputCommandBinder.h>
 #include <Scene.h>
 #include <fstream>
 #include <sstream>
@@ -12,25 +13,26 @@
 #include <Minigin.h>
 #include <filesystem>
 #include "CollisionTags.h"
+#include <KeyState.h>
+#include <AudioLocator.h>
+#include "Game.h"
+#include "HitState.h"
+#include "Spawners.h"
 
 const std::string LevelState::m_SceneName{ "Level" };
 
 void LevelState::OnEnter()
 {
-	auto& scene = dae::SceneManager::GetInstance().CreateScene(m_SceneName + std::to_string(m_LevelNumber));
+	m_pNextLevelCmd = std::make_shared<NextLevelCommand>(this);
 
-	auto pPlayer = std::make_unique<dae::GameObject>();
-	MakePlayer(pPlayer); 
-
-	LoadLevel("Levels.txt");
-
-	scene.AddGameObject(std::move(pPlayer));
+	UploadScene();
 	
 	auto& inputMan = dae::InputCommandBinder::GetInstance();
-	std::shared_ptr<dae::Command> pNextLevelCmd = std::make_shared<NextLevelCommand>(this);
-	inputMan.AddKeyCommand(pNextLevelCmd, SDL_SCANCODE_F1, dae::KeyState::DownThisFrame);
+	
+	inputMan.AddKeyCommand(m_pNextLevelCmd, SDL_SCANCODE_F1, dae::KeyState::DownThisFrame);
 
 	auto& ss2 = dae::AudioLocator::GetAudioService();
+	ss2.AddSound("Sounds/MainTheme.mp3", static_cast<dae::SoundID>(Game::SoundEvent::MainTheme));
 	ss2.PlaySoundClip(static_cast<dae::SoundID>(Game::SoundEvent::MainTheme), 80, true);
 }
 
@@ -50,28 +52,15 @@ void LevelState::AdvanceLevel()
 {
 	if(m_LevelNumber == m_MaxLevel)
 	{
-
+		Game::GetInstance().SetScene(Game::CurrScene::TitleScreen);
 	}
 	else
 	{
-		auto& sceneMan = dae::SceneManager::GetInstance();
-
-
 		++m_LevelNumber;
-		dae::Scene* pScene = sceneMan.GetActiveScene();
-		pScene->RemoveAll();
+		m_pPlayerOne->RemoveComponent<MovementComponent>();
 
-		auto pPlayer = std::make_unique<dae::GameObject>();
-		MakePlayer(pPlayer);
-
-		LoadLevel(m_LevelFile);
-		pScene->AddGameObject(std::move(pPlayer));
-
-		pScene->Start();
-
-	}
-
-	
+		UploadScene();
+	}	
 }
 
 void LevelState::MakePlayer(const std::unique_ptr<dae::GameObject>& pPlayer)
@@ -98,12 +87,39 @@ void LevelState::MakePlayer(const std::unique_ptr<dae::GameObject>& pPlayer)
 	pPlayer->AddComponent<WallCheckingComponent>(glm::vec2{ 0,destRctSize.y / 4 }, glm::vec2{ destRctSize.x,destRctSize.y / 2 });
 	pPlayer->AddComponent<FloorCheckingComponent>(glm::vec2{ destRctSize.x / 4,0 }, glm::vec2{ destRctSize.x / 2,destRctSize.y });
 
-	//MovementComponent* movementComp = pPlayer->GetComponent<MovementComponent>();
-//if(movementComp->GetPlayerIndex() == 0)
-	 m_pPlayerOne = pPlayer.get();
-	//else m_pPlayerTwo = pPlayer.get();
+	MovementComponent* movementComp = pPlayer->GetComponent<MovementComponent>();
+	if(movementComp->GetPlayerIndex() == 0) m_pPlayerOne = pPlayer.get();
+	else m_pPlayerTwo = pPlayer.get();
 
 }
+
+void LevelState::UploadScene()
+{
+
+	auto& scene = dae::SceneManager::GetInstance().CreateScene(m_SceneName + std::to_string(m_LevelNumber));
+
+	//auto pButtonHandler = std::make_unique<dae::GameObject>();
+	//pButtonHandler->AddComponent<ButtonHandlerComponent>();
+	//auto pHandlerComp = pButtonHandler->GetComponent<ButtonHandlerComponent>();
+	//
+	//auto pButton = std::make_unique<dae::GameObject>();
+	//pButton->AddComponent<ButtonComponent>(m_pNextLevelCmd);
+	//auto pButtonComp = pButton->GetComponent<ButtonComponent>();
+	//
+	//pHandlerComp->AddButton(pButtonComp);
+	//
+	//scene.AddGameObject(std::move(pButtonHandler));
+	//scene.AddGameObject(std::move(pButton));
+
+
+	auto pPlayer = std::make_unique<dae::GameObject>();
+	MakePlayer(pPlayer);
+
+	LoadLevel("Levels.txt");
+
+	scene.AddGameObject(std::move(pPlayer));
+}
+
 void LevelState::LoadLevel(const std::string& filename)
 {
 	std::string path{ dae::ResourceManager::GetInstance().GetDataPath() + filename };
@@ -209,46 +225,39 @@ void LevelState::ParseStage(int levelNumber, std::stringstream& levelInfoStream)
 
 void LevelState::ParseEnemies(std::stringstream& levelInfoStream)
 {
-	std::string enemies{};
-	std::getline(levelInfoStream, enemies, ':');
-	enemies.erase(0, 1);
 
-	std::stringstream enemiesStream{ enemies };
+	auto pCounter = std::make_unique<dae::GameObject>();
+	pCounter->AddComponent<EnemyCounterComponent>(m_pNextLevelCmd.get());
+	EnemyCounterComponent* pCounterComp = pCounter->GetComponent<EnemyCounterComponent>();
 
 	std::string enemy{};
-	while (std::getline(enemiesStream, enemy))
+	std::regex reg{ "^(\\D+): (\\d+), (\\d+)$" };
+	while (std::getline(levelInfoStream, enemy))
 	{
+		std::smatch matches{};
 		std::string zenChan{ "ZenChan" };
-		if (enemy.find(zenChan) != std::string::npos)
-		{
-			std::string element{};
-			enemy.erase(0, zenChan.size());
-			std::stringstream enemyStream{ enemy };
-			glm::vec2 pos{};
-
-			enemyStream >> pos.x >> pos.y;
-
-
-			spawners::SpawnZenChan(pos,
-				m_pPlayerOne ? m_pPlayerOne->GetComponent<PlayerComponent>() : nullptr,
-				m_pPlayerTwo ? m_pPlayerTwo->GetComponent<PlayerComponent>() : nullptr);
-			++m_AmountOfEnnemiesLeft;
-		}
-
 		std::string maita{ "Maita" };
-		if (enemy.find(maita) != std::string::npos)
+		if (std::regex_search(enemy.cbegin(), enemy.cend(), matches, reg))
 		{
-			std::string element{};
-			enemy.erase(0, maita.size());
-			std::stringstream enemyStream{ enemy };
 			glm::vec2 pos{};
-
-			enemyStream >> pos.x >> pos.y;
-
-			spawners::SpawnMaita(pos,
-				m_pPlayerOne ? m_pPlayerOne->GetComponent<PlayerComponent>() : nullptr,
-				m_pPlayerTwo ? m_pPlayerTwo->GetComponent<PlayerComponent>() : nullptr);
-			++m_AmountOfEnnemiesLeft;
+			pos.x = std::stof(matches.str(2));
+			pos.y = std::stof(matches.str(3));
+			if (matches.str(1) == zenChan)
+			{
+				spawners::SpawnZenChan(pos,
+					m_pPlayerOne ? m_pPlayerOne->GetComponent<PlayerComponent>() : nullptr,
+					m_pPlayerTwo ? m_pPlayerTwo->GetComponent<PlayerComponent>() : nullptr,
+					pCounterComp);
+			}
+			if (matches.str(1) == maita)
+			{
+				spawners::SpawnMaita(pos,
+					m_pPlayerOne ? m_pPlayerOne->GetComponent<PlayerComponent>() : nullptr,
+					m_pPlayerTwo ? m_pPlayerTwo->GetComponent<PlayerComponent>() : nullptr,
+					pCounterComp);
+			}
 		}
 	}
+	
+	dae::SceneManager::GetInstance().GetNextScene()->AddGameObject(std::move(pCounter));
 }

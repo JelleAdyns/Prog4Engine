@@ -34,8 +34,14 @@ public:
 	// I've got this idea of making sure the underlying type is SoundID from Wout Firlefyn
 	enum class SoundEvent : dae::SoundID
 	{
-		MainTheme,
-		Jump
+		MainTheme, 
+		TitleScreen,
+		Select,
+		Shoot,
+		EnemyDeath,
+		PickUp,
+		Jump,
+		JumpBubble
 	};
 
 
