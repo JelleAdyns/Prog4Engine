@@ -19,7 +19,7 @@ class BubbleComponent;
 class ZenChanCaughtState final : public ZenChanState, public dae::Observer<BubbleComponent>
 {
 public:
-	explicit ZenChanCaughtState(dae::GameObject* pZenChan, dae::GameObject* pBubble);
+	explicit ZenChanCaughtState(dae::GameObject* pEnemy, dae::GameObject* pBubble);
 	virtual ~ZenChanCaughtState()
 	{
 		if (m_pObservedSubject) m_pObservedSubject->RemoveObserver(this);
@@ -30,7 +30,7 @@ public:
 	ZenChanCaughtState& operator= (const ZenChanCaughtState&) = delete;
 	ZenChanCaughtState& operator= (ZenChanCaughtState&&) noexcept = delete;
 
-	virtual std::unique_ptr<ZenChanState> Update() override;
+	virtual std::unique_ptr<EnemyState> Update() override;
 	virtual void OnEnter() override;
 	virtual void OnExit() override;
 
@@ -49,7 +49,7 @@ private:
 	NextState m_NextState{ NextState::Caught };
 	static constexpr SpriteComponent::SpriteInfo m_CaughtInfo{ .rowNumber{3} };
 
-	dae::GameObject* m_pZenChan;;
+	dae::GameObject* m_pEnemy;;
 	dae::PhysicsComponent* m_pPhysicsComp;
 	dae::CollisionComponent* m_pCollisionComp;
 	SpriteComponent* m_pSpriteComp;

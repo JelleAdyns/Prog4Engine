@@ -12,7 +12,7 @@ ZenChanPoppedState::ZenChanPoppedState(dae::GameObject* pEnemy) :
 	m_pSpriteComp{ pEnemy->GetComponent<SpriteComponent>() }
 {}
 
-std::unique_ptr<ZenChanState> ZenChanPoppedState::Update()
+std::unique_ptr<EnemyState> ZenChanPoppedState::Update()
 {
 	if (m_pFloorComp->IsOnGround())
 	{

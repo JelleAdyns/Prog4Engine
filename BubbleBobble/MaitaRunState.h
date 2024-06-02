@@ -12,13 +12,13 @@ namespace dae
 	class PhysicsComponent;
 }
 
-class MaitaComponent;
+class EnemyComponent;
 class WallCheckingComponent;
 class FloorCheckingComponent;
 class MaitaRunState final : public MaitaState, public dae::Observer<PlayerComponent>
 {
 public:
-	explicit MaitaRunState(dae::GameObject* pMaita, MaitaComponent* pMaitaComp, bool isAngry = false);
+	explicit MaitaRunState(dae::GameObject* pMaita, EnemyComponent* pEnemyComp, bool isAngry = false);
 	virtual ~MaitaRunState()
 	{
 		for (dae::Subject<PlayerComponent>* pSpriteSubject : m_pVecObservedSpriteSubjects)
@@ -32,7 +32,7 @@ public:
 	MaitaRunState& operator= (const MaitaRunState&) = delete;
 	MaitaRunState& operator= (MaitaRunState&&) noexcept = delete;
 
-	virtual std::unique_ptr<MaitaState> Update() override;
+	virtual std::unique_ptr<EnemyState> Update() override;
 	virtual void OnEnter() override;
 	virtual void OnExit() override;
 
@@ -54,8 +54,8 @@ private:
 	bool m_HasToAttack{ false };
 	bool m_IsAngry;
 
-	dae::GameObject* m_pMaita;
-	MaitaComponent* m_pMaitaComp;
+	dae::GameObject* m_pEnemy;
+	EnemyComponent* m_pEnemyComp;
 	dae::PhysicsComponent* m_pPhysicsComp;
 	SpriteComponent* m_pSpriteComp;
 	WallCheckingComponent* m_pWallCheckingComp;

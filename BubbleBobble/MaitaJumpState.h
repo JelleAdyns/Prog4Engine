@@ -6,7 +6,7 @@
 #include "MaitaCaughtState.h"
 
 #include "SpriteComponent.h"
-#include "MaitaComponent.h"
+#include "EnemyComponent.h"
 #include "BubbleComponent.h"
 #include "CollisionTags.h"
 #include <PhysicsComponent.h>
@@ -19,7 +19,7 @@
 class MaitaJumpState final : public MaitaState
 {
 public:
-	explicit MaitaJumpState(dae::GameObject* pMaita, MaitaComponent* pMaitaComp, bool isAngry);
+	explicit MaitaJumpState(dae::GameObject* pEnemy, EnemyComponent* pEnemyComp, bool isAngry);
 	virtual ~MaitaJumpState() = default;
 
 	MaitaJumpState(const MaitaJumpState&) = delete;
@@ -27,7 +27,7 @@ public:
 	MaitaJumpState& operator= (const MaitaJumpState&) = delete;
 	MaitaJumpState& operator= (MaitaJumpState&&) noexcept = delete;
 
-	virtual std::unique_ptr<MaitaState> Update() override;
+	virtual std::unique_ptr<EnemyState> Update() override;
 	virtual void OnEnter() override;
 	virtual void OnExit() override;
 
@@ -43,8 +43,8 @@ private:
 	const float m_JumpVelocity{ -160.f };
 
 
-	dae::GameObject* m_pMaita;
-	MaitaComponent* m_pMaitaComp;
+	dae::GameObject* m_pEnemy;
+	EnemyComponent* m_pEnemyComp;
 	dae::PhysicsComponent* m_pPhysicsComp;
 	SpriteComponent* m_pSpriteComp;
 	dae::CollisionComponent* m_pCollisionComp;

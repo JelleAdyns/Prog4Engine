@@ -12,14 +12,14 @@ namespace dae
 	class PhysicsComponent;
 }
 
-class MaitaComponent;
+class EnemyComponent;
 class FloorCheckingComponent;
 class BubbleComponent;
 
 class MaitaCaughtState final : public MaitaState, public dae::Observer<BubbleComponent>
 {
 public:
-	explicit MaitaCaughtState(dae::GameObject* pMaita, dae::GameObject* pBubble);
+	explicit MaitaCaughtState(dae::GameObject* pEnemy, dae::GameObject* pBubble);
 	virtual ~MaitaCaughtState()
 	{
 		if (m_pObservedSubject) m_pObservedSubject->RemoveObserver(this);
@@ -30,7 +30,7 @@ public:
 	MaitaCaughtState& operator= (const MaitaCaughtState&) = delete;
 	MaitaCaughtState& operator= (MaitaCaughtState&&) noexcept = delete;
 
-	virtual std::unique_ptr<MaitaState> Update() override;
+	virtual std::unique_ptr<EnemyState> Update() override;
 	virtual void OnEnter() override;
 	virtual void OnExit() override;
 
@@ -49,7 +49,7 @@ private:
 	NextState m_NextState{ NextState::Caught };
 	static constexpr SpriteComponent::SpriteInfo m_CaughtInfo{ .rowNumber{5}, .nrOfCols{4} };
 
-	dae::GameObject* m_pMaita;
+	dae::GameObject* m_pEnemy;
 	dae::PhysicsComponent* m_pPhysicsComp;
 	dae::CollisionComponent* m_pCollisionComp;
 	SpriteComponent* m_pSpriteComp;

@@ -4,7 +4,7 @@
 #include "MaitaState.h"
 #include "Spawners.h"
 #include "SpriteComponent.h"
-#include "MaitaComponent.h"
+#include "EnemyComponent.h"
 #include "FloorCheckingComponent.h"
 #include "WallCheckingComponent.h"
 #include <PhysicsComponent.h>
@@ -17,7 +17,7 @@
 class MaitaPoppedState final : public MaitaState
 {
 public:
-	explicit MaitaPoppedState(dae::GameObject* pMaita);
+	explicit MaitaPoppedState(dae::GameObject* pEnemy);
 	virtual ~MaitaPoppedState() = default;
 
 	MaitaPoppedState(const MaitaPoppedState&) = delete;
@@ -25,7 +25,7 @@ public:
 	MaitaPoppedState& operator= (const MaitaPoppedState&) = delete;
 	MaitaPoppedState& operator= (MaitaPoppedState&&) noexcept = delete;
 
-	virtual std::unique_ptr<MaitaState> Update() override;
+	virtual std::unique_ptr<EnemyState> Update() override;
 	virtual void OnEnter() override;
 	virtual void OnExit() override;
 
@@ -35,7 +35,7 @@ private:
 
 	const float m_Speed{ 120.f };
 
-	dae::GameObject* m_pMaita;
+	dae::GameObject* m_pEnemy;
 	dae::PhysicsComponent* m_pPhysicsComp;
 	dae::CollisionComponent* m_pCollisionComp;
 	FloorCheckingComponent* m_pFloorComp;

@@ -1,7 +1,7 @@
 #include "MaitaAttackState.h"
 #include "MaitaRunState.h"
 #include "MaitaCaughtState.h"
-#include "MaitaComponent.h"
+#include "EnemyComponent.h"
 #include "BubbleComponent.h"
 #include "Spawners.h"
 #include "CollisionTags.h"
@@ -9,14 +9,14 @@
 #include <CollisionComponent.h>
 #include <GameObject.h>
 
-MaitaAttackState::MaitaAttackState(dae::GameObject* pMaita, MaitaComponent* pMaitaComp, bool isAngry):
+MaitaAttackState::MaitaAttackState(dae::GameObject* pEnemy, EnemyComponent* pEnemyComp, bool isAngry):
 	MaitaState{},
-	m_pMaita{pMaita},
-	m_pMaitaComp{pMaitaComp},
+	m_pEnemy{pEnemy},
+	m_pEnemyComp{pEnemyComp},
 	m_IsAngry{isAngry},
-	m_pPhysicsComp{pMaita->GetComponent<dae::PhysicsComponent>()},
-	m_pCollisionComp{pMaita->GetComponent<dae::CollisionComponent>()},
-	m_pSpriteComp{pMaita->GetComponent<SpriteComponent>()}
+	m_pPhysicsComp{pEnemy->GetComponent<dae::PhysicsComponent>()},
+	m_pCollisionComp{pEnemy->GetComponent<dae::CollisionComponent>()},
+	m_pSpriteComp{pEnemy->GetComponent<SpriteComponent>()}
 {
 	m_pSpriteComp->AddObserver(this);
 }
@@ -29,17 +29,17 @@ MaitaAttackState::~MaitaAttackState()
 	}
 }
 
-std::unique_ptr<MaitaState> MaitaAttackState::Update()
+std::unique_ptr<EnemyState> MaitaAttackState::Update()
 {
 	dae::GameObject* pCollidedObject = m_pCollisionComp->CheckForCollision(collisionTags::bubbleTag);
 	if (pCollidedObject)
 	{
 		if (!pCollidedObject->GetComponent<BubbleComponent>()->IsOccupied())
 		{
-			return std::make_unique<MaitaCaughtState>(m_pMaita, pCollidedObject);
+			return std::make_unique<MaitaCaughtState>(m_pEnemy, pCollidedObject);
 		}
 	}
-	if (m_Done) return std::make_unique<MaitaRunState>(m_pMaita, m_pMaitaComp, m_IsAngry);
+	if (m_Done) return std::make_unique<MaitaRunState>(m_pEnemy, m_pEnemyComp, m_IsAngry);
 	return nullptr;
 }
 
@@ -56,10 +56,10 @@ void MaitaAttackState::OnExit()
 {
 	m_pSpriteComp->AddRows(-m_AttackInfo.rowNumber);
 
-	auto pos = m_pMaita->GetWorldPosition();
+	auto pos = m_pEnemy->GetWorldPosition();
 	if (!m_pSpriteComp->IsLookingLeft())
 	{
-		pos.x += m_pSpriteComp->GetDestRectSize().x - MaitaComponent::GetMaitaOffset();
+		pos.x += m_pSpriteComp->GetDestRectSize().x - EnemyComponent::GetMaitaOffset();
 	}
 
 	spawners::SpawnProjectile(pos, m_pSpriteComp->IsLookingLeft());

@@ -1,24 +1,24 @@
 #include "MaitaJumpState.h"
 
-MaitaJumpState::MaitaJumpState(dae::GameObject* pMaita, MaitaComponent* pMaitaComp, bool isAngry) :
+MaitaJumpState::MaitaJumpState(dae::GameObject* pEnemy, EnemyComponent* pEnemyComp, bool isAngry) :
 	MaitaState{},
 	m_IsAngry{ isAngry },
 	m_TimeToJump{ isAngry ? 0.4f : 0.8f },
-	m_pMaita{ pMaita },
-	m_pMaitaComp{ pMaitaComp },
-	m_pPhysicsComp{ pMaita->GetComponent<dae::PhysicsComponent>() },
-	m_pSpriteComp{ pMaita->GetComponent<SpriteComponent>() },
-	m_pCollisionComp{ pMaita->GetComponent<dae::CollisionComponent>() }
+	m_pEnemy{ pEnemy },
+	m_pEnemyComp{ pEnemyComp },
+	m_pPhysicsComp{ pEnemy->GetComponent<dae::PhysicsComponent>() },
+	m_pSpriteComp{ pEnemy->GetComponent<SpriteComponent>() },
+	m_pCollisionComp{ pEnemy->GetComponent<dae::CollisionComponent>() }
 {}
 
-std::unique_ptr<MaitaState> MaitaJumpState::Update()
+std::unique_ptr<EnemyState> MaitaJumpState::Update()
 {
 	dae::GameObject* pCollidedObject = m_pCollisionComp->CheckForCollision(collisionTags::bubbleTag);
 	if (pCollidedObject)
 	{
 		if (!pCollidedObject->GetComponent<BubbleComponent>()->IsOccupied())
 		{
-			return std::make_unique<MaitaCaughtState>(m_pMaita, pCollidedObject);
+			return std::make_unique<MaitaCaughtState>(m_pEnemy, pCollidedObject);
 		}
 	}
 
@@ -28,7 +28,7 @@ std::unique_ptr<MaitaState> MaitaJumpState::Update()
 
 	if (m_CheckIfLanded)
 	{
-		if (m_pPhysicsComp->GetVelocity().y > 0.f) return std::make_unique<MaitaFallingState>(m_pMaita, m_pMaitaComp, m_IsAngry);
+		if (m_pPhysicsComp->GetVelocity().y > 0.f) return std::make_unique<MaitaFallingState>(m_pEnemy, m_pEnemyComp, m_IsAngry);
 	}
 	else
 	{

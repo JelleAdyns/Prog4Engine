@@ -5,7 +5,7 @@
 #include "MaitaAttackState.h"
 #include "SpriteComponent.h"
 #include "BubbleComponent.h"
-#include "MaitaComponent.h"
+#include "EnemyComponent.h"
 #include "WallCheckingComponent.h"
 #include "FloorCheckingComponent.h"
 #include "CollisionTags.h"
@@ -14,27 +14,27 @@
 #include <GameObject.h>
 #include <GameTime.h>
 
-MaitaRunState::MaitaRunState(dae::GameObject* pMaita, MaitaComponent* pMaitaComp, bool isAngry) :
+MaitaRunState::MaitaRunState(dae::GameObject* pEnemy, EnemyComponent* pEnemyComp, bool isAngry) :
 	MaitaState{},
 	m_Speed{ isAngry ? m_GeneralSpeed * 1.8f : m_GeneralSpeed },
 	m_IsAngry{ isAngry },
-	m_pMaita{ pMaita },
-	m_pMaitaComp{ pMaitaComp },
-	m_pPhysicsComp{ pMaita->GetComponent<dae::PhysicsComponent>() },
-	m_pSpriteComp{ pMaita->GetComponent<SpriteComponent>() },
-	m_pWallCheckingComp{ pMaita->GetComponent<WallCheckingComponent>() },
-	m_pFloorCheckingComp{ pMaita->GetComponent<FloorCheckingComponent>() },
-	m_pCollisionComp{ pMaita->GetComponent<dae::CollisionComponent>() }
+	m_pEnemy{ pEnemy },
+	m_pEnemyComp{ pEnemyComp },
+	m_pPhysicsComp{ pEnemy->GetComponent<dae::PhysicsComponent>() },
+	m_pSpriteComp{ pEnemy->GetComponent<SpriteComponent>() },
+	m_pWallCheckingComp{ pEnemy->GetComponent<WallCheckingComponent>() },
+	m_pFloorCheckingComp{ pEnemy->GetComponent<FloorCheckingComponent>() },
+	m_pCollisionComp{ pEnemy->GetComponent<dae::CollisionComponent>() }
 {}
 
-std::unique_ptr<MaitaState> MaitaRunState::Update()
+std::unique_ptr<EnemyState> MaitaRunState::Update()
 {
 	dae::GameObject* pCollidedObject = m_pCollisionComp->CheckForCollision(collisionTags::bubbleTag);
 	if (pCollidedObject)
 	{
 		if (!pCollidedObject->GetComponent<BubbleComponent>()->IsOccupied())
 		{
-			return std::make_unique<MaitaCaughtState>(m_pMaita, pCollidedObject);
+			return std::make_unique<MaitaCaughtState>(m_pEnemy, pCollidedObject);
 		}
 	}
 
@@ -46,13 +46,13 @@ std::unique_ptr<MaitaState> MaitaRunState::Update()
 	}
 	else
 	{
-		if (m_HasToAttack) return std::make_unique<MaitaAttackState>(m_pMaita, m_pMaitaComp, m_IsAngry);
+		if (m_HasToAttack) return std::make_unique<MaitaAttackState>(m_pEnemy, m_pEnemyComp, m_IsAngry);
 	}
 
 
-	if (m_HasToJump) return std::make_unique<MaitaJumpState>(m_pMaita, m_pMaitaComp, m_IsAngry);
+	if (m_HasToJump) return std::make_unique<MaitaJumpState>(m_pEnemy, m_pEnemyComp, m_IsAngry);
 
-	if (!m_pFloorCheckingComp->IsOnGround()) return std::make_unique<MaitaFallingState>(m_pMaita, m_pMaitaComp, m_IsAngry);
+	if (!m_pFloorCheckingComp->IsOnGround()) return std::make_unique<MaitaFallingState>(m_pEnemy, m_pEnemyComp, m_IsAngry);
 
 	if (m_pWallCheckingComp->CollidingWithLeft()) m_pPhysicsComp->SetVelocityX(m_Speed);
 	if (m_pWallCheckingComp->CollidingWithRight()) m_pPhysicsComp->SetVelocityX(-m_Speed);
@@ -62,9 +62,9 @@ std::unique_ptr<MaitaState> MaitaRunState::Update()
 
 void MaitaRunState::OnEnter()
 {
-	for (dae::Subject<PlayerComponent>* pSubject : m_pMaitaComp->GetPlayerSubjects())
+	for (dae::Subject<PlayerComponent>* pSubject : m_pEnemyComp->GetPlayerSubjects())
 	{
-		pSubject->AddObserver(this);
+		if(pSubject) pSubject->AddObserver(this);
 	}
 	if (m_pSpriteComp->IsLookingLeft()) m_pPhysicsComp->SetVelocityX(-m_Speed);
 	else m_pPhysicsComp->SetVelocityX(m_Speed);
@@ -84,7 +84,7 @@ void MaitaRunState::OnExit()
 void MaitaRunState::Notify(PlayerComponent* pSubject)
 {
 	auto subjectPos = pSubject->GetPos();
-	auto enemyPos = m_pMaita->GetWorldPosition();
+	auto enemyPos = m_pEnemy->GetWorldPosition();
 	if (subjectPos.y < enemyPos.y)
 	{
 		float subjectMiddleX{ subjectPos.x + pSubject->GetDestRectSize().x / 2 };

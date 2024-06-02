@@ -10,12 +10,12 @@ namespace dae
 	class CollisionComponent;
 }
 
-class ZenChanComponent;
+class EnemyComponent;
 class SpriteComponent;
 class ZenChanJumpState final : public ZenChanState
 {
 public:
-	explicit ZenChanJumpState(dae::GameObject* pZenChan, ZenChanComponent* pZenChanComp, bool isAngry);
+	explicit ZenChanJumpState(dae::GameObject* pEnemy, EnemyComponent* pEnemyComp, bool isAngry);
 	virtual ~ZenChanJumpState() = default;
 
 	ZenChanJumpState(const ZenChanJumpState&) = delete;
@@ -23,7 +23,7 @@ public:
 	ZenChanJumpState& operator= (const ZenChanJumpState&) = delete;
 	ZenChanJumpState& operator= (ZenChanJumpState&&) noexcept = delete;
 
-	virtual std::unique_ptr<ZenChanState> Update() override;
+	virtual std::unique_ptr<EnemyState> Update() override;
 	virtual void OnEnter() override;
 	virtual void OnExit() override;
 
@@ -39,8 +39,8 @@ private:
 	const float m_JumpVelocity{ -160.f };
 
 
-	dae::GameObject* m_pZenChan;
-	ZenChanComponent* m_pZenChanComp;
+	dae::GameObject* m_pEnemy;
+	EnemyComponent* m_pEnemyComp;
 	dae::PhysicsComponent* m_pPhysicsComp;
 	SpriteComponent* m_pSpriteComp;
 	dae::CollisionComponent* m_pCollisionComp;

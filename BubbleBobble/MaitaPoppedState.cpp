@@ -2,24 +2,24 @@
 #include "CollisionTags.h"
 
 
-MaitaPoppedState::MaitaPoppedState(dae::GameObject* pMaita) :
+MaitaPoppedState::MaitaPoppedState(dae::GameObject* pEnemy) :
 	MaitaState{},
-	m_pMaita{ pMaita },
-	m_pPhysicsComp{ pMaita->GetComponent<dae::PhysicsComponent>() },
-	m_pCollisionComp{ pMaita->GetComponent<dae::CollisionComponent>() },
-	m_pFloorComp{ pMaita->GetComponent<FloorCheckingComponent>() },
-	m_pWallComp{ pMaita->GetComponent<WallCheckingComponent>() },
-	m_pSpriteComp{ pMaita->GetComponent<SpriteComponent>() }
+	m_pEnemy{ pEnemy },
+	m_pPhysicsComp{ pEnemy->GetComponent<dae::PhysicsComponent>() },
+	m_pCollisionComp{ pEnemy->GetComponent<dae::CollisionComponent>() },
+	m_pFloorComp{ pEnemy->GetComponent<FloorCheckingComponent>() },
+	m_pWallComp{ pEnemy->GetComponent<WallCheckingComponent>() },
+	m_pSpriteComp{ pEnemy->GetComponent<SpriteComponent>() }
 {}
 
-std::unique_ptr<MaitaState> MaitaPoppedState::Update()
+std::unique_ptr<EnemyState> MaitaPoppedState::Update()
 {
 	if (m_pFloorComp->IsOnGround())
 	{
-		auto pos = m_pMaita->GetWorldPosition();
-		pos.x += MaitaComponent::GetMaitaOffset();
+		auto pos = m_pEnemy->GetWorldPosition();
+		pos.x += EnemyComponent::GetMaitaOffset();
 		spawners::SpawnPickUp(pos, PickUpComponent::PickUpType::Fries);
-		m_pMaita->MarkDead();
+		m_pEnemy->MarkDead();
 	}
 	if (m_pWallComp->CollidingWithLeft()) m_pPhysicsComp->SetVelocityX(m_Speed);
 	if (m_pWallComp->CollidingWithRight()) m_pPhysicsComp->SetVelocityX(-m_Speed);

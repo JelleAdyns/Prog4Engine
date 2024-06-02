@@ -24,7 +24,7 @@ public:
 	ZenChanPoppedState& operator= (const ZenChanPoppedState&) = delete;
 	ZenChanPoppedState& operator= (ZenChanPoppedState&&) noexcept = delete;
 
-	virtual std::unique_ptr<ZenChanState> Update() override;
+	virtual std::unique_ptr<EnemyState> Update() override;
 	virtual void OnEnter() override;
 	virtual void OnExit() override;
 

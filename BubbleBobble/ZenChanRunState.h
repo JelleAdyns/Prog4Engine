@@ -12,14 +12,14 @@ namespace dae
 	class PhysicsComponent;
 }
 
-class ZenChanComponent;
+class EnemyComponent;
 class SpriteComponent;
 class WallCheckingComponent;
 class FloorCheckingComponent;
 class ZenChanRunState final : public ZenChanState, public dae::Observer<PlayerComponent>
 {
 public:
-	explicit ZenChanRunState(dae::GameObject* pZenChan, ZenChanComponent* pZenChanComp, bool isAngry = false);
+	explicit ZenChanRunState(dae::GameObject* pEnemy, EnemyComponent* pEnemyComp, bool isAngry = false);
 	virtual ~ZenChanRunState()
 	{
 		for (dae::Subject<PlayerComponent>* pSpriteSubject : m_pVecObservedSpriteSubjects)
@@ -33,7 +33,7 @@ public:
 	ZenChanRunState& operator= (const ZenChanRunState&) = delete;
 	ZenChanRunState& operator= (ZenChanRunState&&) noexcept = delete;
 
-	virtual std::unique_ptr<ZenChanState> Update() override;
+	virtual std::unique_ptr<EnemyState> Update() override;
 	virtual void OnEnter() override;
 	virtual void OnExit() override;
 	
@@ -49,8 +49,8 @@ private:
 	bool m_HasToJump{ false };
 	bool m_IsAngry;
 
-	dae::GameObject* m_pZenChan;
-	ZenChanComponent* m_pZenChanComp;
+	dae::GameObject* m_pEnemy;
+	EnemyComponent* m_pEnemyComp;
 	dae::PhysicsComponent* m_pPhysicsComp;
 	SpriteComponent* m_pSpriteComp;
 	WallCheckingComponent* m_pWallCheckingComp;

@@ -1,49 +1,52 @@
 #include "ZenChanFallingState.h"
 #include "ZenChanRunState.h"
 #include "SpriteComponent.h"
-#include "ZenChanComponent.h"
+#include "EnemyComponent.h"
 #include "FloorCheckingComponent.h"
 #include <PhysicsComponent.h>
 #include <CollisionComponent.h>
 #include <GameObject.h>
 #include <Minigin.h>
+#include "CollisionTags.h"
+#include "BubbleComponent.h"
+#include "ZenChanCaughtState.h"
 
-ZenChanFallingState::ZenChanFallingState(dae::GameObject* pZenChan, ZenChanComponent* pZenChanComp, bool isAngry) :
+ZenChanFallingState::ZenChanFallingState(dae::GameObject* pEnemy, EnemyComponent* pEnemyComp, bool isAngry) :
 	ZenChanState{},
 	m_IsAngry{ isAngry },
-	m_pZenChan{ pZenChan },
-	m_pZenChanComp{ pZenChanComp },
-	m_pPhysicsComp{ pZenChan->GetComponent<dae::PhysicsComponent>() },
-	m_pCollisionComp{ pZenChan->GetComponent<dae::CollisionComponent>() },
-	m_pFloorCheckingComp{ pZenChan->GetComponent<FloorCheckingComponent>() }
+	m_pEnemy{ pEnemy },
+	m_pEnemyComp{ pEnemyComp },
+	m_pPhysicsComp{ pEnemy->GetComponent<dae::PhysicsComponent>() },
+	m_pCollisionComp{ pEnemy->GetComponent<dae::CollisionComponent>() },
+	m_pFloorCheckingComp{ pEnemy->GetComponent<FloorCheckingComponent>() }
 {}
 
 
-std::unique_ptr<ZenChanState> ZenChanFallingState::Update()
+std::unique_ptr<EnemyState> ZenChanFallingState::Update()
 {
 	dae::GameObject* pCollidedObject = m_pCollisionComp->CheckForCollision(collisionTags::bubbleTag);
 	if (pCollidedObject)
 	{
 		if (!pCollidedObject->GetComponent<BubbleComponent>()->IsOccupied())
 		{
-			return std::make_unique<ZenChanCaughtState>(m_pZenChan, pCollidedObject);
+			return std::make_unique<ZenChanCaughtState>(m_pEnemy, pCollidedObject);
 		}
 	}
 
-	if (m_pZenChan->GetWorldPosition().y > dae::Minigin::GetWindowSize().y)
+	if (m_pEnemy->GetWorldPosition().y > dae::Minigin::GetWindowSize().y)
 	{
-		m_pZenChan->SetLocalPos(m_pZenChan->GetLocalPosition().x, -50);
+		m_pEnemy->SetLocalPos(m_pEnemy->GetLocalPosition().x, -50);
 	}
 	if (m_pFloorCheckingComp->IsOnGround())
 	{
-		return std::make_unique<ZenChanRunState>(m_pZenChan, m_pZenChanComp, m_IsAngry);
+		return std::make_unique<ZenChanRunState>(m_pEnemy, m_pEnemyComp, m_IsAngry);
 	}
 
 	return nullptr;
 }
 void ZenChanFallingState::OnEnter()
 {
-	for (dae::Subject<PlayerComponent>* pSubject : m_pZenChanComp->GetPlayerSubjects())
+	for (dae::Subject<PlayerComponent>* pSubject : m_pEnemyComp->GetPlayerSubjects())
 	{
 		pSubject->AddObserver(this);
 	}
@@ -52,9 +55,9 @@ void ZenChanFallingState::OnEnter()
 void ZenChanFallingState::OnExit()
 {
 
-	SpriteComponent* pSpriteComp = m_pZenChan->GetComponent<SpriteComponent>();
+	SpriteComponent* pSpriteComp = m_pEnemy->GetComponent<SpriteComponent>();
 
-	if (m_PlayerXPos < m_pZenChan->GetWorldPosition().x) pSpriteComp->LookLeft(true);
+	if (m_PlayerXPos < m_pEnemy->GetWorldPosition().x) pSpriteComp->LookLeft(true);
 	else pSpriteComp->LookLeft(false);
 	
 }

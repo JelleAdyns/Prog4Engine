@@ -1,32 +1,36 @@
 #include "ZenChanJumpState.h"
 #include "SpriteComponent.h"
-#include "ZenChanComponent.h"
+#include "EnemyComponent.h"
 #include <PhysicsComponent.h>
 #include <CollisionComponent.h>
 #include <GameObject.h>
 #include <Minigin.h>
 #include <GameTime.h>
+#include "CollisionTags.h"
+#include "BubbleComponent.h"
+#include "ZenChanCaughtState.h"
+#include "ZenChanFallingState.h"
 
-ZenChanJumpState::ZenChanJumpState(dae::GameObject* pZenChan, ZenChanComponent* pZenChanComp, bool isAngry) :
+ZenChanJumpState::ZenChanJumpState(dae::GameObject* pEnemy, EnemyComponent* pEnemyComp, bool isAngry) :
 	ZenChanState{},
 	m_IsAngry{ isAngry },
 	m_TimeToJump{ isAngry ? 0.5f : 1.f },
-	m_pZenChan{ pZenChan },
-	m_pZenChanComp{ pZenChanComp },
-	m_pPhysicsComp{ pZenChan->GetComponent<dae::PhysicsComponent>() },
-	m_pSpriteComp{ pZenChan->GetComponent<SpriteComponent>() },
-	m_pCollisionComp{ pZenChan->GetComponent<dae::CollisionComponent>() }
+	m_pEnemy{ pEnemy },
+	m_pEnemyComp{ pEnemyComp },
+	m_pPhysicsComp{ pEnemy->GetComponent<dae::PhysicsComponent>() },
+	m_pSpriteComp{ pEnemy->GetComponent<SpriteComponent>() },
+	m_pCollisionComp{ pEnemy->GetComponent<dae::CollisionComponent>() }
 {};
 
 
-std::unique_ptr<ZenChanState> ZenChanJumpState::Update()
+std::unique_ptr<EnemyState> ZenChanJumpState::Update()
 {
 	dae::GameObject* pCollidedObject = m_pCollisionComp->CheckForCollision(collisionTags::bubbleTag);
 	if (pCollidedObject)
 	{
 		if (!pCollidedObject->GetComponent<BubbleComponent>()->IsOccupied())
 		{
-			return std::make_unique<ZenChanCaughtState>(m_pZenChan, pCollidedObject);
+			return std::make_unique<ZenChanCaughtState>(m_pEnemy, pCollidedObject);
 		}
 	}
 
@@ -36,7 +40,8 @@ std::unique_ptr<ZenChanState> ZenChanJumpState::Update()
 
 	if (m_CheckIfLanded)
 	{
-		if (m_pPhysicsComp->GetVelocity().y > 0.f) return std::make_unique<ZenChanFallingState>(m_pZenChan, m_pZenChanComp, m_IsAngry);
+		if (m_pPhysicsComp->GetVelocity().y > 0.f) 
+			return std::make_unique<ZenChanFallingState>(m_pEnemy, m_pEnemyComp, m_IsAngry);
 	}
 	else
 	{
