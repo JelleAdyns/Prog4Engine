@@ -192,6 +192,7 @@
     <ClCompile Include="PlayerComponent.cpp" />
     <ClCompile Include="ProjectileComponent.cpp" />
     <ClCompile Include="RotatorComponent.cpp" />
+    <ClCompile Include="ScoreComponent.cpp" />
     <ClCompile Include="ScoreUIComponent.cpp" />
     <ClCompile Include="Spawners.cpp" />
     <ClCompile Include="SpriteComponent.cpp" />
@@ -222,6 +223,7 @@
     <ClInclude Include="NextLevelCommand.h" />
     <ClInclude Include="ProjectileComponent.h" />
     <ClInclude Include="SceneState.h" />
+    <ClInclude Include="ScoreComponent.h" />
     <ClInclude Include="Spawners.h" />
     <ClInclude Include="CollisionTags.h" />
     <ClInclude Include="MovementComponent.h" />

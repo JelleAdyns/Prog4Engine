@@ -1,8 +1,10 @@
 #ifndef PICKUPCOMPONENT_H
 #define PICKUPCOMPONENT_H
 
-#include "Component.h"
-#include "Subject.h"
+#include <Component.h>
+#include <Observer.h>
+#include "SpriteComponent.h"
+#include "PlayerComponent.h"
 
 namespace dae
 {
@@ -12,8 +14,7 @@ namespace dae
 }
 
 class ScoreUIComponent;
-class SpriteComponent;
-class PickUpComponent final : public dae::Component
+class PickUpComponent final : public dae::Component, public dae::Observer<SpriteComponent>
 {
 public:
 	enum class PickUpType
@@ -22,7 +23,7 @@ public:
 		Fries
 	};
 	explicit PickUpComponent(dae::GameObject* pOwner, PickUpComponent::PickUpType pickUpType, ScoreUIComponent* pObserver);
-	virtual ~PickUpComponent() = default;
+	virtual ~PickUpComponent();
 
 	PickUpComponent(const PickUpComponent&) = delete;
 	PickUpComponent(PickUpComponent&&) noexcept = delete;
@@ -32,6 +33,12 @@ public:
 	virtual void Start() override;
 	virtual void Update() override;
 	virtual void PrepareImGuiRender() override;
+
+	virtual void Notify(SpriteComponent* pSubject) override;
+	virtual void AddSubjectPointer(dae::Subject<SpriteComponent>* pSubject) override;
+	virtual void SetSubjectPointersInvalid() override;
+
+	void PickUp(PlayerComponent::PlayerType playerType);
 
 	PickUpType GetPickUpType() const;
 private:
@@ -51,6 +58,8 @@ private:
 	SpriteComponent* m_pSpriteComp;
 
 	std::unique_ptr<dae::Subject<PickUpComponent>> m_PickedUp;
+
+	std::vector<dae::Subject<SpriteComponent>*> m_pVecObservedSubjects;
 };
 
 

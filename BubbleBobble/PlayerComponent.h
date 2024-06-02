@@ -19,7 +19,14 @@ class MovementComponent;
 class PlayerComponent final : public dae::Component, public dae::Observer<SpriteComponent>
 {
 public:
-	explicit PlayerComponent(dae::GameObject* pOwner);
+
+	enum class PlayerType
+	{
+		Green,
+		Blue
+	};
+
+	explicit PlayerComponent(dae::GameObject* pOwner, PlayerType playerType);
 	virtual ~PlayerComponent();
 
 	PlayerComponent(const PlayerComponent&) = delete;
@@ -58,6 +65,8 @@ private:
 	float m_InvincibilityTimer{};
 	float m_RenderTimer{};
 	float m_InvincibilityMaxTime{3.f};
+
+	PlayerType m_PlayerType;
 
 	std::unique_ptr<PlayerState> m_pCurrState{};
 	

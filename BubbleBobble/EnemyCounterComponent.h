@@ -3,12 +3,12 @@
 
 #include <Component.h>
 #include <Observer.h>
+#include <Command.h>
 #include "EnemyComponent.h"
 
 namespace dae
 {
 	class PhysicsComponent;
-	class Command;
 }
 class PlayerComponent;
 class SpriteComponent;
@@ -17,7 +17,7 @@ class EnemyCounterComponent final : public dae::Component, public dae::Observer<
 public:
 
 
-	explicit EnemyCounterComponent(dae::GameObject* pOwner, dae::Command* pNextLevelCommand);
+	explicit EnemyCounterComponent(dae::GameObject* pOwner, std::unique_ptr<dae::Command>& pNextLevelCommand);
 	virtual ~EnemyCounterComponent();
 	EnemyCounterComponent(const EnemyCounterComponent&) = delete;
 	EnemyCounterComponent(EnemyCounterComponent&&) noexcept = delete;
@@ -40,7 +40,7 @@ private:
 	float m_TimeForLevelSwitch{ 5.f };
 
 
-	dae::Command* m_pNextLevelCommand;
+	std::unique_ptr<dae::Command> m_pNextLevelCommand;
 	std::vector<dae::Subject<EnemyComponent>*> m_pVecObservedSubjects;
 };
 

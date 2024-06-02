@@ -27,7 +27,7 @@ namespace dae
 		void Init(const std::string& data);
 
 		std::unique_ptr<Texture2D>LoadTexture(const std::string& file);
-		std::unique_ptr<Texture2D> LoadTextureFromFont(const std::string& text, const std::unique_ptr<Font>& font) const;
+		std::unique_ptr<Texture2D> LoadTextureFromFont(const std::string& text, const std::unique_ptr<Font>& font, SDL_Color color) const;
 		std::unique_ptr<Font> LoadFont(const std::string& file, unsigned int size) const;
 		const std::string& GetDataPath() const { return m_DataPath; }
 

@@ -26,9 +26,10 @@ void MainMenuState::OnExit()
 	auto& inputMan = dae::InputCommandBinder::GetInstance();
 	inputMan.RemoveAllCommands();
 
-	auto& ss2 = dae::AudioLocator::GetAudioService();
-	ss2.StopSound(static_cast<dae::SoundID>(Game::SoundEvent::MainTheme));
+	auto& audioService = dae::AudioLocator::GetAudioService();
+	audioService.StopSound(static_cast<dae::SoundID>(Game::SoundEvent::MainTheme));
 
+	audioService.PlaySoundClip(static_cast<dae::SoundID>(Game::SoundEvent::Select), 80, false);
 }
 
 void MainMenuState::OnSuspend()

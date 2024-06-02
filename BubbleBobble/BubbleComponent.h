@@ -73,7 +73,7 @@ private:
 
 	FloatingStage m_FloatingStage{FloatingStage::ShooterColor};
 	float m_TimeBeforePop{};
-	float m_TimeToPop{10.f};
+	float m_TimeToPop{7.f};
 	BubbleState m_CurrState;
 	SpriteComponent* m_pSpriteComp;
 	WallCheckingComponent* m_pWallComp;

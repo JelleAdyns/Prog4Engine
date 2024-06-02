@@ -18,26 +18,24 @@
 #include "Game.h"
 #include "HitState.h"
 #include "Spawners.h"
+#include "ActivateButtonCommand.h"
 
 const std::string LevelState::m_SceneName{ "Level" };
 
 void LevelState::OnEnter()
 {
-	m_pNextLevelCmd = std::make_shared<NextLevelCommand>(this);
 
 	UploadScene();
-	
-	auto& inputMan = dae::InputCommandBinder::GetInstance();
-	
-	inputMan.AddKeyCommand(m_pNextLevelCmd, SDL_SCANCODE_F1, dae::KeyState::DownThisFrame);
 
-	auto& ss2 = dae::AudioLocator::GetAudioService();
-	ss2.AddSound("Sounds/MainTheme.mp3", static_cast<dae::SoundID>(Game::SoundEvent::MainTheme));
-	ss2.PlaySoundClip(static_cast<dae::SoundID>(Game::SoundEvent::MainTheme), 80, true);
+	auto& audioService = dae::AudioLocator::GetAudioService();
+	audioService.AddSound("Sounds/MainTheme.mp3", static_cast<dae::SoundID>(Game::SoundEvent::MainTheme));
+	audioService.PlaySoundClip(static_cast<dae::SoundID>(Game::SoundEvent::MainTheme), 80, true);
 }
 
 void LevelState::OnExit()
 {
+	auto& audioService = dae::AudioLocator::GetAudioService();
+	audioService.StopAllSounds();
 }
 
 void LevelState::OnSuspend()
@@ -63,14 +61,14 @@ void LevelState::AdvanceLevel()
 	}	
 }
 
-void LevelState::MakePlayer(const std::unique_ptr<dae::GameObject>& pPlayer)
+void LevelState::MakePlayer(const std::unique_ptr<dae::GameObject>& pPlayer, PlayerComponent::PlayerType playerType)
 {
 
 	pPlayer->AddRenderComponent();
 	pPlayer->AddPhysicsComponent();
 	pPlayer->AddComponent<MovementComponent>(-160.f, 60.f);
 	dae::PhysicsComponent::SetGravity(300);
-	pPlayer->AddComponent<PlayerComponent>();
+	pPlayer->AddComponent<PlayerComponent>(playerType);
 	PlayerComponent* playerComp = pPlayer->GetComponent<PlayerComponent>();
 	pPlayer->AddComponent<SpriteComponent>("Textures/BubStates.png", 4, 8, 0.1f, true, false);
 	SpriteComponent* spriteComp = pPlayer->GetComponent<SpriteComponent>();
@@ -98,26 +96,46 @@ void LevelState::UploadScene()
 
 	auto& scene = dae::SceneManager::GetInstance().CreateScene(m_SceneName + std::to_string(m_LevelNumber));
 
-	//auto pButtonHandler = std::make_unique<dae::GameObject>();
-	//pButtonHandler->AddComponent<ButtonHandlerComponent>();
-	//auto pHandlerComp = pButtonHandler->GetComponent<ButtonHandlerComponent>();
-	//
-	//auto pButton = std::make_unique<dae::GameObject>();
-	//pButton->AddComponent<ButtonComponent>(m_pNextLevelCmd);
-	//auto pButtonComp = pButton->GetComponent<ButtonComponent>();
-	//
-	//pHandlerComp->AddButton(pButtonComp);
-	//
-	//scene.AddGameObject(std::move(pButtonHandler));
-	//scene.AddGameObject(std::move(pButton));
+	auto pButtonHandler = std::make_unique<dae::GameObject>();
+	pButtonHandler->AddComponent<ButtonHandlerComponent>();
+	auto pHandlerComp = pButtonHandler->GetComponent<ButtonHandlerComponent>();
+
+	std::unique_ptr<dae::Command> pNextLevelCommand = std::make_unique<NextLevelCommand>(this);
+	auto pButton = std::make_unique<dae::GameObject>();
+	pButton->AddComponent<ButtonComponent>(pNextLevelCommand);
+	auto pButtonComp = pButton->GetComponent<ButtonComponent>();
+	
+	pHandlerComp->AddButton(pButtonComp);
+
+	auto& inputMan = dae::InputCommandBinder::GetInstance();
+
+	std::shared_ptr<dae::Command> activateCommand = std::make_shared<ActivateButtonCommand>(pButtonHandler);
+	inputMan.AddKeyCommand(activateCommand, SDL_SCANCODE_F1, dae::KeyState::UpThisFrame);
+	inputMan.AddControllerCommand(activateCommand, dae::ControllerButton::A, dae::KeyState::UpThisFrame, 0);
+	
+	scene.AddGameObject(std::move(pButtonHandler));
+	scene.AddGameObject(std::move(pButton));
 
 
 	auto pPlayer = std::make_unique<dae::GameObject>();
-	MakePlayer(pPlayer);
+	MakePlayer(pPlayer, PlayerComponent::PlayerType::Green);
 
 	LoadLevel("Levels.txt");
 
 	scene.AddGameObject(std::move(pPlayer));
+	
+	auto pScoreDisplayText = std::make_unique<dae::GameObject>(dae::Minigin::GetWindowSize().x/4.f, 4.f);
+	pScoreDisplayText->AddRenderComponent(true);
+	pScoreDisplayText->AddComponent<dae::TextComponent>("1UP", "Fonts/Pixel_NES.otf", 8, glm::u8vec4{ 0,255,0,255 });
+
+	auto pScoreDisplay = std::make_unique<dae::GameObject>(0,8);
+	pScoreDisplay->AddRenderComponent(true);
+	pScoreDisplay->AddComponent<dae::TextComponent>("0", "Fonts/Pixel_NES.otf", 8);
+
+	pScoreDisplay->SetParent(pScoreDisplayText, false);
+
+	scene.AddGameObject(std::move(pScoreDisplayText));
+	scene.AddGameObject(std::move(pScoreDisplay));
 }
 
 void LevelState::LoadLevel(const std::string& filename)
@@ -225,9 +243,9 @@ void LevelState::ParseStage(int levelNumber, std::stringstream& levelInfoStream)
 
 void LevelState::ParseEnemies(std::stringstream& levelInfoStream)
 {
-
+	std::unique_ptr<dae::Command> pNextCmd = std::make_unique<NextLevelCommand>(this);
 	auto pCounter = std::make_unique<dae::GameObject>();
-	pCounter->AddComponent<EnemyCounterComponent>(m_pNextLevelCmd.get());
+	pCounter->AddComponent<EnemyCounterComponent>(std::move(pNextCmd));
 	EnemyCounterComponent* pCounterComp = pCounter->GetComponent<EnemyCounterComponent>();
 
 	std::string enemy{};

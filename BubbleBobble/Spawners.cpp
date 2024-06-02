@@ -81,7 +81,7 @@ namespace spawners
 
 	void SpawnBubble(const glm::vec2& spawnPos, bool left)
 	{
-		dae::Scene* pScene = dae::SceneManager::GetInstance().GetNextScene();
+		dae::Scene* pScene = dae::SceneManager::GetInstance().GetActiveScene();
 
 		auto pBubble = std::make_unique<dae::GameObject>(spawnPos);
 		pBubble->AddRenderComponent();
@@ -100,14 +100,14 @@ namespace spawners
 
 	void SpawnPickUp(const glm::vec2& spawnPos, PickUpComponent::PickUpType pickUpType)
 	{
-		dae::Scene* pScene = dae::SceneManager::GetInstance().GetNextScene();
+		dae::Scene* pScene = dae::SceneManager::GetInstance().GetActiveScene();
 
 		auto pPickUp = std::make_unique<dae::GameObject>(spawnPos);
 		pPickUp->AddRenderComponent();
 		pPickUp->AddPhysicsComponent();
 		pPickUp->AddComponent<PickUpComponent>(pickUpType, nullptr);
 		PickUpComponent* pPickUpComp = pPickUp->GetComponent<PickUpComponent>();
-		pPickUp->AddComponent<SpriteComponent>("Textures/PickUpsWithPop.png", 5, 1, 0.2f, false, false);
+		pPickUp->AddComponent<SpriteComponent>("Textures/PickUps.png", 5, 1, 0.2f, false, false);
 		SpriteComponent* pSpriteComp = pPickUp->GetComponent<SpriteComponent>();
 		auto destRectSize = pSpriteComp->GetDestRectSize();
 		pSpriteComp->AddObserver(pPickUpComp);
@@ -121,7 +121,7 @@ namespace spawners
 
 	void SpawnProjectile(const glm::vec2& spawnPos, bool left)
 	{
-		dae::Scene* pScene = dae::SceneManager::GetInstance().GetNextScene();
+		dae::Scene* pScene = dae::SceneManager::GetInstance().GetActiveScene();
 
 		auto pBoulder = std::make_unique<dae::GameObject>(spawnPos);
 		pBoulder->AddRenderComponent();
@@ -136,5 +136,19 @@ namespace spawners
 		pBoulder->Start();
 
 		pScene->AddGameObject(std::move(pBoulder));
+	}
+
+	void SpawnFloatingScore(const glm::vec2& spawnPos, PickUpComponent::PickUpType pickUpType, PlayerComponent::PlayerType playerType)
+	{
+		dae::Scene* pScene = dae::SceneManager::GetInstance().GetActiveScene();
+
+		auto pScore = std::make_unique<dae::GameObject>(spawnPos);
+		pScore->AddRenderComponent();
+		pScore->AddComponent<ScoreComponent>(pickUpType, playerType);
+		pScore->AddComponent<SpriteComponent>("Textures/Scores.png", 2, 2, 0.1f, false, false);
+
+		pScore->Start();
+
+		pScene->AddGameObject(std::move(pScore));
 	}
 }

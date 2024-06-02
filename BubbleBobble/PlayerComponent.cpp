@@ -2,6 +2,7 @@
 #include "IdleState.h"
 #include "SpriteComponent.h"
 #include "MovementComponent.h"
+#include "PickUpComponent.h"
 #include "CollisionTags.h"
 #include <GameObject.h>
 #include <PhysicsComponent.h>
@@ -11,8 +12,9 @@
 #include <Minigin.h>
 
 
-PlayerComponent::PlayerComponent(dae::GameObject* pOwner):
+PlayerComponent::PlayerComponent(dae::GameObject* pOwner, PlayerType playerType):
 	dae::Component{pOwner},
+	m_PlayerType{ playerType },
 	m_pCurrState{},
 	m_pPosChecked{std::make_unique<dae::Subject<PlayerComponent>>()}
 {
@@ -44,7 +46,11 @@ void PlayerComponent::Start()
 
 void PlayerComponent::Update()
 {
-	m_pCollisionComp->CheckForCollision(collisionTags::enemyTag);
+	dae::GameObject* pPickUp = m_pCollisionComp->CheckForCollision(collisionTags::pickUp);
+	if (m_pCollisionComp->GetCollisionFlags() > 0)
+	{
+		pPickUp->GetComponent<PickUpComponent>()->PickUp(m_PlayerType);
+	}
 	
 	if (m_IsInvincible)
 	{

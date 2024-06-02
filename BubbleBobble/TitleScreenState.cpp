@@ -20,9 +20,9 @@ void TitleScreenState::OnEnter()
 	inputMan.RemoveAllCommands();
 	inputMan.AddController();
 
-	auto& ss2 = dae::AudioLocator::GetAudioService();
-	ss2.AddSound("Sounds/TitleScreen.wav", static_cast<dae::SoundID>(Game::SoundEvent::TitleScreen));
-	ss2.PlaySoundClip(static_cast<dae::SoundID>(Game::SoundEvent::TitleScreen), 80, false);
+	auto& audioService = dae::AudioLocator::GetAudioService();
+	audioService.AddSound("Sounds/TitleScreen.wav", static_cast<dae::SoundID>(Game::SoundEvent::TitleScreen));
+	audioService.PlaySoundClip(static_cast<dae::SoundID>(Game::SoundEvent::TitleScreen), 80, false);
 
 
 	LoadTitleScreen();
@@ -38,9 +38,12 @@ void TitleScreenState::OnExit()
 	auto& inputMan = dae::InputCommandBinder::GetInstance();
 	inputMan.RemoveAllCommands();
 
-	auto& ss2 = dae::AudioLocator::GetAudioService();
-	ss2.AddSound("Sounds/Select.wav", static_cast<dae::SoundID>(Game::SoundEvent::Select));
-	ss2.PlaySoundClip(static_cast<dae::SoundID>(Game::SoundEvent::Select), 80, false);
+	auto& audioService = dae::AudioLocator::GetAudioService();
+	audioService.StopAllSounds();
+
+	audioService.AddSound("Sounds/Select.wav", static_cast<dae::SoundID>(Game::SoundEvent::Select));
+	audioService.PlaySoundClip(static_cast<dae::SoundID>(Game::SoundEvent::Select), 80, false);
+
 }
 
 void TitleScreenState::OnSuspend()

@@ -6,6 +6,7 @@
 #include <Command.h>
 #include <Scene.h>
 #include "SceneState.h"
+#include "PlayerComponent.h"
 
 class LevelState final : public SceneState
 {
@@ -36,7 +37,7 @@ private:
 		int m_Health{};
 	};
 
-	void MakePlayer(const std::unique_ptr<dae::GameObject>& pPlayer);
+	void MakePlayer(const std::unique_ptr<dae::GameObject>& pPlayer, PlayerComponent::PlayerType playerType);
 	void UploadScene();
 	void LoadLevel(const std::string& filename);
 	void ParseLevelInfo(int levelNumber, std::ifstream& file, std::stringstream& levelInfoStream);
@@ -51,8 +52,6 @@ private:
 
 	dae::GameObject* m_pPlayerOne;
 	dae::GameObject* m_pPlayerTwo;
-
-	std::shared_ptr<dae::Command> m_pNextLevelCmd;
 
 	const std::string m_LevelFile{ "Levels.txt" };
 	static const std::string m_SceneName;

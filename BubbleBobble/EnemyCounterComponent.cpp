@@ -1,12 +1,11 @@
 #include "EnemyCounterComponent.h"
 #include "LevelState.h"
 #include <GameTime.h>
-#include <Command.h>
 #include <iostream>
 
-EnemyCounterComponent::EnemyCounterComponent(dae::GameObject* pOwner, dae::Command* pNextLevelCommand):
+EnemyCounterComponent::EnemyCounterComponent(dae::GameObject* pOwner, std::unique_ptr<dae::Command>& pNextLevelCommand):
 	Component{pOwner},
-	m_pNextLevelCommand{pNextLevelCommand},
+	m_pNextLevelCommand{std::move(pNextLevelCommand)},
 	m_pVecObservedSubjects{}
 {
 }

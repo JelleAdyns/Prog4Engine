@@ -23,12 +23,11 @@
 #include "WallCheckingComponent.h"
 #include "FloorCheckingComponent.h"
 #include "PlayerComponent.h"
-//#include "ZenChanComponent.h"
-//#include "MaitaComponent.h"
 #include "EnemyComponent.h"
 #include "EnemyCounterComponent.h"
 #include "MovementComponent.h"
 #include "BubbleComponent.h"
 #include "ProjectileComponent.h"
+#include "ScoreComponent.h"
 
 #endif // !COMPONENTS_H

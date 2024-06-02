@@ -4,6 +4,7 @@
 #include "ResourceManager.h"
 #include "Renderer.h"
 #include "Minigin.h"
+#include <glm/fwd.hpp>
 
 dae::ResourceManager::~ResourceManager()
 {
@@ -44,9 +45,8 @@ std::unique_ptr<dae::Texture2D> dae::ResourceManager::LoadTexture(const std::str
 	
 }
 
-std::unique_ptr<dae::Texture2D> dae::ResourceManager::LoadTextureFromFont(const std::string& text, const std::unique_ptr<Font>& font) const
+std::unique_ptr<dae::Texture2D> dae::ResourceManager::LoadTextureFromFont(const std::string& text, const std::unique_ptr<Font>& font, SDL_Color color) const
 {
-	const SDL_Color color = { 255,255,255,255 }; // only white text is supported now
 	const auto surf = TTF_RenderText_Blended(font->GetFont(), text.c_str(), color);
 	if (surf == nullptr) throw std::runtime_error(std::string("Render text failed: ") + SDL_GetError());
 
