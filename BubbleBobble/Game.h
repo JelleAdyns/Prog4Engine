@@ -20,6 +20,13 @@ public:
 	Game& operator= (const Game&) = delete;
 	Game& operator= (Game&&) noexcept = delete;
 
+	enum class GameMode
+	{
+		SinglePlayer,
+		MultiPlayer,
+		Versus
+	};
+
 	enum class CurrScene
 	{
 		TitleScreen,
@@ -47,17 +54,12 @@ public:
 
 	void StartGame();
 	void SetScene(Game::CurrScene newScene);
+	void SetGameMode(Game::GameMode newGameMode);
+	GameMode GetCurrentGameMode() {return m_CurrentGameMode;}
 private:
-	void LoadTitleScreen() const;
-	void LoadMainMenu() const;
-	void LoadLevelOne() const;
-	void LoadLevelTwo() const;
-	void LoadLevelThree() const;
 
-	void MakePlayer(dae::Scene& scene) const;
-
-	CurrScene m_ActiveScene{ CurrScene::TitleScreen };
 	std::unique_ptr<SceneState> m_CurrScene{ nullptr };
+	GameMode m_CurrentGameMode{ GameMode::SinglePlayer };
 
 	friend class dae::Singleton<Game>;
 	Game() = default;

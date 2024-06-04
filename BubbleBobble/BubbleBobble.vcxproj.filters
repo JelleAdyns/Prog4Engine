@@ -50,9 +50,6 @@
     <ClCompile Include="FPSComponent.cpp">
       <Filter>Source Files\Components</Filter>
     </ClCompile>
-    <ClCompile Include="LivesComponent.cpp">
-      <Filter>Source Files\Components</Filter>
-    </ClCompile>
     <ClCompile Include="LivesUIComponent.cpp">
       <Filter>Source Files\Components</Filter>
     </ClCompile>
@@ -178,9 +175,6 @@
     <ClInclude Include="FPSComponent.h">
       <Filter>Source Files\Components</Filter>
     </ClInclude>
-    <ClInclude Include="LivesComponent.h">
-      <Filter>Source Files\Components</Filter>
-    </ClInclude>
     <ClInclude Include="LivesUIComponent.h">
       <Filter>Source Files\Components</Filter>
     </ClInclude>
@@ -203,9 +197,6 @@
       <Filter>Source Files\Components</Filter>
     </ClInclude>
     <ClInclude Include="MovementCommands.h">
-      <Filter>Source Files\Commands</Filter>
-    </ClInclude>
-    <ClInclude Include="Killcommand.h">
       <Filter>Source Files\Commands</Filter>
     </ClInclude>
     <ClInclude Include="Commands.h">
@@ -351,6 +342,9 @@
     </ClInclude>
     <ClInclude Include="InventoryComponent.h">
       <Filter>Source Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="StartLevelCommand.h">
+      <Filter>Source Files\Commands</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

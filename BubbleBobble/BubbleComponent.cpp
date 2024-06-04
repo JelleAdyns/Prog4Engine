@@ -8,8 +8,9 @@
 #include <RenderComponent.h>
 #include <GameTime.h>
 
-BubbleComponent::BubbleComponent(dae::GameObject* pOwner, bool left):
+BubbleComponent::BubbleComponent(dae::GameObject* pOwner, PlayerComponent::PlayerType shooter, bool left):
 	dae::Component{pOwner},
+	m_Shooter{shooter},
 	m_CurrState{BubbleState::Shot},
 	m_Left{left},
 	m_pSpriteComp{},
@@ -39,6 +40,15 @@ void BubbleComponent::Start()
 	if (!m_pRenderComp) m_pRenderComp = GetOwner()->GetComponent<dae::RenderComponent>();
 	m_pSpriteComp->AddObserver(this);
 	m_pPhysicsComp->StopGravity();
+	switch (m_Shooter)
+	{
+	case PlayerComponent::PlayerType::Green:
+		m_pSpriteComp->SetRow(0);
+		break;
+	case PlayerComponent::PlayerType::Blue:
+		m_pSpriteComp->SetRow(3);
+		break;
+	}
 }
 
 void BubbleComponent::Update()
@@ -75,7 +85,7 @@ void BubbleComponent::Notify(SpriteComponent* )
 			m_RowCount = 0;
 			m_CurrState = BubbleState::Floating;
 			m_pSpriteComp->SetRowUpdate(false);
-			m_pSpriteComp->SetRow(2);
+			m_pSpriteComp->AddRows(1);
 		}
 	}
 	break;
@@ -137,6 +147,11 @@ BubbleComponent::FloatingStage BubbleComponent::GetFloatingStage() const
 bool BubbleComponent::IsFloating() const
 {
 	return m_CurrState == BubbleState::Floating;
+}
+
+PlayerComponent::PlayerType BubbleComponent::GetShooterType() const
+{
+	return m_Shooter;
 }
 
 void BubbleComponent::HandleShotState()

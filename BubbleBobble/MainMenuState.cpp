@@ -9,6 +9,7 @@
 #include "LoadSceneCommand.h"
 #include "Game.h"
 #include "SelectButtonCommand.h"
+#include "StartLevelCommand.h"
 #include <KeyState.h>
 #include "ActivateButtonCommand.h"
 #include "SetTextCommand.h"
@@ -27,9 +28,22 @@ void MainMenuState::OnExit()
 	inputMan.RemoveAllCommands();
 
 	auto& audioService = dae::AudioLocator::GetAudioService();
-	audioService.StopSound(static_cast<dae::SoundID>(Game::SoundEvent::MainTheme));
+	audioService.StopAllSounds();
 
 	audioService.PlaySoundClip(static_cast<dae::SoundID>(Game::SoundEvent::Select), 80, false);
+
+	switch (Game::GetInstance().GetCurrentGameMode())
+	{
+	case Game::GameMode::SinglePlayer:
+		break;
+	case Game::GameMode::MultiPlayer:
+		dae::InputCommandBinder::GetInstance().AddController();
+		break;
+	case Game::GameMode::Versus:
+		dae::InputCommandBinder::GetInstance().AddController();
+		break;
+
+	}
 }
 
 void MainMenuState::OnSuspend()
@@ -61,7 +75,7 @@ void MainMenuState::LoadMainMenu() const
 	const auto& handlerComponent = buttonHandler->GetComponent<ButtonHandlerComponent>();
 
 	const float distanceBetweenButton{ 20.f };
-	std::unique_ptr<dae::Command> loadCommand = std::make_unique<LoadSceneCommand>(Game::CurrScene::Level);
+	std::unique_ptr<dae::Command> loadCommand = std::make_unique<StartLevelCommand>(Game::GameMode::SinglePlayer);
 
 	auto button1 = std::make_unique<dae::GameObject>(0.f, distanceBetweenButton);
 	button1->AddRenderComponent(false);
@@ -72,7 +86,7 @@ void MainMenuState::LoadMainMenu() const
 	handlerComponent->AddButton(button1->GetComponent<ButtonComponent>());
 
 
-	std::unique_ptr<dae::Command> loadCommand2 = std::make_unique<LoadSceneCommand>(Game::CurrScene::Level);
+	std::unique_ptr<dae::Command> loadCommand2 = std::make_unique<StartLevelCommand>(Game::GameMode::MultiPlayer);
 
 	auto button2 = std::make_unique<dae::GameObject>(0.f, distanceBetweenButton);
 	button2->AddRenderComponent(false);
@@ -82,7 +96,7 @@ void MainMenuState::LoadMainMenu() const
 
 	handlerComponent->AddButton(button2->GetComponent<ButtonComponent>());
 
-	std::unique_ptr<dae::Command> loadCommand3 = std::make_unique<LoadSceneCommand>(Game::CurrScene::Level);
+	std::unique_ptr<dae::Command> loadCommand3 = std::make_unique<StartLevelCommand>(Game::GameMode::Versus);
 
 	auto button3 = std::make_unique<dae::GameObject>(0.f, distanceBetweenButton);
 	button3->AddRenderComponent(false);

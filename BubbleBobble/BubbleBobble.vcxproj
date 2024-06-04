@@ -178,7 +178,6 @@
     <ClCompile Include="InventoryComponent.cpp" />
     <ClCompile Include="LevelLoader.cpp" />
     <ClCompile Include="LevelState.cpp" />
-    <ClCompile Include="LivesComponent.cpp" />
     <ClCompile Include="LivesUIComponent.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MainMenuState.cpp" />
@@ -229,6 +228,7 @@
     <ClInclude Include="Spawners.h" />
     <ClInclude Include="CollisionTags.h" />
     <ClInclude Include="MovementComponent.h" />
+    <ClInclude Include="StartLevelCommand.h" />
     <ClInclude Include="TitleScreenState.h" />
     <ClInclude Include="ZenChanCaughtState.h" />
     <ClInclude Include="ZenChanJumpState.h" />
@@ -251,9 +251,7 @@
     <ClInclude Include="HitState.h" />
     <ClInclude Include="IdleState.h" />
     <ClInclude Include="JumpingState.h" />
-    <ClInclude Include="Killcommand.h" />
     <ClInclude Include="LevelLoader.h" />
-    <ClInclude Include="LivesComponent.h" />
     <ClInclude Include="LivesUIComponent.h" />
     <ClInclude Include="LoadSceneCommand.h" />
     <ClInclude Include="MovementCommands.h" />

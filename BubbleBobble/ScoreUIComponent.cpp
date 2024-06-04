@@ -7,10 +7,10 @@
 #include "GameObject.h"
 
 
-ScoreUIComponent::ScoreUIComponent(dae::GameObject* pOwner, Achievements* pObserver):
+ScoreUIComponent::ScoreUIComponent(dae::GameObject* pOwner, int startScore, Achievements* pObserver):
 	dae::Component{pOwner},
 	Observer{},
-	m_TotalScore{},
+	m_TotalScore{startScore},
 	m_pTextComponent{},
 	m_pScoreChanged{std::make_unique<dae::Subject<ScoreUIComponent>>()},
     m_pVecObservedSubjects{}
@@ -28,6 +28,7 @@ ScoreUIComponent::~ScoreUIComponent()
 void ScoreUIComponent::Start()
 {
 	if (!m_pTextComponent) m_pTextComponent = GetOwner()->GetComponent<dae::TextComponent>();
+	m_pTextComponent->SetText(std::to_string(m_TotalScore));
 }
 
 void ScoreUIComponent::Update()

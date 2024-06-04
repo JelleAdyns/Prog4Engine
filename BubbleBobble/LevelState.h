@@ -34,28 +34,31 @@ private:
 	struct Player
 	{
 		dae::GameObject* pPlayerObject;
-		int m_Score{};
-		int m_Health{};
+		ScoreUIComponent* pScoreUIComp;
+		int score{};
+		int health{};
 	};
 
-	void MakePlayer(const std::unique_ptr<dae::GameObject>& pPlayer, PlayerComponent::PlayerType playerType, ScoreUIComponent* scoreDisplay);
-	void UploadScene();
+	void CreateSkipButton(dae::Scene& scene);
+	void MakePlayer(const std::unique_ptr<dae::GameObject>& pPlayer, PlayerComponent::PlayerType playerType, ScoreUIComponent* scoreDisplay, LivesUIComponent* livesDisplay);
+	void CreateScoreDisplay(dae::Scene& scene, bool playerOne);
+	void CreateLivesDisplay();
+	void UploadScene(dae::Scene& scene);
 	void LoadLevel(const std::string& filename);
 	void ParseLevelInfo(int levelNumber, std::ifstream& file, std::stringstream& levelInfoStream);
 	void ParseStage(int levelNumber, std::stringstream& levelInfoStream);
 	void ParseEnemies(std::stringstream& levelInfoStream);
 
+
 	int m_LevelNumber{1};
 
-	static constexpr float m_GeneralCollisionOffset{3.f};
-
-	static constexpr float m_MaxLevel{3};
-
-	dae::GameObject* m_pPlayerOne;
-	dae::GameObject* m_pPlayerTwo;
+	Player m_pPlayerOne{};
+	Player m_pPlayerTwo;
 
 	const std::string m_LevelFile{ "Levels.txt" };
 	static const std::string m_SceneName;
+	static constexpr float m_MaxLevel{3};
+	static constexpr float m_GeneralCollisionOffset{3.f};
 };
 
 

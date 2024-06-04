@@ -11,7 +11,6 @@
 #include "WallCheckingComponent.h"
 #include "FloorCheckingComponent.h"
 #include "ProjectileComponent.h"
-#include "PlayerComponent.h"
 #include "EnemyComponent.h"
 #include "EnemyCounterComponent.h"
 #include "LevelState.h"
@@ -79,14 +78,14 @@ namespace spawners
 		
 	}
 
-	void SpawnBubble(const glm::vec2& spawnPos, bool left)
+	void SpawnBubble(const glm::vec2& spawnPos, PlayerComponent::PlayerType shooter, bool left)
 	{
 		dae::Scene* pScene = dae::SceneManager::GetInstance().GetActiveScene();
 
 		auto pBubble = std::make_unique<dae::GameObject>(spawnPos);
 		pBubble->AddRenderComponent();
 		pBubble->AddPhysicsComponent();
-		pBubble->AddComponent<BubbleComponent>(left);
+		pBubble->AddComponent<BubbleComponent>(shooter, left);
 		pBubble->AddComponent<SpriteComponent>("Textures/Bubble.png", 3, 11, 0.1f, true, true);
 		SpriteComponent* pSpriteComp = pBubble->GetComponent<SpriteComponent>();
 		auto destRectSize = pSpriteComp->GetDestRectSize();

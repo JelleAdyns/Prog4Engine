@@ -7,7 +7,7 @@
 class MovementComponent final : public dae::Component
 {
 public:
-	explicit MovementComponent(dae::GameObject* pOwner, float jumpVelocity, float moveSpeed);
+	explicit MovementComponent(dae::GameObject* pOwner, float jumpVelocity, float moveSpeed, uint8_t playerIndex);
 	virtual ~MovementComponent();
 
 	MovementComponent(const MovementComponent&) = delete;
@@ -42,6 +42,5 @@ private:
 	std::shared_ptr<dae::Command> m_StopMovingCommand;
 	std::shared_ptr<dae::Command> m_AttackCommand;
 
-	static uint8_t m_NrOfPlayers;
 };
 #endif // !MOVEMENTCOMPONENT_H

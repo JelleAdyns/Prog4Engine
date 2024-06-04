@@ -18,7 +18,7 @@ class Achievements;
 class ScoreUIComponent final : public dae::Component, public dae::Observer<InventoryComponent>
 {
 public:
-	explicit ScoreUIComponent(dae::GameObject* pOwner, Achievements* pObserver);
+	explicit ScoreUIComponent(dae::GameObject* pOwner, int startScore, Achievements* pObserver);
 	virtual ~ScoreUIComponent();
 
 	ScoreUIComponent(const ScoreUIComponent&) = delete;

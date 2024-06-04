@@ -41,6 +41,8 @@ namespace dae
 		glm::vec2 GetJoystickValueImpl(bool leftJoystick);
 		float GetTriggerValueImpl(bool leftJoystick);
 
+		static int AmountOfConnectedControllersImpl();
+
 	private:
 		uint8_t m_ControllerIndex{};
 		XINPUT_STATE m_PreviousState{};
@@ -205,6 +207,7 @@ namespace dae
 	void Controller::ControllerImpl::RemoveAllCommandsImpl()
 	{
 		m_MapCommands.clear();
+		VibrateImpl(0);
 	}
 
 
@@ -246,6 +249,20 @@ namespace dae
 		if (value < m_TriggerDeadZonePercentage / 100.f) value = 0;
 
 		return value;
+	}
+
+	int Controller::ControllerImpl::AmountOfConnectedControllersImpl()
+	{
+		int connectedControllers = 0;
+		XINPUT_STATE state{};
+		DWORD dwResult;
+
+		for (DWORD i = 0; i < XUSER_MAX_COUNT; ++i)
+		{
+			dwResult = XInputGetState(i, &state);
+			if (dwResult == ERROR_SUCCESS) ++connectedControllers;
+		}
+		return connectedControllers;
 	}
 
 	//Controller
@@ -310,6 +327,11 @@ namespace dae
 	float Controller::GetTriggerValue(bool leftTrigger)
 	{
 		return m_pImpl->GetTriggerValueImpl(leftTrigger);
+	}
+
+	int Controller::AmountOfConnectedControllers()
+	{
+		return ControllerImpl::AmountOfConnectedControllersImpl();
 	}
 	
 }

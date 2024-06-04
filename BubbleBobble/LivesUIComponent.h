@@ -9,14 +9,11 @@
 
 namespace dae
 {
-    template <typename T>
-    class Subject;
-	class TextComponent;
 	class GameObject;
 }
 
-class LivesComponent;
-class LivesUIComponent final : public dae::Component, public dae::Observer<LivesComponent>
+class PlayerComponent;
+class LivesUIComponent final : public dae::Component, public dae::Observer<PlayerComponent>
 {
 public:
 	explicit LivesUIComponent(dae::GameObject* pOwner);
@@ -31,15 +28,17 @@ public:
 	virtual void Update() override;
 	virtual void PrepareImGuiRender() override;
 
-	virtual void Notify(LivesComponent* pSubject) override;
-	virtual void AddSubjectPointer(dae::Subject<LivesComponent>* pSubject) override;
+	virtual void Notify(PlayerComponent* pSubject) override;
+	virtual void AddSubjectPointer(dae::Subject<PlayerComponent>* pSubject) override;
 	virtual void SetSubjectPointersInvalid() override;
+
+	void AddLifeObjct(dae::GameObject* pLife);
 
 private:
 
-	dae::TextComponent* m_pTextComponent;
+    std::vector<dae::GameObject*> m_pLives;
 
-    std::vector<dae::Subject<LivesComponent>*> m_pVecObservedSubjects;
+    std::vector<dae::Subject<PlayerComponent>*> m_pVecObservedSubjects;
 };
 
 #endif // !LIVESOBSERVER_H

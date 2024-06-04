@@ -54,6 +54,8 @@ private:
 	dae::CollisionComponent* m_pCollisionComp;
 	SpriteComponent* m_pSpriteComp;
 
+	BubbleComponent* m_pOccupiedBubble;
+
 	dae::Subject<BubbleComponent>* m_pObservedSubject;
 };
 

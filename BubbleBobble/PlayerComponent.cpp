@@ -3,6 +3,7 @@
 #include "SpriteComponent.h"
 #include "MovementComponent.h"
 #include "PickUpComponent.h"
+#include "LivesUIComponent.h"
 #include "CollisionTags.h"
 #include <GameObject.h>
 #include <PhysicsComponent.h>
@@ -12,12 +13,15 @@
 #include <Minigin.h>
 
 
-PlayerComponent::PlayerComponent(dae::GameObject* pOwner, PlayerType playerType):
+PlayerComponent::PlayerComponent(dae::GameObject* pOwner, PlayerType playerType, LivesUIComponent* pObserver):
 	dae::Component{pOwner},
 	m_PlayerType{ playerType },
 	m_pCurrState{},
-	m_pPosChecked{std::make_unique<dae::Subject<PlayerComponent>>()}
+	m_pPosChecked{std::make_unique<dae::Subject<PlayerComponent>>()},
+	m_pDied{std::make_unique<dae::Subject<PlayerComponent>>()}
 {
+	m_pDied->AddObserver(pObserver);
+	m_SpawnPos = GetOwner()->GetWorldPosition();
 	Respawn();
 }
 
@@ -46,11 +50,6 @@ void PlayerComponent::Start()
 
 void PlayerComponent::Update()
 {
-	//dae::GameObject* pPickUp = m_pCollisionComp->CheckForCollision(collisionTags::pickUp);
-	//if (m_pCollisionComp->GetCollisionFlags() > 0)
-	//{
-	//	pPickUp->GetComponent<PickUpComponent>()->PickUp(m_PlayerType);
-	//}
 	
 	if (m_IsInvincible)
 	{
@@ -121,7 +120,7 @@ bool PlayerComponent::IsInvincible() const
 
 void PlayerComponent::Respawn()
 {
-	GetOwner()->SetLocalPos(24.f, dae::Minigin::GetWindowSize().y - 40.f);
+	GetOwner()->SetLocalPos(m_SpawnPos);
 }
 
 dae::Subject<PlayerComponent>* PlayerComponent::GetSubject() const
@@ -142,6 +141,24 @@ glm::vec2 PlayerComponent::GetPos() const
 glm::vec2 PlayerComponent::GetDestRectSize() const
 {
 	return m_pSpriteComp->GetDestRectSize();
+}
+
+int PlayerComponent::GetNrOfLives() const
+{
+	return m_Health;
+}
+
+void PlayerComponent::TakeLife()
+{
+	if(m_Health > 0)
+	{
+		--m_Health;
+		m_pDied->NotifyObservers(this);
+	}
+	else
+	{
+		m_pRenderComp->SetNeedToRender(false);
+	}
 }
 
 

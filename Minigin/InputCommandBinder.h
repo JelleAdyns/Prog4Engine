@@ -52,6 +52,8 @@ namespace dae
 		glm::vec2 GetJoystickValue(bool leftJoystick, uint8_t controllerIndex);
 		float GetTriggerValue(bool leftTrigger, uint8_t controllerIndex);
 
+		static int AmountOfControllersConnected();
+
 	private:
 		friend class Singleton<InputCommandBinder>;
 		InputCommandBinder() = default;

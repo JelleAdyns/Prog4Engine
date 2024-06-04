@@ -16,6 +16,7 @@ namespace dae
 
 class SpriteComponent;
 class MovementComponent;
+class LivesUIComponent;
 class PlayerComponent final : public dae::Component, public dae::Observer<SpriteComponent>
 {
 public:
@@ -26,7 +27,7 @@ public:
 		Blue
 	};
 
-	explicit PlayerComponent(dae::GameObject* pOwner, PlayerType playerType);
+	explicit PlayerComponent(dae::GameObject* pOwner, PlayerType playerType, LivesUIComponent* pObserver);
 	virtual ~PlayerComponent();
 
 	PlayerComponent(const PlayerComponent&) = delete;
@@ -54,18 +55,22 @@ public:
 	glm::vec2 GetDestRectSize() const;
 	float GetJumpVelocity() const { return m_JumpVelocity; }
 	float GetMoveVelocity() const { return m_MoveVelocity; }
+	int GetNrOfLives() const;
+
+	void TakeLife();
 
 private:
 
 	bool m_IsInvincible{};
-	//bool m_IsHit{};
 
-	int m_Health{5};
+	int m_Health{4};
 	float m_JumpVelocity{ -160.f };
 	float m_MoveVelocity{ 60.f };
 	float m_InvincibilityTimer{};
 	float m_RenderTimer{};
 	float m_InvincibilityMaxTime{3.f};
+
+	glm::vec2 m_SpawnPos{};
 
 	PlayerType m_PlayerType;
 
@@ -78,6 +83,7 @@ private:
 	MovementComponent* m_pMovementComp;
 
 	std::unique_ptr<dae::Subject<PlayerComponent>> m_pPosChecked;
+	std::unique_ptr<dae::Subject<PlayerComponent>> m_pDied;
 
 	std::vector<dae::Subject<SpriteComponent>*> m_pVecObservedSpriteSubjects;
 

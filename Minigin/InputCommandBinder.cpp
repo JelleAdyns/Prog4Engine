@@ -39,48 +39,43 @@ namespace dae
 			}
 			if (event.type == SDL_QUIT) return false;
 
-			if(m_IsKeyboardActive)
+			for (const auto& [keyBoardState, pCommand] : m_MapKeyCommands)
 			{
-				for (const auto& [keyBoardState, pCommand] : m_MapKeyCommands)
+				switch (keyBoardState.keyState)
 				{
-					switch (keyBoardState.keyState)
-					{
-					case KeyState::DownThisFrame:
-						if (KeyDownThisFrame(event, keyBoardState.key)) pCommand->Execute();
-						break;
-					case KeyState::UpThisFrame:
-						if (KeyUpThisFrame(event, keyBoardState.key)) pCommand->Execute();
-						break;
-					}
+				case KeyState::DownThisFrame:
+					if (KeyDownThisFrame(event, keyBoardState.key)) pCommand->Execute();
+					break;
+				case KeyState::UpThisFrame:
+					if (KeyUpThisFrame(event, keyBoardState.key)) pCommand->Execute();
+					break;
 				}
 			}
 
 			ImGui_ImplSDL2_ProcessEvent(&event);
 		}
 
-		if (m_IsKeyboardActive)
-		{
-			for (const auto& [keyBoardState, pCommand] : m_MapKeyCommands)
-			{
-				switch (keyBoardState.keyState)
-				{
-				case KeyState::Pressed:
-					if (KeyPressed(keyBoardState.key)) pCommand->Execute();
-					break;
-				case KeyState::NotPressed:
-					if (!KeyPressed(keyBoardState.key)) pCommand->Execute();
-					break;
-				}
-			}
-		}
 
-		if (!m_IsKeyboardActive)
+		for (const auto& [keyBoardState, pCommand] : m_MapKeyCommands)
 		{
-			for (auto& controller : m_pVecControllers)
+			switch (keyBoardState.keyState)
 			{
-				controller->ProcessControllerInput();
+			case KeyState::Pressed:
+				if (KeyPressed(keyBoardState.key)) pCommand->Execute();
+				break;
+			case KeyState::NotPressed:
+				if (!KeyPressed(keyBoardState.key)) pCommand->Execute();
+				break;
 			}
 		}
+		
+
+
+		for (auto& controller : m_pVecControllers)
+		{
+			controller->ProcessControllerInput();
+		}
+		
 
 		return true;
 		
@@ -204,6 +199,11 @@ namespace dae
 	float InputCommandBinder::GetTriggerValue(bool leftTrigger, uint8_t controllerIndex)
 	{
 		return m_pVecControllers.at(controllerIndex)->GetTriggerValue(leftTrigger);
+	}
+
+	int InputCommandBinder::AmountOfControllersConnected()
+	{
+		return Controller::AmountOfConnectedControllers();
 	}
 
 

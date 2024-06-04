@@ -58,6 +58,7 @@ namespace dae
 		void Vibrate(int strengthPrecantage);
 		glm::vec2 GetJoystickValue(bool leftJoystick);
 		float GetTriggerValue(bool leftTrigger);
+		static int AmountOfConnectedControllers();
 	private:
 
 		class ControllerImpl;

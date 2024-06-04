@@ -65,7 +65,8 @@ void MaitaFallingState::OnExit()
 void MaitaFallingState::Notify(PlayerComponent* pSubject)
 {
 	auto subjectPos = pSubject->GetPos();
-	m_PlayerXPos = subjectPos.x;
+	if (std::abs(subjectPos.x - m_pEnemy->GetWorldPosition().x) < std::abs(m_PlayerXPos - m_pEnemy->GetWorldPosition().x))
+		m_PlayerXPos = subjectPos.x;
 }
 
 void MaitaFallingState::AddSubjectPointer(dae::Subject<PlayerComponent>* pSubject)

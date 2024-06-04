@@ -67,6 +67,7 @@ void HitState::OnExit()
 	m_pMovementComp->RegisterAttackCommand();
 	m_pMovementComp->RegisterMoveCommands();
 
+	m_pPlayerComp->TakeLife();
 }
 
 void HitState::Shoot()

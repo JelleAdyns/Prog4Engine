@@ -25,8 +25,10 @@ const std::string LevelState::m_SceneName{ "Level" };
 
 void LevelState::OnEnter()
 {
-
-	UploadScene();
+	auto& scene = dae::SceneManager::GetInstance().CreateScene(m_SceneName + std::to_string(m_LevelNumber));
+	CreateSkipButton(scene);
+	
+	UploadScene(scene);
 
 	auto& audioService = dae::AudioLocator::GetAudioService();
 	audioService.AddSound("Sounds/MainTheme.mp3", static_cast<dae::SoundID>(Game::SoundEvent::MainTheme));
@@ -56,23 +58,61 @@ void LevelState::AdvanceLevel()
 	else
 	{
 		++m_LevelNumber;
-		m_pPlayerOne->RemoveComponent<MovementComponent>();
-
-		UploadScene();
+		//m_pPlayerOne->RemoveComponent<MovementComponent>();
+		auto& scene = dae::SceneManager::GetInstance().CreateScene(m_SceneName + std::to_string(m_LevelNumber));
+		CreateSkipButton(scene);
+		UploadScene(scene);
 	}	
 }
 
-void LevelState::MakePlayer(const std::unique_ptr<dae::GameObject>& pPlayer, PlayerComponent::PlayerType playerType, ScoreUIComponent* scoreDisplay)
+void LevelState::CreateSkipButton(dae::Scene& scene)
 {
+	auto pButtonHandler = std::make_unique<dae::GameObject>();
+	pButtonHandler->AddComponent<ButtonHandlerComponent>();
+	auto pHandlerComp = pButtonHandler->GetComponent<ButtonHandlerComponent>();
 
+	std::unique_ptr<dae::Command> pNextLevelCommand = std::make_unique<NextLevelCommand>(this);
+	auto pButton = std::make_unique<dae::GameObject>();
+	pButton->AddComponent<ButtonComponent>(pNextLevelCommand);
+	auto pButtonComp = pButton->GetComponent<ButtonComponent>();
+
+	pHandlerComp->AddButton(pButtonComp);
+
+	auto& inputMan = dae::InputCommandBinder::GetInstance();
+	inputMan.RemoveAllCommands();
+
+	std::shared_ptr<dae::Command> activateCommand = std::make_shared<ActivateButtonCommand>(pButtonHandler);
+	inputMan.AddKeyCommand(activateCommand, SDL_SCANCODE_F1, dae::KeyState::UpThisFrame);
+	inputMan.AddControllerCommand(activateCommand, dae::ControllerButton::Start, dae::KeyState::UpThisFrame, 0);
+
+
+	scene.AddGameObject(std::move(pButtonHandler));
+	scene.AddGameObject(std::move(pButton));
+}
+
+void LevelState::MakePlayer(const std::unique_ptr<dae::GameObject>& pPlayer, PlayerComponent::PlayerType playerType, ScoreUIComponent* scoreDisplay, LivesUIComponent* livesDisplay)
+{
+	
 	pPlayer->AddRenderComponent();
 	pPlayer->AddPhysicsComponent();
-	pPlayer->AddComponent<MovementComponent>(-160.f, 60.f);
+	uint8_t playerIndex{};
+	switch (playerType)
+	{
+	case PlayerComponent::PlayerType::Green:
+		playerIndex = 0;
+		pPlayer->AddComponent<SpriteComponent>("Textures/BubStates.png", 4, 8, 0.1f, true, false);
+		break;
+	case PlayerComponent::PlayerType::Blue:
+		playerIndex = 1;
+		pPlayer->AddComponent<SpriteComponent>("Textures/BobStates.png", 4, 8, 0.1f, true, false);
+		pPlayer->GetComponent<SpriteComponent>()->LookLeft(true);
+		break;
+	}
+	pPlayer->AddComponent<MovementComponent>(-160.f, 60.f, playerIndex);
 	pPlayer->AddComponent<InventoryComponent>(scoreDisplay);
 	dae::PhysicsComponent::SetGravity(300);
-	pPlayer->AddComponent<PlayerComponent>(playerType);
+	pPlayer->AddComponent<PlayerComponent>(playerType, livesDisplay);
 	PlayerComponent* playerComp = pPlayer->GetComponent<PlayerComponent>();
-	pPlayer->AddComponent<SpriteComponent>("Textures/BubStates.png", 4, 8, 0.1f, true, false);
 	SpriteComponent* spriteComp = pPlayer->GetComponent<SpriteComponent>();
 	spriteComp->AddObserver(playerComp);
 	spriteComp->SetHeightMarkers(0, HitState::GetHitSpriteOffset());
@@ -88,59 +128,158 @@ void LevelState::MakePlayer(const std::unique_ptr<dae::GameObject>& pPlayer, Pla
 	pPlayer->AddComponent<FloorCheckingComponent>(glm::vec2{ destRctSize.x / 4,0 }, glm::vec2{ destRctSize.x / 2,destRctSize.y });
 
 	MovementComponent* movementComp = pPlayer->GetComponent<MovementComponent>();
-	if(movementComp->GetPlayerIndex() == 0) m_pPlayerOne = pPlayer.get();
-	else m_pPlayerTwo = pPlayer.get();
+	if(movementComp->GetPlayerIndex() == 0) m_pPlayerOne.pPlayerObject = pPlayer.get();
+	else m_pPlayerTwo.pPlayerObject = pPlayer.get();
 
+	
 }
 
-void LevelState::UploadScene()
+void LevelState::CreateScoreDisplay(dae::Scene& scene, bool playerOne)
 {
-
-	auto& scene = dae::SceneManager::GetInstance().CreateScene(m_SceneName + std::to_string(m_LevelNumber));
-
-	auto pButtonHandler = std::make_unique<dae::GameObject>();
-	pButtonHandler->AddComponent<ButtonHandlerComponent>();
-	auto pHandlerComp = pButtonHandler->GetComponent<ButtonHandlerComponent>();
-
-	std::unique_ptr<dae::Command> pNextLevelCommand = std::make_unique<NextLevelCommand>(this);
-	auto pButton = std::make_unique<dae::GameObject>();
-	pButton->AddComponent<ButtonComponent>(pNextLevelCommand);
-	auto pButtonComp = pButton->GetComponent<ButtonComponent>();
-	
-	pHandlerComp->AddButton(pButtonComp);
-
-	auto& inputMan = dae::InputCommandBinder::GetInstance();
-
-	std::shared_ptr<dae::Command> activateCommand = std::make_shared<ActivateButtonCommand>(pButtonHandler);
-	inputMan.AddKeyCommand(activateCommand, SDL_SCANCODE_F1, dae::KeyState::UpThisFrame);
-	inputMan.AddControllerCommand(activateCommand, dae::ControllerButton::A, dae::KeyState::UpThisFrame, 0);
-	
-	scene.AddGameObject(std::move(pButtonHandler));
-	scene.AddGameObject(std::move(pButton));
-
-	auto pScoreDisplayText = std::make_unique<dae::GameObject>(dae::Minigin::GetWindowSize().x / 4.f, 4.f);
+	//Score Display
+	float distanceBetweenDisplays{ dae::Minigin::GetWindowSize().x / 4.f };
+	auto pScoreDisplayText = std::make_unique<dae::GameObject>(playerOne ? distanceBetweenDisplays : distanceBetweenDisplays * 3, 4.f);
 	pScoreDisplayText->AddRenderComponent(true);
-	pScoreDisplayText->AddComponent<dae::TextComponent>("1UP", "Fonts/Pixel_NES.otf", 8, glm::u8vec4{ 0,255,0,255 });
 
 	auto pScoreDisplay = std::make_unique<dae::GameObject>(0, 8);
 	pScoreDisplay->AddRenderComponent(true);
-	pScoreDisplay->AddComponent<dae::TextComponent>("0", "Fonts/Pixel_NES.otf", 8);
-	pScoreDisplay->AddComponent<ScoreUIComponent>(&Achievements::GetInstance());
+	pScoreDisplay->AddComponent<dae::TextComponent>("", "Fonts/Pixel_NES.otf", 8);
 
 	pScoreDisplay->SetParent(pScoreDisplayText, false);
 
+	std::string displayText{"1UP"};
+	if (!playerOne)
+	{
+		switch (Game::GetInstance().GetCurrentGameMode())
+		{
+		case Game::GameMode::SinglePlayer:
+			displayText = "Insert Coin";
+			pScoreDisplay->AddComponent<ScoreUIComponent>(m_pPlayerTwo.score, &Achievements::GetInstance());
+			break;
+		case Game::GameMode::MultiPlayer:
+			displayText = "2UP";
+			pScoreDisplay->AddComponent<ScoreUIComponent>(m_pPlayerTwo.score, &Achievements::GetInstance());
+			break;
+		case Game::GameMode::Versus:
+			displayText = "Versus";
+			pScoreDisplay->AddComponent<ScoreUIComponent>(0, &Achievements::GetInstance());
+			break;
+		}
+
+	}
+	else pScoreDisplay->AddComponent<ScoreUIComponent>(m_pPlayerOne.score, &Achievements::GetInstance());
+	pScoreDisplayText->AddComponent<dae::TextComponent>(displayText, "Fonts/Pixel_NES.otf", 8, playerOne ? glm::u8vec4{ 116, 251, 77, 255 } : glm::u8vec4{ 77, 166, 248 ,255 });
+
+
 	ScoreUIComponent* pScoreUIComp = pScoreDisplay->GetComponent<ScoreUIComponent>();
-	
+	playerOne ? m_pPlayerOne.pScoreUIComp = pScoreUIComp : m_pPlayerTwo.pScoreUIComp = pScoreUIComp;
 
-	auto pPlayer = std::make_unique<dae::GameObject>();
-	MakePlayer(pPlayer, PlayerComponent::PlayerType::Green, pScoreUIComp);
-
-	LoadLevel("Levels.txt");
-
-	scene.AddGameObject(std::move(pPlayer));
 	scene.AddGameObject(std::move(pScoreDisplayText));
 	scene.AddGameObject(std::move(pScoreDisplay));
+}
+
+void LevelState::CreateLivesDisplay()
+{
+}
+
+void LevelState::UploadScene(dae::Scene& scene)
+{
+	switch (Game::GetInstance().GetCurrentGameMode())
+	{
+	case Game::GameMode::SinglePlayer:
+	{
+		if (m_pPlayerOne.pScoreUIComp) m_pPlayerOne.score = m_pPlayerOne.pScoreUIComp->GetScore();
+
+		CreateScoreDisplay(scene, true);
+		CreateScoreDisplay(scene, false);
+
+		//Lives Display
+		auto pLivesUI = std::make_unique<dae::GameObject>();
+		pLivesUI->AddComponent<LivesUIComponent>();
+		auto pLivesUIComponent = pLivesUI->GetComponent<LivesUIComponent>();
+
+		//Player
+		auto pPlayer = std::make_unique<dae::GameObject>(24.f, dae::Minigin::GetWindowSize().y - 24.f);
+		MakePlayer(pPlayer, PlayerComponent::PlayerType::Green, m_pPlayerOne.pScoreUIComp, pLivesUIComponent);
+
+		//Level
+		LoadLevel("Levels.txt");
+
+		//Lives
+		for (int i = 0; i < pPlayer->GetComponent<PlayerComponent>()->GetNrOfLives(); i++)
+		{
+			auto pLife = std::make_unique<dae::GameObject>(8.f * i, dae::Minigin::GetWindowSize().y - 8.f);
+			pLife->AddRenderComponent();
+			pLife->AddComponent<SpriteComponent>("Textures/Lives.png", 2, 1, 0.1f, false, false);
+			pLivesUIComponent->AddLifeObjct(pLife.get());
+			scene.AddGameObject(std::move(pLife));
+		}
+		
+		scene.AddGameObject(std::move(pLivesUI));
+		scene.AddGameObject(std::move(pPlayer));
+	}
+		break;
+	case Game::GameMode::MultiPlayer:
+	{
+		if (m_pPlayerOne.pScoreUIComp) m_pPlayerOne.score = m_pPlayerOne.pScoreUIComp->GetScore();
+		if (m_pPlayerTwo.pScoreUIComp) m_pPlayerTwo.score = m_pPlayerTwo.pScoreUIComp->GetScore();
+
+		CreateScoreDisplay(scene, true);
+		CreateScoreDisplay(scene, false);
+
+		//Lives Display
+		auto pLivesUIOne = std::make_unique<dae::GameObject>();
+		pLivesUIOne->AddComponent<LivesUIComponent>();
+		auto pLivesUIOneComponent = pLivesUIOne->GetComponent<LivesUIComponent>();
+
+		//Player
+		auto pPlayerOne = std::make_unique<dae::GameObject>(24.f, dae::Minigin::GetWindowSize().y - 24.f);
+		MakePlayer(pPlayerOne, PlayerComponent::PlayerType::Green, m_pPlayerOne.pScoreUIComp, pLivesUIOneComponent);
+
 	
+		//Lives Display
+		auto pLivesUITwo = std::make_unique<dae::GameObject>();
+		pLivesUITwo->AddComponent<LivesUIComponent>();
+		auto pLivesUITwoComponent = pLivesUIOne->GetComponent<LivesUIComponent>();
+
+		//Player
+		auto pPlayerTwo = std::make_unique<dae::GameObject>(dae::Minigin::GetWindowSize().x - 32.f, dae::Minigin::GetWindowSize().y - 24.f);
+		MakePlayer(pPlayerTwo, PlayerComponent::PlayerType::Blue, m_pPlayerTwo.pScoreUIComp, pLivesUITwoComponent);
+
+		//Level
+		LoadLevel("Levels.txt");
+		
+		//Lives
+		for (int i = 0; i < pPlayerOne->GetComponent<PlayerComponent>()->GetNrOfLives(); i++)
+		{
+			auto pLife = std::make_unique<dae::GameObject>(8.f * i, dae::Minigin::GetWindowSize().y - 8.f);
+			pLife->AddRenderComponent();
+			pLife->AddComponent<SpriteComponent>("Textures/Lives.png", 2, 1, 0.1f, false, false);
+			pLivesUIOneComponent->AddLifeObjct(pLife.get());
+			scene.AddGameObject(std::move(pLife));
+		}
+		for (int i = 0; i < pPlayerTwo->GetComponent<PlayerComponent>()->GetNrOfLives(); i++)
+		{
+			auto pLife = std::make_unique<dae::GameObject>(dae::Minigin::GetWindowSize().x - 8.f * (i+1), dae::Minigin::GetWindowSize().y - 8.f);
+			pLife->AddRenderComponent();
+			pLife->AddComponent<SpriteComponent>("Textures/Lives.png", 2, 1, 0.1f, false, false);
+			pLife->GetComponent<SpriteComponent>()->SetCol(1);
+			pLivesUITwoComponent->AddLifeObjct(pLife.get());
+			scene.AddGameObject(std::move(pLife));
+		}
+		
+		scene.AddGameObject(std::move(pLivesUIOne));
+		scene.AddGameObject(std::move(pLivesUITwo));
+
+		scene.AddGameObject(std::move(pPlayerOne));
+		scene.AddGameObject(std::move(pPlayerTwo));
+	}
+		break;
+	case Game::GameMode::Versus:
+		break;
+	}
+	
+
 }
 
 void LevelState::LoadLevel(const std::string& filename)
@@ -268,15 +407,15 @@ void LevelState::ParseEnemies(std::stringstream& levelInfoStream)
 			if (matches.str(1) == zenChan)
 			{
 				spawners::SpawnZenChan(pos,
-					m_pPlayerOne ? m_pPlayerOne->GetComponent<PlayerComponent>() : nullptr,
-					m_pPlayerTwo ? m_pPlayerTwo->GetComponent<PlayerComponent>() : nullptr,
+					m_pPlayerOne.pPlayerObject ? m_pPlayerOne.pPlayerObject->GetComponent<PlayerComponent>() : nullptr,
+					m_pPlayerTwo.pPlayerObject ? m_pPlayerTwo.pPlayerObject->GetComponent<PlayerComponent>() : nullptr,
 					pCounterComp);
 			}
 			if (matches.str(1) == maita)
 			{
 				spawners::SpawnMaita(pos,
-					m_pPlayerOne ? m_pPlayerOne->GetComponent<PlayerComponent>() : nullptr,
-					m_pPlayerTwo ? m_pPlayerTwo->GetComponent<PlayerComponent>() : nullptr,
+					m_pPlayerOne.pPlayerObject ? m_pPlayerOne.pPlayerObject->GetComponent<PlayerComponent>() : nullptr,
+					m_pPlayerTwo.pPlayerObject ? m_pPlayerTwo.pPlayerObject->GetComponent<PlayerComponent>() : nullptr,
 					pCounterComp);
 			}
 		}

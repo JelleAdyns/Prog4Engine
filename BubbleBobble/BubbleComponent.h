@@ -4,6 +4,7 @@
 #include <vector>
 #include <Component.h>
 #include <Subject.h>
+#include "PlayerComponent.h"
 
 
 namespace dae
@@ -26,7 +27,7 @@ public:
 	};
 
 
-	explicit BubbleComponent(dae::GameObject* pOwner, bool left);
+	explicit BubbleComponent(dae::GameObject* pOwner, PlayerComponent::PlayerType shooter, bool left);
 	virtual ~BubbleComponent();
 
 
@@ -50,6 +51,7 @@ public:
 	FloatingStage GetFloatingStage() const;
 	bool IsFloating() const;
 
+	PlayerComponent::PlayerType GetShooterType() const;
 private:
 	enum class BubbleState
 	{
@@ -70,6 +72,8 @@ private:
 	bool m_IsOccupied{ false };
 	bool m_Left{};
 	int m_RowCount{};
+
+	PlayerComponent::PlayerType m_Shooter;
 
 	FloatingStage m_FloatingStage{FloatingStage::ShooterColor};
 	float m_TimeBeforePop{};

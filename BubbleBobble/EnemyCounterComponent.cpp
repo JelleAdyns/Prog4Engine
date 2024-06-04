@@ -1,7 +1,6 @@
 #include "EnemyCounterComponent.h"
 #include "LevelState.h"
 #include <GameTime.h>
-#include <iostream>
 
 EnemyCounterComponent::EnemyCounterComponent(dae::GameObject* pOwner, std::unique_ptr<dae::Command>& pNextLevelCommand):
 	Component{pOwner},
@@ -30,7 +29,6 @@ void EnemyCounterComponent::Update()
 		if (m_Timer >= m_TimeForLevelSwitch)
 		{
 			m_pNextLevelCommand->Execute();
-			std::cout << "LevelUpdate\n";
 		}
 	}
 }

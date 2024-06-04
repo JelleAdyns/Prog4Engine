@@ -51,7 +51,16 @@ void MaitaCaughtState::OnEnter()
 	switch (m_pOccupiedBubble->GetFloatingStage())
 	{
 	case BubbleComponent::FloatingStage::ShooterColor:
-		m_pSpriteComp->SetRow(m_CaughtInfo.rowNumber);
+
+		switch (m_pOccupiedBubble->GetShooterType())
+		{
+		case PlayerComponent::PlayerType::Green:
+			m_pSpriteComp->SetRow(m_CaughtInfo.rowNumber);
+			break;
+		case PlayerComponent::PlayerType::Blue:
+			m_pSpriteComp->SetRow(m_CaughtInfo.rowNumber + 1);
+			break;
+		}
 		break;
 	case BubbleComponent::FloatingStage::Pink:
 		m_pSpriteComp->SetRow(m_CaughtInfo.rowNumber + 2);

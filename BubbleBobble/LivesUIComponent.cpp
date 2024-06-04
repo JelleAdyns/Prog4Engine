@@ -1,12 +1,11 @@
 #include "LivesUIComponent.h"
 #include "TextComponent.h"
-#include "LivesComponent.h"
-#include "GameObject.h"
+#include "PlayerComponent.h"
+#include <GameObject.h>
 
 LivesUIComponent::LivesUIComponent(dae::GameObject* pOwner) :
 	dae::Component{pOwner},
-	dae::Observer<LivesComponent>{},
-	m_pTextComponent{},
+	dae::Observer<PlayerComponent>{},
     m_pVecObservedSubjects{}
 {
 }
@@ -19,7 +18,7 @@ LivesUIComponent::~LivesUIComponent()
 }
 void LivesUIComponent::Start()
 {
-    if (!m_pTextComponent) m_pTextComponent = GetOwner()->GetComponent<dae::TextComponent>();
+
 }
 void LivesUIComponent::Update()
 {
@@ -30,12 +29,13 @@ void LivesUIComponent::PrepareImGuiRender()
 {
 }
 
-void LivesUIComponent::Notify(LivesComponent* pSubject)
+void LivesUIComponent::Notify(PlayerComponent*)
 {
-	m_pTextComponent->SetText("Remaining lives: " + std::to_string(pSubject->GetNrOfLives()));
+    m_pLives.back()->MarkDead();
+    m_pLives.pop_back();
 }
 
-void LivesUIComponent::AddSubjectPointer(dae::Subject<LivesComponent>* pSubject)
+void LivesUIComponent::AddSubjectPointer(dae::Subject<PlayerComponent>* pSubject)
 {
     m_pVecObservedSubjects.emplace_back( pSubject );
 }
@@ -46,4 +46,9 @@ void LivesUIComponent::SetSubjectPointersInvalid()
     {
         pSubject = nullptr;
     }
+}
+
+void LivesUIComponent::AddLifeObjct(dae::GameObject* pLife)
+{
+    m_pLives.push_back(pLife);
 }

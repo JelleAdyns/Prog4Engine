@@ -70,7 +70,7 @@ void IdleState::Shoot()
 		m_pSpriteComp->SetCol(0);
 		m_pSpriteComp->SetRow(GetShootStartIndex() + m_IdleSpriteInfo.rowNumber);
 
-		spawners::SpawnBubble(m_pPlayer->GetWorldPosition(), m_pSpriteComp->IsLookingLeft());
+		spawners::SpawnBubble(m_pPlayer->GetWorldPosition(), m_pPlayerComp->GetPlayerType(), m_pSpriteComp->IsLookingLeft());
 	}
 }
 
