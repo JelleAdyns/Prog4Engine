@@ -1,7 +1,7 @@
 #include "MaitaJumpState.h"
 
 MaitaJumpState::MaitaJumpState(dae::GameObject* pEnemy, EnemyComponent* pEnemyComp, bool isAngry) :
-	MaitaState{},
+	MaitaState{pEnemy},
 	m_IsAngry{ isAngry },
 	m_TimeToJump{ isAngry ? 0.4f : 0.8f },
 	m_pEnemy{ pEnemy },
@@ -62,8 +62,4 @@ void MaitaJumpState::OnExit()
 
 	m_pSpriteComp->SetUpdate(true);
 
-}
-
-void MaitaJumpState::NotifyPlayerObservers(PlayerComponent*)
-{
 }

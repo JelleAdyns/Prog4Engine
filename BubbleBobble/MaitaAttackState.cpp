@@ -11,7 +11,7 @@
 #include <algorithm>
 
 MaitaAttackState::MaitaAttackState(dae::GameObject* pEnemy, EnemyComponent* pEnemyComp, bool isAngry):
-	MaitaState{},
+	MaitaState{pEnemy},
 	m_pEnemy{pEnemy},
 	m_pEnemyComp{pEnemyComp},
 	m_IsAngry{isAngry},
@@ -48,7 +48,7 @@ void MaitaAttackState::OnEnter()
 {
 	m_pSpriteComp->SetCol(0);
 	m_pSpriteComp->AddRows(m_AttackInfo.rowNumber);
-	m_pSpriteComp->SetFrameTime(m_IsAngry ? m_AttackInfo.frameTime * 0.5f : m_AttackInfo.frameTime);
+	m_pSpriteComp->SetFrameTime(m_IsAngry ? m_AttackInfo.frameTime * 0.75f : m_AttackInfo.frameTime);
 	m_pSpriteComp->SetRowUpdate(m_AttackInfo.rowUpdate);
 	m_pPhysicsComp->SetVelocityX(0.f);
 }
@@ -66,9 +66,6 @@ void MaitaAttackState::OnExit()
 	spawners::SpawnProjectile(pos, m_pSpriteComp->IsLookingLeft());
 }
 
-void MaitaAttackState::NotifyPlayerObservers(PlayerComponent*)
-{
-}
 
 void MaitaAttackState::Notify(SpriteComponent*)
 {

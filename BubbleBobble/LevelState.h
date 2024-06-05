@@ -5,6 +5,7 @@
 #include <string>
 #include <Command.h>
 #include <Scene.h>
+#include <Minigin.h>
 #include "SceneState.h"
 #include "PlayerComponent.h"
 
@@ -37,6 +38,7 @@ private:
 		ScoreUIComponent* pScoreUIComp;
 		int score{};
 		int health{};
+		const glm::vec2 spawnPos{};
 	};
 
 	void CreateSkipButton(dae::Scene& scene);
@@ -48,12 +50,12 @@ private:
 	void ParseLevelInfo(int levelNumber, std::ifstream& file, std::stringstream& levelInfoStream);
 	void ParseStage(int levelNumber, std::stringstream& levelInfoStream);
 	void ParseEnemies(std::stringstream& levelInfoStream);
-
+	void CreatePlayableMaita(const std::unique_ptr<dae::GameObject>& pPlayer);
 
 	int m_LevelNumber{1};
 
-	Player m_pPlayerOne{};
-	Player m_pPlayerTwo;
+	Player m_pPlayerOne{ .spawnPos{24.f, dae::Minigin::GetWindowSize().y - 24.f} };
+	Player m_pPlayerTwo{ .spawnPos{dae::Minigin::GetWindowSize().x - 32.f, dae::Minigin::GetWindowSize().y - 24.f} };
 
 	const std::string m_LevelFile{ "Levels.txt" };
 	static const std::string m_SceneName;

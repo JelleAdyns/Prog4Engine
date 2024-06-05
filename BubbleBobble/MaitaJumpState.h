@@ -31,7 +31,6 @@ public:
 	virtual void OnEnter() override;
 	virtual void OnExit() override;
 
-	virtual void NotifyPlayerObservers(PlayerComponent* pSubject) override;
 private:
 
 	bool m_IsAngry;

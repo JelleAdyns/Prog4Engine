@@ -31,8 +31,6 @@ public:
 	virtual void OnEnter() override;
 	virtual void OnExit() override;
 
-	virtual void NotifyPlayerObservers(PlayerComponent* pSubject) override;
-
 	virtual void Notify(SpriteComponent* pSpriteComp) override;
 	virtual void AddSubjectPointer(dae::Subject<SpriteComponent>* pSubject) override;
 	virtual void SetSubjectPointersInvalid(dae::Subject<SpriteComponent>* pSubject) override;

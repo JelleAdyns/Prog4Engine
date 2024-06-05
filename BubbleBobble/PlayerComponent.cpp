@@ -159,6 +159,12 @@ void PlayerComponent::TakeLife()
 	}
 	else
 	{
+		auto pMoveComp = GetOwner()->GetComponent<MovementComponent>();
+		pMoveComp->UnRegisterMoveCommands();
+		pMoveComp->UnRegisterJumpCommand();
+		pMoveComp->UnRegisterJumpOnBubbleCommand();
+		pMoveComp->UnRegisterAttackCommand();
+
 		GetOwner()->MarkDead();
 		m_pRenderComp->SetNeedToRender(false);
 	}

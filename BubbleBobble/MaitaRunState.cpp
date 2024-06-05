@@ -16,7 +16,7 @@
 #include <algorithm>
 
 MaitaRunState::MaitaRunState(dae::GameObject* pEnemy, EnemyComponent* pEnemyComp, bool isAngry) :
-	MaitaState{},
+	MaitaState{pEnemy},
 	m_Speed{ isAngry ? m_GeneralSpeed * 1.8f : m_GeneralSpeed },
 	m_IsAngry{ isAngry },
 	m_pEnemy{ pEnemy },
@@ -30,6 +30,93 @@ MaitaRunState::MaitaRunState(dae::GameObject* pEnemy, EnemyComponent* pEnemyComp
 
 std::unique_ptr<EnemyState> MaitaRunState::Update()
 {
+	if (IsPlayable()) return UpdatePlayable();
+	return UpdateRegular();
+}
+
+void MaitaRunState::OnEnter()
+{
+	if (IsPlayable()) OnEnterPlayable();
+	else OnEnterRegular();
+}
+
+void MaitaRunState::OnExit()
+{
+}
+
+void MaitaRunState::NotifyPlayerObservers(PlayerComponent* pSubject)
+{
+	if (!IsPlayable())
+	{
+		auto subjectPos = pSubject->GetPos();
+		auto enemyPos = m_pEnemy->GetWorldPosition();
+		if (subjectPos.y < enemyPos.y)
+		{
+			float subjectMiddleX{ subjectPos.x + pSubject->GetDestRectSize().x / 2 };
+			if (subjectMiddleX > enemyPos.x && subjectMiddleX < enemyPos.x + m_pSpriteComp->GetDestRectSize().x)
+			{
+				m_HasToJump = true;
+			}
+		}
+
+		float subjectMiddleY{ subjectPos.y + pSubject->GetDestRectSize().y / 2 };
+		if (subjectMiddleY > enemyPos.y && subjectMiddleY < enemyPos.y + m_pSpriteComp->GetDestRectSize().y)
+		{
+			m_HasToAttack = true;
+		}
+	}
+}
+
+void MaitaRunState::Attack()
+{
+	m_HasToAttack = true;
+}
+
+void MaitaRunState::OnEnterPlayable()
+{
+	m_pSpriteComp->SetRow(m_RunInfo.rowNumber);
+	if (m_IsAngry) m_pSpriteComp->AddRows(1);
+
+	m_pSpriteComp->SetFrameTime(m_RunInfo.frameTime);
+	m_pSpriteComp->SetNrOfCols(m_RunInfo.nrOfCols);
+	m_pSpriteComp->SetRowUpdate(m_RunInfo.rowUpdate);
+
+	MovementComponent* pMoveComp = m_pEnemy->GetComponent<MovementComponent>();
+	pMoveComp->RegisterJumpCommand();
+}
+
+void MaitaRunState::OnEnterRegular()
+{
+	if (m_pSpriteComp->IsLookingLeft()) m_pPhysicsComp->SetVelocityX(-m_Speed);
+	else m_pPhysicsComp->SetVelocityX(m_Speed);
+
+	m_pSpriteComp->SetRow(m_RunInfo.rowNumber);
+	if (m_IsAngry) m_pSpriteComp->AddRows(1);
+
+	m_pSpriteComp->SetFrameTime(m_RunInfo.frameTime);
+	m_pSpriteComp->SetNrOfCols(m_RunInfo.nrOfCols);
+	m_pSpriteComp->SetRowUpdate(m_RunInfo.rowUpdate);
+}
+
+std::unique_ptr<EnemyState> MaitaRunState::UpdatePlayable()
+{
+	dae::GameObject* pCollidedObject = m_pCollisionComp->CheckForCollision(collisionTags::bubbleTag);
+	if (pCollidedObject)
+	{
+		if (!pCollidedObject->GetComponent<BubbleComponent>()->IsOccupied())
+		{
+			return std::make_unique<MaitaCaughtState>(m_pEnemy, pCollidedObject);
+		}
+	}
+
+	if (m_HasToAttack) return std::make_unique<MaitaAttackState>(m_pEnemy, m_pEnemyComp, m_IsAngry);
+
+
+	return nullptr;
+}
+
+std::unique_ptr<EnemyState> MaitaRunState::UpdateRegular()
+{
 	dae::GameObject* pCollidedObject = m_pCollisionComp->CheckForCollision(collisionTags::bubbleTag);
 	if (pCollidedObject)
 	{
@@ -40,7 +127,6 @@ std::unique_ptr<EnemyState> MaitaRunState::Update()
 	}
 
 
-	
 	if (m_AttackDelayTimer < m_AttackDelay)
 	{
 		m_AttackDelayTimer += dae::GameTime::GetInstance().GetDeltaTime();
@@ -59,41 +145,4 @@ std::unique_ptr<EnemyState> MaitaRunState::Update()
 	if (m_pWallCheckingComp->CollidingWithRight()) m_pPhysicsComp->SetVelocityX(-m_Speed);
 
 	return nullptr;
-}
-
-void MaitaRunState::OnEnter()
-{
-	if (m_pSpriteComp->IsLookingLeft()) m_pPhysicsComp->SetVelocityX(-m_Speed);
-	else m_pPhysicsComp->SetVelocityX(m_Speed);
-
-	m_pSpriteComp->SetRow(m_RunInfo.rowNumber);
-	if (m_IsAngry) m_pSpriteComp->AddRows(1);
-
-	m_pSpriteComp->SetFrameTime(m_RunInfo.frameTime);
-	m_pSpriteComp->SetNrOfCols(m_RunInfo.nrOfCols);
-	m_pSpriteComp->SetRowUpdate(m_RunInfo.rowUpdate);
-}
-
-void MaitaRunState::OnExit()
-{
-}
-
-void MaitaRunState::NotifyPlayerObservers(PlayerComponent* pSubject)
-{
-	auto subjectPos = pSubject->GetPos();
-	auto enemyPos = m_pEnemy->GetWorldPosition();
-	if (subjectPos.y < enemyPos.y)
-	{
-		float subjectMiddleX{ subjectPos.x + pSubject->GetDestRectSize().x / 2 };
-		if (subjectMiddleX > enemyPos.x && subjectMiddleX < enemyPos.x + m_pSpriteComp->GetDestRectSize().x)
-		{
-			m_HasToJump = true;
-		}
-	}
-
-	float subjectMiddleY{ subjectPos.y + pSubject->GetDestRectSize().y / 2 };
-	if (subjectMiddleY > enemyPos.y && subjectMiddleY < enemyPos.y + m_pSpriteComp->GetDestRectSize().y)
-	{
-		m_HasToAttack = true;
-	}
 }

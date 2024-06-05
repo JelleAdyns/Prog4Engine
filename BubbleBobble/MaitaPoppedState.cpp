@@ -3,7 +3,7 @@
 
 
 MaitaPoppedState::MaitaPoppedState(dae::GameObject* pEnemy) :
-	MaitaState{},
+	MaitaState{pEnemy},
 	m_pEnemy{ pEnemy },
 	m_pPhysicsComp{ pEnemy->GetComponent<dae::PhysicsComponent>() },
 	m_pCollisionComp{ pEnemy->GetComponent<dae::CollisionComponent>() },
@@ -41,6 +41,3 @@ void MaitaPoppedState::OnExit()
 
 }
 
-void MaitaPoppedState::NotifyPlayerObservers(PlayerComponent*)
-{
-}

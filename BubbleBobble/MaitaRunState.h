@@ -31,9 +31,13 @@ public:
 	virtual void OnExit() override;
 
 	virtual void NotifyPlayerObservers(PlayerComponent* pSubject) override;
-
+	virtual void Attack() override;
 private:
 
+	void OnEnterPlayable();
+	void OnEnterRegular();
+	std::unique_ptr<EnemyState> UpdatePlayable();
+	std::unique_ptr<EnemyState> UpdateRegular();
 
 	static constexpr SpriteComponent::SpriteInfo m_RunInfo{ .rowUpdate{false}, .rowNumber{0}, .nrOfCols{5}, .frameTime{0.1f} };
 	static constexpr float m_GeneralSpeed{ 50.f };

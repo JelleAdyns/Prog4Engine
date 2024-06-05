@@ -22,7 +22,8 @@ public:
 	virtual void OnEnter() = 0;
 	virtual void OnExit() = 0;
 
-	virtual void NotifyPlayerObservers(PlayerComponent*) override {};
+	virtual void NotifyPlayerObservers(PlayerComponent*) override = 0;
+	virtual void Attack() override {};
 };
 
 #endif // !ZENCHANSTATE_H

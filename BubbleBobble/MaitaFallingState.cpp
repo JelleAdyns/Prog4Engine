@@ -13,7 +13,7 @@
 #include <algorithm>
 
 MaitaFallingState::MaitaFallingState(dae::GameObject* pEnemy, EnemyComponent* pEnemyComp, bool isAngry) :
-	MaitaState{},
+	MaitaState{pEnemy},
 	m_IsAngry{ isAngry },
 	m_pEnemy{ pEnemy },
 	m_pEnemyComp{ pEnemyComp },

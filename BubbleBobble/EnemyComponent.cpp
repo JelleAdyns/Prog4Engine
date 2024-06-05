@@ -35,19 +35,6 @@ void EnemyComponent::Start()
 	if (!m_pPhysicsComp) m_pPhysicsComp = GetOwner()->GetComponent<dae::PhysicsComponent>();
 	if (!m_pSpriteComp) m_pSpriteComp = GetOwner()->GetComponent<SpriteComponent>();
 
-	if (!m_pCurrState)
-	{
-		switch (m_EnemyType)
-		{
-		case EnemyType::ZenChan:
-			m_pCurrState = std::make_unique<ZenChanRunState>(GetOwner(), this);
-			break;
-		case EnemyType::Maita:
-			m_pCurrState = std::make_unique<MaitaRunState>(GetOwner(), this);
-			break;
-		}
-		m_pCurrState->OnEnter();
-	}
 }
 
 void EnemyComponent::Update()
@@ -85,9 +72,7 @@ void EnemyComponent::SetSubjectPointersInvalid(dae::Subject<PlayerComponent>* pS
 
 void EnemyComponent::Attack()
 {
-	m_pCurrState->OnExit();
-	m_pCurrState = std::make_unique<MaitaAttackState>(GetOwner(), this);
-	m_pCurrState->OnEnter();
+	m_pCurrState->Attack();
 }
 
 void EnemyComponent::AddPlayerObserver(PlayerComponent* pSubject)
@@ -97,6 +82,21 @@ void EnemyComponent::AddPlayerObserver(PlayerComponent* pSubject)
 
 void EnemyComponent::UpdateStates()
 {
+
+	if (!m_pCurrState)
+	{
+		switch (m_EnemyType)
+		{
+		case EnemyType::ZenChan:
+			m_pCurrState = std::make_unique<ZenChanRunState>(GetOwner(), this);
+			break;
+		case EnemyType::Maita:
+			m_pCurrState = std::make_unique<MaitaRunState>(GetOwner(), this);
+			break;
+		}
+		m_pCurrState->OnEnter();
+	}
+
 	auto pNewState = m_pCurrState->Update();
 
 	if (pNewState)

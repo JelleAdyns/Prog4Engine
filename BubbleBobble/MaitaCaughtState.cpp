@@ -12,7 +12,7 @@
 #include <GameTime.h>
 
 MaitaCaughtState::MaitaCaughtState(dae::GameObject* pEnemy, dae::GameObject* pBubble) :
-	MaitaState{},
+	MaitaState{pEnemy},
 	m_pEnemy{ pEnemy },
 	m_pPhysicsComp{ pEnemy->GetComponent<dae::PhysicsComponent>() },
 	m_pCollisionComp{ pEnemy->GetComponent<dae::CollisionComponent>() },
@@ -44,6 +44,15 @@ std::unique_ptr<EnemyState> MaitaCaughtState::Update()
 }
 void MaitaCaughtState::OnEnter()
 {
+	if (IsPlayable())
+	{
+		auto pMoveComp = m_pEnemy->GetComponent<MovementComponent>();
+		pMoveComp->UnRegisterMoveCommands();
+		pMoveComp->UnRegisterJumpCommand();
+		pMoveComp->UnRegisterAttackCommand();
+	}
+
+
 	m_pOccupiedBubble->AddObserver(this);
 	m_pOccupiedBubble->SetOccupied();
 
@@ -88,10 +97,6 @@ void MaitaCaughtState::OnExit()
 	m_pCollisionComp->SetCollision(true);
 
 	m_pPhysicsComp->StartGravity();
-}
-
-void MaitaCaughtState::NotifyPlayerObservers(PlayerComponent*)
-{
 }
 
 void MaitaCaughtState::Notify(BubbleComponent* pSubject)

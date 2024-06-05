@@ -2,14 +2,17 @@
 #define MAITASTATE_H
 
 #include <memory>
+#include <GameObject.h>
 #include "EnemyState.h"
+#include "MovementComponent.h"
 
 class PlayerComponent;
 class MaitaState: public EnemyState
 {
 public:
-	MaitaState() :
-		EnemyState{}
+	MaitaState(dae::GameObject* pEnemy) :
+		EnemyState{},
+		m_IsPlayable{pEnemy->HasComponent<MovementComponent>()}
 	{}
 	virtual ~MaitaState() = default;
 
@@ -23,6 +26,12 @@ public:
 	virtual void OnExit() = 0;
 
 	virtual void NotifyPlayerObservers(PlayerComponent*) override {};
+	virtual void Attack() override {};
+
+protected:
+	bool IsPlayable() const { return m_IsPlayable; };
+private:
+	bool m_IsPlayable;
 };
 
 #endif // !MAITASTATE_H

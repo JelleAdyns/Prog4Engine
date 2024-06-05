@@ -10,7 +10,6 @@
 #include <iostream>
 #include <regex>
 #include <GameObject.h>
-#include <Minigin.h>
 #include <filesystem>
 #include "CollisionTags.h"
 #include <KeyState.h>
@@ -204,7 +203,7 @@ void LevelState::UploadScene(dae::Scene& scene)
 		auto pLivesUIComponent = pLivesUI->GetComponent<LivesUIComponent>();
 
 		//Player
-		auto pPlayer = std::make_unique<dae::GameObject>(24.f, dae::Minigin::GetWindowSize().y - 24.f);
+		auto pPlayer = std::make_unique<dae::GameObject>(m_pPlayerOne.spawnPos);
 		MakePlayer(pPlayer, PlayerComponent::PlayerType::Green, m_pPlayerOne.pScoreUIComp, pLivesUIComponent);
 
 		//Level
@@ -238,7 +237,7 @@ void LevelState::UploadScene(dae::Scene& scene)
 		auto pLivesUIOneComponent = pLivesUIOne->GetComponent<LivesUIComponent>();
 
 		//Player
-		auto pPlayerOne = std::make_unique<dae::GameObject>(24.f, dae::Minigin::GetWindowSize().y - 24.f);
+		auto pPlayerOne = std::make_unique<dae::GameObject>(m_pPlayerOne.spawnPos);
 		MakePlayer(pPlayerOne, PlayerComponent::PlayerType::Green, m_pPlayerOne.pScoreUIComp, pLivesUIOneComponent);
 
 	
@@ -248,7 +247,7 @@ void LevelState::UploadScene(dae::Scene& scene)
 		auto pLivesUITwoComponent = pLivesUIOne->GetComponent<LivesUIComponent>();
 
 		//Player
-		auto pPlayerTwo = std::make_unique<dae::GameObject>(dae::Minigin::GetWindowSize().x - 32.f, dae::Minigin::GetWindowSize().y - 24.f);
+		auto pPlayerTwo = std::make_unique<dae::GameObject>(m_pPlayerTwo.spawnPos);
 		MakePlayer(pPlayerTwo, PlayerComponent::PlayerType::Blue, m_pPlayerTwo.pScoreUIComp, pLivesUITwoComponent);
 
 		//Level
@@ -281,7 +280,43 @@ void LevelState::UploadScene(dae::Scene& scene)
 	}
 		break;
 	case Game::GameMode::Versus:
-		break;
+	{
+		if (m_pPlayerOne.pScoreUIComp) m_pPlayerOne.score = m_pPlayerOne.pScoreUIComp->GetScore();
+
+		CreateScoreDisplay(scene, true);
+		CreateScoreDisplay(scene, false);
+
+		//Lives Display
+		auto pLivesUI = std::make_unique<dae::GameObject>();
+		pLivesUI->AddComponent<LivesUIComponent>();
+		auto pLivesUIComponent = pLivesUI->GetComponent<LivesUIComponent>();
+
+		//Player
+		auto pPlayer = std::make_unique<dae::GameObject>(24.f, dae::Minigin::GetWindowSize().y - 24.f);
+		MakePlayer(pPlayer, PlayerComponent::PlayerType::Green, m_pPlayerOne.pScoreUIComp, pLivesUIComponent);
+
+		//Player
+		auto pMaitaPlayer = std::make_unique<dae::GameObject>(m_pPlayerTwo.spawnPos);
+		CreatePlayableMaita(pMaitaPlayer);
+
+		//Level
+		LoadLevel("Levels.txt");
+
+		//Lives
+		for (int i = 0; i < pPlayer->GetComponent<PlayerComponent>()->GetNrOfLives(); i++)
+		{
+			auto pLife = std::make_unique<dae::GameObject>(8.f * i, dae::Minigin::GetWindowSize().y - 8.f);
+			pLife->AddRenderComponent();
+			pLife->AddComponent<SpriteComponent>("Textures/Lives.png", 2, 1, 0.1f, false, false);
+			pLivesUIComponent->AddLifeObjct(pLife.get());
+			scene.AddGameObject(std::move(pLife));
+		}
+
+		scene.AddGameObject(std::move(pLivesUI));
+		scene.AddGameObject(std::move(pPlayer));
+		scene.AddGameObject(std::move(pMaitaPlayer));
+	}
+	break;
 	}
 	
 
@@ -427,4 +462,26 @@ void LevelState::ParseEnemies(std::stringstream& levelInfoStream)
 	}
 	
 	dae::SceneManager::GetInstance().GetNextScene()->AddGameObject(std::move(pCounter));
+}
+
+void LevelState::CreatePlayableMaita(const std::unique_ptr<dae::GameObject>& pPlayer)
+{
+	pPlayer->AddRenderComponent();
+	pPlayer->AddPhysicsComponent();
+	pPlayer->AddComponent<MovementComponent>(-160.f, 60.f, static_cast<uint8_t>(1));
+	pPlayer->AddComponent<EnemyComponent>(EnemyComponent::EnemyType::Maita, nullptr);
+	float maitaOffset = EnemyComponent::GetMaitaOffset();
+	pPlayer->AddComponent<SpriteComponent>("Textures/MaitaStates.png", 5, 9, 0.1f);
+	SpriteComponent* maitaSpriteComp = pPlayer->GetComponent<SpriteComponent>();
+
+	auto maitaDestRctSize = maitaSpriteComp->GetDestRectSize();
+	float collisionOffset{ LevelState::GetCollisionOffset() };
+
+	pPlayer->AddComponent<dae::CollisionComponent>(
+		glm::vec2{ maitaOffset + collisionOffset  ,collisionOffset },
+		glm::vec2{ maitaDestRctSize.x - collisionOffset * 2 - maitaOffset * 2 ,maitaDestRctSize.y - collisionOffset * 2 },
+		collisionTags::enemyTag);
+
+	pPlayer->AddComponent<WallCheckingComponent>(glm::vec2{ maitaOffset ,maitaDestRctSize.y / 4 }, glm::vec2{ maitaDestRctSize.x - maitaOffset * 2,maitaDestRctSize.y / 2 });
+	pPlayer->AddComponent<FloorCheckingComponent>(glm::vec2{ (maitaDestRctSize.x - maitaOffset * 2) / 4 + maitaOffset, 0 }, glm::vec2{ (maitaDestRctSize.x - maitaOffset * 2) / 2,maitaDestRctSize.y });
 }
