@@ -36,8 +36,9 @@ private:
 	{
 		dae::GameObject* pPlayerObject;
 		ScoreUIComponent* pScoreUIComp;
+		LivesUIComponent* pLivesUIComp;
 		int score{};
-		int health{};
+		int health{3};
 		const glm::vec2 spawnPos{};
 	};
 
@@ -60,7 +61,7 @@ private:
 	const std::string m_LevelFile{ "Levels.txt" };
 	static const std::string m_SceneName;
 	static constexpr float m_MaxLevel{3};
-	static constexpr float m_GeneralCollisionOffset{3.f};
+	static constexpr float m_GeneralCollisionOffset{2.f};
 };
 
 

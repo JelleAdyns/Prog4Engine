@@ -96,30 +96,35 @@ void LevelState::CreateSkipButton(dae::Scene& scene)
 
 void LevelState::MakePlayer(const std::unique_ptr<dae::GameObject>& pPlayer, PlayerComponent::PlayerType playerType, ScoreUIComponent* scoreDisplay, LivesUIComponent* livesDisplay)
 {
-	
-	pPlayer->AddRenderComponent();
-	pPlayer->AddPhysicsComponent();
-	dae::PhysicsComponent::SetGravity(300);
 	uint8_t playerIndex{};
+	int startHealth{};
 	switch (playerType)
 	{
 	case PlayerComponent::PlayerType::Green:
 		playerIndex = 0;
+		startHealth = m_pPlayerOne.health;
 		pPlayer->AddComponent<SpriteComponent>("Textures/BubStates.png", 4, 8, 0.1f, true, false);
 		break;
 	case PlayerComponent::PlayerType::Blue:
 		playerIndex = 1;
+		startHealth = m_pPlayerTwo.health;
 		pPlayer->AddComponent<SpriteComponent>("Textures/BobStates.png", 4, 8, 0.1f, true, false);
 		pPlayer->GetComponent<SpriteComponent>()->LookLeft(true);
 		break;
 	}
+	
+	pPlayer->AddRenderComponent();
+	pPlayer->AddPhysicsComponent();
+	dae::PhysicsComponent::SetGravity(300);
 	pPlayer->AddComponent<MovementComponent>(-160.f, 60.f, playerIndex);
 	pPlayer->AddComponent<InventoryComponent>(scoreDisplay);
-	pPlayer->AddComponent<PlayerComponent>(playerType, livesDisplay);
+
+	pPlayer->AddComponent<PlayerComponent>(playerType, startHealth, livesDisplay, scoreDisplay);
 	PlayerComponent* playerComp = pPlayer->GetComponent<PlayerComponent>();
 	SpriteComponent* spriteComp = pPlayer->GetComponent<SpriteComponent>();
 	spriteComp->AddObserver(playerComp);
 	spriteComp->SetHeightMarkers(0, HitState::GetHitSpriteOffset());
+
 
 	const auto& destRctSize = spriteComp->GetDestRectSize();
 
@@ -193,6 +198,8 @@ void LevelState::UploadScene(dae::Scene& scene)
 	case Game::GameMode::SinglePlayer:
 	{
 		if (m_pPlayerOne.pScoreUIComp) m_pPlayerOne.score = m_pPlayerOne.pScoreUIComp->GetScore();
+		if (m_pPlayerOne.pLivesUIComp) m_pPlayerOne.health = m_pPlayerOne.pLivesUIComp->GetRemainingLives();
+		if (m_pPlayerOne.health == 0) m_pPlayerOne.health = 1;
 
 		CreateScoreDisplay(scene, true);
 		CreateScoreDisplay(scene, false);
@@ -201,6 +208,7 @@ void LevelState::UploadScene(dae::Scene& scene)
 		auto pLivesUI = std::make_unique<dae::GameObject>();
 		pLivesUI->AddComponent<LivesUIComponent>();
 		auto pLivesUIComponent = pLivesUI->GetComponent<LivesUIComponent>();
+		m_pPlayerOne.pLivesUIComp = pLivesUIComponent;
 
 		//Player
 		auto pPlayer = std::make_unique<dae::GameObject>(m_pPlayerOne.spawnPos);
@@ -226,7 +234,12 @@ void LevelState::UploadScene(dae::Scene& scene)
 	case Game::GameMode::MultiPlayer:
 	{
 		if (m_pPlayerOne.pScoreUIComp) m_pPlayerOne.score = m_pPlayerOne.pScoreUIComp->GetScore();
+		if (m_pPlayerOne.pLivesUIComp) m_pPlayerOne.health = m_pPlayerOne.pLivesUIComp->GetRemainingLives();
+		if (m_pPlayerOne.health == 0) m_pPlayerOne.health = 1;
+
 		if (m_pPlayerTwo.pScoreUIComp) m_pPlayerTwo.score = m_pPlayerTwo.pScoreUIComp->GetScore();
+		if (m_pPlayerTwo.pLivesUIComp) m_pPlayerTwo.health = m_pPlayerTwo.pLivesUIComp->GetRemainingLives();
+		if (m_pPlayerTwo.health == 0) m_pPlayerTwo.health = 1;
 
 		CreateScoreDisplay(scene, true);
 		CreateScoreDisplay(scene, false);
@@ -235,6 +248,7 @@ void LevelState::UploadScene(dae::Scene& scene)
 		auto pLivesUIOne = std::make_unique<dae::GameObject>();
 		pLivesUIOne->AddComponent<LivesUIComponent>();
 		auto pLivesUIOneComponent = pLivesUIOne->GetComponent<LivesUIComponent>();
+		m_pPlayerOne.pLivesUIComp = pLivesUIOneComponent;
 
 		//Player
 		auto pPlayerOne = std::make_unique<dae::GameObject>(m_pPlayerOne.spawnPos);
@@ -244,7 +258,8 @@ void LevelState::UploadScene(dae::Scene& scene)
 		//Lives Display
 		auto pLivesUITwo = std::make_unique<dae::GameObject>();
 		pLivesUITwo->AddComponent<LivesUIComponent>();
-		auto pLivesUITwoComponent = pLivesUIOne->GetComponent<LivesUIComponent>();
+		auto pLivesUITwoComponent = pLivesUITwo->GetComponent<LivesUIComponent>();
+		m_pPlayerTwo.pLivesUIComp = pLivesUITwoComponent;
 
 		//Player
 		auto pPlayerTwo = std::make_unique<dae::GameObject>(m_pPlayerTwo.spawnPos);
@@ -282,6 +297,8 @@ void LevelState::UploadScene(dae::Scene& scene)
 	case Game::GameMode::Versus:
 	{
 		if (m_pPlayerOne.pScoreUIComp) m_pPlayerOne.score = m_pPlayerOne.pScoreUIComp->GetScore();
+		if (m_pPlayerOne.pLivesUIComp) m_pPlayerOne.health = m_pPlayerOne.pLivesUIComp->GetRemainingLives();
+		if (m_pPlayerOne.health == 0) m_pPlayerOne.health = 1;
 
 		CreateScoreDisplay(scene, true);
 		CreateScoreDisplay(scene, false);
@@ -290,6 +307,7 @@ void LevelState::UploadScene(dae::Scene& scene)
 		auto pLivesUI = std::make_unique<dae::GameObject>();
 		pLivesUI->AddComponent<LivesUIComponent>();
 		auto pLivesUIComponent = pLivesUI->GetComponent<LivesUIComponent>();
+		m_pPlayerOne.pLivesUIComp = pLivesUIComponent;
 
 		//Player
 		auto pPlayer = std::make_unique<dae::GameObject>(24.f, dae::Minigin::GetWindowSize().y - 24.f);

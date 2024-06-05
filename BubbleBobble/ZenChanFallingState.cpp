@@ -65,6 +65,6 @@ void ZenChanFallingState::NotifyPlayerObservers(PlayerComponent* pSubject)
 	auto subjectPos = pSubject->GetPos();
 	auto enemyPos = m_pEnemy->GetWorldPosition();
 
-	if (std::abs(enemyPos.x - subjectPos.x) < std::abs(enemyPos.x - m_PlayerXPos))
+	if (std::abs(enemyPos.x - subjectPos.x) < std::abs(enemyPos.x - m_PlayerXPos) || m_PlayerXPos < 1.f)
 		m_PlayerXPos = subjectPos.x;
 }

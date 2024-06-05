@@ -43,6 +43,7 @@ void ProjectileComponent::Update()
 			GetOwner()->GetComponent<dae::CollisionComponent>()->SetCollision(false);
 			m_pPhysicsComp->SetVelocityX(0.f);
 			m_pSpriteComp->AddRows(1);
+			m_pSpriteComp->SetCol(0);
 			m_pSpriteComp->SetFrameTime(0.2f);
 		}
 	}

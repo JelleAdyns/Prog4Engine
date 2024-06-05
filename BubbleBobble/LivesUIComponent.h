@@ -33,6 +33,8 @@ public:
 	virtual void SetSubjectPointersInvalid(dae::Subject<PlayerComponent>* pSubject) override;
 
 	void AddLifeObjct(dae::GameObject* pLife);
+	int GetRemainingLives() const { return static_cast<int>(m_pLives.size()); };
+
 
 private:
 

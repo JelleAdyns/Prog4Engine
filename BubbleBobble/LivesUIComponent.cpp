@@ -32,8 +32,11 @@ void LivesUIComponent::PrepareImGuiRender()
 
 void LivesUIComponent::Notify(PlayerComponent*)
 {
-    m_pLives.back()->MarkDead();
-    m_pLives.pop_back();
+    if(!m_pLives.empty())
+    {
+        m_pLives.back()->MarkDead();
+        m_pLives.pop_back();
+    }
 }
 
 void LivesUIComponent::AddSubjectPointer(dae::Subject<PlayerComponent>* pSubject)

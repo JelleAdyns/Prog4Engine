@@ -2,6 +2,7 @@
 #include "PickUpComponent.h"
 #include "TextComponent.h"
 #include "InventoryComponent.h"
+#include "PlayerComponent.h"
 #include "Achievements.h"
 #include "Spawners.h"
 #include "GameObject.h"
@@ -10,20 +11,19 @@
 
 ScoreUIComponent::ScoreUIComponent(dae::GameObject* pOwner, int startScore, Achievements* pObserver):
 	dae::Component{pOwner},
-	Observer{},
+	dae::Observer<InventoryComponent>{},
+	dae::Observer<PlayerComponent>{},
 	m_TotalScore{startScore},
 	m_pTextComponent{},
 	m_pScoreChanged{std::make_unique<dae::Subject<ScoreUIComponent>>()},
-    m_pVecObservedSubjects{}
+    m_pVecObservedInventorySubject{}
 {
 	m_pScoreChanged->AddObserver(pObserver);	
 }
 ScoreUIComponent::~ScoreUIComponent()
 {
-    for (auto& pSubject : m_pVecObservedSubjects)
-    {
-        if(pSubject) pSubject->RemoveObserver(this);
-    }
+    if(m_pVecObservedInventorySubject) m_pVecObservedInventorySubject->RemoveObserver(this);
+    if(m_pVecObservedPlayerSubject) m_pVecObservedPlayerSubject->RemoveObserver(this);
 }
 
 void ScoreUIComponent::Start()
@@ -59,19 +59,36 @@ void ScoreUIComponent::Notify(InventoryComponent* pSubject)
 	m_pScoreChanged->NotifyObservers(this);
 	m_pTextComponent->SetText( std::to_string(m_TotalScore));
 }
-
 void ScoreUIComponent::AddSubjectPointer(dae::Subject<InventoryComponent>* pSubject)
 {
-    m_pVecObservedSubjects.emplace_back(pSubject);
+	m_pVecObservedInventorySubject = pSubject;
 }
 
-void ScoreUIComponent::SetSubjectPointersInvalid(dae::Subject<InventoryComponent>* pSubject)
+void ScoreUIComponent::SetSubjectPointersInvalid(dae::Subject<InventoryComponent>*)
 {
-	auto pos = std::find(m_pVecObservedSubjects.begin(), m_pVecObservedSubjects.end(), pSubject);
-	if (pos != m_pVecObservedSubjects.cend())
-	{
-		m_pVecObservedSubjects.erase(pos);
-	}
+	m_pVecObservedInventorySubject = nullptr;
+}
+void ScoreUIComponent::Notify(PlayerComponent* pSubject)
+{
+	//Player died
+
+	if (pSubject->GetNrOfLives() == 0) m_TotalScore -= 300;
+	else m_TotalScore -= 150;
+
+	if (m_TotalScore < 0) m_TotalScore = 0;
+
+	m_pScoreChanged->NotifyObservers(this);
+	m_pTextComponent->SetText(std::to_string(m_TotalScore));
+}
+
+void ScoreUIComponent::AddSubjectPointer(dae::Subject<PlayerComponent>* pSubject)
+{
+	m_pVecObservedPlayerSubject = pSubject;
+}
+
+void ScoreUIComponent::SetSubjectPointersInvalid(dae::Subject<PlayerComponent>*)
+{
+	m_pVecObservedPlayerSubject = nullptr;
 }
 
 int ScoreUIComponent::GetScore() const

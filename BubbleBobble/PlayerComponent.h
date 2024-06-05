@@ -17,6 +17,7 @@ namespace dae
 class SpriteComponent;
 class MovementComponent;
 class LivesUIComponent;
+class ScoreUIComponent;
 class PlayerComponent final : public dae::Component, public dae::Observer<SpriteComponent>
 {
 public:
@@ -27,7 +28,7 @@ public:
 		Blue
 	};
 
-	explicit PlayerComponent(dae::GameObject* pOwner, PlayerType playerType, LivesUIComponent* pObserver);
+	explicit PlayerComponent(dae::GameObject* pOwner, PlayerType playerType, int health, LivesUIComponent* pObserver, ScoreUIComponent* pScoreObserver);
 	virtual ~PlayerComponent();
 
 	PlayerComponent(const PlayerComponent&) = delete;
@@ -63,7 +64,7 @@ private:
 
 	bool m_IsInvincible{};
 
-	int m_Health{1};
+	int m_Health;
 	float m_JumpVelocity{ -160.f };
 	float m_MoveVelocity{ 60.f };
 	float m_InvincibilityTimer{};

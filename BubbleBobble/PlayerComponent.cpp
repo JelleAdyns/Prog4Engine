@@ -4,6 +4,7 @@
 #include "MovementComponent.h"
 #include "PickUpComponent.h"
 #include "LivesUIComponent.h"
+#include "ScoreUIComponent.h"
 #include "CollisionTags.h"
 #include <GameObject.h>
 #include <PhysicsComponent.h>
@@ -14,14 +15,16 @@
 #include <algorithm>
 
 
-PlayerComponent::PlayerComponent(dae::GameObject* pOwner, PlayerType playerType, LivesUIComponent* pObserver):
+PlayerComponent::PlayerComponent(dae::GameObject* pOwner, PlayerType playerType, int health, LivesUIComponent* pLivesObserver, ScoreUIComponent* pScoreObserver):
 	dae::Component{pOwner},
+	m_Health{health},
 	m_PlayerType{ playerType },
 	m_pCurrState{},
 	m_pPosChecked{std::make_unique<dae::Subject<PlayerComponent>>()},
 	m_pDied{std::make_unique<dae::Subject<PlayerComponent>>()}
 {
-	m_pDied->AddObserver(pObserver);
+	m_pDied->AddObserver(pLivesObserver);
+	m_pDied->AddObserver(pScoreObserver);
 	m_SpawnPos = GetOwner()->GetWorldPosition();
 	Respawn();
 }
@@ -155,7 +158,6 @@ void PlayerComponent::TakeLife()
 	if(m_Health > 0)
 	{
 		--m_Health;
-		m_pDied->NotifyObservers(this);
 	}
 	else
 	{
@@ -168,6 +170,7 @@ void PlayerComponent::TakeLife()
 		GetOwner()->MarkDead();
 		m_pRenderComp->SetNeedToRender(false);
 	}
+	m_pDied->NotifyObservers(this);
 }
 
 

@@ -35,7 +35,7 @@ public:
 	virtual void AddSubjectPointer(dae::Subject<SpriteComponent>* pSubject) override;
 	virtual void SetSubjectPointersInvalid(dae::Subject<SpriteComponent>* pSubject) override;
 private:
-	static constexpr SpriteComponent::SpriteInfo m_AttackInfo{ .rowUpdate{false}, .rowNumber{2}, .nrOfCols{5}, .frameTime{0.2f}};
+	static constexpr SpriteComponent::SpriteInfo m_AttackInfo{ .rowUpdate{false}, .rowNumber{2}, .nrOfCols{5}, .frameTime{0.15f}};
 
 	const bool m_IsAngry;
 	bool m_Done{ false };

@@ -14,8 +14,9 @@ namespace dae
 }
 
 class InventoryComponent;
+class PlayerComponent;
 class Achievements;
-class ScoreUIComponent final : public dae::Component, public dae::Observer<InventoryComponent>
+class ScoreUIComponent final : public dae::Component, public dae::Observer<InventoryComponent>, public dae::Observer<PlayerComponent>
 {
 public:
 	explicit ScoreUIComponent(dae::GameObject* pOwner, int startScore, Achievements* pObserver);
@@ -34,6 +35,10 @@ public:
 	virtual void AddSubjectPointer(dae::Subject<InventoryComponent>* pSubject) override;
 	virtual void SetSubjectPointersInvalid(dae::Subject<InventoryComponent>* pSubject) override;
 
+	virtual void Notify (PlayerComponent* pSubject) override;
+	virtual void AddSubjectPointer(dae::Subject<PlayerComponent>* pSubject) override;
+	virtual void SetSubjectPointersInvalid(dae::Subject<PlayerComponent>* pSubject) override;
+
 	int GetScore() const;
 
 private:
@@ -42,7 +47,8 @@ private:
 	dae::TextComponent* m_pTextComponent;
 	std::unique_ptr<dae::Subject<ScoreUIComponent>> m_pScoreChanged;
 
-    std::vector<dae::Subject<InventoryComponent>*> m_pVecObservedSubjects;
+    dae::Subject<InventoryComponent>* m_pVecObservedInventorySubject;
+    dae::Subject<PlayerComponent>* m_pVecObservedPlayerSubject;
 };
 
 
