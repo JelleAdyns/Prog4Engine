@@ -69,6 +69,7 @@ void HitState::OnExit()
 	m_pMovementComp->RegisterMoveCommands();
 
 	m_pPlayerComp->TakeLife();
+	m_pPlayerComp->Respawn();
 }
 
 void HitState::Shoot()
@@ -95,8 +96,8 @@ void HitState::Notify(SpriteComponent*)
 		m_pSpriteComp->SetCol(0);
 		m_pSpriteComp->SetRowUpdate(false);
 
+		m_pPlayer->GetComponent<dae::RenderComponent>()->SetNeedToRender(false);
 
-		m_pPlayerComp->Respawn();
 	}
 }
 
