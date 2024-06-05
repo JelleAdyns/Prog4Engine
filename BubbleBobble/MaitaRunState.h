@@ -34,8 +34,6 @@ public:
 	virtual void Attack() override;
 private:
 
-	void OnEnterPlayable();
-	void OnEnterRegular();
 	std::unique_ptr<EnemyState> UpdatePlayable();
 	std::unique_ptr<EnemyState> UpdateRegular();
 

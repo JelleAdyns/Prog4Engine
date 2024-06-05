@@ -60,7 +60,7 @@ void PlayerComponent::Update()
 
 		if (m_RenderTimer >= 0.07f)
 		{
-			m_pRenderComp->ToggleNeedToRender();
+			if(!GetOwner()->IsDead()) m_pRenderComp->ToggleNeedToRender();
 			m_RenderTimer = 0.f;
 		}
 
@@ -68,7 +68,7 @@ void PlayerComponent::Update()
 		{
 			m_InvincibilityTimer = 0.f;
 			m_IsInvincible = false;
-			m_pRenderComp->SetNeedToRender(true);
+			 m_pRenderComp->SetNeedToRender(true);
 		}
 	}
 
@@ -179,7 +179,10 @@ void PlayerComponent::UpdateStates()
 	if (newState != nullptr)
 	{
 		m_pCurrState->OnExit();
-		m_pCurrState = std::move(newState);
-		m_pCurrState->OnEnter();
+		if(!GetOwner()->IsDead())
+		{
+			m_pCurrState = std::move(newState);
+			m_pCurrState->OnEnter();
+		}
 	}
 }

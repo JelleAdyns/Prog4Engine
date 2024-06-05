@@ -13,6 +13,7 @@
 
 MaitaCaughtState::MaitaCaughtState(dae::GameObject* pEnemy, dae::GameObject* pBubble) :
 	MaitaState{pEnemy},
+	m_GoalAmountOfTaps{ 20 + (rand() % 20 + 1) },
 	m_pEnemy{ pEnemy },
 	m_pPhysicsComp{ pEnemy->GetComponent<dae::PhysicsComponent>() },
 	m_pCollisionComp{ pEnemy->GetComponent<dae::CollisionComponent>() },
@@ -30,6 +31,15 @@ MaitaCaughtState::MaitaCaughtState(dae::GameObject* pEnemy, dae::GameObject* pBu
 
 std::unique_ptr<EnemyState> MaitaCaughtState::Update()
 {
+	if (IsPlayable())
+	{
+		if (m_TapCount >= m_GoalAmountOfTaps)
+		{
+			m_pEnemy->SetParent(nullptr, true);
+			return std::make_unique<MaitaRunState>(m_pEnemy, m_pEnemy->GetComponent<EnemyComponent>(), true);
+		}
+	}
+	
 	switch (m_NextState)
 	{
 	case MaitaCaughtState::NextState::Popped:
@@ -39,6 +49,7 @@ std::unique_ptr<EnemyState> MaitaCaughtState::Update()
 		return std::make_unique<MaitaRunState>(m_pEnemy, m_pEnemy->GetComponent<EnemyComponent>(), true);
 		break;
 	}
+	
 
 	return nullptr;
 }
@@ -49,7 +60,6 @@ void MaitaCaughtState::OnEnter()
 		auto pMoveComp = m_pEnemy->GetComponent<MovementComponent>();
 		pMoveComp->UnRegisterMoveCommands();
 		pMoveComp->UnRegisterJumpCommand();
-		pMoveComp->UnRegisterAttackCommand();
 	}
 
 
@@ -92,11 +102,23 @@ void MaitaCaughtState::OnEnter()
 }
 void MaitaCaughtState::OnExit()
 {
+	if (IsPlayable())
+	{
+		auto pMoveComp = m_pEnemy->GetComponent<MovementComponent>();
+		pMoveComp->RegisterMoveCommands();
+		pMoveComp->RegisterAttackCommand();
+	}
+
 	m_pEnemy->GetComponent<FloorCheckingComponent>()->SetHandleCollison(true);
 	m_pCollisionComp->SetTag(collisionTags::enemyTag);
 	m_pCollisionComp->SetCollision(true);
 
 	m_pPhysicsComp->StartGravity();
+}
+
+void MaitaCaughtState::Attack()
+{
+	++m_TapCount;
 }
 
 void MaitaCaughtState::Notify(BubbleComponent* pSubject)

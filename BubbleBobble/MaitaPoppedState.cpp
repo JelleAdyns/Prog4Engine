@@ -27,6 +27,14 @@ std::unique_ptr<EnemyState> MaitaPoppedState::Update()
 }
 void MaitaPoppedState::OnEnter()
 {
+	if (IsPlayable())
+	{
+		MovementComponent* pMoveComp = m_pEnemy->GetComponent<MovementComponent>();
+		pMoveComp->UnRegisterAttackCommand();
+		pMoveComp->UnRegisterJumpCommand();
+		pMoveComp->UnRegisterMoveCommands();
+	}
+
 	//m_pCollisionComp->SetCollision(false);
 	m_pCollisionComp->SetTag(collisionTags::caughtEnemyTag);
 	m_pSpriteComp->SetRow(m_PoppedInfo.rowNumber);

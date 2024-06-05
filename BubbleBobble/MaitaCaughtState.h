@@ -34,6 +34,8 @@ public:
 	virtual void OnEnter() override;
 	virtual void OnExit() override;
 
+	virtual void Attack() override;
+
 	virtual void Notify(BubbleComponent* pSubject) override;
 	virtual void AddSubjectPointer(dae::Subject<BubbleComponent>* pSubject) override;
 	virtual void SetSubjectPointersInvalid(dae::Subject<BubbleComponent>* pSubject) override;
@@ -48,6 +50,9 @@ private:
 	};
 	NextState m_NextState{ NextState::Caught };
 	static constexpr SpriteComponent::SpriteInfo m_CaughtInfo{ .rowNumber{5}, .nrOfCols{4} };
+
+	int m_TapCount{};
+	const int m_GoalAmountOfTaps;
 
 	dae::GameObject* m_pEnemy;
 	dae::PhysicsComponent* m_pPhysicsComp;

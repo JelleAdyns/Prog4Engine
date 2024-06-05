@@ -30,18 +30,48 @@ MaitaRunState::MaitaRunState(dae::GameObject* pEnemy, EnemyComponent* pEnemyComp
 
 std::unique_ptr<EnemyState> MaitaRunState::Update()
 {
+	dae::GameObject* pCollidedObject = m_pCollisionComp->CheckForCollision(collisionTags::bubbleTag);
+	if (pCollidedObject)
+	{
+		if (!pCollidedObject->GetComponent<BubbleComponent>()->IsOccupied())
+		{
+			return std::make_unique<MaitaCaughtState>(m_pEnemy, pCollidedObject);
+		}
+	}
+
 	if (IsPlayable()) return UpdatePlayable();
 	return UpdateRegular();
 }
 
 void MaitaRunState::OnEnter()
 {
-	if (IsPlayable()) OnEnterPlayable();
-	else OnEnterRegular();
+	if (IsPlayable())
+	{
+		MovementComponent* pMoveComp = m_pEnemy->GetComponent<MovementComponent>();
+		pMoveComp->RegisterJumpCommand();
+	}
+	else
+	{
+		if (m_pSpriteComp->IsLookingLeft()) m_pPhysicsComp->SetVelocityX(-m_Speed);
+		else m_pPhysicsComp->SetVelocityX(m_Speed);
+	}
+
+	m_pSpriteComp->SetRow(m_RunInfo.rowNumber);
+	if (m_IsAngry) m_pSpriteComp->AddRows(1);
+
+	m_pSpriteComp->SetFrameTime(m_RunInfo.frameTime);
+	m_pSpriteComp->SetNrOfCols(m_RunInfo.nrOfCols);
+	m_pSpriteComp->SetRowUpdate(m_RunInfo.rowUpdate);
+
 }
 
 void MaitaRunState::OnExit()
 {
+	if (IsPlayable())
+	{
+		MovementComponent* pMoveComp = m_pEnemy->GetComponent<MovementComponent>();
+		pMoveComp->UnRegisterJumpCommand();
+	}
 }
 
 void MaitaRunState::NotifyPlayerObservers(PlayerComponent* pSubject)
@@ -72,60 +102,15 @@ void MaitaRunState::Attack()
 	m_HasToAttack = true;
 }
 
-void MaitaRunState::OnEnterPlayable()
-{
-	m_pSpriteComp->SetRow(m_RunInfo.rowNumber);
-	if (m_IsAngry) m_pSpriteComp->AddRows(1);
-
-	m_pSpriteComp->SetFrameTime(m_RunInfo.frameTime);
-	m_pSpriteComp->SetNrOfCols(m_RunInfo.nrOfCols);
-	m_pSpriteComp->SetRowUpdate(m_RunInfo.rowUpdate);
-
-	MovementComponent* pMoveComp = m_pEnemy->GetComponent<MovementComponent>();
-	pMoveComp->RegisterJumpCommand();
-}
-
-void MaitaRunState::OnEnterRegular()
-{
-	if (m_pSpriteComp->IsLookingLeft()) m_pPhysicsComp->SetVelocityX(-m_Speed);
-	else m_pPhysicsComp->SetVelocityX(m_Speed);
-
-	m_pSpriteComp->SetRow(m_RunInfo.rowNumber);
-	if (m_IsAngry) m_pSpriteComp->AddRows(1);
-
-	m_pSpriteComp->SetFrameTime(m_RunInfo.frameTime);
-	m_pSpriteComp->SetNrOfCols(m_RunInfo.nrOfCols);
-	m_pSpriteComp->SetRowUpdate(m_RunInfo.rowUpdate);
-}
 
 std::unique_ptr<EnemyState> MaitaRunState::UpdatePlayable()
 {
-	dae::GameObject* pCollidedObject = m_pCollisionComp->CheckForCollision(collisionTags::bubbleTag);
-	if (pCollidedObject)
-	{
-		if (!pCollidedObject->GetComponent<BubbleComponent>()->IsOccupied())
-		{
-			return std::make_unique<MaitaCaughtState>(m_pEnemy, pCollidedObject);
-		}
-	}
-
 	if (m_HasToAttack) return std::make_unique<MaitaAttackState>(m_pEnemy, m_pEnemyComp, m_IsAngry);
-
-
 	return nullptr;
 }
 
 std::unique_ptr<EnemyState> MaitaRunState::UpdateRegular()
 {
-	dae::GameObject* pCollidedObject = m_pCollisionComp->CheckForCollision(collisionTags::bubbleTag);
-	if (pCollidedObject)
-	{
-		if (!pCollidedObject->GetComponent<BubbleComponent>()->IsOccupied())
-		{
-			return std::make_unique<MaitaCaughtState>(m_pEnemy, pCollidedObject);
-		}
-	}
-
 
 	if (m_AttackDelayTimer < m_AttackDelay)
 	{
