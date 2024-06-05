@@ -40,3 +40,7 @@ void MaitaPoppedState::OnExit()
 {
 
 }
+
+void MaitaPoppedState::NotifyPlayerObservers(PlayerComponent*)
+{
+}

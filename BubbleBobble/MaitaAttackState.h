@@ -31,9 +31,11 @@ public:
 	virtual void OnEnter() override;
 	virtual void OnExit() override;
 
+	virtual void NotifyPlayerObservers(PlayerComponent* pSubject) override;
+
 	virtual void Notify(SpriteComponent* pSpriteComp) override;
 	virtual void AddSubjectPointer(dae::Subject<SpriteComponent>* pSubject) override;
-	virtual void SetSubjectPointersInvalid() override;
+	virtual void SetSubjectPointersInvalid(dae::Subject<SpriteComponent>* pSubject) override;
 private:
 	static constexpr SpriteComponent::SpriteInfo m_AttackInfo{ .rowUpdate{false}, .rowNumber{2}, .nrOfCols{5}, .frameTime{0.2f}};
 

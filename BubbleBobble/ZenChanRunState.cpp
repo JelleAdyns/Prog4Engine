@@ -11,6 +11,7 @@
 #include <GameObject.h>
 #include <PhysicsComponent.h>
 #include <CollisionComponent.h>
+#include <algorithm>
 #include "CollisionTags.h"
 
 ZenChanRunState::ZenChanRunState(dae::GameObject* pEnemy, EnemyComponent* pEnemyComp, bool isAngry) :
@@ -47,10 +48,7 @@ std::unique_ptr<EnemyState> ZenChanRunState::Update()
 }
 void ZenChanRunState::OnEnter()
 {
-	for (dae::Subject<PlayerComponent>* pSubject : m_pEnemyComp->GetPlayerSubjects())
-	{
-		pSubject->AddObserver(this);
-	}
+
 	if (m_pSpriteComp->IsLookingLeft()) m_pPhysicsComp->SetVelocityX(-m_Speed);
 	else m_pPhysicsComp->SetVelocityX(m_Speed);
 
@@ -64,7 +62,7 @@ void ZenChanRunState::OnExit()
 
 }
 
-void ZenChanRunState::Notify(PlayerComponent* pSubject)
+void ZenChanRunState::NotifyPlayerObservers(PlayerComponent* pSubject)
 {
 	auto subjectPos = pSubject->GetPos();
 	auto enemyPos = m_pEnemy->GetWorldPosition();
@@ -75,19 +73,5 @@ void ZenChanRunState::Notify(PlayerComponent* pSubject)
 		{
 			m_HasToJump = true;
 		}
-	}
-	
-}
-
-void ZenChanRunState::AddSubjectPointer(dae::Subject<PlayerComponent>* pSubject)
-{
-	m_pVecObservedSpriteSubjects.push_back(pSubject);
-}
-
-void ZenChanRunState::SetSubjectPointersInvalid()
-{
-	for (auto& pSubject : m_pVecObservedSpriteSubjects)
-	{
-		pSubject = nullptr;
 	}
 }

@@ -7,6 +7,7 @@
 #include <CollisionComponent.h>
 #include <RenderComponent.h>
 #include <GameTime.h>
+#include <algorithm>
 
 BubbleComponent::BubbleComponent(dae::GameObject* pOwner, PlayerComponent::PlayerType shooter, bool left):
 	dae::Component{pOwner},
@@ -111,11 +112,12 @@ void BubbleComponent::AddSubjectPointer(dae::Subject<SpriteComponent>* pSubject)
 	m_pVecObservedSpriteSubjects.push_back(pSubject);
 }
 
-void BubbleComponent::SetSubjectPointersInvalid()
+void BubbleComponent::SetSubjectPointersInvalid(dae::Subject<SpriteComponent>* pSubject)
 {
-	for (auto& pSubject : m_pVecObservedSpriteSubjects)
+	auto pos = std::find(m_pVecObservedSpriteSubjects.begin(), m_pVecObservedSpriteSubjects.end(), pSubject);
+	if (pos != m_pVecObservedSpriteSubjects.cend())
 	{
-		pSubject = nullptr;
+		m_pVecObservedSpriteSubjects.erase(pos);
 	}
 }
 

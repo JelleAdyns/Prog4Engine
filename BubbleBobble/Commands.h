@@ -8,7 +8,7 @@
 #include "SelectButtonCommand.h"
 #include "ActivateButtonCommand.h"
 #include "SetTextCommand.h"
-#include "ShootCommand.h"
+#include "AttackCommand.h"
 #include "StartLevelCommand.h"
 
 #endif // !COMMANDS_H

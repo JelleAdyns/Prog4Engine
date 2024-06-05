@@ -6,6 +6,7 @@
 #include <PhysicsComponent.h>
 #include <Minigin.h>
 #include <InputCommandBinder.h>
+#include <algorithm>
 
 const float HitState::m_HitSpriteOffset{ 128.f };
 
@@ -104,11 +105,12 @@ void HitState::AddSubjectPointer(dae::Subject<SpriteComponent>* pSubject)
 	m_pVecObservedSpriteSubjects.emplace_back(pSubject);
 }
 
-void HitState::SetSubjectPointersInvalid()
+void HitState::SetSubjectPointersInvalid(dae::Subject<SpriteComponent>* pSubject)
 {
-	for (auto& pSubject : m_pVecObservedSpriteSubjects)
+	auto pos = std::find(m_pVecObservedSpriteSubjects.begin(), m_pVecObservedSpriteSubjects.end(), pSubject);
+	if (pos != m_pVecObservedSpriteSubjects.cend())
 	{
-		pSubject = nullptr;
+		m_pVecObservedSpriteSubjects.erase(pos);
 	}
 }
 

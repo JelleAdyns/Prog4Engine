@@ -2,6 +2,7 @@
 #include "TextComponent.h"
 #include "PlayerComponent.h"
 #include <GameObject.h>
+#include <algorithm>
 
 LivesUIComponent::LivesUIComponent(dae::GameObject* pOwner) :
 	dae::Component{pOwner},
@@ -40,11 +41,12 @@ void LivesUIComponent::AddSubjectPointer(dae::Subject<PlayerComponent>* pSubject
     m_pVecObservedSubjects.emplace_back( pSubject );
 }
 
-void LivesUIComponent::SetSubjectPointersInvalid()
+void LivesUIComponent::SetSubjectPointersInvalid(dae::Subject<PlayerComponent>* pSubject)
 {
-    for (auto& pSubject : m_pVecObservedSubjects)
+    auto pos = std::find(m_pVecObservedSubjects.begin(), m_pVecObservedSubjects.end(), pSubject);
+    if (pos != m_pVecObservedSubjects.cend())
     {
-        pSubject = nullptr;
+        m_pVecObservedSubjects.erase(pos);
     }
 }
 

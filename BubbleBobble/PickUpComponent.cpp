@@ -6,6 +6,7 @@
 #include <RenderComponent.h>
 #include <GameObject.h>
 #include <GameTime.h>
+#include <algorithm>
 
 PickUpComponent::PickUpComponent(dae::GameObject* pOwner, PickUpComponent::PickUpType pickUpType):
 	dae::Component{pOwner},
@@ -71,19 +72,15 @@ void PickUpComponent::AddSubjectPointer(dae::Subject<SpriteComponent>* pSubject)
 	m_pVecObservedSubjects.emplace_back(pSubject);
 }
 
-void PickUpComponent::SetSubjectPointersInvalid()
+void PickUpComponent::SetSubjectPointersInvalid(dae::Subject<SpriteComponent>* pSubject)
 {
-	for (auto& pSubject : m_pVecObservedSubjects)
+	auto pos = std::find(m_pVecObservedSubjects.begin(), m_pVecObservedSubjects.end(), pSubject);
+	if (pos != m_pVecObservedSubjects.cend())
 	{
-		pSubject = nullptr;
+		m_pVecObservedSubjects.erase(pos);
 	}
 }
 
-//void PickUpComponent::PickUp(PlayerComponent::PlayerType playerType)
-//{
-//
-//	GetOwner()->MarkDead();
-//}
 
 PickUpComponent::PickUpType PickUpComponent::GetPickUpType() const
 {

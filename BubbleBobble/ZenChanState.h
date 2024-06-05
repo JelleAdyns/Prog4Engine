@@ -4,6 +4,7 @@
 #include <memory>
 #include "EnemyState.h"
 
+class PlayerComponent;
 class ZenChanState: public EnemyState
 {
 public:
@@ -21,6 +22,7 @@ public:
 	virtual void OnEnter() = 0;
 	virtual void OnExit() = 0;
 
+	virtual void NotifyPlayerObservers(PlayerComponent*) override {};
 };
 
 #endif // !ZENCHANSTATE_H

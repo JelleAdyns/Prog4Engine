@@ -15,6 +15,7 @@
 #include "CollisionTags.h"
 #include <KeyState.h>
 #include <AudioLocator.h>
+#include <Renderer.h>
 #include "Game.h"
 #include "HitState.h"
 #include "Spawners.h"
@@ -33,6 +34,8 @@ void LevelState::OnEnter()
 	auto& audioService = dae::AudioLocator::GetAudioService();
 	audioService.AddSound("Sounds/MainTheme.mp3", static_cast<dae::SoundID>(Game::SoundEvent::MainTheme));
 	audioService.PlaySoundClip(static_cast<dae::SoundID>(Game::SoundEvent::MainTheme), 80, true);
+
+	dae::Renderer::GetInstance().StartFadeIn();
 }
 
 void LevelState::OnExit()
@@ -62,6 +65,8 @@ void LevelState::AdvanceLevel()
 		auto& scene = dae::SceneManager::GetInstance().CreateScene(m_SceneName + std::to_string(m_LevelNumber));
 		CreateSkipButton(scene);
 		UploadScene(scene);
+
+		dae::Renderer::GetInstance().StartFadeIn();
 	}	
 }
 
@@ -95,6 +100,7 @@ void LevelState::MakePlayer(const std::unique_ptr<dae::GameObject>& pPlayer, Pla
 	
 	pPlayer->AddRenderComponent();
 	pPlayer->AddPhysicsComponent();
+	dae::PhysicsComponent::SetGravity(300);
 	uint8_t playerIndex{};
 	switch (playerType)
 	{
@@ -110,7 +116,6 @@ void LevelState::MakePlayer(const std::unique_ptr<dae::GameObject>& pPlayer, Pla
 	}
 	pPlayer->AddComponent<MovementComponent>(-160.f, 60.f, playerIndex);
 	pPlayer->AddComponent<InventoryComponent>(scoreDisplay);
-	dae::PhysicsComponent::SetGravity(300);
 	pPlayer->AddComponent<PlayerComponent>(playerType, livesDisplay);
 	PlayerComponent* playerComp = pPlayer->GetComponent<PlayerComponent>();
 	SpriteComponent* spriteComp = pPlayer->GetComponent<SpriteComponent>();

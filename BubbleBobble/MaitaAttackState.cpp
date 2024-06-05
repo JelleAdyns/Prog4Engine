@@ -8,6 +8,7 @@
 #include <PhysicsComponent.h>
 #include <CollisionComponent.h>
 #include <GameObject.h>
+#include <algorithm>
 
 MaitaAttackState::MaitaAttackState(dae::GameObject* pEnemy, EnemyComponent* pEnemyComp, bool isAngry):
 	MaitaState{},
@@ -65,6 +66,10 @@ void MaitaAttackState::OnExit()
 	spawners::SpawnProjectile(pos, m_pSpriteComp->IsLookingLeft());
 }
 
+void MaitaAttackState::NotifyPlayerObservers(PlayerComponent*)
+{
+}
+
 void MaitaAttackState::Notify(SpriteComponent*)
 {
 	m_Done = true;
@@ -75,10 +80,11 @@ void MaitaAttackState::AddSubjectPointer(dae::Subject<SpriteComponent>* pSubject
 	m_pVecObservedSpriteSubjects.emplace_back(pSubject);
 }
 
-void MaitaAttackState::SetSubjectPointersInvalid()
+void MaitaAttackState::SetSubjectPointersInvalid(dae::Subject<SpriteComponent>* pSubject)
 {
-	for (auto& pSubject : m_pVecObservedSpriteSubjects)
+	auto pos = std::find(m_pVecObservedSpriteSubjects.begin(), m_pVecObservedSpriteSubjects.end(), pSubject);
+	if (pos != m_pVecObservedSpriteSubjects.cend())
 	{
-		pSubject = nullptr;
+		m_pVecObservedSpriteSubjects.erase(pos);
 	}
 }

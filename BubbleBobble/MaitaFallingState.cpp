@@ -10,6 +10,7 @@
 #include <CollisionComponent.h>
 #include <GameObject.h>
 #include <Minigin.h>
+#include <algorithm>
 
 MaitaFallingState::MaitaFallingState(dae::GameObject* pEnemy, EnemyComponent* pEnemyComp, bool isAngry) :
 	MaitaState{},
@@ -46,10 +47,6 @@ std::unique_ptr<EnemyState> MaitaFallingState::Update()
 }
 void MaitaFallingState::OnEnter()
 {
-	for (dae::Subject<PlayerComponent>* pSubject : m_pEnemyComp->GetPlayerSubjects())
-	{
-		if(pSubject) pSubject->AddObserver(this);
-	}
 	m_pPhysicsComp->SetVelocityX(0);
 }
 void MaitaFallingState::OnExit()
@@ -62,22 +59,12 @@ void MaitaFallingState::OnExit()
 
 }
 
-void MaitaFallingState::Notify(PlayerComponent* pSubject)
+void MaitaFallingState::NotifyPlayerObservers(PlayerComponent* pSubject)
 {
+
 	auto subjectPos = pSubject->GetPos();
-	if (std::abs(subjectPos.x - m_pEnemy->GetWorldPosition().x) < std::abs(m_PlayerXPos - m_pEnemy->GetWorldPosition().x))
+	auto enemyPos = m_pEnemy->GetWorldPosition();
+
+	if (std::abs(enemyPos.x - subjectPos.x) < std::abs(enemyPos.x - m_PlayerXPos))
 		m_PlayerXPos = subjectPos.x;
-}
-
-void MaitaFallingState::AddSubjectPointer(dae::Subject<PlayerComponent>* pSubject)
-{
-	m_pVecObservedSubjects.push_back(pSubject);
-}
-
-void MaitaFallingState::SetSubjectPointersInvalid()
-{
-	for (auto& pSubject : m_pVecObservedSubjects)
-	{
-		pSubject = nullptr;
-	}
 }

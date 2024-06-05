@@ -70,6 +70,8 @@ void MaitaCaughtState::OnEnter()
 		break;
 	}
 
+	m_pCollisionComp->SetCollision(false);
+
 	m_pSpriteComp->SetNrOfCols(m_CaughtInfo.nrOfCols, false);
 	m_pEnemy->GetComponent<FloorCheckingComponent>()->SetHandleCollison(false);
 	m_pCollisionComp->SetTag(collisionTags::caughtEnemyTag);
@@ -83,8 +85,13 @@ void MaitaCaughtState::OnExit()
 {
 	m_pEnemy->GetComponent<FloorCheckingComponent>()->SetHandleCollison(true);
 	m_pCollisionComp->SetTag(collisionTags::enemyTag);
+	m_pCollisionComp->SetCollision(true);
 
 	m_pPhysicsComp->StartGravity();
+}
+
+void MaitaCaughtState::NotifyPlayerObservers(PlayerComponent*)
+{
 }
 
 void MaitaCaughtState::Notify(BubbleComponent* pSubject)
@@ -109,7 +116,7 @@ void MaitaCaughtState::AddSubjectPointer(dae::Subject<BubbleComponent>* pSubject
 	m_pObservedSubject = pSubject;
 }
 
-void MaitaCaughtState::SetSubjectPointersInvalid()
+void MaitaCaughtState::SetSubjectPointersInvalid(dae::Subject<BubbleComponent>*)
 {
 	m_pObservedSubject = nullptr;
 }

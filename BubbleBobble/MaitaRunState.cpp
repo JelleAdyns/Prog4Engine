@@ -13,6 +13,7 @@
 #include <CollisionComponent.h>
 #include <GameObject.h>
 #include <GameTime.h>
+#include <algorithm>
 
 MaitaRunState::MaitaRunState(dae::GameObject* pEnemy, EnemyComponent* pEnemyComp, bool isAngry) :
 	MaitaState{},
@@ -62,10 +63,6 @@ std::unique_ptr<EnemyState> MaitaRunState::Update()
 
 void MaitaRunState::OnEnter()
 {
-	for (dae::Subject<PlayerComponent>* pSubject : m_pEnemyComp->GetPlayerSubjects())
-	{
-		if(pSubject) pSubject->AddObserver(this);
-	}
 	if (m_pSpriteComp->IsLookingLeft()) m_pPhysicsComp->SetVelocityX(-m_Speed);
 	else m_pPhysicsComp->SetVelocityX(m_Speed);
 
@@ -81,7 +78,7 @@ void MaitaRunState::OnExit()
 {
 }
 
-void MaitaRunState::Notify(PlayerComponent* pSubject)
+void MaitaRunState::NotifyPlayerObservers(PlayerComponent* pSubject)
 {
 	auto subjectPos = pSubject->GetPos();
 	auto enemyPos = m_pEnemy->GetWorldPosition();
@@ -98,19 +95,5 @@ void MaitaRunState::Notify(PlayerComponent* pSubject)
 	if (subjectMiddleY > enemyPos.y && subjectMiddleY < enemyPos.y + m_pSpriteComp->GetDestRectSize().y)
 	{
 		m_HasToAttack = true;
-	}
-
-}
-
-void MaitaRunState::AddSubjectPointer(dae::Subject<PlayerComponent>* pSubject)
-{
-	m_pVecObservedSpriteSubjects.push_back(pSubject);
-}
-
-void MaitaRunState::SetSubjectPointersInvalid()
-{
-	for (auto& pSubject : m_pVecObservedSpriteSubjects)
-	{
-		pSubject = nullptr;
 	}
 }

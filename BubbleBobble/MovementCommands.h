@@ -39,7 +39,9 @@ public:
 		if ((!m_pWallCheckingComponent->CollidingWithLeft() && m_XDirectionSpeed < 0) || 
 			(!m_pWallCheckingComponent->CollidingWithRight() && m_XDirectionSpeed > 0))
 		{
-			auto localPos = GetGameObject()->GetLocalPosition();
+			auto currentVelocity = m_pPhysicsComponent->GetVelocity().x;
+			if ((m_XDirectionSpeed > 0 && currentVelocity <= 0) ||
+				(m_XDirectionSpeed < 0 && currentVelocity >= 0))
 			m_pPhysicsComponent->AddVelocity(glm::vec2{ m_XDirectionSpeed, 0 });
 		}
 

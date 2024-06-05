@@ -49,10 +49,11 @@ void EnemyCounterComponent::AddSubjectPointer(dae::Subject<EnemyComponent>* pSub
 	++m_AmountOfEnmies;
 }
 
-void EnemyCounterComponent::SetSubjectPointersInvalid()
+void EnemyCounterComponent::SetSubjectPointersInvalid(dae::Subject<EnemyComponent>* pSubject)
 {
-	for (auto& pSubject : m_pVecObservedSubjects)
+	auto pos = std::find(m_pVecObservedSubjects.begin(), m_pVecObservedSubjects.end(), pSubject);
+	if (pos != m_pVecObservedSubjects.cend())
 	{
-		pSubject = nullptr;
+		m_pVecObservedSubjects.erase(pos);
 	}
 }

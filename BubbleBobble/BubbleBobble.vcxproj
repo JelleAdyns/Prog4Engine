@@ -238,7 +238,7 @@
     <ClInclude Include="ZenChanPoppedState.h" />
     <ClInclude Include="ZenChanRunState.h" />
     <ClInclude Include="ZenChanState.h" />
-    <ClInclude Include="ShootCommand.h" />
+    <ClInclude Include="AttackCommand.h" />
     <ClInclude Include="ButtonComponent.h" />
     <ClInclude Include="ButtonHandlerComponent.h" />
     <ClInclude Include="CacheExperimentComponent.h" />

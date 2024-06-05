@@ -1,7 +1,6 @@
 #include "ZenChanCaughtState.h"
 #include "ZenChanPoppedState.h"
 #include "EnemyComponent.h"
-#include "FloorCheckingComponent.h"
 #include "BubbleComponent.h"
 #include <PhysicsComponent.h>
 #include <CollisionComponent.h>
@@ -71,8 +70,11 @@ void ZenChanCaughtState::OnEnter()
 		break;
 	}
 
+
+
 	m_pEnemy->GetComponent<FloorCheckingComponent>()->SetHandleCollison(false);
 	m_pCollisionComp->SetTag(collisionTags::caughtEnemyTag);
+	m_pCollisionComp->SetCollision(false);
 	m_pEnemy->SetLocalPos(0.f, 0.f);
 	m_pPhysicsComp->SetVelocityX(0);
 	m_pPhysicsComp->SetVelocityY(0);
@@ -83,8 +85,13 @@ void ZenChanCaughtState::OnExit()
 {
 	m_pEnemy->GetComponent<FloorCheckingComponent>()->SetHandleCollison(true);
 	m_pCollisionComp->SetTag(collisionTags::enemyTag);
+	m_pCollisionComp->SetCollision(true);
 
 	m_pPhysicsComp->StartGravity();
+}
+
+void ZenChanCaughtState::NotifyPlayerObservers(PlayerComponent*)
+{
 }
 
 void ZenChanCaughtState::Notify(BubbleComponent* pSubject)
@@ -109,7 +116,7 @@ void ZenChanCaughtState::AddSubjectPointer(dae::Subject<BubbleComponent>* pSubje
 	m_pObservedSubject = pSubject;
 }
 
-void ZenChanCaughtState::SetSubjectPointersInvalid()
+void ZenChanCaughtState::SetSubjectPointersInvalid(dae::Subject<BubbleComponent>*)
 {
 	m_pObservedSubject = nullptr;
 }

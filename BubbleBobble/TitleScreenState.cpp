@@ -5,6 +5,7 @@
 #include <SceneManager.h>
 #include <InputCommandBinder.h>
 #include <Minigin.h>
+#include <Renderer.h>
 #include "Components.h"
 #include "LoadSceneCommand.h"
 #include "Game.h"
@@ -16,9 +17,11 @@ const std::string TitleScreenState::m_SceneName{ "TitleScreen" };
 
 void TitleScreenState::OnEnter()
 {
+	dae::Renderer::GetInstance().StartFadeIn();
+	
 	auto& inputMan = dae::InputCommandBinder::GetInstance();
 	inputMan.RemoveAllCommands();
-	inputMan.AddController();
+	
 
 
 	LoadTitleScreen();
@@ -31,6 +34,7 @@ void TitleScreenState::OnEnter()
 
 void TitleScreenState::OnExit()
 {
+	//dae::Renderer::GetInstance().StartFadeOut();
 	auto& inputMan = dae::InputCommandBinder::GetInstance();
 	inputMan.RemoveAllCommands();
 

@@ -49,8 +49,10 @@ void IdleState::OnEnter()
 	m_pSpriteComp->SetHeightMarkers(0, HitState::GetHitSpriteOffset());
 	m_pSpriteComp->SetNrOfRows(m_IdleSpriteInfo.nrOfRows);
 	m_pSpriteComp->SetRowUpdate(m_IdleSpriteInfo.rowUpdate);
-	m_pSpriteComp->SetFrameTime(m_IdleSpriteInfo.frameTime);
-
+	if (m_pSpriteComp->GetCurrRow() < GetShootStartIndex())
+	{
+		m_pSpriteComp->SetFrameTime(m_IdleSpriteInfo.frameTime);
+	}
 	m_pPhysicsComp->SetVelocityX(0);
 	m_pPhysicsComp->SetVelocityY(0);
 

@@ -69,7 +69,10 @@ public:
 	{
 		m_pSpriteComp->AddRows(m_WalkingSpriteInfo.rowNumber);
 		m_pSpriteComp->SetNrOfRows(m_WalkingSpriteInfo.nrOfRows);
-		m_pSpriteComp->SetFrameTime(m_WalkingSpriteInfo.frameTime);
+		if (m_pSpriteComp->GetCurrRow() < GetShootStartIndex())
+		{
+			m_pSpriteComp->SetFrameTime(m_WalkingSpriteInfo.frameTime);
+		}
 
 		m_pMovementComp->RegisterJumpCommand();
 

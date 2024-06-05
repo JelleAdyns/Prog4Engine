@@ -11,6 +11,7 @@
 #include <RenderComponent.h>
 #include <GameTime.h>
 #include <Minigin.h>
+#include <algorithm>
 
 
 PlayerComponent::PlayerComponent(dae::GameObject* pOwner, PlayerType playerType, LivesUIComponent* pObserver):
@@ -94,11 +95,12 @@ void PlayerComponent::AddSubjectPointer(dae::Subject<SpriteComponent>* pSubject)
 	m_pVecObservedSpriteSubjects.emplace_back(pSubject);
 }
 
-void PlayerComponent::SetSubjectPointersInvalid()
+void PlayerComponent::SetSubjectPointersInvalid(dae::Subject<SpriteComponent>* pSubject)
 {
-	for (auto& pSubject : m_pVecObservedSpriteSubjects)
+	auto pos = std::find(m_pVecObservedSpriteSubjects.begin(), m_pVecObservedSpriteSubjects.end(), pSubject);
+	if (pos != m_pVecObservedSpriteSubjects.cend())
 	{
-		pSubject = nullptr;
+		m_pVecObservedSpriteSubjects.erase(pos);
 	}
 }
 
@@ -157,6 +159,7 @@ void PlayerComponent::TakeLife()
 	}
 	else
 	{
+		GetOwner()->MarkDead();
 		m_pRenderComp->SetNeedToRender(false);
 	}
 }

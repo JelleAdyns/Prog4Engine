@@ -3,6 +3,7 @@
 #include <GameObject.h>
 #include <PhysicsComponent.h>
 #include <CollisionComponent.h>
+#include <algorithm>
 
 
 ProjectileComponent::ProjectileComponent(dae::GameObject* pOwner, bool left) :
@@ -65,10 +66,11 @@ void ProjectileComponent::AddSubjectPointer(dae::Subject<SpriteComponent>* pSubj
 	m_pVecObservedSubjects.emplace_back(pSubject);
 }
 
-void ProjectileComponent::SetSubjectPointersInvalid()
+void ProjectileComponent::SetSubjectPointersInvalid(dae::Subject<SpriteComponent>* pSubject)
 {
-	for (auto& pSubject : m_pVecObservedSubjects)
+	auto pos = std::find(m_pVecObservedSubjects.begin(), m_pVecObservedSubjects.end(), pSubject);
+	if (pos != m_pVecObservedSubjects.cend())
 	{
-		pSubject = nullptr;
+		m_pVecObservedSubjects.erase(pos);
 	}
 }

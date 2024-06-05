@@ -4,7 +4,7 @@
 #include "MaitaState.h"
 #include "PlayerComponent.h"
 #include "SpriteComponent.h"
-#include <Observer.h>
+
 namespace dae
 {
 	class GameObject;
@@ -15,17 +15,11 @@ namespace dae
 class EnemyComponent;
 class WallCheckingComponent;
 class FloorCheckingComponent;
-class MaitaRunState final : public MaitaState, public dae::Observer<PlayerComponent>
+class MaitaRunState final : public MaitaState
 {
 public:
 	explicit MaitaRunState(dae::GameObject* pMaita, EnemyComponent* pEnemyComp, bool isAngry = false);
-	virtual ~MaitaRunState()
-	{
-		for (dae::Subject<PlayerComponent>* pSpriteSubject : m_pVecObservedSpriteSubjects)
-		{
-			if (pSpriteSubject) pSpriteSubject->RemoveObserver(this);
-		}
-	}
+	virtual ~MaitaRunState() = default;
 
 	MaitaRunState(const MaitaRunState&) = delete;
 	MaitaRunState(MaitaRunState&&) noexcept = delete;
@@ -36,9 +30,7 @@ public:
 	virtual void OnEnter() override;
 	virtual void OnExit() override;
 
-	virtual void Notify(PlayerComponent* pSubject) override;
-	virtual void AddSubjectPointer(dae::Subject<PlayerComponent>* pSubject) override;
-	virtual void SetSubjectPointersInvalid() override;
+	virtual void NotifyPlayerObservers(PlayerComponent* pSubject) override;
 
 private:
 
@@ -61,8 +53,6 @@ private:
 	WallCheckingComponent* m_pWallCheckingComp;
 	FloorCheckingComponent* m_pFloorCheckingComp;
 	dae::CollisionComponent* m_pCollisionComp;
-
-	std::vector<dae::Subject<PlayerComponent>*> m_pVecObservedSpriteSubjects;
 };
 
 

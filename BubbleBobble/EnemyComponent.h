@@ -2,7 +2,8 @@
 #define ENEMYCOMPONENT_H
 
 #include <Component.h>
-#include <Subject.h>
+#include <Observer.h>
+#include <vector>
 #include "EnemyState.h"
 
 namespace dae
@@ -12,7 +13,7 @@ namespace dae
 class PlayerComponent;
 class SpriteComponent;
 class EnemyCounterComponent;
-class EnemyComponent final : public dae::Component
+class EnemyComponent final : public dae::Component, public dae::Observer<PlayerComponent>
 {
 public:
 
@@ -33,9 +34,12 @@ public:
 	virtual void Update() override;
 	virtual void PrepareImGuiRender() override;
 
-	void AddPlayerObserver(PlayerComponent* pSubject);
+	virtual void Notify(PlayerComponent* pSubject) override;
+	virtual void AddSubjectPointer(dae::Subject<PlayerComponent>* pSubject) override;
+	virtual void SetSubjectPointersInvalid(dae::Subject<PlayerComponent>* pSubject) override;
 
-	const std::vector<dae::Subject<PlayerComponent>*>& GetPlayerSubjects() const { return m_SubjectsForState; }
+	void Attack();
+	void AddPlayerObserver(PlayerComponent* pSubject);
 
 	static float GetMaitaOffset() { return m_MaitaOffset; }
 
@@ -52,7 +56,7 @@ private:
 
 	std::unique_ptr<dae::Subject<EnemyComponent>> m_pDied;
 
-	std::vector<dae::Subject<PlayerComponent>*> m_SubjectsForState;
+	std::vector<dae::Subject<PlayerComponent>*> m_pVecObservedSubjects;
 };
 
 

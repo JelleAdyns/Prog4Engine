@@ -21,7 +21,7 @@ namespace dae
 
 		virtual void Notify(T* pSubjectOwner) = 0;
         virtual void AddSubjectPointer(Subject<T>* pSubject) = 0;
-        virtual void SetSubjectPointersInvalid() = 0;
+        virtual void SetSubjectPointersInvalid(Subject<T>* pSubject) = 0;
 
 	protected:
 		Observer() = default;

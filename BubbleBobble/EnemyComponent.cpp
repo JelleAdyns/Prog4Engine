@@ -1,5 +1,6 @@
 #include "EnemyComponent.h"
 #include "MaitaRunState.h"
+#include "MaitaAttackState.h"
 #include "ZenChanRunState.h"
 #include "PlayerComponent.h"
 #include "SpriteComponent.h"
@@ -14,7 +15,7 @@ EnemyComponent::EnemyComponent(dae::GameObject* pOwner, EnemyType enemyType, Ene
 	m_pPhysicsComp{},
 	m_pSpriteComp{},
 	m_pDied{ std::make_unique<dae::Subject<EnemyComponent>>() },
-	m_SubjectsForState{}
+	m_pVecObservedSubjects{}
 {
 	m_pDied->AddObserver(pObserver);
 }
@@ -22,6 +23,11 @@ EnemyComponent::EnemyComponent(dae::GameObject* pOwner, EnemyType enemyType, Ene
 EnemyComponent::~EnemyComponent()
 {
 	m_pDied->NotifyObservers(this);
+
+	for (auto& pSubject : m_pVecObservedSubjects)
+	{
+		if (pSubject) pSubject->RemoveObserver(this);
+	}
 }
 
 void EnemyComponent::Start()
@@ -58,9 +64,35 @@ void EnemyComponent::PrepareImGuiRender()
 {
 }
 
+void EnemyComponent::Notify(PlayerComponent* pSubject)
+{
+	m_pCurrState->NotifyPlayerObservers(pSubject);
+}
+
+void EnemyComponent::AddSubjectPointer(dae::Subject<PlayerComponent>* pSubject)
+{
+	m_pVecObservedSubjects.push_back(pSubject);
+}
+
+void EnemyComponent::SetSubjectPointersInvalid(dae::Subject<PlayerComponent>* pSubject)
+{
+	auto pos = std::find(m_pVecObservedSubjects.begin(), m_pVecObservedSubjects.end(), pSubject);
+	if (pos != m_pVecObservedSubjects.cend())
+	{
+		m_pVecObservedSubjects.erase(pos);
+	}
+}
+
+void EnemyComponent::Attack()
+{
+	m_pCurrState->OnExit();
+	m_pCurrState = std::make_unique<MaitaAttackState>(GetOwner(), this);
+	m_pCurrState->OnEnter();
+}
+
 void EnemyComponent::AddPlayerObserver(PlayerComponent* pSubject)
 {
-	if (pSubject) m_SubjectsForState.push_back(pSubject->GetSubject());
+	if (pSubject) pSubject->GetSubject()->AddObserver(this);
 }
 
 void EnemyComponent::UpdateStates()

@@ -58,7 +58,10 @@ public:
 	{
 		m_pSpriteComp->AddRows(m_FallingSpriteInfo.rowNumber);
 		m_pSpriteComp->SetNrOfRows(m_FallingSpriteInfo.nrOfRows);
-		m_pSpriteComp->SetFrameTime(m_FallingSpriteInfo.frameTime);
+		if (m_pSpriteComp->GetCurrRow() < GetShootStartIndex())
+		{
+			m_pSpriteComp->SetFrameTime(m_FallingSpriteInfo.frameTime);
+		}
 
 		m_pMovementComp->RegisterJumpOnBubbleCommand();
 	}

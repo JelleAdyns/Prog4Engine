@@ -28,6 +28,8 @@ public:
 	virtual void OnEnter() override;
 	virtual void OnExit() override;
 
+	virtual void NotifyPlayerObservers(PlayerComponent* pSubject) override;
+
 private:
 
 	static constexpr SpriteComponent::SpriteInfo m_PoppedInfo{ .rowNumber{2}, .frameTime{0.06f}};

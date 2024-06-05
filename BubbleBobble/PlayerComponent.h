@@ -41,7 +41,7 @@ public:
 
 	virtual void Notify(SpriteComponent* pSubject) override;
 	virtual void AddSubjectPointer(dae::Subject<SpriteComponent>* pSubject) override;
-	virtual void SetSubjectPointersInvalid() override;
+	virtual void SetSubjectPointersInvalid(dae::Subject<SpriteComponent>* pSubject) override;
 
 	void Shoot();
 
@@ -63,7 +63,7 @@ private:
 
 	bool m_IsInvincible{};
 
-	int m_Health{4};
+	int m_Health{1};
 	float m_JumpVelocity{ -160.f };
 	float m_MoveVelocity{ 60.f };
 	float m_InvincibilityTimer{};

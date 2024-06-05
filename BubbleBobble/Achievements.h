@@ -24,7 +24,7 @@ public:
 		
 	virtual void Notify(ScoreUIComponent* pScoreUIComponent) override;
 	virtual void AddSubjectPointer(dae::Subject<ScoreUIComponent>* pScoreUIComponent) override;
-	virtual void SetSubjectPointersInvalid() override;
+	virtual void SetSubjectPointersInvalid(dae::Subject<ScoreUIComponent>* pScoreUIComponent) override;
 
 	//static void SetSteamAchievements(CSteamAchievements* pSteamAchievements);
 	//static Achievement_t g_Achievements[4];

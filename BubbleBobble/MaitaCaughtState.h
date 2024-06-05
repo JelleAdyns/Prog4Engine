@@ -34,9 +34,11 @@ public:
 	virtual void OnEnter() override;
 	virtual void OnExit() override;
 
+	virtual void NotifyPlayerObservers(PlayerComponent* pSubject) override;
+
 	virtual void Notify(BubbleComponent* pSubject) override;
 	virtual void AddSubjectPointer(dae::Subject<BubbleComponent>* pSubject) override;
-	virtual void SetSubjectPointersInvalid() override;
+	virtual void SetSubjectPointersInvalid(dae::Subject<BubbleComponent>* pSubject) override;
 
 private:
 

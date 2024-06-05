@@ -25,7 +25,7 @@ namespace dae
 		Renderer& operator= (Renderer&&) noexcept = delete;
 
 		void Init(SDL_Window* window);
-		void Render() const;
+		void Render();
 		void Destroy();
 
 		void RenderTexture(const Texture2D& texture, float x, float y, bool flip) const;
@@ -33,15 +33,26 @@ namespace dae
 
 		SDL_Renderer* GetSDLRenderer() const;
 		
-		const SDL_Color& GetBackgroundColor() const { return m_clearColor; }
-		void SetBackgroundColor(const SDL_Color& color) { m_clearColor = color; }
+		const SDL_Color& GetBackgroundColor() const { return m_ClearColor; }
+		void SetBackgroundColor(const SDL_Color& color) { m_ClearColor = color; }
+
+		void StartFadeIn();
 
 	private:
+
+		void FadeIn();
+
 		friend class Singleton<Renderer>;
 		Renderer() = default;
-		SDL_Renderer* m_renderer{};
-		SDL_Window* m_window{};
-		SDL_Color m_clearColor{};	
+		SDL_Renderer* m_Renderer{};
+		SDL_Window* m_Window{};
+		SDL_Color m_ClearColor{};	
+		SDL_Rect m_WindowRect{};	
+
+		float m_FadeTimer{};
+		
+		bool m_FadingIn{};
+		float m_AlphaVaule{};
 	};
 }
 #endif // !RENDERER_H

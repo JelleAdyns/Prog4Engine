@@ -63,3 +63,7 @@ void MaitaJumpState::OnExit()
 	m_pSpriteComp->SetUpdate(true);
 
 }
+
+void MaitaJumpState::NotifyPlayerObservers(PlayerComponent*)
+{
+}

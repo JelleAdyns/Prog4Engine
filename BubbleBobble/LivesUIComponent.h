@@ -30,7 +30,7 @@ public:
 
 	virtual void Notify(PlayerComponent* pSubject) override;
 	virtual void AddSubjectPointer(dae::Subject<PlayerComponent>* pSubject) override;
-	virtual void SetSubjectPointersInvalid() override;
+	virtual void SetSubjectPointersInvalid(dae::Subject<PlayerComponent>* pSubject) override;
 
 	void AddLifeObjct(dae::GameObject* pLife);
 

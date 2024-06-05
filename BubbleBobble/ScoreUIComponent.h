@@ -32,7 +32,7 @@ public:
 
 	virtual void Notify(InventoryComponent* pSubject) override;
 	virtual void AddSubjectPointer(dae::Subject<InventoryComponent>* pSubject) override;
-	virtual void SetSubjectPointersInvalid() override;
+	virtual void SetSubjectPointersInvalid(dae::Subject<InventoryComponent>* pSubject) override;
 
 	int GetScore() const;
 

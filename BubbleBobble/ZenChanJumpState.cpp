@@ -76,3 +76,7 @@ void ZenChanJumpState::OnExit()
 	m_pSpriteComp->SetUpdate(true);
 
 }
+
+void ZenChanJumpState::NotifyPlayerObservers(PlayerComponent*)
+{
+}

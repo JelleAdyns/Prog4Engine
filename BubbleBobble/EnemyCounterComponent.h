@@ -30,7 +30,7 @@ public:
 
 	virtual void Notify(EnemyComponent* pSubject) override;
 	virtual void AddSubjectPointer(dae::Subject<EnemyComponent>* pSubject) override;
-	virtual void SetSubjectPointersInvalid() override;
+	virtual void SetSubjectPointersInvalid(dae::Subject<EnemyComponent>* pSubject) override;
 
 private:
 

@@ -232,7 +232,7 @@
     <ClInclude Include="PlayerComponent.h">
       <Filter>Source Files\Components</Filter>
     </ClInclude>
-    <ClInclude Include="ShootCommand.h">
+    <ClInclude Include="AttackCommand.h">
       <Filter>Source Files\Commands</Filter>
     </ClInclude>
     <ClInclude Include="SpriteComponent.h">

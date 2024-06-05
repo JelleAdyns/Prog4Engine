@@ -1,4 +1,5 @@
 #include "Achievements.h"
+#include <algorithm>
 
 
 /*std::unique_ptr<CSteamAchievements> Achievements::m_pSteamAchievements = NULL;
@@ -37,11 +38,12 @@ void Achievements::AddSubjectPointer(dae::Subject<ScoreUIComponent>* pScoreUICom
     m_pVecObservedSubjects.emplace_back(pScoreUIComponent);
 }
 
-void Achievements::SetSubjectPointersInvalid()
+void Achievements::SetSubjectPointersInvalid(dae::Subject<ScoreUIComponent>* pScoreUIComponent)
 {
-	for (auto& pSubject : m_pVecObservedSubjects)
+	auto pos = std::find(m_pVecObservedSubjects.begin(), m_pVecObservedSubjects.end(), pScoreUIComponent);
+	if (pos != m_pVecObservedSubjects.cend())
 	{
-		pSubject = nullptr;
+		m_pVecObservedSubjects.erase(pos);
 	}
 }
 

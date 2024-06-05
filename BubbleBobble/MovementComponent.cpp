@@ -1,6 +1,6 @@
 #include "MovementComponent.h"
 #include "MovementCommands.h"
-#include "ShootCommand.h"
+#include "AttackCommand.h"
 #include <InputCommandBinder.h>
 #include <Controller.h>
 #include <KeyState.h>
@@ -31,9 +31,7 @@ void MovementComponent::Start()
 	m_MoveRightCommand = std::make_shared<MoveCommand>(GetOwner(), m_MoveSpeed);
 	m_MoveLeftCommand = std::make_shared<MoveCommand>(GetOwner(), -m_MoveSpeed);
 	m_StopMovingCommand = std::make_shared<StopMovingCommand>(GetOwner());
-
-	//TODO: Check for Enemycomponent;
-	m_AttackCommand = std::make_shared<ShootCommand>(GetOwner());
+	m_AttackCommand = std::make_shared<AttackCommand>(GetOwner());
 
 	RegisterMoveCommands();
 	RegisterAttackCommand();
@@ -41,7 +39,6 @@ void MovementComponent::Start()
 
 void MovementComponent::Update()
 {
-	std::cout << dae::InputCommandBinder::GetInstance().AmountOfControllersConnected() << std::endl;
 }
 
 void MovementComponent::PrepareImGuiRender()

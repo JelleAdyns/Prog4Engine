@@ -37,6 +37,9 @@ void Game::StartGame()
 	dae::AudioLocator::RegisterAudioService(std::make_unique<dae::SDLAudio>());
 #endif // !NDEBUG
 
+
+	dae::InputCommandBinder::GetInstance().AddController();
+
 	auto& audioService = dae::AudioLocator::GetAudioService();
 	audioService.AddSound("Sounds/TitleScreen.wav", static_cast<dae::SoundID>(Game::SoundEvent::TitleScreen));
 	audioService.PlaySoundClip(static_cast<dae::SoundID>(Game::SoundEvent::TitleScreen), 80, false);

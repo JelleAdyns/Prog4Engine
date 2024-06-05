@@ -3,6 +3,7 @@
 #include <SDLAudio.h>
 #include <LogAudio.h>
 #include <SceneManager.h>
+#include <Renderer.h>
 #include <InputCommandBinder.h>
 #include <Minigin.h>
 #include "Components.h"
@@ -19,6 +20,7 @@ const std::string MainMenuState::m_SceneName{ "MainMenu" };
 
 void MainMenuState::OnEnter()
 {
+	dae::Renderer::GetInstance().StartFadeIn();
 	LoadMainMenu();
 }
 

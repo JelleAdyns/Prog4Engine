@@ -5,6 +5,7 @@
 #include "Achievements.h"
 #include "Spawners.h"
 #include "GameObject.h"
+#include <algorithm>
 
 
 ScoreUIComponent::ScoreUIComponent(dae::GameObject* pOwner, int startScore, Achievements* pObserver):
@@ -64,11 +65,12 @@ void ScoreUIComponent::AddSubjectPointer(dae::Subject<InventoryComponent>* pSubj
     m_pVecObservedSubjects.emplace_back(pSubject);
 }
 
-void ScoreUIComponent::SetSubjectPointersInvalid()
+void ScoreUIComponent::SetSubjectPointersInvalid(dae::Subject<InventoryComponent>* pSubject)
 {
-	for (auto& pSubject : m_pVecObservedSubjects)
+	auto pos = std::find(m_pVecObservedSubjects.begin(), m_pVecObservedSubjects.end(), pSubject);
+	if (pos != m_pVecObservedSubjects.cend())
 	{
-		pSubject = nullptr;
+		m_pVecObservedSubjects.erase(pos);
 	}
 }
 

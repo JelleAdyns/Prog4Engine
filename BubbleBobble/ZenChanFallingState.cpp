@@ -7,6 +7,7 @@
 #include <CollisionComponent.h>
 #include <GameObject.h>
 #include <Minigin.h>
+#include <algorithm>
 #include "CollisionTags.h"
 #include "BubbleComponent.h"
 #include "ZenChanCaughtState.h"
@@ -46,10 +47,6 @@ std::unique_ptr<EnemyState> ZenChanFallingState::Update()
 }
 void ZenChanFallingState::OnEnter()
 {
-	for (dae::Subject<PlayerComponent>* pSubject : m_pEnemyComp->GetPlayerSubjects())
-	{
-		pSubject->AddObserver(this);
-	}
 	m_pPhysicsComp->SetVelocityX(0);
 }
 void ZenChanFallingState::OnExit()
@@ -62,22 +59,12 @@ void ZenChanFallingState::OnExit()
 	
 }
 
-void ZenChanFallingState::Notify(PlayerComponent* pSubject)
+void ZenChanFallingState::NotifyPlayerObservers(PlayerComponent* pSubject)
 {
+
 	auto subjectPos = pSubject->GetPos();
-	if (std::abs(subjectPos.x - m_pEnemy->GetWorldPosition().x) < std::abs(m_PlayerXPos - m_pEnemy->GetWorldPosition().x))
+	auto enemyPos = m_pEnemy->GetWorldPosition();
+
+	if (std::abs(enemyPos.x - subjectPos.x) < std::abs(enemyPos.x - m_PlayerXPos))
 		m_PlayerXPos = subjectPos.x;
-}
-
-void ZenChanFallingState::AddSubjectPointer(dae::Subject<PlayerComponent>* pSubject)
-{
-	m_pVecObservedSubjects.push_back(pSubject);
-}
-
-void ZenChanFallingState::SetSubjectPointersInvalid()
-{
-	for (auto& pSubject : m_pVecObservedSubjects)
-	{
-		pSubject = nullptr;
-	}
 }

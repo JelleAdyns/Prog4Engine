@@ -3,7 +3,6 @@
 
 #include "ZenChanState.h"
 #include "PlayerComponent.h"
-#include <Observer.h>
 
 namespace dae
 {
@@ -16,17 +15,11 @@ class EnemyComponent;
 class SpriteComponent;
 class WallCheckingComponent;
 class FloorCheckingComponent;
-class ZenChanRunState final : public ZenChanState, public dae::Observer<PlayerComponent>
+class ZenChanRunState final : public ZenChanState
 {
 public:
 	explicit ZenChanRunState(dae::GameObject* pEnemy, EnemyComponent* pEnemyComp, bool isAngry = false);
-	virtual ~ZenChanRunState()
-	{
-		for (dae::Subject<PlayerComponent>* pSpriteSubject : m_pVecObservedSpriteSubjects)
-		{
-			if (pSpriteSubject) pSpriteSubject->RemoveObserver(this);
-		}
-	}
+	virtual ~ZenChanRunState() = default;
 
 	ZenChanRunState(const ZenChanRunState&) = delete;
 	ZenChanRunState(ZenChanRunState&&) noexcept = delete;
@@ -37,9 +30,8 @@ public:
 	virtual void OnEnter() override;
 	virtual void OnExit() override;
 	
-	virtual void Notify(PlayerComponent* pSubject) override;
-	virtual void AddSubjectPointer(dae::Subject<PlayerComponent>* pSubject) override;
-	virtual void SetSubjectPointersInvalid() override;
+	virtual void NotifyPlayerObservers(PlayerComponent* pSubject) override;
+
 
 private:
 
@@ -57,7 +49,7 @@ private:
 	FloorCheckingComponent* m_pFloorCheckingComp;
 	dae::CollisionComponent* m_pCollisionComp;
 
-	std::vector<dae::Subject<PlayerComponent>*> m_pVecObservedSpriteSubjects;
+
 };
 
 

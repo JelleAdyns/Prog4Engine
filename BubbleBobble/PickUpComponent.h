@@ -35,7 +35,7 @@ public:
 
 	virtual void Notify(SpriteComponent* pSubject) override;
 	virtual void AddSubjectPointer(dae::Subject<SpriteComponent>* pSubject) override;
-	virtual void SetSubjectPointersInvalid() override;
+	virtual void SetSubjectPointersInvalid(dae::Subject<SpriteComponent>* pSubject) override;
 
 	//void PickUp(PlayerComponent::PlayerType playerType);
 

@@ -38,3 +38,7 @@ void ZenChanPoppedState::OnExit()
 {
 
 }
+
+void ZenChanPoppedState::NotifyPlayerObservers(PlayerComponent*)
+{
+}

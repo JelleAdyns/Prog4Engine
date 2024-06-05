@@ -17,7 +17,7 @@ namespace dae
 		{
 			for (Observer<T>* pObserver : m_pVecObservers)
 			{
-				pObserver->SetSubjectPointersInvalid();
+				pObserver->SetSubjectPointersInvalid(this);
 			}
 		}
 
