@@ -44,8 +44,7 @@ private:
 
 	void CreateSkipButton(dae::Scene& scene);
 	void MakePlayer(const std::unique_ptr<dae::GameObject>& pPlayer, PlayerComponent::PlayerType playerType, ScoreUIComponent* scoreDisplay, LivesUIComponent* livesDisplay);
-	void CreateScoreDisplay(dae::Scene& scene, bool playerOne);
-	void CreateLivesDisplay();
+	void CreateScoreDisplay(dae::Scene& scene, bool playerOne);;
 	void UploadScene(dae::Scene& scene);
 	void LoadLevel(const std::string& filename);
 	void ParseLevelInfo(int levelNumber, std::ifstream& file, std::stringstream& levelInfoStream);
@@ -56,7 +55,7 @@ private:
 	int m_LevelNumber{1};
 
 	Player m_pPlayerOne{ .spawnPos{24.f, dae::Minigin::GetWindowSize().y - 24.f} };
-	Player m_pPlayerTwo{ .spawnPos{dae::Minigin::GetWindowSize().x - 32.f, dae::Minigin::GetWindowSize().y - 24.f} };
+	Player m_pPlayerTwo{ .spawnPos{dae::Minigin::GetWindowSize().x - 40.f, dae::Minigin::GetWindowSize().y - 24.f} };
 
 	const std::string m_LevelFile{ "Levels.txt" };
 	static const std::string m_SceneName;

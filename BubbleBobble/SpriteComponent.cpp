@@ -29,9 +29,6 @@ SpriteComponent::SpriteComponent(dae::GameObject* pOwner, std::unique_ptr<dae::T
 	m_pRowFinished{std::make_unique<dae::Subject<SpriteComponent>>()}
 {
 
-
-	//m_pRowFinished->AddObserver(pObserver);
-
 	m_EndHeightMarker = static_cast<float>(m_pTexture->GetTextureSize().y);
 
 	m_pTexture->SetSrcRect(
@@ -54,6 +51,7 @@ void SpriteComponent::Start()
 		using ThisType = std::remove_reference<decltype(*this)>::type;
 		m_pRenderComponent = GetOwner()->GetComponent<dae::RenderComponent>();
 		m_pRenderComponent->AddTexture<ThisType>(m_pTexture);
+		m_pRenderComponent->SetFlipped<ThisType>(m_IsLookingLeft);
 	}
 }
 

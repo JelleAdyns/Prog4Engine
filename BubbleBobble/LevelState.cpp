@@ -96,6 +96,10 @@ void LevelState::CreateSkipButton(dae::Scene& scene)
 
 void LevelState::MakePlayer(const std::unique_ptr<dae::GameObject>& pPlayer, PlayerComponent::PlayerType playerType, ScoreUIComponent* scoreDisplay, LivesUIComponent* livesDisplay)
 {
+	pPlayer->AddRenderComponent();
+	pPlayer->AddPhysicsComponent();
+	dae::PhysicsComponent::SetGravity(300);
+
 	uint8_t playerIndex{};
 	int startHealth{};
 	switch (playerType)
@@ -113,9 +117,6 @@ void LevelState::MakePlayer(const std::unique_ptr<dae::GameObject>& pPlayer, Pla
 		break;
 	}
 	
-	pPlayer->AddRenderComponent();
-	pPlayer->AddPhysicsComponent();
-	dae::PhysicsComponent::SetGravity(300);
 	pPlayer->AddComponent<MovementComponent>(-160.f, 60.f, playerIndex);
 	pPlayer->AddComponent<InventoryComponent>(scoreDisplay);
 
@@ -185,10 +186,6 @@ void LevelState::CreateScoreDisplay(dae::Scene& scene, bool playerOne)
 
 	scene.AddGameObject(std::move(pScoreDisplayText));
 	scene.AddGameObject(std::move(pScoreDisplay));
-}
-
-void LevelState::CreateLivesDisplay()
-{
 }
 
 void LevelState::UploadScene(dae::Scene& scene)
@@ -334,7 +331,7 @@ void LevelState::UploadScene(dae::Scene& scene)
 		scene.AddGameObject(std::move(pPlayer));
 		scene.AddGameObject(std::move(pMaitaPlayer));
 	}
-	break;
+		break;
 	}
 	
 
