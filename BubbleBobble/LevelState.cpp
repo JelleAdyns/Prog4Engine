@@ -22,6 +22,8 @@
 #include "Achievements.h"
 
 const std::string LevelState::m_SceneName{ "Level" };
+LevelState::PlayerInfo LevelState::m_pPlayerOne{ .textColor{ 116, 251, 77, 255 }, .spawnPos{24.f, dae::Minigin::GetWindowSize().y - 24.f}  };
+LevelState::PlayerInfo LevelState::m_pPlayerTwo{ .textColor{  77, 166, 248 ,255 }, .spawnPos{dae::Minigin::GetWindowSize().x - 40.f, dae::Minigin::GetWindowSize().y - 24.f} };
 
 void LevelState::OnEnter()
 {
@@ -39,6 +41,9 @@ void LevelState::OnEnter()
 
 void LevelState::OnExit()
 {
+	auto& inputMan = dae::InputCommandBinder::GetInstance();
+	inputMan.RemoveAllCommands();
+
 	auto& audioService = dae::AudioLocator::GetAudioService();
 	audioService.StopAllSounds();
 }
@@ -53,9 +58,17 @@ void LevelState::OnResume()
 
 void LevelState::AdvanceLevel()
 {
+	if (m_pPlayerOne.pScoreUIComp) m_pPlayerOne.score = m_pPlayerOne.pScoreUIComp->GetScore();
+	if (m_pPlayerOne.pLivesUIComp) m_pPlayerOne.health = m_pPlayerOne.pLivesUIComp->GetRemainingLives();
+	if (m_pPlayerOne.health == 0) m_pPlayerOne.health = 1;
+
+	if (m_pPlayerTwo.pScoreUIComp) m_pPlayerTwo.score = m_pPlayerTwo.pScoreUIComp->GetScore();
+	if (m_pPlayerTwo.pLivesUIComp) m_pPlayerTwo.health = m_pPlayerTwo.pLivesUIComp->GetRemainingLives();
+	if (m_pPlayerTwo.health == 0) m_pPlayerTwo.health = 1;
+
 	if(m_LevelNumber == m_MaxLevel)
 	{
-		Game::GetInstance().SetScene(Game::CurrScene::TitleScreen);
+		Game::GetInstance().SetScene(Game::CurrScene::Results);
 	}
 	else
 	{
@@ -178,7 +191,7 @@ void LevelState::CreateScoreDisplay(dae::Scene& scene, bool playerOne)
 
 	}
 	else pScoreDisplay->AddComponent<ScoreUIComponent>(m_pPlayerOne.score, &Achievements::GetInstance());
-	pScoreDisplayText->AddComponent<dae::TextComponent>(displayText, "Fonts/Pixel_NES.otf", 8, playerOne ? glm::u8vec4{ 116, 251, 77, 255 } : glm::u8vec4{ 77, 166, 248 ,255 });
+	pScoreDisplayText->AddComponent<dae::TextComponent>(displayText, "Fonts/Pixel_NES.otf", 8, playerOne ? m_pPlayerOne.textColor : m_pPlayerTwo.textColor);
 
 
 	ScoreUIComponent* pScoreUIComp = pScoreDisplay->GetComponent<ScoreUIComponent>();

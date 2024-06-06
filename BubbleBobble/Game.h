@@ -33,6 +33,7 @@ public:
 		Menu,
 		Level,
 		PauseScreen,
+		Results,
 		HighScore,
 		DeathScene,
 		WelcomeScreen

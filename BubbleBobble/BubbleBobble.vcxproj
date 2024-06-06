@@ -173,10 +173,11 @@
     <ClCompile Include="FloorCheckingComponent.cpp" />
     <ClCompile Include="FPSComponent.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="HighScoreHandling.cpp" />
+    <ClCompile Include="HighScoreState.cpp" />
     <ClCompile Include="HitState.cpp" />
     <ClCompile Include="IdleState.cpp" />
     <ClCompile Include="InventoryComponent.cpp" />
-    <ClCompile Include="LevelLoader.cpp" />
     <ClCompile Include="LevelState.cpp" />
     <ClCompile Include="LivesUIComponent.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -191,6 +192,7 @@
     <ClCompile Include="PickUpComponent.cpp" />
     <ClCompile Include="PlayerComponent.cpp" />
     <ClCompile Include="ProjectileComponent.cpp" />
+    <ClCompile Include="ResultsState.cpp" />
     <ClCompile Include="RotatorComponent.cpp" />
     <ClCompile Include="ScoreComponent.cpp" />
     <ClCompile Include="ScoreUIComponent.cpp" />
@@ -213,6 +215,8 @@
     <ClInclude Include="EnemyComponent.h" />
     <ClInclude Include="EnemyCounterComponent.h" />
     <ClInclude Include="EnemyState.h" />
+    <ClInclude Include="HighScoreHandling.h" />
+    <ClInclude Include="HighScoreState.h" />
     <ClInclude Include="InventoryComponent.h" />
     <ClInclude Include="LevelState.h" />
     <ClInclude Include="MainMenuState.h" />
@@ -223,6 +227,7 @@
     <ClInclude Include="MaitaPoppedState.h" />
     <ClInclude Include="NextLevelCommand.h" />
     <ClInclude Include="ProjectileComponent.h" />
+    <ClInclude Include="ResultsState.h" />
     <ClInclude Include="SceneState.h" />
     <ClInclude Include="ScoreComponent.h" />
     <ClInclude Include="Spawners.h" />
@@ -251,7 +256,6 @@
     <ClInclude Include="HitState.h" />
     <ClInclude Include="IdleState.h" />
     <ClInclude Include="JumpingState.h" />
-    <ClInclude Include="LevelLoader.h" />
     <ClInclude Include="LivesUIComponent.h" />
     <ClInclude Include="LoadSceneCommand.h" />
     <ClInclude Include="MovementCommands.h" />

@@ -146,9 +146,6 @@
     <ClCompile Include="Spawners.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="LevelLoader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="EnemyComponent.cpp">
       <Filter>Source Files\Components</Filter>
     </ClCompile>
@@ -160,6 +157,15 @@
     </ClCompile>
     <ClCompile Include="InventoryComponent.cpp">
       <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ResultsState.cpp">
+      <Filter>Source Files\States\SceneState</Filter>
+    </ClCompile>
+    <ClCompile Include="HighScoreState.cpp">
+      <Filter>Source Files\States\SceneState</Filter>
+    </ClCompile>
+    <ClCompile Include="HighScoreHandling.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -204,9 +210,6 @@
     </ClInclude>
     <ClInclude Include="LoadSceneCommand.h">
       <Filter>Source Files\Commands</Filter>
-    </ClInclude>
-    <ClInclude Include="LevelLoader.h">
-      <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="ButtonComponent.h">
       <Filter>Source Files\Components</Filter>
@@ -345,6 +348,15 @@
     </ClInclude>
     <ClInclude Include="StartLevelCommand.h">
       <Filter>Source Files\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="ResultsState.h">
+      <Filter>Source Files\States\SceneState</Filter>
+    </ClInclude>
+    <ClInclude Include="HighScoreState.h">
+      <Filter>Source Files\States\SceneState</Filter>
+    </ClInclude>
+    <ClInclude Include="HighScoreHandling.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -67,7 +67,10 @@ namespace dae
 
 		m_WindowScale = windowScale;
 
+#ifndef NDEBUG
 		PrintSDLVersion();
+#endif // !NDEBUG
+
 
 		if (SDL_Init(SDL_INIT_VIDEO) != 0)
 		{

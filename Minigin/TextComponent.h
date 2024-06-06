@@ -15,7 +15,6 @@ namespace dae
 	{
 	public:
 		explicit TextComponent(GameObject* pOwner, const std::string& text, const std::string& fontFile, unsigned int size, const glm::u8vec4& color = {255,255,255,255});
-		explicit TextComponent(GameObject* pOwner, const std::string& text, std::unique_ptr<Font>&& pFont, std::unique_ptr<Texture2D>&& pTexture, const glm::u8vec4& color = { 255,255,255,255 });
 		explicit TextComponent(GameObject* pOwner, const std::string& text, std::unique_ptr<Font>&& pFont, const glm::u8vec4& color = { 255,255,255,255 });
 		virtual ~TextComponent() {}
 

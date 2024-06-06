@@ -10,7 +10,6 @@
 #include "KeyState.h"
 #include "GameObject.h"
 #include "Achievements.h"
-#include "LevelLoader.h"
 #include "CollisionTags.h"
 #include "MainMenuState.h"
 #include "LevelState.h"
@@ -27,6 +26,7 @@
 //#pragma warning(pop)
 
 #include <iostream>
+#include "ResultsState.h"
 
 void Game::StartGame()
 {
@@ -50,28 +50,23 @@ void Game::StartGame()
 
 void Game::SetScene(Game::CurrScene newScene)
 {
-
+	m_CurrScene->OnExit();
 	switch (newScene)
 	{
 	case CurrScene::TitleScreen:
-		m_CurrScene->OnExit();
 		m_CurrScene = std::make_unique<TitleScreenState>();
-		m_CurrScene->OnEnter();
 		break;
 	case CurrScene::Menu:
-		m_CurrScene->OnExit();
 		m_CurrScene = std::make_unique<MainMenuState>();
-		m_CurrScene->OnEnter();
 		break;
 	case CurrScene::Level:
-		m_CurrScene->OnExit();
 		m_CurrScene = std::make_unique<LevelState>();
-		m_CurrScene->OnEnter();
 		break;
-	case CurrScene::HighScore:
+	case CurrScene::Results:
+		m_CurrScene = std::make_unique<ResultsState>();
 		break;
 	}
-
+	m_CurrScene->OnEnter();
 }
 
 void Game::SetGameMode(Game::GameMode newGameMode)

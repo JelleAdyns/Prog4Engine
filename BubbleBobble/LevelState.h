@@ -13,6 +13,17 @@ class ScoreUIComponent;
 class LevelState final : public SceneState
 {
 public:
+	struct PlayerInfo
+	{
+		dae::GameObject* pPlayerObject;
+		ScoreUIComponent* pScoreUIComp;
+		LivesUIComponent* pLivesUIComp;
+		int score{};
+		int health{ 3 };
+		const glm::u8vec4 textColor{};
+		const glm::vec2 spawnPos{};
+	};
+
 	explicit LevelState() = default;
 	virtual ~LevelState() = default;
 
@@ -28,19 +39,13 @@ public:
 	virtual void OnResume() override;
 	
 	static float GetCollisionOffset() { return m_GeneralCollisionOffset; }
+	static const PlayerInfo& GetPlayerOne() { return m_pPlayerOne; }
+	static const PlayerInfo& GetPlayerTwo() { return m_pPlayerTwo; }
 
 	void AdvanceLevel();
 
 private:
-	struct Player
-	{
-		dae::GameObject* pPlayerObject;
-		ScoreUIComponent* pScoreUIComp;
-		LivesUIComponent* pLivesUIComp;
-		int score{};
-		int health{3};
-		const glm::vec2 spawnPos{};
-	};
+	
 
 	void CreateSkipButton(dae::Scene& scene);
 	void MakePlayer(const std::unique_ptr<dae::GameObject>& pPlayer, PlayerComponent::PlayerType playerType, ScoreUIComponent* scoreDisplay, LivesUIComponent* livesDisplay);
@@ -54,8 +59,8 @@ private:
 
 	int m_LevelNumber{1};
 
-	Player m_pPlayerOne{ .spawnPos{24.f, dae::Minigin::GetWindowSize().y - 24.f} };
-	Player m_pPlayerTwo{ .spawnPos{dae::Minigin::GetWindowSize().x - 40.f, dae::Minigin::GetWindowSize().y - 24.f} };
+	static PlayerInfo m_pPlayerOne;
+	static PlayerInfo m_pPlayerTwo;
 
 	const std::string m_LevelFile{ "Levels.txt" };
 	static const std::string m_SceneName;
