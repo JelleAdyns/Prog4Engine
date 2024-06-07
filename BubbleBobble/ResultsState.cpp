@@ -7,6 +7,7 @@
 #include <GameObject.h>
 #include <SceneManager.h>
 #include <InputCommandBinder.h>
+#include <Renderer.h>
 #include <AudioLocator.h>
 #include <KeyState.h>
 #include "ActivateButtonCommand.h"
@@ -25,6 +26,8 @@ ResultsState::~ResultsState()
 
 void ResultsState::OnEnter()
 {
+	dae::Renderer::GetInstance().StartFadeIn();
+
 	auto& scene = dae::SceneManager::GetInstance().CreateScene(m_SceneName);
 	LoadPlayerScore(scene, m_TemporaryInitials);
 	LoadTopFive(scene);

@@ -6,6 +6,7 @@
 HighScoreUIComponent::HighScoreUIComponent(dae::GameObject* pOwner):
     dae::Component{pOwner}
 {
+    m_CurrentHighScore = highScoreHandling::GetFirstScore().score;
 }
 
 HighScoreUIComponent::~HighScoreUIComponent()
@@ -20,7 +21,6 @@ void HighScoreUIComponent::Start()
 {
     if(!m_pTextComponent) m_pTextComponent = GetOwner()->GetComponent<dae::TextComponent>();
 
-    m_CurrentHighScore = highScoreHandling::GetFirstScore().score;
     m_pTextComponent->SetText(std::to_string(m_CurrentHighScore));
 }
 
@@ -34,6 +34,8 @@ void HighScoreUIComponent::PrepareImGuiRender()
 
 void HighScoreUIComponent::Notify(ScoreUIComponent* pSubject)
 {
+    if (!m_pTextComponent) m_pTextComponent = GetOwner()->GetComponent<dae::TextComponent>();
+
     if (pSubject->GetScore() > m_CurrentHighScore)
         m_CurrentHighScore = pSubject->GetScore();
 

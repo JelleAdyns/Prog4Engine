@@ -30,6 +30,8 @@ void ScoreUIComponent::Start()
 {
 	if (!m_pTextComponent) m_pTextComponent = GetOwner()->GetComponent<dae::TextComponent>();
 	m_pTextComponent->SetText(std::to_string(m_TotalScore));
+
+	m_pScoreChanged->NotifyObservers(this);
 }
 
 void ScoreUIComponent::Update()
