@@ -16,6 +16,7 @@
 #include "LivesUIComponent.h"
 #include "PickUpComponent.h"
 #include "ScoreUIComponent.h"
+#include "HighScoreUIComponent.h"
 #include "SpriteComponent.h"
 #include "ButtonComponent.h"
 #include "ButtonHandlerComponent.h"

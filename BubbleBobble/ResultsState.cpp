@@ -52,6 +52,7 @@ void ResultsState::OnResume()
 void ResultsState::Notify(InitialsComponent* pSubject)
 {
 	++m_RefreshCount;
+
 	auto& scene = dae::SceneManager::GetInstance().CreateScene(m_SceneName+std::to_string(m_RefreshCount));
 
 	auto& inputMan = dae::InputCommandBinder::GetInstance();
@@ -110,12 +111,14 @@ void ResultsState::SetSubjectPointersInvalid(dae::Subject<InitialsComponent>* pS
 
 void ResultsState::LoadPlayerScore(dae::Scene& scene, const std::string& name)
 {
-	const auto& player = m_RefreshCount < 1 ? LevelState::GetPlayerOne() : LevelState::GetPlayerTwo();
+	auto gameMode = Game::GetInstance().GetCurrentGameMode();
+
+	const auto& player = (m_RefreshCount > 0 && gameMode == Game::GameMode::MultiPlayer) ? LevelState::GetPlayerTwo() : LevelState::GetPlayerOne();
 
 	auto pEnterInitialsText = std::make_unique<dae::GameObject>(dae::Minigin::GetWindowSize().x / 2, 32);
 	pEnterInitialsText->AddRenderComponent(true);
 	pEnterInitialsText->AddComponent<dae::TextComponent>(
-		m_RefreshCount < 1 ? "Enter 1UP Initials !" : "Enter 2UP Initials !",
+		(m_RefreshCount > 0 && gameMode == Game::GameMode::MultiPlayer) ? "Enter 2UP Initials !" : "Enter 1UP Initials !",
 		highScoreHandling::fontName,
 		highScoreHandling::fontsize,
 		player.textColor);

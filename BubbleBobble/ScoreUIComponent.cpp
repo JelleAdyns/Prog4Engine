@@ -96,3 +96,8 @@ int ScoreUIComponent::GetScore() const
 	return m_TotalScore;
 }
 
+void ScoreUIComponent::AddObserver(dae::Observer<ScoreUIComponent>* pObserver)
+{
+	m_pScoreChanged->AddObserver(pObserver);
+}
+

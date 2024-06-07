@@ -175,6 +175,7 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="HighScoreHandling.cpp" />
     <ClCompile Include="HighScoreState.cpp" />
+    <ClCompile Include="HighScoreUIComponent.cpp" />
     <ClCompile Include="HitState.cpp" />
     <ClCompile Include="IdleState.cpp" />
     <ClCompile Include="InitialsComponent.cpp" />
@@ -218,6 +219,7 @@
     <ClInclude Include="EnemyState.h" />
     <ClInclude Include="HighScoreHandling.h" />
     <ClInclude Include="HighScoreState.h" />
+    <ClInclude Include="HighScoreUIComponent.h" />
     <ClInclude Include="InitialsCommands.h" />
     <ClInclude Include="InitialsComponent.h" />
     <ClInclude Include="InventoryComponent.h" />

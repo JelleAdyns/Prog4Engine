@@ -168,11 +168,11 @@ void LevelState::MakePlayer(const std::unique_ptr<dae::GameObject>& pPlayer, Pla
 	
 }
 
-void LevelState::CreateScoreDisplay(dae::Scene& scene, bool playerOne)
+void LevelState::CreateScoreDisplay(dae::Scene& scene, HighScoreUIComponent* pHighScoreComp, bool playerOne)
 {
 	//Score Display
-	float distanceBetweenDisplays{ dae::Minigin::GetWindowSize().x / 4.f };
-	auto pScoreDisplayText = std::make_unique<dae::GameObject>(playerOne ? distanceBetweenDisplays : distanceBetweenDisplays * 3, 4.f);
+	float distanceBetweenDisplays{ dae::Minigin::GetWindowSize().x / 6.f };
+	auto pScoreDisplayText = std::make_unique<dae::GameObject>(playerOne ? distanceBetweenDisplays : distanceBetweenDisplays * 5, 4.f);
 	pScoreDisplayText->AddRenderComponent(true);
 
 	auto pScoreDisplay = std::make_unique<dae::GameObject>(0, 8);
@@ -207,6 +207,7 @@ void LevelState::CreateScoreDisplay(dae::Scene& scene, bool playerOne)
 
 	ScoreUIComponent* pScoreUIComp = pScoreDisplay->GetComponent<ScoreUIComponent>();
 	playerOne ? m_pPlayerOne.pScoreUIComp = pScoreUIComp : m_pPlayerTwo.pScoreUIComp = pScoreUIComp;
+	pScoreUIComp->AddObserver(pHighScoreComp);
 
 	scene.AddGameObject(std::move(pScoreDisplayText));
 	scene.AddGameObject(std::move(pScoreDisplay));
@@ -214,6 +215,19 @@ void LevelState::CreateScoreDisplay(dae::Scene& scene, bool playerOne)
 
 void LevelState::UploadScene(dae::Scene& scene)
 {
+	auto pHighScoreDisplayText = std::make_unique<dae::GameObject>(dae::Minigin::GetWindowSize().x /2.f, 4.f);
+	pHighScoreDisplayText->AddRenderComponent(true);
+	pHighScoreDisplayText->AddComponent<dae::TextComponent>("HighScore", "Fonts/Pixel_NES.otf", 8, glm::u8vec4{255,0,0,255});
+
+	auto pHighScoreDisplay = std::make_unique<dae::GameObject>(0, 8);
+	pHighScoreDisplay->AddRenderComponent(true);
+	pHighScoreDisplay->AddComponent<dae::TextComponent>("", "Fonts/Pixel_NES.otf", 8);
+	pHighScoreDisplay->AddComponent<HighScoreUIComponent>();
+	pHighScoreDisplay->SetParent(pHighScoreDisplayText, false);
+
+	HighScoreUIComponent* pHighScoreComp = pHighScoreDisplay->GetComponent<HighScoreUIComponent>();
+
+
 	switch (Game::GetInstance().GetCurrentGameMode())
 	{
 	case Game::GameMode::SinglePlayer:
@@ -222,8 +236,8 @@ void LevelState::UploadScene(dae::Scene& scene)
 		if (m_pPlayerOne.pLivesUIComp) m_pPlayerOne.health = m_pPlayerOne.pLivesUIComp->GetRemainingLives();
 		if (m_pPlayerOne.health == 0) m_pPlayerOne.health = 1;
 
-		CreateScoreDisplay(scene, true);
-		CreateScoreDisplay(scene, false);
+		CreateScoreDisplay(scene, pHighScoreComp, true);
+		CreateScoreDisplay(scene, nullptr, false);
 
 		//Lives Display
 		auto pLivesUI = std::make_unique<dae::GameObject>();
@@ -262,8 +276,8 @@ void LevelState::UploadScene(dae::Scene& scene)
 		if (m_pPlayerTwo.pLivesUIComp) m_pPlayerTwo.health = m_pPlayerTwo.pLivesUIComp->GetRemainingLives();
 		if (m_pPlayerTwo.health == 0) m_pPlayerTwo.health = 1;
 
-		CreateScoreDisplay(scene, true);
-		CreateScoreDisplay(scene, false);
+		CreateScoreDisplay(scene, pHighScoreComp, true);
+		CreateScoreDisplay(scene, pHighScoreComp, false);
 
 		//Lives Display
 		auto pLivesUIOne = std::make_unique<dae::GameObject>();
@@ -321,8 +335,8 @@ void LevelState::UploadScene(dae::Scene& scene)
 		if (m_pPlayerOne.pLivesUIComp) m_pPlayerOne.health = m_pPlayerOne.pLivesUIComp->GetRemainingLives();
 		if (m_pPlayerOne.health == 0) m_pPlayerOne.health = 1;
 
-		CreateScoreDisplay(scene, true);
-		CreateScoreDisplay(scene, false);
+		CreateScoreDisplay(scene, pHighScoreComp, true);
+		CreateScoreDisplay(scene, nullptr, false);
 
 		//Lives Display
 		auto pLivesUI = std::make_unique<dae::GameObject>();
@@ -358,7 +372,8 @@ void LevelState::UploadScene(dae::Scene& scene)
 		break;
 	}
 	
-
+	scene.AddGameObject(std::move(pHighScoreDisplayText));
+	scene.AddGameObject(std::move(pHighScoreDisplay));
 }
 
 void LevelState::LoadLevel(const std::string& filename)

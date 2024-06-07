@@ -10,6 +10,7 @@
 #include "PlayerComponent.h"
 
 class ScoreUIComponent;
+class HighScoreUIComponent;
 class LevelState final : public SceneState
 {
 public:
@@ -49,7 +50,7 @@ private:
 
 	void CreateSkipButton(dae::Scene& scene);
 	void MakePlayer(const std::unique_ptr<dae::GameObject>& pPlayer, PlayerComponent::PlayerType playerType, ScoreUIComponent* scoreDisplay, LivesUIComponent* livesDisplay);
-	void CreateScoreDisplay(dae::Scene& scene, bool playerOne);;
+	void CreateScoreDisplay(dae::Scene& scene, HighScoreUIComponent* pHighScoreComp , bool playerOne);
 	void UploadScene(dae::Scene& scene);
 	void LoadLevel(const std::string& filename);
 	void ParseLevelInfo(int levelNumber, std::ifstream& file, std::stringstream& levelInfoStream);

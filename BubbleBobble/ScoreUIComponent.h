@@ -40,6 +40,7 @@ public:
 	virtual void SetSubjectPointersInvalid(dae::Subject<PlayerComponent>* pSubject) override;
 
 	int GetScore() const;
+	void AddObserver(dae::Observer<ScoreUIComponent>* pObserver);
 
 private:
 	int m_TotalScore;
