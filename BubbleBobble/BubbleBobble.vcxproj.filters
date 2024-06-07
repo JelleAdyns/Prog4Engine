@@ -167,6 +167,9 @@
     <ClCompile Include="HighScoreHandling.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="InitialsComponent.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Achievements.h">
@@ -357,6 +360,12 @@
     </ClInclude>
     <ClInclude Include="HighScoreHandling.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InitialsComponent.h">
+      <Filter>Source Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="InitialsCommands.h">
+      <Filter>Source Files\Commands</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

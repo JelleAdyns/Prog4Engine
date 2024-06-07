@@ -29,5 +29,6 @@
 #include "ProjectileComponent.h"
 #include "ScoreComponent.h"
 #include "InventoryComponent.h"
+#include "InitialsComponent.h"
 
 #endif // !COMPONENTS_H

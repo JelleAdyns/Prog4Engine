@@ -12,7 +12,7 @@ void dae::SceneManager::Start()
 
 void dae::SceneManager::Update()
 {
-	m_pMapScenes.at(m_ActiveScene)->Update();
+ 	m_pMapScenes.at(m_ActiveScene)->Update();
 
 	CheckForDestroyedScenes();
 
@@ -52,9 +52,11 @@ dae::Scene& dae::SceneManager::CreateScene(const std::string& name)
 {
 	auto pScene = std::make_unique<Scene>();
 
-	if (m_pMapScenes.contains(name)) std::cout << "This name ("<<name<<") for the new scene already exists, overwriting now.\n";
+	if (m_pMapScenes.contains(name))throw std::runtime_error("This name (" + name +") for the new scene already exists, overwriting now.\n");
+
 	m_pMapScenes[name] = std::move(pScene);
 	SetNextScene(name);
+	
 	return *m_pMapScenes.at(name);
 }
 

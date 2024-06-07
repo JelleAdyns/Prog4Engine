@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <string>
+#include <Scene.h>
 #include "SceneState.h"
 
 class HighScoreState final : public SceneState
@@ -23,7 +24,7 @@ public:
 	virtual void OnResume() override;
 
 private:
-	void LoadHighScores() const;
+	void LoadHighScores(dae::Scene& scene) const;
 
 	static const std::string m_SceneName;
 };

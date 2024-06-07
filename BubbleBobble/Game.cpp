@@ -13,6 +13,7 @@
 #include "CollisionTags.h"
 #include "MainMenuState.h"
 #include "LevelState.h"
+#include "HighScoreState.h"
 #include <Minigin.h>
 #include <SceneManager.h>
 #include <functional>
@@ -64,6 +65,9 @@ void Game::SetScene(Game::CurrScene newScene)
 		break;
 	case CurrScene::Results:
 		m_CurrScene = std::make_unique<ResultsState>();
+		break;
+	case CurrScene::HighScore:
+		m_CurrScene = std::make_unique<HighScoreState>();
 		break;
 	}
 	m_CurrScene->OnEnter();

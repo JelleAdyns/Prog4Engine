@@ -27,6 +27,17 @@ LevelState::PlayerInfo LevelState::m_pPlayerTwo{ .textColor{  77, 166, 248 ,255 
 
 void LevelState::OnEnter()
 {
+
+	m_pPlayerOne.pPlayerObject = nullptr;
+	m_pPlayerOne.pLivesUIComp = nullptr;
+	m_pPlayerOne.pScoreUIComp = nullptr;
+	m_pPlayerOne.score = 0;
+
+	m_pPlayerTwo.pPlayerObject = nullptr;
+	m_pPlayerTwo.pLivesUIComp = nullptr;
+	m_pPlayerTwo.pScoreUIComp = nullptr;
+	m_pPlayerTwo.score = 0;
+
 	auto& scene = dae::SceneManager::GetInstance().CreateScene(m_SceneName + std::to_string(m_LevelNumber));
 	CreateSkipButton(scene);
 	

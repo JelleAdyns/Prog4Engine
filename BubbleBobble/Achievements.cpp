@@ -11,7 +11,8 @@ Achievement_t Achievements::g_Achievements[4]{
 		_ACH_ID(ACH_TRAVEL_FAR_SINGLE, "Orbiter")
 };*/
 
-AchievementProps Achievements::g_Achievements[2]{
+AchievementProps Achievements::g_Achievements[3]{
+	{"Score500Points", false},
 	{"WinOneGame", false},
 	{"WinAHundredGames", false}
 };

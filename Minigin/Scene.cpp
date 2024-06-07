@@ -19,7 +19,10 @@ namespace dae
 
 	void Scene::RemoveAll()
 	{
-		m_pObjects.clear();
+		for(auto& pObject : m_pObjects)
+		{
+			pObject.first->MarkDead();
+		}
 	}
 
 

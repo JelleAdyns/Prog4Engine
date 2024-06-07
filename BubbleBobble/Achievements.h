@@ -28,7 +28,7 @@ public:
 
 	//static void SetSteamAchievements(CSteamAchievements* pSteamAchievements);
 	//static Achievement_t g_Achievements[4];
-	static AchievementProps g_Achievements[2];
+	static AchievementProps g_Achievements[3];
 private:
 	friend class dae::Singleton<Achievements>;
 	Achievements() :
