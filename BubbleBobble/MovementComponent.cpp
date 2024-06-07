@@ -50,7 +50,7 @@ void MovementComponent::RegisterJumpCommand() const
 	auto& inputMan = dae::InputCommandBinder::GetInstance();
 
 	inputMan.AddKeyCommand(m_pJumpCommand, m_PlayerIndex == 0 ? SDL_SCANCODE_SPACE : SDL_SCANCODE_UP, dae::KeyState::Pressed);
-	inputMan.AddControllerCommand(m_pJumpCommand, dae::ControllerButton::Y, dae::KeyState::Pressed, m_PlayerIndex);
+	inputMan.AddControllerCommand(m_pJumpCommand, dae::ControllerButton::A, dae::KeyState::Pressed, m_PlayerIndex);
 }
 
 void MovementComponent::UnRegisterJumpCommand() const
@@ -59,7 +59,7 @@ void MovementComponent::UnRegisterJumpCommand() const
 	auto& inputMan = dae::InputCommandBinder::GetInstance();
 
 	inputMan.RemoveKeyCommand(m_PlayerIndex == 0 ? SDL_SCANCODE_SPACE : SDL_SCANCODE_UP, dae::KeyState::Pressed);
-	inputMan.RemoveControllerCommand(dae::ControllerButton::Y, dae::KeyState::Pressed, m_PlayerIndex);
+	inputMan.RemoveControllerCommand(dae::ControllerButton::A, dae::KeyState::Pressed, m_PlayerIndex);
 }
 
 void MovementComponent::RegisterJumpOnBubbleCommand() const
@@ -67,14 +67,14 @@ void MovementComponent::RegisterJumpOnBubbleCommand() const
 	auto& inputMan = dae::InputCommandBinder::GetInstance();
 
 	inputMan.AddKeyCommand(m_pJumpOnBubbleCommand, m_PlayerIndex == 0 ? SDL_SCANCODE_SPACE : SDL_SCANCODE_UP, dae::KeyState::Pressed);
-	inputMan.AddControllerCommand(m_pJumpOnBubbleCommand, dae::ControllerButton::Y, dae::KeyState::Pressed, m_PlayerIndex);
+	inputMan.AddControllerCommand(m_pJumpOnBubbleCommand, dae::ControllerButton::A, dae::KeyState::Pressed, m_PlayerIndex);
 }
 void MovementComponent::UnRegisterJumpOnBubbleCommand() const
 {
 	auto& inputMan = dae::InputCommandBinder::GetInstance();
 
 	inputMan.RemoveKeyCommand(m_PlayerIndex == 0 ? SDL_SCANCODE_SPACE : SDL_SCANCODE_UP, dae::KeyState::Pressed);
-	inputMan.RemoveControllerCommand(dae::ControllerButton::Y, dae::KeyState::Pressed, m_PlayerIndex);
+	inputMan.RemoveControllerCommand(dae::ControllerButton::A, dae::KeyState::Pressed, m_PlayerIndex);
 }
 
 void MovementComponent::RegisterMoveCommands() const
@@ -114,7 +114,7 @@ void MovementComponent::RegisterAttackCommand() const
 	auto& inputMan = dae::InputCommandBinder::GetInstance();
 
 	inputMan.AddKeyCommand(m_AttackCommand, m_PlayerIndex == 0 ? SDL_SCANCODE_W : SDL_SCANCODE_RCTRL, dae::KeyState::DownThisFrame);
-	inputMan.AddControllerCommand(m_AttackCommand, dae::ControllerButton::A, dae::KeyState::DownThisFrame, m_PlayerIndex);
+	inputMan.AddControllerCommand(m_AttackCommand, dae::ControllerButton::X, dae::KeyState::DownThisFrame, m_PlayerIndex);
 }
 
 void MovementComponent::UnRegisterAttackCommand() const
@@ -122,5 +122,5 @@ void MovementComponent::UnRegisterAttackCommand() const
 	auto& inputMan = dae::InputCommandBinder::GetInstance();
 
 	inputMan.RemoveKeyCommand(m_PlayerIndex == 0 ? SDL_SCANCODE_W : SDL_SCANCODE_RCTRL, dae::KeyState::DownThisFrame);
-	inputMan.RemoveControllerCommand(dae::ControllerButton::A, dae::KeyState::DownThisFrame, m_PlayerIndex);
+	inputMan.RemoveControllerCommand(dae::ControllerButton::X, dae::KeyState::DownThisFrame, m_PlayerIndex);
 }
