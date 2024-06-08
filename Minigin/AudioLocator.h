@@ -7,12 +7,11 @@
 
 namespace dae
 {
-	class AudioLocator
+	class AudioLocator final
 	{
 	public:
 
 		AudioLocator() = delete;
-		~AudioLocator() = delete;
 
 		AudioLocator(const AudioLocator&) = delete;
 		AudioLocator(AudioLocator&&) noexcept = delete;

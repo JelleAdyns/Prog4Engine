@@ -8,7 +8,7 @@ class RotatorComponent final : public dae::Component
 {
 public:
 	explicit RotatorComponent(dae::GameObject* pOwner);
-	explicit RotatorComponent(dae::GameObject* pOwner, float radius, float speed = 1.f);
+	explicit RotatorComponent(dae::GameObject* pOwner, float radius,float startDegrees = 0.f, float speed = 1.f);
 	virtual ~RotatorComponent() = default;
 
 	RotatorComponent(const RotatorComponent&) = delete;

@@ -17,6 +17,7 @@ namespace dae
 		~Texture2D();
 
 		Texture2D(const Texture2D& other) = delete;
+		//Texture2D(Texture2D&& other) noexcept = delete;
 		Texture2D(Texture2D&& other) noexcept:
 			m_Texture{ other.m_Texture },
 			m_SrcRect {other.m_SrcRect},
@@ -26,6 +27,7 @@ namespace dae
 			other.m_Texture = nullptr;
 		};
 		Texture2D& operator= (const Texture2D& other) = delete;
+		//Texture2D& operator= (Texture2D&& other) noexcept = delete;
 		Texture2D& operator= (Texture2D&& other) noexcept
 		{
 			if (&other != this)

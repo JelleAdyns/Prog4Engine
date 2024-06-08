@@ -12,7 +12,8 @@
 namespace dae
 {
 	
-	enum class ControllerButton {
+	enum class ControllerButton 
+	{
 		DpadUp = XINPUT_GAMEPAD_DPAD_UP,
 		DpadDown = XINPUT_GAMEPAD_DPAD_DOWN,
 		DpadLeft = XINPUT_GAMEPAD_DPAD_LEFT,
@@ -54,9 +55,13 @@ namespace dae
 		void RemoveCommand(ControllerButton button, KeyState keyState);
 		void RemoveAllCommands();
 
+		void DeactivateAllCommands();
+		void ActivateAllCommands();
+
 		void Vibrate(int strengthPrecantage);
 		glm::vec2 GetJoystickValue(bool leftJoystick);
 		float GetTriggerValue(bool leftTrigger);
+		static int AmountOfConnectedControllers();
 	private:
 
 		class ControllerImpl;

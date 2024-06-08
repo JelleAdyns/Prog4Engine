@@ -2,16 +2,23 @@
 #define ZENCHANRUNSTATE_H
 
 #include "ZenChanState.h"
-#include "SpriteComponent.h"
-#include "EnemyComponent.h"
-#include <PhysicsComponent.h>
-#include <GameObject.h>
-#include <Observer.h>
+#include "PlayerComponent.h"
 
-class ZenChanRunState final : public ZenChanState, public dae::Observer<PlayerComponent>
+namespace dae
+{
+	class GameObject;
+	class CollisionComponent;
+	class PhysicsComponent;
+}
+
+class EnemyComponent;
+class SpriteComponent;
+class WallCheckingComponent;
+class FloorCheckingComponent;
+class ZenChanRunState final : public ZenChanState
 {
 public:
-	explicit ZenChanRunState(dae::GameObject* pEnemy, EnemyComponent* pEnemyComp);
+	explicit ZenChanRunState(dae::GameObject* pEnemy, EnemyComponent* pEnemyComp, bool isAngry = false);
 	virtual ~ZenChanRunState() = default;
 
 	ZenChanRunState(const ZenChanRunState&) = delete;
@@ -23,12 +30,16 @@ public:
 	virtual void OnEnter() override;
 	virtual void OnExit() override;
 	
-	virtual void Notify(PlayerComponent* pSubject) override;
-	virtual void AddSubjectPointer(dae::Subject<PlayerComponent>* pSubject) override;
+	virtual void NotifyPlayerObservers(PlayerComponent* pSubject) override;
+
 
 private:
 
+	static constexpr float m_GeneralSpeed{40.f};
+	const float m_Speed;
+
 	bool m_HasToJump{ false };
+	bool m_IsAngry;
 
 	dae::GameObject* m_pEnemy;
 	EnemyComponent* m_pEnemyComp;
@@ -36,8 +47,9 @@ private:
 	SpriteComponent* m_pSpriteComp;
 	WallCheckingComponent* m_pWallCheckingComp;
 	FloorCheckingComponent* m_pFloorCheckingComp;
+	dae::CollisionComponent* m_pCollisionComp;
 
-	std::vector<dae::Subject<PlayerComponent>*> m_pVecObservedSpriteSubjects;
+
 };
 
 

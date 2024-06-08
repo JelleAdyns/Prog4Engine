@@ -2,11 +2,12 @@
 #define MOVEMENTCOMPONENT_H
 
 #include <Component.h>
+#include <Command.h>
 
 class MovementComponent final : public dae::Component
 {
 public:
-	explicit MovementComponent(dae::GameObject* pOwner, float jumpVelocity, float moveSpeed);
+	explicit MovementComponent(dae::GameObject* pOwner, float jumpVelocity, float moveSpeed, uint8_t playerIndex);
 	virtual ~MovementComponent();
 
 	MovementComponent(const MovementComponent&) = delete;
@@ -20,6 +21,8 @@ public:
 
 	void RegisterJumpCommand() const;
 	void UnRegisterJumpCommand() const;
+	void RegisterJumpOnBubbleCommand() const;
+	void UnRegisterJumpOnBubbleCommand() const;
 	void RegisterMoveCommands() const;
 	void UnRegisterMoveCommands() const;
 	void RegisterAttackCommand() const;
@@ -32,6 +35,12 @@ private:
 	float m_JumpVelocity;
 	float m_MoveSpeed;
 
-	static uint8_t m_NrOfPlayers;
+	std::shared_ptr<dae::Command> m_pJumpCommand;
+	std::shared_ptr<dae::Command> m_pJumpOnBubbleCommand;
+	std::shared_ptr<dae::Command> m_MoveRightCommand;
+	std::shared_ptr<dae::Command> m_MoveLeftCommand;
+	std::shared_ptr<dae::Command> m_StopMovingCommand;
+	std::shared_ptr<dae::Command> m_AttackCommand;
+
 };
 #endif // !MOVEMENTCOMPONENT_H

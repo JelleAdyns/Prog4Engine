@@ -4,13 +4,11 @@
 #include <Command.h>
 #include <GameObjectCommand.h>
 #include "MovementCommands.h"
-#include "KillCommand.h"
-#include "PickUpCommand.h"
-#include "LoadSceneCommand.h"
+#include "LoadSceneCommands.h"
 #include "SelectButtonCommand.h"
 #include "ActivateButtonCommand.h"
 #include "SetTextCommand.h"
-#include "JumpCommand.h"
-#include "ShootCommand.h"
+#include "AttackCommand.h"
+#include "StartLevelCommand.h"
 
 #endif // !COMMANDS_H

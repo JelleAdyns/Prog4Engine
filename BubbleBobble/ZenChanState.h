@@ -1,14 +1,16 @@
 #ifndef ZENCHANSTATE_H
 #define ZENCHANSTATE_H
 
+#include <memory>
 #include "EnemyState.h"
 
-class ZenChanState : public EnemyState
+class PlayerComponent;
+class ZenChanState: public EnemyState
 {
 public:
-	ZenChanState() :
-		EnemyState{} 
-	{}
+	ZenChanState():
+		EnemyState{}
+	{};
 	virtual ~ZenChanState() = default;
 
 	ZenChanState(const ZenChanState&) = delete;
@@ -20,6 +22,8 @@ public:
 	virtual void OnEnter() = 0;
 	virtual void OnExit() = 0;
 
+	virtual void NotifyPlayerObservers(PlayerComponent*) override = 0;
+	virtual void Attack() override {};
 };
 
 #endif // !ZENCHANSTATE_H

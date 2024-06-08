@@ -6,11 +6,11 @@
 #include <string>
 #include <memory>
 #include "Singleton.h"
+#include "Scene.h"
 
-class Game;
 namespace dae
 {
-	class Scene;
+	//class Scene;
 	class SceneManager final : public Singleton<SceneManager>
 	{
 	public:
@@ -18,7 +18,12 @@ namespace dae
 		void RemoveScene(const std::string& name);
 		void RemoveNonActiveScenes();
 
-		void SetActiveScene(const std::string& sceneToActivate);
+		Scene* GetActiveScene() const;
+		Scene* GetNextScene() const;
+		void SetNextScene(const std::string& sceneToActivate);
+		void SetActiveScene();
+		void SuspendActiveScene();
+		void ResumeSuspendedScene();
 
 		virtual ~SceneManager() = default;
 
@@ -27,7 +32,6 @@ namespace dae
 		SceneManager& operator= (const SceneManager&) = delete;
 		SceneManager& operator= (SceneManager&&) noexcept = delete;
 
-		void Start();
 		void Update();
 		void PrepareImGuiRender();
 		void Render() const;
@@ -35,12 +39,15 @@ namespace dae
 	private:
 		friend class Singleton<SceneManager>;
 		SceneManager() = default;
+		void Start();
 
 		void CheckForDestroyedScenes();
 
+		std::string m_SuspendedScene;
 		std::string m_ActiveScene;
+		std::string m_NextScene;
 		std::vector<std::string> m_KeysToDestroy;
-		std::unordered_map <std::string, std::shared_ptr <Scene>> m_pMapScenes;
+		std::unordered_map <std::string, std::unique_ptr <Scene>> m_pMapScenes;
 	};
 }
 #endif // !SCENEMANAGER_H

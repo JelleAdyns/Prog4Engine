@@ -16,8 +16,19 @@ class PlayerComponent;
 class SpriteComponent final : public dae::Component
 {
 public:
-	explicit SpriteComponent(dae::GameObject* pOwner, const std::string& texturePath, int nrCols, int nrRows, float frameTime, bool needsUpdate = true, bool needsRowUpdate = false, PlayerComponent* pObserver = nullptr);
-	explicit SpriteComponent(dae::GameObject* pOwner, std::unique_ptr<dae::Texture2D>&& pTexture, int nrCols, int nrRows, float frameTime, bool needsUpdate = true, bool needsRowUpdate = false, PlayerComponent* pObserver = nullptr);
+
+	struct SpriteInfo
+	{
+		bool rowUpdate{ false };
+		int rowNumber{ 0 };
+		int nrOfRows{ 1 };
+		int nrOfCols{ 1 };
+		float frameTime{ 1.f };
+	};
+
+
+	explicit SpriteComponent(dae::GameObject* pOwner, const std::string& texturePath, int nrCols, int nrRows, float frameTime, bool needsUpdate = true, bool needsRowUpdate = false);
+	explicit SpriteComponent(dae::GameObject* pOwner, std::unique_ptr<dae::Texture2D>&& pTexture, int nrCols, int nrRows, float frameTime, bool needsUpdate = true, bool needsRowUpdate = false);
 	virtual ~SpriteComponent() = default;
 
 
@@ -33,17 +44,19 @@ public:
 	void SetCol(int col);
 	void SetRow(int row);
 	void SetHeightMarkers(float startHeight, float endHeight);
-	void SetNrOfRows(int nrOfRows);
+	void SetNrOfRows(int nrOfRows, bool updateSrcRect = true);
+	void SetNrOfCols(int nrOfCols, bool updateSrcRect = true);
 	void SetRowUpdate(bool rowNeedsToUpdate);
 	void SetUpdate(bool needsToUpdate);
-	void SetStartRow(int startRow);
 	void SetFrameTime(float frameTime);
 	void LookLeft(bool isLookingLeft);
 	void Flip();
 
+	void AddRows(int nrOfRowsToAdd);
 	void AddObserver(dae::Observer<SpriteComponent>* pObserver);
 
 	bool IsLookingLeft() const;
+	int GetCurrRow() const;
 	glm::ivec2 GetTextureSize() const;
 	glm::ivec2 GetDestRectSize() const;
 
@@ -58,13 +71,11 @@ private:
 	bool m_NeedsRowUpdate;
 	bool m_IsLookingLeft;
 
-	int	m_StartRow;
-
 	int	m_CurrentCol;
 	int	m_CurrentRow;
 
 	int m_NrOfRows;
-	const int m_NrOfCols;
+	int m_NrOfCols;
 	float m_FrameTime;
 
 	float m_PassedTime;

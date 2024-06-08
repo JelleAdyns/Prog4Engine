@@ -29,6 +29,12 @@ w = wall, p = platform, f = false tile
 26ww                            ww
 27ww                            ww
 28wwppppppppppppppppppppppppppppww
+:
+ZenChan: 56, 80
+ZenChan: 120, 80
+ZenChan: 184, 80
+Maita: 70, 120
+Maita: 156, 120
 -
 
 Level 2
@@ -62,6 +68,12 @@ w = wall, p = platform, f = false tile
 26ww                            ww
 27ww                            ww
 28wwppppppppppppppppppppppppppppww
+:
+ZenChan: 112, 40
+ZenChan: 128, 40
+ZenChan: 96, 80
+ZenChan: 144, 80
+Maita: 112, 120
 -
 
 Level 3
@@ -95,4 +107,11 @@ w = wall, p = platform, f = false tile
 26ww                            ww
 27ww                            ww
 28wwppppppp    pppppp    pppppppww
+:
+ZenChan: 64, 40
+ZenChan: 80, 80
+Maita: 96, 120
+ZenChan: 192, 40
+ZenChan: 176, 80
+Maita: 160, 120
 -

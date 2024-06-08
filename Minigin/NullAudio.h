@@ -20,6 +20,8 @@ namespace dae
 		virtual void PlaySoundClip(SoundID, uint8_t, bool) const override {}
 		virtual uint8_t GetVolume(SoundID) const override { return 0; }
 		virtual void SetVolume(SoundID, uint8_t) override{}
+		virtual void SetMasterVolume(uint8_t) override{}
+		virtual void ToggleMute() override{}
 		virtual void PauseSound(SoundID) const override{}
 		virtual void PauseAllSounds() const override{}
 		virtual void ResumeSound(SoundID) const override{}

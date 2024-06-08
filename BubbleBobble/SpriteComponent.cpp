@@ -5,18 +5,17 @@
 #include <ResourceManager.h>
 #include <GameTime.h>
 
-SpriteComponent::SpriteComponent(dae::GameObject* pOwner, const std::string& texturePath, int nrCols, int nrRows, float frameTime, bool needsUpdate, bool needsRowUpdate, PlayerComponent* pObserver) :
-	SpriteComponent{pOwner, std::move(dae::ResourceManager::GetInstance().LoadTexture(texturePath)), nrCols, nrRows, frameTime, needsUpdate, needsRowUpdate, pObserver}
+SpriteComponent::SpriteComponent(dae::GameObject* pOwner, const std::string& texturePath, int nrCols, int nrRows, float frameTime, bool needsUpdate, bool needsRowUpdate) :
+	SpriteComponent{pOwner, std::move(dae::ResourceManager::GetInstance().LoadTexture(texturePath)), nrCols, nrRows, frameTime, needsUpdate, needsRowUpdate}
 {
 
 }
-SpriteComponent::SpriteComponent(dae::GameObject* pOwner, std::unique_ptr<dae::Texture2D>&& pTexture, int nrCols, int nrRows, float frameTime, bool needsUpdate, bool needsRowUpdate, PlayerComponent* pObserver):
+SpriteComponent::SpriteComponent(dae::GameObject* pOwner, std::unique_ptr<dae::Texture2D>&& pTexture, int nrCols, int nrRows, float frameTime, bool needsUpdate, bool needsRowUpdate):
 	dae::Component{ pOwner },
 	m_SpriteIsDirty{false},
 	m_NeedsUpdate{ needsUpdate },
 	m_NeedsRowUpdate{ needsRowUpdate },
 	m_IsLookingLeft{ false },
-	m_StartRow{0},
 	m_CurrentCol{ 0 },
 	m_CurrentRow{ 0 },
 	m_NrOfCols{ nrCols },
@@ -29,9 +28,6 @@ SpriteComponent::SpriteComponent(dae::GameObject* pOwner, std::unique_ptr<dae::T
 	m_pTexture{ std::move(pTexture) },
 	m_pRowFinished{std::make_unique<dae::Subject<SpriteComponent>>()}
 {
-
-
-	m_pRowFinished->AddObserver(pObserver);
 
 	m_EndHeightMarker = static_cast<float>(m_pTexture->GetTextureSize().y);
 
@@ -55,6 +51,7 @@ void SpriteComponent::Start()
 		using ThisType = std::remove_reference<decltype(*this)>::type;
 		m_pRenderComponent = GetOwner()->GetComponent<dae::RenderComponent>();
 		m_pRenderComponent->AddTexture<ThisType>(m_pTexture);
+		m_pRenderComponent->SetFlipped<ThisType>(m_IsLookingLeft);
 	}
 }
 
@@ -73,7 +70,7 @@ void SpriteComponent::Update()
 			if (m_CurrentCol == m_NrOfCols - 1)
 			{
 				m_pRowFinished->NotifyObservers(this);
-				if (m_NeedsRowUpdate) ++m_CurrentRow %= m_NrOfRows + m_StartRow;
+				if (m_NeedsRowUpdate) ++m_CurrentRow %= m_NrOfRows;
 			}
 
  			++m_CurrentCol %= m_NrOfCols;
@@ -94,7 +91,7 @@ void SpriteComponent::SetCol(int col)
 }
 void SpriteComponent::SetRow(int row)
 {
-	m_CurrentRow = m_StartRow + row;
+	m_CurrentRow = row;
 	m_SpriteIsDirty = true;
 }
 
@@ -117,10 +114,16 @@ void SpriteComponent::SetHeightMarkers(float startHeight, float endHeight)
 	m_SpriteIsDirty = true;
 }
 
-void SpriteComponent::SetNrOfRows(int nrOfRows)
+void SpriteComponent::SetNrOfRows(int nrOfRows, bool updateSrcRect)
 {
 	m_NrOfRows = nrOfRows;
-	m_SpriteIsDirty = true;
+	if (updateSrcRect) m_SpriteIsDirty = true;
+}
+
+void SpriteComponent::SetNrOfCols(int nrOfCols, bool updateSrcRect)
+{
+	m_NrOfCols = nrOfCols;
+	if(updateSrcRect) m_SpriteIsDirty = true;
 }
 
 void SpriteComponent::SetRowUpdate(bool rowNeedsToUpdate)
@@ -131,13 +134,6 @@ void SpriteComponent::SetRowUpdate(bool rowNeedsToUpdate)
 void SpriteComponent::SetUpdate(bool needsToUpdate)
 {
 	m_NeedsUpdate = needsToUpdate;
-}
-
-void SpriteComponent::SetStartRow(int startRow)
-{
-	m_StartRow = startRow;
-	m_CurrentRow -= (m_CurrentRow - m_StartRow);
-	m_SpriteIsDirty = true;
 }
 
 void SpriteComponent::SetFrameTime(float frameTime)
@@ -161,6 +157,16 @@ void SpriteComponent::Flip()
 	if (m_pRenderComponent) m_pRenderComponent->SetFlipped<ThisType>(m_IsLookingLeft);
 }
 
+void SpriteComponent::AddRows(int nrOfRowsToAdd)
+{
+	m_CurrentRow += nrOfRowsToAdd;
+#ifndef NDEBUG
+	if (m_CurrentRow < 0) std::cout << "CurrentRow is smaller than 0.\n";
+	if (m_CurrentRow >= m_NrOfRows) std::cout << "CurrentRow is greater than max.\n";
+#endif // !NDEBUG
+
+}
+
 void SpriteComponent::AddObserver(dae::Observer<SpriteComponent>* pObserver)
 {
 	m_pRowFinished->AddObserver(pObserver);
@@ -169,6 +175,11 @@ void SpriteComponent::AddObserver(dae::Observer<SpriteComponent>* pObserver)
 bool SpriteComponent::IsLookingLeft() const
 {
 	return m_IsLookingLeft;
+}
+
+int SpriteComponent::GetCurrRow() const
+{
+	return m_CurrentRow;
 }
 
 glm::ivec2 SpriteComponent::GetTextureSize() const
@@ -185,9 +196,9 @@ void SpriteComponent::UpdateSrcRect()
 {
 
 	m_pTexture->SetSrcRect(
-		glm::ivec2{ static_cast<float>(m_pTexture->GetTextureSize().x) / m_NrOfCols * m_CurrentCol,
+		glm::ivec2{ static_cast<float>(m_pTexture->GetSrcRect().w) * m_CurrentCol,
 		m_StartHeightMarker + (m_EndHeightMarker - m_StartHeightMarker) / m_NrOfRows * m_CurrentRow },
-		static_cast<float>(m_pTexture->GetTextureSize().x) / m_NrOfCols,
+		static_cast<float>(m_pTexture->GetSrcRect().w),
 		(m_EndHeightMarker - m_StartHeightMarker) / m_NrOfRows);
 
 	m_pTexture->SetDstRect(

@@ -63,9 +63,14 @@ namespace dae
 
 	dae::Minigin::Minigin(const std::string& dataPath, int windowScale, float fixedTimeStep, int FPSGoal)
 	{
+		srand(unsigned int(time(nullptr)));
+
 		m_WindowScale = windowScale;
 
+#ifndef NDEBUG
 		PrintSDLVersion();
+#endif // !NDEBUG
+
 
 		if (SDL_Init(SDL_INIT_VIDEO) != 0)
 		{
@@ -120,6 +125,8 @@ namespace dae
 			gameTime.SetDeltaTime(std::chrono::duration<float>(currTime - prevTime).count());
 			prevTime = currTime;
 			lag += gameTime.GetDeltaTime();
+
+			sceneManager.SetActiveScene();
 
 			//SteamAPI_RunCallbacks();
 			doContinue = input.ProcessInput();

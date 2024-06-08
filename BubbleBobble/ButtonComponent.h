@@ -4,7 +4,6 @@
 #include <Component.h>
 #include <Command.h>
 #include <memory>
-#include <functional>
 
 class ButtonComponent final : public dae::Component
 {

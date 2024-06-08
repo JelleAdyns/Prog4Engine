@@ -15,7 +15,10 @@ namespace dae
 	class SDLAudio::SDLAudioImpl
 	{
 	public:
-		SDLAudioImpl() { m_Thread = std::jthread{ &SDLAudio::SDLAudioImpl::HandleRequests, this}; }
+		SDLAudioImpl() { 
+			m_Thread = std::jthread{ &SDLAudio::SDLAudioImpl::HandleRequests, this};
+			Mix_AllocateChannels(20);
+		}
 		~SDLAudioImpl() {m_ServiceIsActive = false;}
 
 		SDLAudioImpl(const SDLAudioImpl&) = delete;
@@ -27,6 +30,8 @@ namespace dae
 		void PlaySoundClipImpl(SoundID id, uint8_t volume, bool repeat);
 		uint8_t GetVolumeImpl(SoundID id) const;
 		void SetVolumeImpl(SoundID id, uint8_t newVolume);
+		void SetMasterVolumeImpl(uint8_t newVolume);
+		void ToggleMuteImpl();
 		void PauseSoundImpl(SoundID id) const;
 		void PauseAllSoundsImpl() const;
 		void ResumeSoundImpl(SoundID id) const;
@@ -58,6 +63,7 @@ namespace dae
 		void HandleRequests();
 
 		bool m_ServiceIsActive{ true };
+		bool m_IsMute{ false };
 		std::string m_DataPath{ ResourceManager::GetInstance().GetDataPath() };
 
 		std::jthread m_Thread;
@@ -73,21 +79,23 @@ namespace dae
 	}
 	void SDLAudio::SDLAudioImpl::PlaySoundClipImpl(SoundID id, uint8_t volume, bool repeat)
 	{
-
-		std::unique_lock<std::mutex> mapLock{ m_MapMutex };
-		if (m_pMapMusicClips.contains(id))
+		if(!m_IsMute)
 		{
-			mapLock.unlock();
+			std::unique_lock<std::mutex> mapLock{ m_MapMutex };
+			if (m_pMapMusicClips.contains(id))
+			{
+				mapLock.unlock();
 
-			AudioInfo info{};
-			info.id = id;
-			info.volume = volume;
-			info.repeat = repeat;
+				AudioInfo info{};
+				info.id = id;
+				info.volume = volume;
+				info.repeat = repeat;
 
-			std::lock_guard<std::mutex> eventsLock{ m_EventsMutex };
-			m_Events.push(info);
+				std::lock_guard<std::mutex> eventsLock{ m_EventsMutex };
+				m_Events.push(info);
+			}
+			else throw std::runtime_error("SoundID has not been added yet.\n");
 		}
-		else throw std::runtime_error("SoundID has not been added yet.\n");
 		
 	}
 	uint8_t SDLAudio::SDLAudioImpl::GetVolumeImpl(SoundID id) const
@@ -101,28 +109,45 @@ namespace dae
 		std::lock_guard<std::mutex> mapLock{ m_MapMutex };
 		if (m_pMapMusicClips.at(id).pMixChunk != nullptr) Mix_Volume(id, newVolume);
 	}
+	void SDLAudio::SDLAudioImpl::SetMasterVolumeImpl(uint8_t newVolume)
+	{
+		std::lock_guard<std::mutex> mapLock{ m_MapMutex };
+		Mix_Volume(-1, newVolume);
+	}
+	void SDLAudio::SDLAudioImpl::ToggleMuteImpl()
+	{
+		m_IsMute = !m_IsMute;
+		if (m_IsMute) PauseAllSoundsImpl();
+		else ResumeAllSoundsImpl();
+	}
 	void SDLAudio::SDLAudioImpl::PauseSoundImpl(SoundID id) const
 	{
+		std::lock_guard<std::mutex> mapLock{ m_MapMutex };
 		Mix_Pause(id);
 	}
 	void SDLAudio::SDLAudioImpl::PauseAllSoundsImpl() const
 	{
+		std::lock_guard<std::mutex> mapLock{ m_MapMutex };
 		Mix_Pause(-1);
 	}
 	void SDLAudio::SDLAudioImpl::ResumeSoundImpl(SoundID id) const
 	{
+		std::lock_guard<std::mutex> mapLock{ m_MapMutex };
 		Mix_Resume(id);
 	}
 	void SDLAudio::SDLAudioImpl::ResumeAllSoundsImpl() const
 	{
+		std::lock_guard<std::mutex> mapLock{ m_MapMutex };
 		Mix_Resume(-1);
 	}
 	void SDLAudio::SDLAudioImpl::StopSoundImpl(SoundID id) const
 	{
+		std::lock_guard<std::mutex> mapLock{ m_MapMutex };
 		Mix_HaltChannel(id);
 	}
 	void SDLAudio::SDLAudioImpl::StopAllSoundsImpl() const
 	{
+		std::lock_guard<std::mutex> mapLock{ m_MapMutex };
 		Mix_HaltChannel(-1);
 	}
 
@@ -190,6 +215,16 @@ namespace dae
 	void SDLAudio::SetVolume(SoundID id, uint8_t newVolume)
 	{
 		m_pImpl->SetVolumeImpl(id, newVolume);
+	}
+
+	void SDLAudio::SetMasterVolume(uint8_t newVolume)
+	{
+		m_pImpl->SetMasterVolumeImpl(newVolume);
+	}
+
+	void SDLAudio::ToggleMute()
+	{
+		m_pImpl->ToggleMuteImpl();
 	}
 
 	void SDLAudio::PauseSound(SoundID id) const

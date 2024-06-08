@@ -25,23 +25,41 @@ namespace dae
 		Renderer& operator= (Renderer&&) noexcept = delete;
 
 		void Init(SDL_Window* window);
-		void Render() const;
+		void Render();
 		void Destroy();
 
 		void RenderTexture(const Texture2D& texture, float x, float y, bool flip) const;
 		void RenderTexture(const Texture2D& texture, SDL_Rect srcRect, SDL_Rect dstRect, bool flip) const;
+		void RenderTranslucentBackGround() const;
 
 		SDL_Renderer* GetSDLRenderer() const;
 		
-		const SDL_Color& GetBackgroundColor() const { return m_clearColor; }
-		void SetBackgroundColor(const SDL_Color& color) { m_clearColor = color; }
+		const SDL_Color& GetBackgroundColor() const { return m_ClearColor; }
+		void SetBackgroundColor(const SDL_Color& color) { m_ClearColor = color; }
+
+		void StartFadeIn(float mulptiplier);
+
+		void SetRenderBG(bool renderBG);
+		bool NeedsToRenderBG() const { return m_RenderBG; }
 
 	private:
+
+		void FadeIn();
+
 		friend class Singleton<Renderer>;
 		Renderer() = default;
-		SDL_Renderer* m_renderer{};
-		SDL_Window* m_window{};
-		SDL_Color m_clearColor{};	
+		SDL_Renderer* m_Renderer{};
+		SDL_Window* m_Window{};
+		SDL_Color m_ClearColor{};	
+		SDL_Rect m_WindowRect{};	
+
+		bool m_RenderBG{};
+
+		float m_FadeTimer{};
+		float m_FadeMultiplier{};
+		
+		bool m_FadingIn{};
+		float m_AlphaVaule{};
 	};
 }
 #endif // !RENDERER_H

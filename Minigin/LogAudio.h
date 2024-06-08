@@ -43,6 +43,16 @@ namespace dae
 			m_pRealService->SetVolume(id, newVolume);
 			std::cout << "SetVolume: id: " << id << ", new volume: " << static_cast<int>(newVolume) << '\n';
 		}
+		virtual void SetMasterVolume(uint8_t newVolume) override
+		{
+			m_pRealService->SetMasterVolume(newVolume);
+			std::cout << "New volume: " << static_cast<int>(newVolume) << '\n';
+		}
+		virtual void ToggleMute() override
+		{
+			m_pRealService->ToggleMute();
+			std::cout << "Toggling Mute\n";
+		}
 		virtual void PauseSound(SoundID id) const override
 		{
 			m_pRealService->PauseSound(id);

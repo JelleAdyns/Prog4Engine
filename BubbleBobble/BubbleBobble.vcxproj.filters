@@ -18,9 +18,6 @@
     <Filter Include="Source Files\States">
       <UniqueIdentifier>{005806b6-e3e5-4533-8c90-08fea4f85723}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\States\PlayerSate">
-      <UniqueIdentifier>{84410032-39d3-44fe-a4af-b475992556bd}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\States\EnemyState">
       <UniqueIdentifier>{e78ed3ec-fff1-4ebb-ba54-9cf97ffaca8a}</UniqueIdentifier>
     </Filter>
@@ -29,6 +26,12 @@
     </Filter>
     <Filter Include="Source Files\States\EnemyState\ZenChanStates">
       <UniqueIdentifier>{2d1e63ea-8c62-4a38-98e0-0e7a68e5329a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\States\PlayerState">
+      <UniqueIdentifier>{84410032-39d3-44fe-a4af-b475992556bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\States\SceneState">
+      <UniqueIdentifier>{3a23d762-58f0-42d5-aa07-25ef403966e1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -45,9 +48,6 @@
       <Filter>Source Files\Components</Filter>
     </ClCompile>
     <ClCompile Include="FPSComponent.cpp">
-      <Filter>Source Files\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="LivesComponent.cpp">
       <Filter>Source Files\Components</Filter>
     </ClCompile>
     <ClCompile Include="LivesUIComponent.cpp">
@@ -86,14 +86,11 @@
     <ClCompile Include="SpriteComponent.cpp">
       <Filter>Source Files\Components</Filter>
     </ClCompile>
-    <ClCompile Include="EnemyComponent.cpp">
-      <Filter>Source Files\Components</Filter>
-    </ClCompile>
     <ClCompile Include="HitState.cpp">
-      <Filter>Source Files\States\PlayerSate</Filter>
+      <Filter>Source Files\States\PlayerState</Filter>
     </ClCompile>
     <ClCompile Include="IdleState.cpp">
-      <Filter>Source Files\States\PlayerSate</Filter>
+      <Filter>Source Files\States\PlayerState</Filter>
     </ClCompile>
     <ClCompile Include="ZenChanRunState.cpp">
       <Filter>Source Files\States\EnemyState\ZenChanStates</Filter>
@@ -105,6 +102,90 @@
       <Filter>Source Files\Components</Filter>
     </ClCompile>
     <ClCompile Include="MovementComponent.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ZenChanCaughtState.cpp">
+      <Filter>Source Files\States\EnemyState\ZenChanStates</Filter>
+    </ClCompile>
+    <ClCompile Include="MaitaRunState.cpp">
+      <Filter>Source Files\States\EnemyState\MaitaStates</Filter>
+    </ClCompile>
+    <ClCompile Include="MaitaFallingState.cpp">
+      <Filter>Source Files\States\EnemyState\MaitaStates</Filter>
+    </ClCompile>
+    <ClCompile Include="MaitaCaughtState.cpp">
+      <Filter>Source Files\States\EnemyState\MaitaStates</Filter>
+    </ClCompile>
+    <ClCompile Include="ZenChanJumpState.cpp">
+      <Filter>Source Files\States\EnemyState\ZenChanStates</Filter>
+    </ClCompile>
+    <ClCompile Include="MaitaAttackState.cpp">
+      <Filter>Source Files\States\EnemyState\MaitaStates</Filter>
+    </ClCompile>
+    <ClCompile Include="MaitaJumpState.cpp">
+      <Filter>Source Files\States\EnemyState\MaitaStates</Filter>
+    </ClCompile>
+    <ClCompile Include="MaitaPoppedState.cpp">
+      <Filter>Source Files\States\EnemyState\MaitaStates</Filter>
+    </ClCompile>
+    <ClCompile Include="ZenChanPoppedState.cpp">
+      <Filter>Source Files\States\EnemyState\ZenChanStates</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjectileComponent.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="TitleScreenState.cpp">
+      <Filter>Source Files\States\SceneState</Filter>
+    </ClCompile>
+    <ClCompile Include="MainMenuState.cpp">
+      <Filter>Source Files\States\SceneState</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelState.cpp">
+      <Filter>Source Files\States\SceneState</Filter>
+    </ClCompile>
+    <ClCompile Include="Spawners.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyComponent.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyCounterComponent.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ScoreComponent.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="InventoryComponent.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ResultsState.cpp">
+      <Filter>Source Files\States\SceneState</Filter>
+    </ClCompile>
+    <ClCompile Include="HighScoreState.cpp">
+      <Filter>Source Files\States\SceneState</Filter>
+    </ClCompile>
+    <ClCompile Include="HighScoreHandling.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InitialsComponent.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="HighScoreUIComponent.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="DeathScreenState.cpp">
+      <Filter>Source Files\States\SceneState</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerCounterComponent.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="PauseScreenState.cpp">
+      <Filter>Source Files\States\SceneState</Filter>
+    </ClCompile>
+    <ClCompile Include="WelcomeScreenState.cpp">
+      <Filter>Source Files\States\SceneState</Filter>
+    </ClCompile>
+    <ClCompile Include="TimerComponent.cpp">
       <Filter>Source Files\Components</Filter>
     </ClCompile>
   </ItemGroup>
@@ -119,9 +200,6 @@
       <Filter>Source Files\Components</Filter>
     </ClInclude>
     <ClInclude Include="FPSComponent.h">
-      <Filter>Source Files\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="LivesComponent.h">
       <Filter>Source Files\Components</Filter>
     </ClInclude>
     <ClInclude Include="LivesUIComponent.h">
@@ -148,20 +226,11 @@
     <ClInclude Include="MovementCommands.h">
       <Filter>Source Files\Commands</Filter>
     </ClInclude>
-    <ClInclude Include="PickUpCommand.h">
-      <Filter>Source Files\Commands</Filter>
-    </ClInclude>
-    <ClInclude Include="Killcommand.h">
-      <Filter>Source Files\Commands</Filter>
-    </ClInclude>
     <ClInclude Include="Commands.h">
       <Filter>Source Files\Commands</Filter>
     </ClInclude>
-    <ClInclude Include="LoadSceneCommand.h">
+    <ClInclude Include="LoadSceneCommands.h">
       <Filter>Source Files\Commands</Filter>
-    </ClInclude>
-    <ClInclude Include="LevelLoader.h">
-      <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="ButtonComponent.h">
       <Filter>Source Files\Components</Filter>
@@ -178,9 +247,6 @@
     <ClInclude Include="SetTextCommand.h">
       <Filter>Source Files\Commands</Filter>
     </ClInclude>
-    <ClInclude Include="JumpCommand.h">
-      <Filter>Source Files\Commands</Filter>
-    </ClInclude>
     <ClInclude Include="WallCheckingComponent.h">
       <Filter>Source Files\Components</Filter>
     </ClInclude>
@@ -190,38 +256,32 @@
     <ClInclude Include="PlayerComponent.h">
       <Filter>Source Files\Components</Filter>
     </ClInclude>
-    <ClInclude Include="ShootCommand.h">
+    <ClInclude Include="AttackCommand.h">
       <Filter>Source Files\Commands</Filter>
     </ClInclude>
     <ClInclude Include="SpriteComponent.h">
       <Filter>Source Files\Components</Filter>
     </ClInclude>
-    <ClInclude Include="EnemyComponent.h">
-      <Filter>Source Files\Components</Filter>
-    </ClInclude>
     <ClInclude Include="FallingState.h">
-      <Filter>Source Files\States\PlayerSate</Filter>
+      <Filter>Source Files\States\PlayerState</Filter>
     </ClInclude>
     <ClInclude Include="HitState.h">
-      <Filter>Source Files\States\PlayerSate</Filter>
+      <Filter>Source Files\States\PlayerState</Filter>
     </ClInclude>
     <ClInclude Include="IdleState.h">
-      <Filter>Source Files\States\PlayerSate</Filter>
+      <Filter>Source Files\States\PlayerState</Filter>
     </ClInclude>
     <ClInclude Include="JumpingState.h">
-      <Filter>Source Files\States\PlayerSate</Filter>
+      <Filter>Source Files\States\PlayerState</Filter>
     </ClInclude>
     <ClInclude Include="PlayerState.h">
-      <Filter>Source Files\States\PlayerSate</Filter>
+      <Filter>Source Files\States\PlayerState</Filter>
     </ClInclude>
     <ClInclude Include="WalkingState.h">
-      <Filter>Source Files\States\PlayerSate</Filter>
+      <Filter>Source Files\States\PlayerState</Filter>
     </ClInclude>
     <ClInclude Include="States.h">
       <Filter>Source Files\States</Filter>
-    </ClInclude>
-    <ClInclude Include="EnemyState.h">
-      <Filter>Source Files\States\EnemyState</Filter>
     </ClInclude>
     <ClInclude Include="MaitaRunState.h">
       <Filter>Source Files\States\EnemyState\MaitaStates</Filter>
@@ -246,6 +306,102 @@
     </ClInclude>
     <ClInclude Include="MovementComponent.h">
       <Filter>Source Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Spawners.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionTags.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ZenChanCaughtState.h">
+      <Filter>Source Files\States\EnemyState\ZenChanStates</Filter>
+    </ClInclude>
+    <ClInclude Include="ZenChanPoppedState.h">
+      <Filter>Source Files\States\EnemyState\ZenChanStates</Filter>
+    </ClInclude>
+    <ClInclude Include="MaitaJumpState.h">
+      <Filter>Source Files\States\EnemyState\MaitaStates</Filter>
+    </ClInclude>
+    <ClInclude Include="MaitaFallingState.h">
+      <Filter>Source Files\States\EnemyState\MaitaStates</Filter>
+    </ClInclude>
+    <ClInclude Include="MaitaCaughtState.h">
+      <Filter>Source Files\States\EnemyState\MaitaStates</Filter>
+    </ClInclude>
+    <ClInclude Include="MaitaPoppedState.h">
+      <Filter>Source Files\States\EnemyState\MaitaStates</Filter>
+    </ClInclude>
+    <ClInclude Include="MaitaAttackState.h">
+      <Filter>Source Files\States\EnemyState\MaitaStates</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectileComponent.h">
+      <Filter>Source Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneState.h">
+      <Filter>Source Files\States\SceneState</Filter>
+    </ClInclude>
+    <ClInclude Include="TitleScreenState.h">
+      <Filter>Source Files\States\SceneState</Filter>
+    </ClInclude>
+    <ClInclude Include="MainMenuState.h">
+      <Filter>Source Files\States\SceneState</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelState.h">
+      <Filter>Source Files\States\SceneState</Filter>
+    </ClInclude>
+    <ClInclude Include="NextLevelCommand.h">
+      <Filter>Source Files\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyComponent.h">
+      <Filter>Source Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyState.h">
+      <Filter>Source Files\States\EnemyState</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyCounterComponent.h">
+      <Filter>Source Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ScoreComponent.h">
+      <Filter>Source Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="InventoryComponent.h">
+      <Filter>Source Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ResultsState.h">
+      <Filter>Source Files\States\SceneState</Filter>
+    </ClInclude>
+    <ClInclude Include="HighScoreState.h">
+      <Filter>Source Files\States\SceneState</Filter>
+    </ClInclude>
+    <ClInclude Include="HighScoreHandling.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InitialsComponent.h">
+      <Filter>Source Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="InitialsCommands.h">
+      <Filter>Source Files\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="HighScoreUIComponent.h">
+      <Filter>Source Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="DeathScreenState.h">
+      <Filter>Source Files\States\SceneState</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerCounterComponent.h">
+      <Filter>Source Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="PauseScreenState.h">
+      <Filter>Source Files\States\SceneState</Filter>
+    </ClInclude>
+    <ClInclude Include="WelcomeScreenState.h">
+      <Filter>Source Files\States\SceneState</Filter>
+    </ClInclude>
+    <ClInclude Include="TimerComponent.h">
+      <Filter>Source Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="StartLevelCommand.h">
+      <Filter>Source Files\Commands</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

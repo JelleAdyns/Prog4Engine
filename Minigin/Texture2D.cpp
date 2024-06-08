@@ -1,11 +1,34 @@
-
 #include "Texture2D.h"
 #include "Minigin.h"
+#include <iostream>
+
+dae::Texture2D::Texture2D(SDL_Texture* texture, bool usesFont) :
+	m_UsesFont{ usesFont },
+	m_Texture{ texture }
+{
+
+	auto size = GetTextureSize();
+	m_SrcRect.x = 0;
+	m_SrcRect.y = 0;
+	m_SrcRect.w = size.x;
+	m_SrcRect.h = size.y;
+
+	m_DstRect.x = 0;
+	m_DstRect.y = 0;
+	m_DstRect.w = size.x;
+	m_DstRect.h = size.y;
+}
+
 
 dae::Texture2D::~Texture2D()
 {
-	// if the SDL_Texture is created with a font, we don't save it in the resourceManager so it needs to be destroyed here
-	if(m_UsesFont) SDL_DestroyTexture(m_Texture);
+	// If the SDL_Texture is created with a font, we don't save it in the resourceManager so it needs to be destroyed here.
+	// The reason we don't save it in the ResourceManager is that we would have to save every texture that has a different size,text and/or color.
+	// They would each need a unique key, which is just impossible.
+	if (m_UsesFont)
+	{
+		SDL_DestroyTexture(m_Texture);
+	}
 }
 
 void dae::Texture2D::SetSrcRect(const glm::ivec2& offset, const float width, const float height)
@@ -68,20 +91,3 @@ SDL_Texture* dae::Texture2D::GetSDLTexture() const
 {
 	return m_Texture;
 }
-
-dae::Texture2D::Texture2D(SDL_Texture* texture, bool usesFont):
-	m_UsesFont{usesFont},
-	m_Texture{texture}
-{
-
-	auto size = GetTextureSize();
-	m_SrcRect.x = 0;
-	m_SrcRect.y = 0;
-	m_SrcRect.w = size.x;
-	m_SrcRect.h = size.y;
-
-	m_DstRect.x = 0;
-	m_DstRect.y = 0;
-	m_DstRect.w = size.x;
-	m_DstRect.h = size.y;
-}			    

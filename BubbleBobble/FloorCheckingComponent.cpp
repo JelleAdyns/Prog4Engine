@@ -1,5 +1,6 @@
 #include "FloorCheckingComponent.h"
 #include "CollisionComponent.h"
+#include "CollisionTags.h"
 #include "PhysicsComponent.h"
 #include "GameObject.h"
 #include "Minigin.h"
@@ -7,6 +8,8 @@
 
 FloorCheckingComponent::FloorCheckingComponent(dae::GameObject* pOwner, const glm::vec2& offset, const glm::vec2& size):
 	dae::Component{ pOwner },
+	m_IsOnGround{false},
+	m_HandleCollision{true},
 	m_Offset{ offset },
 	m_Size{ size },
 	m_pCollisionComponent{},
@@ -28,24 +31,27 @@ void FloorCheckingComponent::Update()
 		GetOwner()->SetLocalPos(localPos.x, -50);
 	}
 
-	HandleCollision();
+	if(m_HandleCollision) HandleCollision();
 	
 }
 
 void FloorCheckingComponent::PrepareImGuiRender()
 {
+#ifndef NDEBUG
 	auto scale = dae::Minigin::GetWindowScale();
 
-	ImGui::Begin("Collision");
-	// ImGui::SetWindowSize(ImVec2{ float( Minigin::GetWindowSize().x* scale), float( Minigin::GetWindowSize().y*scale )});
-	// ImGui::SetWindowPos(ImVec2{});
-	float top = GetOwner()->GetWorldPosition().y + m_Offset.y;
-	float left = GetOwner()->GetWorldPosition().x + m_Offset.x;
-	ImGui::GetWindowDrawList()->AddRect(
-		ImVec2(left * scale, top * scale),
-		ImVec2((left + m_Size.x) * scale, (top + m_Size.y) * scale),
-		IM_COL32(0, 0, 255, 255));
-	ImGui::End();
+		ImGui::Begin("Collision");
+		// ImGui::SetWindowSize(ImVec2{ float( Minigin::GetWindowSize().x* scale), float( Minigin::GetWindowSize().y*scale )});
+		// ImGui::SetWindowPos(ImVec2{});
+		float top = GetOwner()->GetWorldPosition().y + m_Offset.y;
+		float left = GetOwner()->GetWorldPosition().x + m_Offset.x;
+		ImGui::GetWindowDrawList()->AddRect(
+			ImVec2(left * scale, top * scale),
+			ImVec2((left + m_Size.x) * scale, (top + m_Size.y) * scale),
+			IM_COL32(0, 0, 255, 255));
+		ImGui::End();
+#endif // !NDEBUG
+
 }
 
 bool FloorCheckingComponent::IsOnGround() const
@@ -53,12 +59,15 @@ bool FloorCheckingComponent::IsOnGround() const
 	return m_IsOnGround;
 }
 
+void FloorCheckingComponent::SetHandleCollison(bool handleCollision)
+{
+	m_HandleCollision = handleCollision;
+}
+
 void FloorCheckingComponent::HandleCollision()
 {
-	m_pCollisionComponent->SetOffset(m_Offset);
-	m_pCollisionComponent->SetSize(m_Size);
 
-	m_pCollisionComponent->CheckForCollision(dae::CollisionComponent::CollisionType::Platform);
+	m_pCollisionComponent->CheckForCollision(m_Offset, m_Size, collisionTags::platformTag);
 
 	auto flags = m_pCollisionComponent->GetCollisionFlags();
 

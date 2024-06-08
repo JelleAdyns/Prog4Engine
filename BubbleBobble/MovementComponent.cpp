@@ -1,28 +1,38 @@
 #include "MovementComponent.h"
-#include "JumpCommand.h"
 #include "MovementCommands.h"
-#include "ShootCommand.h"
+#include "AttackCommand.h"
 #include <InputCommandBinder.h>
+#include <Controller.h>
 #include <KeyState.h>
 
-uint8_t MovementComponent::m_NrOfPlayers{};
 
-MovementComponent::MovementComponent(dae::GameObject* pOwner, float jumpVelocity, float moveSpeed):
+MovementComponent::MovementComponent(dae::GameObject* pOwner, float jumpVelocity, float moveSpeed, uint8_t playerIndex):
 	dae::Component{pOwner},
+	m_PlayerIndex{playerIndex},
 	m_JumpVelocity{jumpVelocity},
 	m_MoveSpeed{moveSpeed}
 {
-	m_PlayerIndex = m_NrOfPlayers;
-	++m_NrOfPlayers;
+
 }
 
 MovementComponent::~MovementComponent()
 {
-	--m_NrOfPlayers;
+
+	//UnRegisterMoveCommands();
+	//UnRegisterAttackCommand();
+	//UnRegisterJumpCommand();
 }
 
 void MovementComponent::Start()
 {
+
+	m_pJumpCommand = std::make_shared<JumpCommand>(GetOwner(), m_JumpVelocity);
+	m_pJumpOnBubbleCommand = std::make_shared<JumpCommand>(GetOwner(), m_JumpVelocity, true);
+	m_MoveRightCommand = std::make_shared<MoveCommand>(GetOwner(), m_MoveSpeed);
+	m_MoveLeftCommand = std::make_shared<MoveCommand>(GetOwner(), -m_MoveSpeed);
+	m_StopMovingCommand = std::make_shared<StopMovingCommand>(GetOwner());
+	m_AttackCommand = std::make_shared<AttackCommand>(GetOwner());
+
 	RegisterMoveCommands();
 	RegisterAttackCommand();
 }
@@ -38,9 +48,9 @@ void MovementComponent::PrepareImGuiRender()
 void MovementComponent::RegisterJumpCommand() const
 {
 	auto& inputMan = dae::InputCommandBinder::GetInstance();
-	auto pCommand = std::make_shared<JumpCommand>(GetOwner(), m_JumpVelocity);
-	inputMan.AddKeyCommand(pCommand, SDL_SCANCODE_SPACE, dae::KeyState::Pressed);
-	inputMan.AddControllerCommand(pCommand, dae::ControllerButton::Y, dae::KeyState::Pressed, m_PlayerIndex);
+
+	inputMan.AddKeyCommand(m_pJumpCommand, m_PlayerIndex == 0 ? SDL_SCANCODE_SPACE : SDL_SCANCODE_UP, dae::KeyState::Pressed);
+	inputMan.AddControllerCommand(m_pJumpCommand, dae::ControllerButton::A, dae::KeyState::Pressed, m_PlayerIndex);
 }
 
 void MovementComponent::UnRegisterJumpCommand() const
@@ -48,39 +58,50 @@ void MovementComponent::UnRegisterJumpCommand() const
 
 	auto& inputMan = dae::InputCommandBinder::GetInstance();
 
-	inputMan.RemoveKeyCommand(SDL_SCANCODE_SPACE, dae::KeyState::Pressed);
-	inputMan.RemoveControllerCommand(dae::ControllerButton::Y, dae::KeyState::Pressed, m_PlayerIndex);
+	inputMan.RemoveKeyCommand(m_PlayerIndex == 0 ? SDL_SCANCODE_SPACE : SDL_SCANCODE_UP, dae::KeyState::Pressed);
+	inputMan.RemoveControllerCommand(dae::ControllerButton::A, dae::KeyState::Pressed, m_PlayerIndex);
+}
+
+void MovementComponent::RegisterJumpOnBubbleCommand() const
+{
+	auto& inputMan = dae::InputCommandBinder::GetInstance();
+
+	inputMan.AddKeyCommand(m_pJumpOnBubbleCommand, m_PlayerIndex == 0 ? SDL_SCANCODE_SPACE : SDL_SCANCODE_UP, dae::KeyState::Pressed);
+	inputMan.AddControllerCommand(m_pJumpOnBubbleCommand, dae::ControllerButton::A, dae::KeyState::Pressed, m_PlayerIndex);
+}
+void MovementComponent::UnRegisterJumpOnBubbleCommand() const
+{
+	auto& inputMan = dae::InputCommandBinder::GetInstance();
+
+	inputMan.RemoveKeyCommand(m_PlayerIndex == 0 ? SDL_SCANCODE_SPACE : SDL_SCANCODE_UP, dae::KeyState::Pressed);
+	inputMan.RemoveControllerCommand(dae::ControllerButton::A, dae::KeyState::Pressed, m_PlayerIndex);
 }
 
 void MovementComponent::RegisterMoveCommands() const
 {
 	auto& inputMan = dae::InputCommandBinder::GetInstance();
 
-	std::shared_ptr<dae::Command> moveCommand = std::make_shared<MoveCommand>(GetOwner(), m_MoveSpeed);
-	inputMan.AddKeyCommand(moveCommand, SDL_SCANCODE_D, dae::KeyState::Pressed);
-	inputMan.AddControllerCommand(moveCommand, dae::ControllerButton::DpadRight, dae::KeyState::Pressed, m_PlayerIndex);
+	inputMan.AddKeyCommand(m_MoveRightCommand, m_PlayerIndex == 0 ? SDL_SCANCODE_D : SDL_SCANCODE_RIGHT, dae::KeyState::Pressed);
+	inputMan.AddControllerCommand(m_MoveRightCommand, dae::ControllerButton::DpadRight, dae::KeyState::Pressed, m_PlayerIndex);
 
-	moveCommand = std::make_shared<MoveCommand>(GetOwner(), -m_MoveSpeed);
-	inputMan.AddKeyCommand(moveCommand, SDL_SCANCODE_A, dae::KeyState::Pressed);
-	inputMan.AddControllerCommand(moveCommand, dae::ControllerButton::DpadLeft, dae::KeyState::Pressed, m_PlayerIndex);
+	inputMan.AddKeyCommand(m_MoveLeftCommand, m_PlayerIndex == 0 ? SDL_SCANCODE_A : SDL_SCANCODE_LEFT, dae::KeyState::Pressed);
+	inputMan.AddControllerCommand(m_MoveLeftCommand, dae::ControllerButton::DpadLeft, dae::KeyState::Pressed, m_PlayerIndex);
 
-	std::shared_ptr<dae::Command> stopMovingCommand = std::make_shared<StopMovingCommand>(GetOwner());
-	inputMan.AddKeyCommand(stopMovingCommand, SDL_SCANCODE_D, dae::KeyState::UpThisFrame);
-	inputMan.AddControllerCommand(stopMovingCommand, dae::ControllerButton::DpadRight, dae::KeyState::UpThisFrame, m_PlayerIndex);
+	inputMan.AddKeyCommand(m_StopMovingCommand, m_PlayerIndex == 0 ? SDL_SCANCODE_D : SDL_SCANCODE_RIGHT, dae::KeyState::UpThisFrame);
+	inputMan.AddControllerCommand(m_StopMovingCommand, dae::ControllerButton::DpadRight, dae::KeyState::UpThisFrame, m_PlayerIndex);
 
-	stopMovingCommand = std::make_shared<StopMovingCommand>(GetOwner());
-	inputMan.AddKeyCommand(stopMovingCommand, SDL_SCANCODE_A, dae::KeyState::UpThisFrame);
-	inputMan.AddControllerCommand(stopMovingCommand, dae::ControllerButton::DpadLeft, dae::KeyState::UpThisFrame, m_PlayerIndex);
+	inputMan.AddKeyCommand(m_StopMovingCommand, m_PlayerIndex == 0 ? SDL_SCANCODE_A : SDL_SCANCODE_LEFT, dae::KeyState::UpThisFrame);
+	inputMan.AddControllerCommand(m_StopMovingCommand, dae::ControllerButton::DpadLeft, dae::KeyState::UpThisFrame, m_PlayerIndex);
 }
 
 void MovementComponent::UnRegisterMoveCommands() const
 {
 	auto& inputMan = dae::InputCommandBinder::GetInstance();
 
-	inputMan.RemoveKeyCommand(SDL_SCANCODE_A, dae::KeyState::Pressed);
-	inputMan.RemoveKeyCommand(SDL_SCANCODE_A, dae::KeyState::UpThisFrame);
-	inputMan.RemoveKeyCommand(SDL_SCANCODE_D, dae::KeyState::Pressed);
-	inputMan.RemoveKeyCommand(SDL_SCANCODE_D, dae::KeyState::UpThisFrame);
+	inputMan.RemoveKeyCommand(m_PlayerIndex == 0 ? SDL_SCANCODE_A : SDL_SCANCODE_LEFT, dae::KeyState::Pressed);
+	inputMan.RemoveKeyCommand(m_PlayerIndex == 0 ? SDL_SCANCODE_A : SDL_SCANCODE_LEFT, dae::KeyState::UpThisFrame);
+	inputMan.RemoveKeyCommand(m_PlayerIndex == 0 ? SDL_SCANCODE_D : SDL_SCANCODE_RIGHT, dae::KeyState::Pressed);
+	inputMan.RemoveKeyCommand(m_PlayerIndex == 0 ? SDL_SCANCODE_D : SDL_SCANCODE_RIGHT, dae::KeyState::UpThisFrame);
 
 	inputMan.RemoveControllerCommand(dae::ControllerButton::DpadLeft, dae::KeyState::Pressed, m_PlayerIndex);
 	inputMan.RemoveControllerCommand(dae::ControllerButton::DpadLeft, dae::KeyState::UpThisFrame, m_PlayerIndex);
@@ -92,15 +113,14 @@ void MovementComponent::RegisterAttackCommand() const
 {
 	auto& inputMan = dae::InputCommandBinder::GetInstance();
 
-	std::shared_ptr<dae::Command> shootCommand = std::make_shared<ShootCommand>(GetOwner());
-	inputMan.AddKeyCommand(shootCommand, SDL_SCANCODE_W, dae::KeyState::DownThisFrame);
-	inputMan.AddControllerCommand(shootCommand, dae::ControllerButton::A, dae::KeyState::DownThisFrame, m_PlayerIndex);
+	inputMan.AddKeyCommand(m_AttackCommand, m_PlayerIndex == 0 ? SDL_SCANCODE_W : SDL_SCANCODE_RCTRL, dae::KeyState::DownThisFrame);
+	inputMan.AddControllerCommand(m_AttackCommand, dae::ControllerButton::X, dae::KeyState::DownThisFrame, m_PlayerIndex);
 }
 
 void MovementComponent::UnRegisterAttackCommand() const
 {
 	auto& inputMan = dae::InputCommandBinder::GetInstance();
 
-	inputMan.RemoveKeyCommand(SDL_SCANCODE_W, dae::KeyState::DownThisFrame);
-	inputMan.RemoveControllerCommand(dae::ControllerButton::A, dae::KeyState::DownThisFrame, m_PlayerIndex);
+	inputMan.RemoveKeyCommand(m_PlayerIndex == 0 ? SDL_SCANCODE_W : SDL_SCANCODE_RCTRL, dae::KeyState::DownThisFrame);
+	inputMan.RemoveControllerCommand(dae::ControllerButton::X, dae::KeyState::DownThisFrame, m_PlayerIndex);
 }

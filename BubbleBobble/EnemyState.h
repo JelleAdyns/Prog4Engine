@@ -3,6 +3,7 @@
 
 #include <memory>
 
+class PlayerComponent;
 class EnemyState
 {
 public:
@@ -18,6 +19,8 @@ public:
 	virtual void OnEnter() = 0;
 	virtual void OnExit() = 0;
 
+	virtual void NotifyPlayerObservers(PlayerComponent* pSubject) = 0;
+	virtual void Attack() = 0;
 };
 
 #endif // !ENEMYSTATE_H

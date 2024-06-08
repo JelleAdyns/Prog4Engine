@@ -37,9 +37,14 @@ namespace dae
 		void RemoveCommandImpl(ControllerButton button, KeyState keyState);
 		void RemoveAllCommandsImpl();
 
+		void DeactivateAllCommandsImpl();
+		void ActivateAllCommandsImpl();
+
 		void VibrateImpl(int strengthPercentage);
 		glm::vec2 GetJoystickValueImpl(bool leftJoystick);
 		float GetTriggerValueImpl(bool leftJoystick);
+
+		static int AmountOfConnectedControllersImpl();
 
 	private:
 		uint8_t m_ControllerIndex{};
@@ -78,7 +83,13 @@ namespace dae
 			}
 		};
 
-		std::map<ControllerState, std::shared_ptr<Command>> m_MapCommands{};
+		struct SharedControllerCommand
+		{
+			std::shared_ptr<Command> pCommand;
+			bool active;
+		};
+	
+		std::map<ControllerState, SharedControllerCommand> m_MapCommands{};
 
 		static float m_MaxVibrationValue;
 		static float m_MaxJoystickValue;
@@ -98,22 +109,22 @@ namespace dae
 
 	void Controller::ControllerImpl::HandleInputImpl() const
 	{
-		for (const auto& pair : m_MapCommands)
+		for (const auto& [controllerState, pSharedCommand] : m_MapCommands)
 		{
-			auto& pCommand = pair.second;
-			switch (pair.first.keyState)
+			const auto& [pCommand, active] = pSharedCommand;
+			switch (controllerState.keyState)
 			{
 			case KeyState::DownThisFrame:
-				if (IsDownThisFrameImpl(pair.first.button)) pCommand->Execute();
+				if (active && IsDownThisFrameImpl(controllerState.button)) pCommand->Execute();
 				break;
 			case KeyState::UpThisFrame:
-				if (IsUpThisFrameImpl(pair.first.button)) pCommand->Execute();
+				if (active && IsUpThisFrameImpl(controllerState.button)) pCommand->Execute();
 				break;
 			case KeyState::Pressed:
-				if (IsPressedImpl(pair.first.button)) pCommand->Execute();
+				if (active && IsPressedImpl(controllerState.button)) pCommand->Execute();
 				break;
 			case KeyState::NotPressed:
-				if (!IsPressedImpl(pair.first.button)) pCommand->Execute();
+				if (active && !IsPressedImpl(controllerState.button)) pCommand->Execute();
 				break;
 			}
 		}
@@ -192,7 +203,7 @@ namespace dae
 #ifndef NDEBUG
 		if (m_MapCommands.contains(state)) std::cout << "Binding to the requested button already exists. Overwriting now.\n";
 #endif // !NDEBUG
-		m_MapCommands[state] = pCommand;
+		m_MapCommands[state] = SharedControllerCommand{ pCommand, true };
 	}
 
 	void Controller::ControllerImpl::RemoveCommandImpl(ControllerButton button, KeyState keyState)
@@ -206,6 +217,23 @@ namespace dae
 	void Controller::ControllerImpl::RemoveAllCommandsImpl()
 	{
 		m_MapCommands.clear();
+		VibrateImpl(0);
+	}
+
+	void Controller::ControllerImpl::DeactivateAllCommandsImpl()
+	{
+		for (auto& [keyState, pSharedCommand] : m_MapCommands)
+		{
+			pSharedCommand.active = false;
+		}
+	}
+
+	void Controller::ControllerImpl::ActivateAllCommandsImpl()
+	{
+		for (auto& [keyState, pSharedCommand] : m_MapCommands)
+		{
+			pSharedCommand.active = true;
+		}
 	}
 
 
@@ -213,8 +241,8 @@ namespace dae
 	{
 		XINPUT_VIBRATION vibration;
 		ZeroMemory(&vibration, sizeof(XINPUT_VIBRATION));
-		vibration.wLeftMotorSpeed = static_cast<WORD>(m_MaxVibrationValue / 100 * strengthPercentage); // use any value between 0-65535 here
-		vibration.wRightMotorSpeed = static_cast<WORD>(m_MaxVibrationValue / 100 * strengthPercentage); // use any value between 0-65535 here
+		vibration.wLeftMotorSpeed = static_cast<WORD>(m_MaxVibrationValue / 100 * strengthPercentage);
+		vibration.wRightMotorSpeed = static_cast<WORD>(m_MaxVibrationValue / 100 * strengthPercentage);
 		XInputSetState(m_ControllerIndex, &vibration);
 	}
 
@@ -247,6 +275,20 @@ namespace dae
 		if (value < m_TriggerDeadZonePercentage / 100.f) value = 0;
 
 		return value;
+	}
+
+	int Controller::ControllerImpl::AmountOfConnectedControllersImpl()
+	{
+		int connectedControllers = 0;
+		XINPUT_STATE state{};
+		DWORD dwResult;
+
+		for (DWORD i = 0; i < XUSER_MAX_COUNT; ++i)
+		{
+			dwResult = XInputGetState(i, &state);
+			if (dwResult == ERROR_SUCCESS) ++connectedControllers;
+		}
+		return connectedControllers;
 	}
 
 	//Controller
@@ -298,6 +340,16 @@ namespace dae
 		m_pImpl->RemoveAllCommandsImpl();
 	}
 
+	void Controller::DeactivateAllCommands()
+	{
+		m_pImpl->DeactivateAllCommandsImpl();
+	}
+
+	void Controller::ActivateAllCommands()
+	{
+		m_pImpl->ActivateAllCommandsImpl();
+	}
+
 	void Controller::Vibrate(int strengthPrecantage)
 	{
 		m_pImpl->VibrateImpl(strengthPrecantage);
@@ -311,6 +363,11 @@ namespace dae
 	float Controller::GetTriggerValue(bool leftTrigger)
 	{
 		return m_pImpl->GetTriggerValueImpl(leftTrigger);
+	}
+
+	int Controller::AmountOfConnectedControllers()
+	{
+		return ControllerImpl::AmountOfConnectedControllersImpl();
 	}
 	
 }

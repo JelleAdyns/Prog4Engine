@@ -3,25 +3,20 @@
 
 #include "PlayerState.h"
 #include "SpriteComponent.h"
-#include "PlayerComponent.h"
-#include "MovementComponent.h"
 
-#include "Commands.h"
-#include <PhysicsComponent.h>
-#include <KeyState.h>
-#include <GameObject.h>
-#include <InputCommandBinder.h>
+namespace dae
+{
+	class GameObject;
+	class PhysicsComponent;
+	class CollisionComponent;
+}
 
+class PlayerComponent;
+class MovementComponent;
 class IdleState final : public PlayerState
 {
 public:
-	explicit IdleState(dae::GameObject* pPlayer, PlayerComponent* pPlayerComp, MovementComponent* pMovementComp) :
-		PlayerState{},
-		m_pPlayer{ pPlayer },
-		m_pPlayerComp{ pPlayerComp },
-		m_pMovementComp{ pMovementComp },
-		m_pPhysicsComp{ pPlayer->GetComponent<dae::PhysicsComponent>() }
-	{}
+	explicit IdleState(dae::GameObject* pPlayer, PlayerComponent* pPlayerComp, MovementComponent* pMovementComp);
 	virtual ~IdleState() = default;
 
 	IdleState(const IdleState&) = delete;
@@ -33,15 +28,16 @@ public:
 	virtual void OnEnter() override;
 	virtual void OnExit() override;
 	virtual void Shoot() override;
+	virtual void StopShooting() override;
 
-	static float GetNormalSpriteEndheight();
 private:
+	static constexpr SpriteComponent::SpriteInfo m_IdleSpriteInfo{ .rowNumber = 0, .nrOfRows = 8, .frameTime{0.25f} };
 	dae::GameObject* m_pPlayer;
 	PlayerComponent* m_pPlayerComp;
 	MovementComponent* m_pMovementComp;
+	SpriteComponent* m_pSpriteComp;
 	dae::PhysicsComponent* m_pPhysicsComp;
-
-	static const float m_NormalSpritesEndHeight;
+	dae::CollisionComponent* m_pCollisionComp;
 };
 
 

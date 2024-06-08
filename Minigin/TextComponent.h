@@ -5,6 +5,7 @@
 #include "Component.h"
 #include "Font.h"
 #include "Texture2D.h"
+#include "glm/vec4.hpp"
 
 namespace dae
 {
@@ -13,9 +14,8 @@ namespace dae
 	class TextComponent final : public Component
 	{
 	public:
-		explicit TextComponent(GameObject* pOwner, const std::string& text, const std::string& fontFile, unsigned int size);
-		explicit TextComponent(GameObject* pOwner, const std::string& text, std::unique_ptr<Font>&& pFont, std::unique_ptr<Texture2D>&& pTexture);
-		explicit TextComponent(GameObject* pOwner, const std::string& text, std::unique_ptr<Font>&& pFont);
+		explicit TextComponent(GameObject* pOwner, const std::string& text, const std::string& fontFile, unsigned int size, const glm::u8vec4& color = {255,255,255,255});
+		explicit TextComponent(GameObject* pOwner, const std::string& text, std::unique_ptr<Font>&& pFont, const glm::u8vec4& color = { 255,255,255,255 });
 		virtual ~TextComponent() {}
 
 		TextComponent(const TextComponent&) = delete;
@@ -37,6 +37,8 @@ namespace dae
 
 		std::unique_ptr<Font> m_pFont;
 		std::unique_ptr<Texture2D> m_pTextTexture;
+		 
+		SDL_Color m_Color;
 
 		RenderComponent* m_pRenderComponent;
 	};
