@@ -26,7 +26,7 @@ ResultsState::~ResultsState()
 
 void ResultsState::OnEnter()
 {
-	dae::Renderer::GetInstance().StartFadeIn();
+	dae::Renderer::GetInstance().StartFadeIn(0.5f);
 
 	auto& scene = dae::SceneManager::GetInstance().CreateScene(m_SceneName);
 	LoadPlayerScore(scene, m_TemporaryInitials);
@@ -69,22 +69,7 @@ void ResultsState::Notify(InitialsComponent* pSubject)
 
 	if(m_ReadyToLeave)
 	{
-		auto buttonHandler = std::make_unique<dae::GameObject>();
-		buttonHandler->AddComponent<ButtonHandlerComponent>();
-
-		std::shared_ptr<dae::Command> activateCommand = std::make_shared<ActivateButtonCommand>(buttonHandler);
-		inputMan.AddKeyCommand(activateCommand, SDL_SCANCODE_SPACE, dae::KeyState::DownThisFrame);
-		inputMan.AddControllerCommand(activateCommand, dae::ControllerButton::X, dae::KeyState::DownThisFrame, 0);
-
-		const auto& handlerComponent = buttonHandler->GetComponent<ButtonHandlerComponent>();
-
-		std::unique_ptr<dae::Command> pNextSceneCmd = std::make_unique<LoadSceneCommand>(Game::CurrScene::TitleScreen);
-		auto button = std::make_unique<dae::GameObject>(static_cast<float>(dae::Minigin::GetWindowSize().x) / 2, 180.f);
-		button->AddComponent<ButtonComponent>(std::move(pNextSceneCmd));
-
-		handlerComponent->AddButton(button->GetComponent<ButtonComponent>());
-		scene.AddGameObject(std::move(buttonHandler));
-		scene.AddGameObject(std::move(button));
+		CreateLeaveButton(scene);
 	}
 
 	highScoreHandling::RemoveHighScore(m_TemporaryInitials);
@@ -150,33 +135,7 @@ void ResultsState::LoadPlayerScore(dae::Scene& scene, const std::string& name)
 	{
 		pName->AddComponent<InitialsComponent>(this);
 
-		auto& inputMan = dae::InputCommandBinder::GetInstance();
-		std::shared_ptr<dae::Command> pNextCharacterCmd = std::make_shared<AdvanceCharacterCommand>(pName.get(), true);
-		std::shared_ptr<dae::Command> pPreviousCharacterCmd = std::make_shared<AdvanceCharacterCommand>(pName.get(), false);
-		std::shared_ptr<dae::Command> pConfirmCharacterCmd = std::make_shared<ConfirmCharacterCommand>(pName.get());
-
-		if (m_RefreshCount == 0)
-		{
-			inputMan.AddKeyCommand(pNextCharacterCmd, SDL_SCANCODE_D, dae::KeyState::DownThisFrame);
-			inputMan.AddControllerCommand(pNextCharacterCmd, dae::ControllerButton::DpadRight, dae::KeyState::DownThisFrame, 0);
-
-			inputMan.AddKeyCommand(pPreviousCharacterCmd, SDL_SCANCODE_A, dae::KeyState::DownThisFrame);
-			inputMan.AddControllerCommand(pPreviousCharacterCmd, dae::ControllerButton::DpadLeft, dae::KeyState::DownThisFrame, 0);
-
-			inputMan.AddKeyCommand(pConfirmCharacterCmd, SDL_SCANCODE_W, dae::KeyState::DownThisFrame);
-			inputMan.AddControllerCommand(pConfirmCharacterCmd, dae::ControllerButton::A, dae::KeyState::DownThisFrame, 0);
-		}
-		else if (m_RefreshCount == 1)
-		{
-			inputMan.AddKeyCommand(pNextCharacterCmd, SDL_SCANCODE_RIGHT, dae::KeyState::DownThisFrame);
-			inputMan.AddControllerCommand(pNextCharacterCmd, dae::ControllerButton::DpadRight, dae::KeyState::DownThisFrame, 1);
-
-			inputMan.AddKeyCommand(pPreviousCharacterCmd, SDL_SCANCODE_LEFT, dae::KeyState::DownThisFrame);
-			inputMan.AddControllerCommand(pPreviousCharacterCmd, dae::ControllerButton::DpadLeft, dae::KeyState::DownThisFrame, 1);
-
-			inputMan.AddKeyCommand(pConfirmCharacterCmd, SDL_SCANCODE_UP, dae::KeyState::DownThisFrame);
-			inputMan.AddControllerCommand(pConfirmCharacterCmd, dae::ControllerButton::A, dae::KeyState::DownThisFrame, 1);
-		}
+		CreateCycleCommands(pName.get());
 
 		highScoreHandling::WriteHighScores(m_TemporaryInitials, player.score);
 	}
@@ -248,6 +207,59 @@ void ResultsState::LoadInputInfo(dae::Scene& scene) const
 		inputMan.AddCommand_ChangingToKeyboard(std::move(setTextCommand2));
 	}
 	scene.AddGameObject(std::move(info));
+}
+
+void ResultsState::CreateCycleCommands(dae::GameObject* pObject) const
+{
+	auto& inputMan = dae::InputCommandBinder::GetInstance();
+	std::shared_ptr<dae::Command> pNextCharacterCmd = std::make_shared<AdvanceCharacterCommand>(pObject, true);
+	std::shared_ptr<dae::Command> pPreviousCharacterCmd = std::make_shared<AdvanceCharacterCommand>(pObject, false);
+	std::shared_ptr<dae::Command> pConfirmCharacterCmd = std::make_shared<ConfirmCharacterCommand>(pObject);
+
+	if (m_RefreshCount == 0)
+	{
+		inputMan.AddKeyCommand(pNextCharacterCmd, SDL_SCANCODE_D, dae::KeyState::DownThisFrame);
+		inputMan.AddControllerCommand(pNextCharacterCmd, dae::ControllerButton::DpadRight, dae::KeyState::DownThisFrame, 0);
+
+		inputMan.AddKeyCommand(pPreviousCharacterCmd, SDL_SCANCODE_A, dae::KeyState::DownThisFrame);
+		inputMan.AddControllerCommand(pPreviousCharacterCmd, dae::ControllerButton::DpadLeft, dae::KeyState::DownThisFrame, 0);
+
+		inputMan.AddKeyCommand(pConfirmCharacterCmd, SDL_SCANCODE_W, dae::KeyState::DownThisFrame);
+		inputMan.AddControllerCommand(pConfirmCharacterCmd, dae::ControllerButton::A, dae::KeyState::DownThisFrame, 0);
+	}
+	else if (m_RefreshCount == 1)
+	{
+		inputMan.AddKeyCommand(pNextCharacterCmd, SDL_SCANCODE_RIGHT, dae::KeyState::DownThisFrame);
+		inputMan.AddControllerCommand(pNextCharacterCmd, dae::ControllerButton::DpadRight, dae::KeyState::DownThisFrame, 1);
+
+		inputMan.AddKeyCommand(pPreviousCharacterCmd, SDL_SCANCODE_LEFT, dae::KeyState::DownThisFrame);
+		inputMan.AddControllerCommand(pPreviousCharacterCmd, dae::ControllerButton::DpadLeft, dae::KeyState::DownThisFrame, 1);
+
+		inputMan.AddKeyCommand(pConfirmCharacterCmd, SDL_SCANCODE_UP, dae::KeyState::DownThisFrame);
+		inputMan.AddControllerCommand(pConfirmCharacterCmd, dae::ControllerButton::A, dae::KeyState::DownThisFrame, 1);
+	}
+}
+
+void ResultsState::CreateLeaveButton(dae::Scene& scene) const
+{
+	auto& inputMan = dae::InputCommandBinder::GetInstance();
+
+	auto buttonHandler = std::make_unique<dae::GameObject>();
+	buttonHandler->AddComponent<ButtonHandlerComponent>();
+
+	std::shared_ptr<dae::Command> activateCommand = std::make_shared<ActivateButtonCommand>(buttonHandler);
+	inputMan.AddKeyCommand(activateCommand, SDL_SCANCODE_SPACE, dae::KeyState::DownThisFrame);
+	inputMan.AddControllerCommand(activateCommand, dae::ControllerButton::X, dae::KeyState::DownThisFrame, 0);
+
+	const auto& handlerComponent = buttonHandler->GetComponent<ButtonHandlerComponent>();
+
+	std::unique_ptr<dae::Command> pNextSceneCmd = std::make_unique<LoadSceneCommand>(Game::CurrScene::TitleScreen);
+	auto button = std::make_unique<dae::GameObject>(static_cast<float>(dae::Minigin::GetWindowSize().x) / 2, 180.f);
+	button->AddComponent<ButtonComponent>(std::move(pNextSceneCmd));
+
+	handlerComponent->AddButton(button->GetComponent<ButtonComponent>());
+	scene.AddGameObject(std::move(buttonHandler));
+	scene.AddGameObject(std::move(button));
 }
 
 

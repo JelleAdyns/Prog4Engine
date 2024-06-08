@@ -25,6 +25,7 @@
 #include "PlayerComponent.h"
 #include "EnemyComponent.h"
 #include "EnemyCounterComponent.h"
+#include "PlayerCounterComponent.h"
 #include "MovementComponent.h"
 #include "BubbleComponent.h"
 #include "ProjectileComponent.h"

@@ -10,7 +10,7 @@ namespace dae
 {
 	class PhysicsComponent;
 }
-class PlayerComponent;
+
 class SpriteComponent;
 class EnemyCounterComponent final : public dae::Component, public dae::Observer<EnemyComponent>
 {
@@ -34,7 +34,7 @@ public:
 
 private:
 
-	int m_AmountOfEnmies{};
+	int m_AmountOfEnemies{};
 
 	float m_Timer{};
 	float m_TimeForLevelSwitch{ 5.f };

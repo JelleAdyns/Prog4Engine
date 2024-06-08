@@ -44,6 +44,9 @@ private:
 	void LoadPlayerScore(dae::Scene& scene, const std::string& name);
 	void LoadTopFive(dae::Scene& scene) const;
 	void LoadInputInfo(dae::Scene& scene) const;
+	void CreateCycleCommands(dae::GameObject* pObject) const;
+	void CreateLeaveButton(dae::Scene& scene) const;
+
 
 	bool m_ReadyToLeave{false};
 	int m_RefreshCount{};

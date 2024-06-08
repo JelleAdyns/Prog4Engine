@@ -15,7 +15,7 @@ const std::string HighScoreState::m_SceneName{ "HighScore" };
 
 void HighScoreState::OnEnter()
 {
-	dae::Renderer::GetInstance().StartFadeIn();
+	dae::Renderer::GetInstance().StartFadeIn(0.5f);
 
 	auto& scene = dae::SceneManager::GetInstance().CreateScene(m_SceneName);
 

@@ -20,7 +20,7 @@ const std::string MainMenuState::m_SceneName{ "MainMenu" };
 
 void MainMenuState::OnEnter()
 {
-	dae::Renderer::GetInstance().StartFadeIn();
+	dae::Renderer::GetInstance().StartFadeIn(0.5f);
 	LoadMainMenu();
 }
 
@@ -131,17 +131,18 @@ void MainMenuState::LoadMainMenu() const
 	handlerComponent->AddButton(button5->GetComponent<ButtonComponent>());
 
 
+	float iconOffset{20.f};
 
-	auto icon = std::make_unique<dae::GameObject>(button1->GetWorldPosition().x - 20.f, button1->GetWorldPosition().y);
+	auto icon = std::make_unique<dae::GameObject>(button1->GetWorldPosition().x - iconOffset, button1->GetWorldPosition().y);
 	icon->AddRenderComponent(false);
 	icon->AddComponent<SpriteComponent>("Textures/Selector.png", 2, 1, 0.1f);
 
 
-	std::shared_ptr<dae::Command> nextCommand = std::make_shared<SelectButtonCommand>(buttonHandler, icon, SelectButtonCommand::Direction::Next);
+	std::shared_ptr<dae::Command> nextCommand = std::make_shared<SelectButtonCommand>(buttonHandler, icon, iconOffset, SelectButtonCommand::Direction::Next);
 	inputMan.AddKeyCommand(nextCommand, SDL_SCANCODE_S, dae::KeyState::DownThisFrame);
 	inputMan.AddControllerCommand(nextCommand, dae::ControllerButton::DpadDown, dae::KeyState::DownThisFrame, 0);
 
-	std::shared_ptr<dae::Command> previousCommand = std::make_shared<SelectButtonCommand>(buttonHandler, icon, SelectButtonCommand::Direction::Previous);
+	std::shared_ptr<dae::Command> previousCommand = std::make_shared<SelectButtonCommand>(buttonHandler, icon, iconOffset, SelectButtonCommand::Direction::Previous);
 	inputMan.AddKeyCommand(previousCommand, SDL_SCANCODE_W, dae::KeyState::DownThisFrame);
 	inputMan.AddControllerCommand(previousCommand, dae::ControllerButton::DpadUp, dae::KeyState::DownThisFrame, 0);
 

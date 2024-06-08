@@ -6,6 +6,7 @@
 #include "LivesUIComponent.h"
 #include "ScoreUIComponent.h"
 #include "CollisionTags.h"
+#include "PlayerCounterComponent.h"
 #include <GameObject.h>
 #include <PhysicsComponent.h>
 #include <CollisionComponent.h>
@@ -15,26 +16,31 @@
 #include <algorithm>
 
 
-PlayerComponent::PlayerComponent(dae::GameObject* pOwner, PlayerType playerType, int health, LivesUIComponent* pLivesObserver, ScoreUIComponent* pScoreObserver):
+PlayerComponent::PlayerComponent(dae::GameObject* pOwner, PlayerType playerType, int health, LivesUIComponent* pLivesObserver, ScoreUIComponent* pScoreObserver, PlayerCounterComponent* pCounterObserver):
 	dae::Component{pOwner},
 	m_Health{health},
 	m_PlayerType{ playerType },
 	m_pCurrState{},
 	m_pPosChecked{std::make_unique<dae::Subject<PlayerComponent>>()},
+	m_pLostLife{std::make_unique<dae::Subject<PlayerComponent>>()},
 	m_pDied{std::make_unique<dae::Subject<PlayerComponent>>()}
 {
-	m_pDied->AddObserver(pLivesObserver);
-	m_pDied->AddObserver(pScoreObserver);
+	m_pLostLife->AddObserver(pLivesObserver);
+	m_pLostLife->AddObserver(pScoreObserver);
+	m_pDied->AddObserver(pCounterObserver);
 	m_SpawnPos = GetOwner()->GetWorldPosition();
 	Respawn();
 }
 
 PlayerComponent::~PlayerComponent()
 {
+	m_pDied->NotifyObservers(this);
+
 	for (dae::Subject<SpriteComponent>* pSpriteSubject : m_pVecObservedSpriteSubjects)
 	{
 		if(pSpriteSubject) pSpriteSubject->RemoveObserver(this);
 	}
+
 }
 
 void PlayerComponent::Start()
@@ -155,8 +161,9 @@ int PlayerComponent::GetNrOfLives() const
 
 void PlayerComponent::TakeLife()
 {
+	m_pLostLife->NotifyObservers(this);
 	if(m_Health > 0)
-	{
+	{	
 		--m_Health;
 	}
 	else
@@ -170,7 +177,6 @@ void PlayerComponent::TakeLife()
 		GetOwner()->MarkDead();
 		m_pRenderComp->SetNeedToRender(false);
 	}
-	m_pDied->NotifyObservers(this);
 }
 
 

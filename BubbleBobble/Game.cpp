@@ -28,6 +28,7 @@
 
 #include <iostream>
 #include "ResultsState.h"
+#include "DeathScreenState.h"
 
 void Game::StartGame()
 {
@@ -68,6 +69,9 @@ void Game::SetScene(Game::CurrScene newScene)
 		break;
 	case CurrScene::HighScore:
 		m_CurrScene = std::make_unique<HighScoreState>();
+		break;
+	case CurrScene::DeathScreen:
+		m_CurrScene = std::make_unique<DeathScreenState>();
 		break;
 	}
 	m_CurrScene->OnEnter();

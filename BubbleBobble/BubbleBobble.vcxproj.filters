@@ -173,6 +173,12 @@
     <ClCompile Include="HighScoreUIComponent.cpp">
       <Filter>Source Files\Components</Filter>
     </ClCompile>
+    <ClCompile Include="DeathScreenState.cpp">
+      <Filter>Source Files\States\SceneState</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerCounterComponent.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Achievements.h">
@@ -372,6 +378,15 @@
     </ClInclude>
     <ClInclude Include="HighScoreUIComponent.h">
       <Filter>Source Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="DeathScreenState.h">
+      <Filter>Source Files\States\SceneState</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerCounterComponent.h">
+      <Filter>Source Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="PauseScreenState.h">
+      <Filter>Source Files\States\SceneState</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

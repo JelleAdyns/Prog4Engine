@@ -168,6 +168,7 @@
     <ClCompile Include="ButtonComponent.cpp" />
     <ClCompile Include="ButtonHandlerComponent.cpp" />
     <ClCompile Include="CacheExperimentComponent.cpp" />
+    <ClCompile Include="DeathScreenState.cpp" />
     <ClCompile Include="EnemyComponent.cpp" />
     <ClCompile Include="EnemyCounterComponent.cpp" />
     <ClCompile Include="FloorCheckingComponent.cpp" />
@@ -193,6 +194,7 @@
     <ClCompile Include="MovementComponent.cpp" />
     <ClCompile Include="PickUpComponent.cpp" />
     <ClCompile Include="PlayerComponent.cpp" />
+    <ClCompile Include="PlayerCounterComponent.cpp" />
     <ClCompile Include="ProjectileComponent.cpp" />
     <ClCompile Include="ResultsState.cpp" />
     <ClCompile Include="RotatorComponent.cpp" />
@@ -214,6 +216,7 @@
     <ClInclude Include="Achievements.h" />
     <ClInclude Include="ActivateButtonCommand.h" />
     <ClInclude Include="BubbleComponent.h" />
+    <ClInclude Include="DeathScreenState.h" />
     <ClInclude Include="EnemyComponent.h" />
     <ClInclude Include="EnemyCounterComponent.h" />
     <ClInclude Include="EnemyState.h" />
@@ -231,6 +234,8 @@
     <ClInclude Include="MaitaJumpState.h" />
     <ClInclude Include="MaitaPoppedState.h" />
     <ClInclude Include="NextLevelCommand.h" />
+    <ClInclude Include="PauseScreenState.h" />
+    <ClInclude Include="PlayerCounterComponent.h" />
     <ClInclude Include="ProjectileComponent.h" />
     <ClInclude Include="ResultsState.h" />
     <ClInclude Include="SceneState.h" />

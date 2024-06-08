@@ -17,7 +17,7 @@ const std::string TitleScreenState::m_SceneName{ "TitleScreen" };
 
 void TitleScreenState::OnEnter()
 {
-	dae::Renderer::GetInstance().StartFadeIn();
+	dae::Renderer::GetInstance().StartFadeIn(0.5f);
 	
 	auto& inputMan = dae::InputCommandBinder::GetInstance();
 	inputMan.RemoveAllCommands();

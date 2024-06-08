@@ -121,11 +121,12 @@ void dae::Renderer::RenderTexture(const Texture2D& texture, SDL_Rect srcRect, SD
 
 SDL_Renderer* dae::Renderer::GetSDLRenderer() const { return m_Renderer; }
 
-void dae::Renderer::StartFadeIn()
+void dae::Renderer::StartFadeIn(float mulptiplier)
 {
 	m_AlphaVaule = 255;
 	m_FadeTimer = 0.f;
 	m_FadingIn = true;
+	m_FadeMultiplier = mulptiplier;
 }
 
 
@@ -138,7 +139,7 @@ void dae::Renderer::FadeIn()
 	SDL_RenderFillRect(m_Renderer, &m_WindowRect);
 	
 	m_FadeTimer += dae::GameTime::GetInstance().GetDeltaTime();
-	m_AlphaVaule = std::lerp(255.f, 0.f, m_FadeTimer * 0.5f);
+	m_AlphaVaule = std::lerp(255.f, 0.f, m_FadeTimer * m_FadeMultiplier);
 
 	if (m_AlphaVaule <= 0)
 	{

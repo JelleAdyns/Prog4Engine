@@ -11,6 +11,7 @@
 
 class ScoreUIComponent;
 class HighScoreUIComponent;
+class PlayerCounterComponent;
 class LevelState final : public SceneState
 {
 public:
@@ -20,9 +21,12 @@ public:
 		ScoreUIComponent* pScoreUIComp;
 		LivesUIComponent* pLivesUIComp;
 		int score{};
-		int health{ 3 };
+		int health{  };
 		const glm::u8vec4 textColor{};
 		const glm::vec2 spawnPos{};
+
+		static constexpr int startHealth{ 1 };
+
 	};
 
 	explicit LevelState() = default;
@@ -49,7 +53,7 @@ private:
 	
 
 	void CreateSkipButton(dae::Scene& scene);
-	void MakePlayer(const std::unique_ptr<dae::GameObject>& pPlayer, PlayerComponent::PlayerType playerType, ScoreUIComponent* scoreDisplay, LivesUIComponent* livesDisplay);
+	void MakePlayer(const std::unique_ptr<dae::GameObject>& pPlayer, PlayerComponent::PlayerType playerType, ScoreUIComponent* scoreDisplay, LivesUIComponent* livesDisplay, PlayerCounterComponent* pCounterComponent);
 	void CreateScoreDisplay(dae::Scene& scene, HighScoreUIComponent* pHighScoreComp , bool playerOne);
 	void UploadScene(dae::Scene& scene);
 	void LoadLevel(const std::string& filename);
@@ -57,6 +61,7 @@ private:
 	void ParseStage(int levelNumber, std::stringstream& levelInfoStream);
 	void ParseEnemies(std::stringstream& levelInfoStream);
 	void CreatePlayableMaita(const std::unique_ptr<dae::GameObject>& pPlayer);
+	void UpdatePlayerInfo();
 
 	int m_LevelNumber{1};
 

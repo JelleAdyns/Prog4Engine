@@ -36,7 +36,7 @@ namespace dae
 		const SDL_Color& GetBackgroundColor() const { return m_ClearColor; }
 		void SetBackgroundColor(const SDL_Color& color) { m_ClearColor = color; }
 
-		void StartFadeIn();
+		void StartFadeIn(float mulptiplier);
 
 	private:
 
@@ -50,6 +50,7 @@ namespace dae
 		SDL_Rect m_WindowRect{};	
 
 		float m_FadeTimer{};
+		float m_FadeMultiplier{};
 		
 		bool m_FadingIn{};
 		float m_AlphaVaule{};

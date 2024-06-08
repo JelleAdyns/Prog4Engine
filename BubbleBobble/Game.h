@@ -35,7 +35,7 @@ public:
 		PauseScreen,
 		Results,
 		HighScore,
-		DeathScene,
+		DeathScreen,
 		WelcomeScreen
 	};
 

@@ -15,6 +15,7 @@ namespace dae
 }
 
 class SpriteComponent;
+class PlayerCounterComponent;
 class MovementComponent;
 class LivesUIComponent;
 class ScoreUIComponent;
@@ -28,7 +29,7 @@ public:
 		Blue
 	};
 
-	explicit PlayerComponent(dae::GameObject* pOwner, PlayerType playerType, int health, LivesUIComponent* pObserver, ScoreUIComponent* pScoreObserver);
+	explicit PlayerComponent(dae::GameObject* pOwner, PlayerType playerType, int health, LivesUIComponent* pLivesObserver, ScoreUIComponent* pScoreObserver, PlayerCounterComponent* pCounterObserver);
 	virtual ~PlayerComponent();
 
 	PlayerComponent(const PlayerComponent&) = delete;
@@ -84,6 +85,7 @@ private:
 	MovementComponent* m_pMovementComp;
 
 	std::unique_ptr<dae::Subject<PlayerComponent>> m_pPosChecked;
+	std::unique_ptr<dae::Subject<PlayerComponent>> m_pLostLife;
 	std::unique_ptr<dae::Subject<PlayerComponent>> m_pDied;
 
 	std::vector<dae::Subject<SpriteComponent>*> m_pVecObservedSpriteSubjects;

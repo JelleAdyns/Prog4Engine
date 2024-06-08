@@ -23,7 +23,7 @@ void EnemyCounterComponent::Start()
 
 void EnemyCounterComponent::Update()
 {
-	if (m_AmountOfEnmies == 0)
+	if (m_AmountOfEnemies == 0)
 	{
 		m_Timer += dae::GameTime::GetInstance().GetDeltaTime();
 		if (m_Timer >= m_TimeForLevelSwitch)
@@ -39,14 +39,14 @@ void EnemyCounterComponent::PrepareImGuiRender()
 
 void EnemyCounterComponent::Notify(EnemyComponent*)
 {
-	--m_AmountOfEnmies;
-	assert((m_AmountOfEnmies >= 0) && "Amount of enemies was lower then 0.");
+	--m_AmountOfEnemies;
+	assert((m_AmountOfEnemies >= 0) && "Amount of enemies was lower then 0.");
 }
 
 void EnemyCounterComponent::AddSubjectPointer(dae::Subject<EnemyComponent>* pSubject)
 {
 	m_pVecObservedSubjects.emplace_back(pSubject);
-	++m_AmountOfEnmies;
+	++m_AmountOfEnemies;
 }
 
 void EnemyCounterComponent::SetSubjectPointersInvalid(dae::Subject<EnemyComponent>* pSubject)

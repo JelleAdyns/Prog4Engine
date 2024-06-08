@@ -14,10 +14,11 @@ public:
 		Next
 	};
 
-	SelectButtonCommand(const std::unique_ptr<dae::GameObject>& pObject, const std::unique_ptr<dae::GameObject>& pSelectionIcon, SelectButtonCommand::Direction direction) :
+	SelectButtonCommand(const std::unique_ptr<dae::GameObject>& pObject, const std::unique_ptr<dae::GameObject>& pSelectionIcon, float iconOffset, SelectButtonCommand::Direction direction) :
 		dae::GameObjectCommand{ pObject.get()},
 		m_Direction{direction},
-		m_pSelectionIcon{pSelectionIcon.get()}
+		m_pSelectionIcon{pSelectionIcon.get()},
+		m_IconOffset{iconOffset}
 	{}
 	virtual ~SelectButtonCommand() = default;
 
@@ -40,12 +41,13 @@ public:
 			break;
 		}
 		auto pos = pButtonHandler->GetSelectedButton()->GetPos();
-		m_pSelectionIcon->SetLocalPos(pos.x - 20, pos.y);
+		m_pSelectionIcon->SetLocalPos(pos.x - m_IconOffset, pos.y);
 	}
 
 private:
 	Direction m_Direction;
 	dae::GameObject* m_pSelectionIcon;
+	const float m_IconOffset;
 };
 
 
