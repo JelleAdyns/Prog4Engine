@@ -13,6 +13,7 @@ namespace collisionTags
 	static const std::string projectileTag{ "Projectile" };
 	static const std::string pickUp{ "PickUp" };
 	static const std::string bubbleTag{ "Bubble" };
+	static const std::string OccupiedBubbleTag{ "OccupiedBubble" };
 }
 
 #endif // !COLLISIONTAGS_H

@@ -33,10 +33,7 @@ std::unique_ptr<EnemyState> MaitaRunState::Update()
 	dae::GameObject* pCollidedObject = m_pCollisionComp->CheckForCollision(collisionTags::bubbleTag);
 	if (pCollidedObject)
 	{
-		if (!pCollidedObject->GetComponent<BubbleComponent>()->IsOccupied())
-		{
-			return std::make_unique<MaitaCaughtState>(m_pEnemy, pCollidedObject);
-		}
+		return std::make_unique<MaitaCaughtState>(m_pEnemy, pCollidedObject);
 	}
 
 	if (IsPlayable()) return UpdatePlayable();

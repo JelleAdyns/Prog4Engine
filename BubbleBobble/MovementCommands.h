@@ -110,8 +110,7 @@ public:
 		if (m_CheckForBubble)
 		{
 			dae::GameObject* bubble = m_pCollisionComponent->CheckForCollision(collisionTags::bubbleTag);
-
-			if(bubble)
+			if (bubble)
 			{
 				auto flags = m_pCollisionComponent->GetCollisionFlags();
 				const auto bottomFlag = static_cast<char>(dae::CollisionComponent::CollidingSide::Bottom);
@@ -122,6 +121,23 @@ public:
 						m_pPhysicsComponent->SetVelocityY(m_JumpVelocity);
 				}
 			}
+			else
+			{
+				dae::GameObject* occupiedBubble = m_pCollisionComponent->CheckForCollision(collisionTags::OccupiedBubbleTag);
+
+				if (occupiedBubble)
+				{
+					auto flags = m_pCollisionComponent->GetCollisionFlags();
+					const auto bottomFlag = static_cast<char>(dae::CollisionComponent::CollidingSide::Bottom);
+
+					if ((flags & bottomFlag) == bottomFlag)
+					{
+						if (occupiedBubble->GetComponent<BubbleComponent>()->IsFloating())
+							m_pPhysicsComponent->SetVelocityY(m_JumpVelocity);
+					}
+				}
+			}
+			
 		}
 		else
 		{

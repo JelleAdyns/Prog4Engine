@@ -28,10 +28,7 @@ std::unique_ptr<EnemyState> ZenChanJumpState::Update()
 	dae::GameObject* pCollidedObject = m_pCollisionComp->CheckForCollision(collisionTags::bubbleTag);
 	if (pCollidedObject)
 	{
-		if (!pCollidedObject->GetComponent<BubbleComponent>()->IsOccupied())
-		{
-			return std::make_unique<ZenChanCaughtState>(m_pEnemy, pCollidedObject);
-		}
+		return std::make_unique<ZenChanCaughtState>(m_pEnemy, pCollidedObject);
 	}
 
 	auto deltaTime = dae::GameTime::GetInstance().GetDeltaTime();

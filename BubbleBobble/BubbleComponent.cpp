@@ -128,13 +128,10 @@ void BubbleComponent::AddObserver(dae::Observer<BubbleComponent>* pObserver)
 
 void BubbleComponent::SetOccupied()
 {
+	m_pCollisionComp->SetTag(collisionTags::OccupiedBubbleTag);
 	m_IsOccupied = true;
 }
 
-bool BubbleComponent::IsOccupied()
-{
-	return m_IsOccupied;
-}
 
 bool BubbleComponent::IsPoppedByPlayer()
 {

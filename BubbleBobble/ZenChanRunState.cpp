@@ -31,11 +31,9 @@ std::unique_ptr<EnemyState> ZenChanRunState::Update()
 	dae::GameObject* pCollidedObject = m_pCollisionComp->CheckForCollision(collisionTags::bubbleTag);
 	if (pCollidedObject)
 	{
-		if (!pCollidedObject->GetComponent<BubbleComponent>()->IsOccupied())
-		{
-			return std::make_unique<ZenChanCaughtState>(m_pEnemy, pCollidedObject);
-		}
+		return std::make_unique<ZenChanCaughtState>(m_pEnemy, pCollidedObject);
 	}
+
 
 	if (m_HasToJump) return std::make_unique<ZenChanJumpState>(m_pEnemy, m_pEnemyComp, m_IsAngry);
 

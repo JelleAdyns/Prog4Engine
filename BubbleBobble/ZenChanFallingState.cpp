@@ -28,10 +28,7 @@ std::unique_ptr<EnemyState> ZenChanFallingState::Update()
 	dae::GameObject* pCollidedObject = m_pCollisionComp->CheckForCollision(collisionTags::bubbleTag);
 	if (pCollidedObject)
 	{
-		if (!pCollidedObject->GetComponent<BubbleComponent>()->IsOccupied())
-		{
-			return std::make_unique<ZenChanCaughtState>(m_pEnemy, pCollidedObject);
-		}
+		return std::make_unique<ZenChanCaughtState>(m_pEnemy, pCollidedObject);
 	}
 
 	if (m_pEnemy->GetWorldPosition().y > dae::Minigin::GetWindowSize().y)

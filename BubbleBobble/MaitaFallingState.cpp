@@ -28,10 +28,7 @@ std::unique_ptr<EnemyState> MaitaFallingState::Update()
 	dae::GameObject* pCollidedObject = m_pCollisionComp->CheckForCollision(collisionTags::bubbleTag);
 	if (pCollidedObject)
 	{
-		if (!pCollidedObject->GetComponent<BubbleComponent>()->IsOccupied())
-		{
-			return std::make_unique<MaitaCaughtState>(m_pEnemy, pCollidedObject);
-		}
+		return std::make_unique<MaitaCaughtState>(m_pEnemy, pCollidedObject);
 	}
 
 	if (m_pEnemy->GetWorldPosition().y > dae::Minigin::GetWindowSize().y)
@@ -61,10 +58,9 @@ void MaitaFallingState::OnExit()
 
 void MaitaFallingState::NotifyPlayerObservers(PlayerComponent* pSubject)
 {
-
 	auto subjectPos = pSubject->GetPos();
 	auto enemyPos = m_pEnemy->GetWorldPosition();
 
-	if (std::abs(enemyPos.x - subjectPos.x) < std::abs(enemyPos.x - m_PlayerXPos))
+	if (std::abs(enemyPos.x - subjectPos.x) < std::abs(enemyPos.x - m_PlayerXPos) || m_PlayerXPos < 1.f)
 		m_PlayerXPos = subjectPos.x;
 }

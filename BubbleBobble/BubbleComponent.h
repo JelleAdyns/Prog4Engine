@@ -46,7 +46,6 @@ public:
 
 	void AddObserver(dae::Observer<BubbleComponent>* pObserver);
 	void SetOccupied();
-	bool IsOccupied();
 	bool IsPoppedByPlayer();
 	FloatingStage GetFloatingStage() const;
 	bool IsFloating() const;

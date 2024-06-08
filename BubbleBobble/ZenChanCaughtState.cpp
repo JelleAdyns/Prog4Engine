@@ -47,6 +47,7 @@ void ZenChanCaughtState::OnEnter()
 	m_pOccupiedBubble->AddObserver(this);
 	m_pOccupiedBubble->SetOccupied();
 
+
 	switch (m_pOccupiedBubble->GetFloatingStage())
 	{
 	case BubbleComponent::FloatingStage::ShooterColor:
