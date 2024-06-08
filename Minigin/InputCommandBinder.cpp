@@ -3,6 +3,7 @@
 #include "InputCommandBinder.h"
 #include "GameTime.h"
 #include "KeyState.h"
+#include "AudioLocator.h"
 #include <backends/imgui_impl_sdl2.h>
 #include <iostream>
 #include <algorithm>
@@ -57,6 +58,11 @@ namespace dae
 			}
 
 			ImGui_ImplSDL2_ProcessEvent(&event);
+
+			if (KeyDownThisFrame(event, SDL_SCANCODE_F2))
+			{
+				dae::AudioLocator::GetAudioService().ToggleMute();
+			}
 		}
 
 

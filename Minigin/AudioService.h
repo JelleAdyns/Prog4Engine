@@ -22,6 +22,7 @@ namespace dae
 		virtual uint8_t GetVolume(SoundID id) const = 0;
 		virtual void SetVolume(SoundID id, uint8_t newVolume) = 0;
 		virtual void SetMasterVolume(uint8_t newVolume) = 0;
+		virtual void ToggleMute() = 0;
 		virtual void PauseSound(SoundID id) const = 0;
 		virtual void PauseAllSounds() const = 0;
 		virtual void ResumeSound(SoundID id) const = 0;

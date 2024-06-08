@@ -23,6 +23,7 @@ namespace dae
 		virtual uint8_t GetVolume(SoundID id) const override;
 		virtual void SetVolume(SoundID id, uint8_t newVolume) override;
 		virtual void SetMasterVolume(uint8_t newVolume) override;
+		virtual void ToggleMute() override;
 		virtual void PauseSound(SoundID id) const override;
 		virtual void PauseAllSounds() const override;
 		virtual void ResumeSound(SoundID id) const override;
