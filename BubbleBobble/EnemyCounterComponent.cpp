@@ -1,10 +1,11 @@
 #include "EnemyCounterComponent.h"
 #include "LevelState.h"
 #include <GameTime.h>
+#include "TimerComponent.h"
 
-EnemyCounterComponent::EnemyCounterComponent(dae::GameObject* pOwner, std::unique_ptr<dae::Command>& pNextLevelCommand):
+EnemyCounterComponent::EnemyCounterComponent(dae::GameObject* pOwner):
 	Component{pOwner},
-	m_pNextLevelCommand{std::move(pNextLevelCommand)},
+	m_pTimerComp{},
 	m_pVecObservedSubjects{}
 {
 }
@@ -19,18 +20,12 @@ EnemyCounterComponent::~EnemyCounterComponent()
 
 void EnemyCounterComponent::Start()
 {
+	if (!m_pTimerComp) m_pTimerComp = GetOwner()->GetComponent<TimerComponent>();
 }
 
 void EnemyCounterComponent::Update()
 {
-	if (m_AmountOfEnemies == 0)
-	{
-		m_Timer += dae::GameTime::GetInstance().GetDeltaTime();
-		if (m_Timer >= m_TimeForLevelSwitch)
-		{
-			m_pNextLevelCommand->Execute();
-		}
-	}
+
 }
 
 void EnemyCounterComponent::PrepareImGuiRender()
@@ -41,6 +36,10 @@ void EnemyCounterComponent::Notify(EnemyComponent*)
 {
 	--m_AmountOfEnemies;
 	assert((m_AmountOfEnemies >= 0) && "Amount of enemies was lower then 0.");
+	if (m_AmountOfEnemies == 0)
+	{
+		m_pTimerComp->Activate();
+	}
 }
 
 void EnemyCounterComponent::AddSubjectPointer(dae::Subject<EnemyComponent>* pSubject)

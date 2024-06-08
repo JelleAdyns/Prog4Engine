@@ -264,7 +264,8 @@ void LevelState::UploadScene(dae::Scene& scene)
 	// PlayerCounter
 	std::unique_ptr<dae::Command> pNextCmd = std::make_unique<LoadSceneCommand>(Game::CurrScene::DeathScreen);
 	auto pCounter = std::make_unique<dae::GameObject>();
-	pCounter->AddComponent<PlayerCounterComponent>(std::move(pNextCmd));
+	pCounter->AddComponent<PlayerCounterComponent>();
+	pCounter->AddComponent<TimerComponent>(3.f, std::move(pNextCmd));
 	PlayerCounterComponent* pCounterComp = pCounter->GetComponent<PlayerCounterComponent>();
 
 
@@ -512,7 +513,8 @@ void LevelState::ParseEnemies(std::stringstream& levelInfoStream)
 {
 	std::unique_ptr<dae::Command> pNextCmd = std::make_unique<NextLevelCommand>(this);
 	auto pCounter = std::make_unique<dae::GameObject>();
-	pCounter->AddComponent<EnemyCounterComponent>(std::move(pNextCmd));
+	pCounter->AddComponent<EnemyCounterComponent>();
+	pCounter->AddComponent<TimerComponent>(5.f, std::move(pNextCmd));
 	EnemyCounterComponent* pCounterComp = pCounter->GetComponent<EnemyCounterComponent>();
 
 	std::string enemy{};

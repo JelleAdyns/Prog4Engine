@@ -12,12 +12,13 @@ namespace dae
 }
 
 class SpriteComponent;
+class TimerComponent;
 class PlayerCounterComponent final : public dae::Component, public dae::Observer<PlayerComponent>
 {
 public:
 
 
-	explicit PlayerCounterComponent(dae::GameObject* pOwner, std::unique_ptr<dae::Command>& pNextLevelCommand);
+	explicit PlayerCounterComponent(dae::GameObject* pOwner);
 	virtual ~PlayerCounterComponent();
 	PlayerCounterComponent(const PlayerCounterComponent&) = delete;
 	PlayerCounterComponent(PlayerCounterComponent&&) noexcept = delete;
@@ -36,11 +37,8 @@ private:
 
 	int m_AmountOfPlayers{};
 
-	float m_Timer{};
-	float m_TimeForLevelSwitch{ 3.f };
+	TimerComponent* m_pTimerComp;
 
-
-	std::unique_ptr<dae::Command> m_pNextLevelCommand;
 	std::vector<dae::Subject<PlayerComponent>*> m_pVecObservedSubjects;
 };
 

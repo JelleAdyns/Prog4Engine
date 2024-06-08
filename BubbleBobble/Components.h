@@ -32,5 +32,6 @@
 #include "ScoreComponent.h"
 #include "InventoryComponent.h"
 #include "InitialsComponent.h"
+#include "TimerComponent.h"
 
 #endif // !COMPONENTS_H

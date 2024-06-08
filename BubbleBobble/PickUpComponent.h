@@ -46,7 +46,7 @@ private:
 	PickUpType m_PickUpType;
 
 	float m_Timer{};
-	static constexpr float m_MaxTimeAlive{ 10.f };
+	static constexpr float m_MaxTimeAlive{ 7.f };
 	static constexpr float m_TimeToFlicker{ m_MaxTimeAlive - 3.f };
 
 	float m_FlickerTimer{};

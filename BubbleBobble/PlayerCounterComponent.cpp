@@ -1,11 +1,12 @@
 #include "PlayerCounterComponent.h"
+#include "TimerComponent.h"
 #include "LevelState.h"
 #include <GameTime.h>
 #include <AudioLocator.h>
 
-PlayerCounterComponent::PlayerCounterComponent(dae::GameObject* pOwner, std::unique_ptr<dae::Command>& pNextLevelCommand) :
+PlayerCounterComponent::PlayerCounterComponent(dae::GameObject* pOwner) :
 	Component{ pOwner },
-	m_pNextLevelCommand{ std::move(pNextLevelCommand) },
+	m_pTimerComp{},
 	m_pVecObservedSubjects{}
 {
 }
@@ -20,18 +21,12 @@ PlayerCounterComponent::~PlayerCounterComponent()
 
 void PlayerCounterComponent::Start()
 {
+	if (!m_pTimerComp) m_pTimerComp = GetOwner()->GetComponent<TimerComponent>();
 }
 
 void PlayerCounterComponent::Update()
 {
-	if (m_AmountOfPlayers == 0)
-	{
-		m_Timer += dae::GameTime::GetInstance().GetDeltaTime();
-		if (m_Timer >= m_TimeForLevelSwitch)
-		{
-			m_pNextLevelCommand->Execute();
-		}
-	}
+
 }
 
 void PlayerCounterComponent::PrepareImGuiRender()
@@ -42,6 +37,10 @@ void PlayerCounterComponent::Notify(PlayerComponent*)
 {
 	--m_AmountOfPlayers;
 	assert((m_AmountOfPlayers >= 0) && "Amount of enemies was lower then 0.");
+	if (m_AmountOfPlayers == 0)
+	{
+		m_pTimerComp->Activate();
+	}
 }
 
 void PlayerCounterComponent::AddSubjectPointer(dae::Subject<PlayerComponent>* pSubject)
