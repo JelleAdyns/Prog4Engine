@@ -21,20 +21,14 @@ void TitleScreenState::OnEnter()
 	
 	auto& inputMan = dae::InputCommandBinder::GetInstance();
 	inputMan.RemoveAllCommands();
-	
-
 
 	LoadTitleScreen();
-
-	//dae::SceneManager::GetInstance().RemoveNonActiveScenes();
-
-	//dae::SceneManager::GetInstance().Start();
 	
 }
 
 void TitleScreenState::OnExit()
 {
-	//dae::Renderer::GetInstance().StartFadeOut();
+
 	auto& inputMan = dae::InputCommandBinder::GetInstance();
 	inputMan.RemoveAllCommands();
 

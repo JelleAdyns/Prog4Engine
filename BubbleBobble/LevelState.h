@@ -25,7 +25,7 @@ public:
 		const glm::u8vec4 textColor{};
 		const glm::vec2 spawnPos{};
 
-		static constexpr int startHealth{ 1 };
+		static constexpr int startHealth{ 3 };
 
 	};
 

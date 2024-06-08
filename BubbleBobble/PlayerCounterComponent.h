@@ -37,7 +37,7 @@ private:
 	int m_AmountOfPlayers{};
 
 	float m_Timer{};
-	float m_TimeForLevelSwitch{ 5.f };
+	float m_TimeForLevelSwitch{ 3.f };
 
 
 	std::unique_ptr<dae::Command> m_pNextLevelCommand;

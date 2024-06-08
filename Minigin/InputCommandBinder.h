@@ -36,6 +36,8 @@ namespace dae
 		void RemoveAllCommands();
 		void RemoveKeyCommand(SDL_Scancode key, KeyState keyState);
 		void RemoveControllerCommand(ControllerButton button, KeyState keyState, uint8_t controllerIndex);
+		void RemoveChangingToKeyboardCommands();
+		void RemoveChangingToControllerCommands();
 		void PopController();
 		void PopAllControllers();
 

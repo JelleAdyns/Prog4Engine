@@ -4,6 +4,7 @@
 #include <memory>
 #include <string>
 #include "SceneState.h"
+#include "glm/glm.hpp"
 
 namespace dae
 {
@@ -28,7 +29,8 @@ public:
 	virtual void OnResume() override;
 
 private:
-	void CreateReturnButton(dae::Scene& scene);
+	void CreateReturnButton(dae::Scene& scene) const;
+	void CreateLineOfText(dae::Scene& scene, const glm::vec2& pos, const std::string& keyboardText, const std::string& controllerText)const;
 	void LoadSinglePlayerInfo(dae::Scene& scene) const;
 	void LoadMultiPlayerInfo(dae::Scene& scene) const;
 	void LoadVersusInfo(dae::Scene& scene) const;

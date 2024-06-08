@@ -109,6 +109,14 @@ namespace dae
 	{
 		m_pVecControllers.at(controllerIndex)->RemoveCommand(button, keyState);
 	}
+	void InputCommandBinder::RemoveChangingToKeyboardCommands()
+	{
+		m_pVecCommandsChangingToKeyboard.clear();
+	}
+	void InputCommandBinder::RemoveChangingToControllerCommands()
+	{
+		m_pVecCommandsChangingToController.clear();
+	}
 	void InputCommandBinder::PopController()
 	{
 		if (!m_pVecControllers.empty()) m_pVecControllers.pop_back();
@@ -132,6 +140,10 @@ namespace dae
 		{
 			pUniqueCommand.active = false;
 		}
+		for (auto& controller : m_pVecControllers)
+		{
+			controller->DeactivateAllCommands();
+		}
 	}
 
 	void InputCommandBinder::ActivateAllCommands()
@@ -147,6 +159,10 @@ namespace dae
 		for (auto& pUniqueCommand : m_pVecCommandsChangingToKeyboard)
 		{
 			pUniqueCommand.active = true;
+		}
+		for (auto& controller : m_pVecControllers)
+		{
+			controller->ActivateAllCommands();
 		}
 	}
 
@@ -168,11 +184,11 @@ namespace dae
 	}
 	void InputCommandBinder::AddCommand_ChangingToController(std::unique_ptr<Command>&& pCommand)
 	{
-		m_pVecCommandsChangingToController.emplace_back(std::move(pCommand));
+		m_pVecCommandsChangingToController.emplace_back(std::move(UniqueCommand{std::move(pCommand), true }));
 	}
 	void InputCommandBinder::AddCommand_ChangingToKeyboard(std::unique_ptr<Command>&& pCommand)
 	{
-		m_pVecCommandsChangingToKeyboard.emplace_back(std::move(pCommand));
+		m_pVecCommandsChangingToKeyboard.emplace_back(std::move(UniqueCommand{ std::move(pCommand), true }));
 	}
 	void InputCommandBinder::AddController()
 	{

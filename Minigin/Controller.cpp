@@ -37,6 +37,9 @@ namespace dae
 		void RemoveCommandImpl(ControllerButton button, KeyState keyState);
 		void RemoveAllCommandsImpl();
 
+		void DeactivateAllCommandsImpl();
+		void ActivateAllCommandsImpl();
+
 		void VibrateImpl(int strengthPercentage);
 		glm::vec2 GetJoystickValueImpl(bool leftJoystick);
 		float GetTriggerValueImpl(bool leftJoystick);
@@ -80,7 +83,13 @@ namespace dae
 			}
 		};
 
-		std::map<ControllerState, std::shared_ptr<Command>> m_MapCommands{};
+		struct SharedControllerCommand
+		{
+			std::shared_ptr<Command> pCommand;
+			bool active;
+		};
+	
+		std::map<ControllerState, SharedControllerCommand> m_MapCommands{};
 
 		static float m_MaxVibrationValue;
 		static float m_MaxJoystickValue;
@@ -100,21 +109,22 @@ namespace dae
 
 	void Controller::ControllerImpl::HandleInputImpl() const
 	{
-		for (const auto& [controllerState, pCommand] : m_MapCommands)
+		for (const auto& [controllerState, pSharedCommand] : m_MapCommands)
 		{
+			const auto& [pCommand, active] = pSharedCommand;
 			switch (controllerState.keyState)
 			{
 			case KeyState::DownThisFrame:
-				if (IsDownThisFrameImpl(controllerState.button)) pCommand->Execute();
+				if (active && IsDownThisFrameImpl(controllerState.button)) pCommand->Execute();
 				break;
 			case KeyState::UpThisFrame:
-				if (IsUpThisFrameImpl(controllerState.button)) pCommand->Execute();
+				if (active && IsUpThisFrameImpl(controllerState.button)) pCommand->Execute();
 				break;
 			case KeyState::Pressed:
-				if (IsPressedImpl(controllerState.button)) pCommand->Execute();
+				if (active && IsPressedImpl(controllerState.button)) pCommand->Execute();
 				break;
 			case KeyState::NotPressed:
-				if (!IsPressedImpl(controllerState.button)) pCommand->Execute();
+				if (active && !IsPressedImpl(controllerState.button)) pCommand->Execute();
 				break;
 			}
 		}
@@ -193,7 +203,7 @@ namespace dae
 #ifndef NDEBUG
 		if (m_MapCommands.contains(state)) std::cout << "Binding to the requested button already exists. Overwriting now.\n";
 #endif // !NDEBUG
-		m_MapCommands[state] = pCommand;
+		m_MapCommands[state] = SharedControllerCommand{ pCommand, true };
 	}
 
 	void Controller::ControllerImpl::RemoveCommandImpl(ControllerButton button, KeyState keyState)
@@ -210,13 +220,29 @@ namespace dae
 		VibrateImpl(0);
 	}
 
+	void Controller::ControllerImpl::DeactivateAllCommandsImpl()
+	{
+		for (auto& [keyState, pSharedCommand] : m_MapCommands)
+		{
+			pSharedCommand.active = false;
+		}
+	}
+
+	void Controller::ControllerImpl::ActivateAllCommandsImpl()
+	{
+		for (auto& [keyState, pSharedCommand] : m_MapCommands)
+		{
+			pSharedCommand.active = true;
+		}
+	}
+
 
 	void Controller::ControllerImpl::VibrateImpl(int strengthPercentage)
 	{
 		XINPUT_VIBRATION vibration;
 		ZeroMemory(&vibration, sizeof(XINPUT_VIBRATION));
-		vibration.wLeftMotorSpeed = static_cast<WORD>(m_MaxVibrationValue / 100 * strengthPercentage); // use any value between 0-65535 here
-		vibration.wRightMotorSpeed = static_cast<WORD>(m_MaxVibrationValue / 100 * strengthPercentage); // use any value between 0-65535 here
+		vibration.wLeftMotorSpeed = static_cast<WORD>(m_MaxVibrationValue / 100 * strengthPercentage);
+		vibration.wRightMotorSpeed = static_cast<WORD>(m_MaxVibrationValue / 100 * strengthPercentage);
 		XInputSetState(m_ControllerIndex, &vibration);
 	}
 
@@ -312,6 +338,16 @@ namespace dae
 	void Controller::RemoveAllCommands()
 	{
 		m_pImpl->RemoveAllCommandsImpl();
+	}
+
+	void Controller::DeactivateAllCommands()
+	{
+		m_pImpl->DeactivateAllCommandsImpl();
+	}
+
+	void Controller::ActivateAllCommands()
+	{
+		m_pImpl->ActivateAllCommandsImpl();
 	}
 
 	void Controller::Vibrate(int strengthPrecantage)
