@@ -29,6 +29,7 @@
 #include <iostream>
 #include "ResultsState.h"
 #include "DeathScreenState.h"
+#include "WelcomeScreenState.h"
 
 void Game::StartGame()
 {
@@ -89,6 +90,10 @@ void Game::SetScene(Game::CurrScene newScene)
 	case CurrScene::PauseScreen:
 		//m_CurrScene = std::make_unique<PauseScreenState>();
 		m_SceneStack.push_back(std::make_unique<PauseScreenState>());
+		break;
+	case CurrScene::WelcomeScreen:
+		//m_CurrScene = std::make_unique<PauseScreenState>();
+		m_SceneStack.push_back(std::make_unique<WelcomeScreenState>());
 		break;
 	}
 	m_SceneStack.back()->OnEnter();

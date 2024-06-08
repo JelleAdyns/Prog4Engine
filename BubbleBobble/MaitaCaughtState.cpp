@@ -13,7 +13,7 @@
 
 MaitaCaughtState::MaitaCaughtState(dae::GameObject* pEnemy, dae::GameObject* pBubble) :
 	MaitaState{pEnemy},
-	m_GoalAmountOfTaps{ 20 + (rand() % 20 + 1) },
+	m_GoalAmountOfTaps{ 15 + (rand() % 20 + 1) },
 	m_pEnemy{ pEnemy },
 	m_pPhysicsComp{ pEnemy->GetComponent<dae::PhysicsComponent>() },
 	m_pCollisionComp{ pEnemy->GetComponent<dae::CollisionComponent>() },

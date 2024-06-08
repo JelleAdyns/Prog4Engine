@@ -47,9 +47,7 @@ void LevelState::OnEnter()
 	
 	UploadScene(scene);
 
-	auto& audioService = dae::AudioLocator::GetAudioService();
-	audioService.AddSound("Sounds/MainTheme.mp3", static_cast<dae::SoundID>(Game::SoundEvent::MainTheme));
-	audioService.PlaySoundClip(static_cast<dae::SoundID>(Game::SoundEvent::MainTheme), 80, true);
+	
 
 	dae::Renderer::GetInstance().StartFadeIn(0.5f);
 }
@@ -558,6 +556,7 @@ void LevelState::CreatePlayableMaita(const std::unique_ptr<dae::GameObject>& pPl
 	float maitaOffset = EnemyComponent::GetMaitaOffset();
 	pPlayer->AddComponent<SpriteComponent>("Textures/MaitaStates.png", 5, 9, 0.1f);
 	SpriteComponent* maitaSpriteComp = pPlayer->GetComponent<SpriteComponent>();
+	maitaSpriteComp->LookLeft(true);
 
 	auto maitaDestRctSize = maitaSpriteComp->GetDestRectSize();
 	float collisionOffset{ LevelState::GetCollisionOffset() };

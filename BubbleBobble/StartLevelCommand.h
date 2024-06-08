@@ -21,7 +21,7 @@ public:
 	virtual void Execute() const override
 	{
 		Game::GetInstance().SetGameMode(m_GameMode);
-		Game::GetInstance().SetScene(Game::CurrScene::Level);
+		Game::GetInstance().SetScene(Game::CurrScene::WelcomeScreen);
 	}
 private:
 	const Game::GameMode m_GameMode;

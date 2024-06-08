@@ -203,10 +203,12 @@
     <ClCompile Include="ScoreUIComponent.cpp" />
     <ClCompile Include="Spawners.cpp" />
     <ClCompile Include="SpriteComponent.cpp" />
+    <ClCompile Include="TimerComponent.cpp" />
     <ClCompile Include="TitleScreenState.cpp" />
     <ClCompile Include="TrashTheCacheGameObjectsComponent.cpp" />
     <ClCompile Include="TrashTheCacheIntComponent.cpp" />
     <ClCompile Include="WallCheckingComponent.cpp" />
+    <ClCompile Include="WelcomeScreenState.cpp" />
     <ClCompile Include="ZenChanCaughtState.cpp" />
     <ClCompile Include="ZenChanFallingState.cpp" />
     <ClCompile Include="ZenChanJumpState.cpp" />
@@ -245,7 +247,9 @@
     <ClInclude Include="CollisionTags.h" />
     <ClInclude Include="MovementComponent.h" />
     <ClInclude Include="StartLevelCommand.h" />
+    <ClInclude Include="TimerComponent.h" />
     <ClInclude Include="TitleScreenState.h" />
+    <ClInclude Include="WelcomeScreenState.h" />
     <ClInclude Include="ZenChanCaughtState.h" />
     <ClInclude Include="ZenChanJumpState.h" />
     <ClInclude Include="MaitaRunState.h" />

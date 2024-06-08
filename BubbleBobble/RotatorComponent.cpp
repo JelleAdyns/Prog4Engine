@@ -11,10 +11,10 @@ RotatorComponent::RotatorComponent(dae::GameObject* pOwner):
 
 }
 
-RotatorComponent::RotatorComponent(dae::GameObject* pOwner, float radius, float speed):
+RotatorComponent::RotatorComponent(dae::GameObject* pOwner, float radius, float startDegrees, float speed):
 	dae::Component{ pOwner },
 	m_Radius{ radius },
-	m_Angle{},
+	m_Angle{startDegrees* static_cast<float>(std::numbers::pi) / 180},
 	m_Speed{ speed }
 {
 

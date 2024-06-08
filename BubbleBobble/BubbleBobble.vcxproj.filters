@@ -182,6 +182,12 @@
     <ClCompile Include="PauseScreenState.cpp">
       <Filter>Source Files\States\SceneState</Filter>
     </ClCompile>
+    <ClCompile Include="WelcomeScreenState.cpp">
+      <Filter>Source Files\States\SceneState</Filter>
+    </ClCompile>
+    <ClCompile Include="TimerComponent.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Achievements.h">
@@ -361,9 +367,6 @@
     <ClInclude Include="InventoryComponent.h">
       <Filter>Source Files\Components</Filter>
     </ClInclude>
-    <ClInclude Include="StartLevelCommand.h">
-      <Filter>Source Files\Commands</Filter>
-    </ClInclude>
     <ClInclude Include="ResultsState.h">
       <Filter>Source Files\States\SceneState</Filter>
     </ClInclude>
@@ -390,6 +393,15 @@
     </ClInclude>
     <ClInclude Include="PauseScreenState.h">
       <Filter>Source Files\States\SceneState</Filter>
+    </ClInclude>
+    <ClInclude Include="WelcomeScreenState.h">
+      <Filter>Source Files\States\SceneState</Filter>
+    </ClInclude>
+    <ClInclude Include="TimerComponent.h">
+      <Filter>Source Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="StartLevelCommand.h">
+      <Filter>Source Files\Commands</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
