@@ -30,6 +30,7 @@ namespace dae
 		void PlaySoundClipImpl(SoundID id, uint8_t volume, bool repeat);
 		uint8_t GetVolumeImpl(SoundID id) const;
 		void SetVolumeImpl(SoundID id, uint8_t newVolume);
+		void SetMasterVolumeImpl(uint8_t newVolume);
 		void PauseSoundImpl(SoundID id) const;
 		void PauseAllSoundsImpl() const;
 		void ResumeSoundImpl(SoundID id) const;
@@ -103,6 +104,11 @@ namespace dae
 	{
 		std::lock_guard<std::mutex> mapLock{ m_MapMutex };
 		if (m_pMapMusicClips.at(id).pMixChunk != nullptr) Mix_Volume(id, newVolume);
+	}
+	void SDLAudio::SDLAudioImpl::SetMasterVolumeImpl(uint8_t newVolume)
+	{
+		std::lock_guard<std::mutex> mapLock{ m_MapMutex };
+		Mix_Volume(-1, newVolume);
 	}
 	void SDLAudio::SDLAudioImpl::PauseSoundImpl(SoundID id) const
 	{
@@ -199,6 +205,11 @@ namespace dae
 	void SDLAudio::SetVolume(SoundID id, uint8_t newVolume)
 	{
 		m_pImpl->SetVolumeImpl(id, newVolume);
+	}
+
+	void SDLAudio::SetMasterVolume(uint8_t newVolume)
+	{
+		m_pImpl->SetMasterVolumeImpl(newVolume);
 	}
 
 	void SDLAudio::PauseSound(SoundID id) const
