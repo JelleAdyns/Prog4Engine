@@ -39,6 +39,9 @@ namespace dae
 		void PopController();
 		void PopAllControllers();
 
+		void DeactivateAllCommands();
+		void ActivateAllCommands();
+
 		bool KeyDownThisFrame(SDL_Event& event, SDL_Scancode key) const;
 		bool KeyUpThisFrame(SDL_Event& event, SDL_Scancode key) const;
 		bool KeyPressed(SDL_Scancode key) const;
@@ -90,10 +93,21 @@ namespace dae
 			}
 		};
 
-		std::map<KeyBoardState, std::shared_ptr<Command>> m_MapKeyCommands;
+		struct SharedCommand
+		{
+			std::shared_ptr<Command> pCommand;
+			bool active;
+		};
+		struct UniqueCommand
+		{
+			std::unique_ptr<Command> pCommand;
+			bool active;
+		};
+
+		std::map<KeyBoardState, SharedCommand> m_MapKeyCommands;
 		
-		std::vector<std::unique_ptr<Command>> m_pVecCommandsChangingToController;
-		std::vector<std::unique_ptr<Command>> m_pVecCommandsChangingToKeyboard;
+		std::vector<UniqueCommand> m_pVecCommandsChangingToController;
+		std::vector<UniqueCommand> m_pVecCommandsChangingToKeyboard;
 
 		std::vector<std::unique_ptr<Controller>> m_pVecControllers;
 	};

@@ -7,7 +7,7 @@
 #include <InputCommandBinder.h>
 #include <Minigin.h>
 #include "Components.h"
-#include "LoadSceneCommand.h"
+#include "LoadSceneCommands.h"
 #include "Game.h"
 #include "SelectButtonCommand.h"
 #include "StartLevelCommand.h"

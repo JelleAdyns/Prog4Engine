@@ -179,6 +179,9 @@
     <ClCompile Include="PlayerCounterComponent.cpp">
       <Filter>Source Files\Components</Filter>
     </ClCompile>
+    <ClCompile Include="PauseScreenState.cpp">
+      <Filter>Source Files\States\SceneState</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Achievements.h">
@@ -220,7 +223,7 @@
     <ClInclude Include="Commands.h">
       <Filter>Source Files\Commands</Filter>
     </ClInclude>
-    <ClInclude Include="LoadSceneCommand.h">
+    <ClInclude Include="LoadSceneCommands.h">
       <Filter>Source Files\Commands</Filter>
     </ClInclude>
     <ClInclude Include="ButtonComponent.h">

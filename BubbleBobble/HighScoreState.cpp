@@ -9,7 +9,7 @@
 #include "ButtonHandlerComponent.h"
 #include "ActivateButtonCommand.h"
 #include <KeyState.h>
-#include "LoadSceneCommand.h"
+#include "LoadSceneCommands.h"
 
 const std::string HighScoreState::m_SceneName{ "HighScore" };
 

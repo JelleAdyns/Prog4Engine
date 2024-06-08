@@ -192,6 +192,7 @@
     <ClCompile Include="MaitaPoppedState.cpp" />
     <ClCompile Include="MaitaRunState.cpp" />
     <ClCompile Include="MovementComponent.cpp" />
+    <ClCompile Include="PauseScreenState.cpp" />
     <ClCompile Include="PickUpComponent.cpp" />
     <ClCompile Include="PlayerComponent.cpp" />
     <ClCompile Include="PlayerCounterComponent.cpp" />
@@ -267,7 +268,7 @@
     <ClInclude Include="IdleState.h" />
     <ClInclude Include="JumpingState.h" />
     <ClInclude Include="LivesUIComponent.h" />
-    <ClInclude Include="LoadSceneCommand.h" />
+    <ClInclude Include="LoadSceneCommands.h" />
     <ClInclude Include="MovementCommands.h" />
     <ClInclude Include="PickUpComponent.h" />
     <ClInclude Include="PlayerComponent.h" />

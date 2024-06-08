@@ -25,7 +25,8 @@ namespace dae
 			if (pController->IsAnyButtonPressed())
 			{
 				m_IsKeyboardActive = false;
-				for (auto& pCommand : m_pVecCommandsChangingToController) pCommand->Execute();
+				for (const auto& [pCommand, active] : m_pVecCommandsChangingToController)
+					if (active) pCommand->Execute();
 			}
 		}
 
@@ -35,19 +36,22 @@ namespace dae
 			if (event.type == SDL_KEYDOWN) 
 			{
 				m_IsKeyboardActive = true;
-				for (auto& pCommand : m_pVecCommandsChangingToKeyboard) pCommand->Execute();
+				for (const auto& [pCommand, active] : m_pVecCommandsChangingToKeyboard)
+					if( active ) pCommand->Execute();
 			}
 			if (event.type == SDL_QUIT) return false;
 
-			for (const auto& [keyBoardState, pCommand] : m_MapKeyCommands)
+			for (const auto& [keyBoardState, pSharedCommand] : m_MapKeyCommands)
 			{
+				const auto& [pCommand, active] = pSharedCommand;
+
 				switch (keyBoardState.keyState)
 				{
 				case KeyState::DownThisFrame:
-					if (KeyDownThisFrame(event, keyBoardState.key)) pCommand->Execute();
+					if (active && KeyDownThisFrame(event, keyBoardState.key)) pCommand->Execute();
 					break;
 				case KeyState::UpThisFrame:
-					if (KeyUpThisFrame(event, keyBoardState.key)) pCommand->Execute();
+					if (active && KeyUpThisFrame(event, keyBoardState.key)) pCommand->Execute();
 					break;
 				}
 			}
@@ -56,15 +60,16 @@ namespace dae
 		}
 
 
-		for (const auto& [keyBoardState, pCommand] : m_MapKeyCommands)
+		for (const auto& [keyBoardState, pSharedCommand] : m_MapKeyCommands)
 		{
+			const auto& [pCommand, active] = pSharedCommand;
 			switch (keyBoardState.keyState)
 			{
 			case KeyState::Pressed:
-				if (KeyPressed(keyBoardState.key)) pCommand->Execute();
+				if (active && KeyPressed(keyBoardState.key)) pCommand->Execute();
 				break;
 			case KeyState::NotPressed:
-				if (!KeyPressed(keyBoardState.key)) pCommand->Execute();
+				if (active && !KeyPressed(keyBoardState.key)) pCommand->Execute();
 				break;
 			}
 		}
@@ -113,6 +118,38 @@ namespace dae
 		m_pVecControllers.clear();
 	}
 
+	void InputCommandBinder::DeactivateAllCommands()
+	{
+		for (auto& [keyState, pSharedCommand] : m_MapKeyCommands)
+		{
+			pSharedCommand.active = false;
+		}
+		for (auto& pUniqueCommand : m_pVecCommandsChangingToController)
+		{
+			pUniqueCommand.active = false;
+		}
+		for (auto& pUniqueCommand : m_pVecCommandsChangingToKeyboard)
+		{
+			pUniqueCommand.active = false;
+		}
+	}
+
+	void InputCommandBinder::ActivateAllCommands()
+	{
+		for (auto& [keyState, pSharedCommand] : m_MapKeyCommands)
+		{
+			pSharedCommand.active = true;
+		}
+		for (auto& pUniqueCommand : m_pVecCommandsChangingToController)
+		{
+			pUniqueCommand.active = true;
+		}
+		for (auto& pUniqueCommand : m_pVecCommandsChangingToKeyboard)
+		{
+			pUniqueCommand.active = true;
+		}
+	}
+
 
 	//Adding
 	void InputCommandBinder::AddKeyCommand(const std::shared_ptr<Command>& pCommand, SDL_Scancode key, KeyState keyState)
@@ -123,7 +160,7 @@ namespace dae
 #ifndef NDEBUG
 		if (m_MapKeyCommands.contains(state)) std::cout << "Binding to the requested key ("<<key<<") already exists.Overwriting now.\n";
 #endif // !NDEBUG
-		m_MapKeyCommands[state] = pCommand;
+		m_MapKeyCommands[state] = SharedCommand{ pCommand, true };
 	}
 	void InputCommandBinder::AddControllerCommand(const std::shared_ptr<Command>& pCommand, ControllerButton button, KeyState keyState, uint8_t controllerIndex)
 	{

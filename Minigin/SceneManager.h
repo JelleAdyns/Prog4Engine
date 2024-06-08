@@ -22,6 +22,8 @@ namespace dae
 		Scene* GetNextScene() const;
 		void SetNextScene(const std::string& sceneToActivate);
 		void SetActiveScene();
+		void SuspendActiveScene();
+		void ResumeSuspendedScene();
 
 		virtual ~SceneManager() = default;
 
@@ -41,6 +43,7 @@ namespace dae
 
 		void CheckForDestroyedScenes();
 
+		std::string m_SuspendedScene;
 		std::string m_ActiveScene;
 		std::string m_NextScene;
 		std::vector<std::string> m_KeysToDestroy;

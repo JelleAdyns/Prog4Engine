@@ -20,11 +20,13 @@ void dae::SceneManager::Update()
 
 void dae::SceneManager::PrepareImGuiRender()
 {
+	if(m_pMapScenes.contains(m_SuspendedScene)) m_pMapScenes.at(m_SuspendedScene)->PrepareImGuiRender();
 	m_pMapScenes.at(m_ActiveScene)->PrepareImGuiRender();
 }
 
 void dae::SceneManager::Render() const
 {
+	if(m_pMapScenes.contains(m_SuspendedScene)) m_pMapScenes.at(m_SuspendedScene)->Render();
 	m_pMapScenes.at(m_ActiveScene)->Render();
 }
 
@@ -71,7 +73,7 @@ void dae::SceneManager::RemoveNonActiveScenes()
 	std::for_each(m_pMapScenes.cbegin(), m_pMapScenes.cend(), [&](const std::pair<const std::string, std::unique_ptr<Scene>>& pair)
 		{
 			const auto& [key, pScene] = pair;
-			if(key != m_ActiveScene) pScene->SetDestroyed();
+			if(key != m_ActiveScene && key != m_SuspendedScene) pScene->SetDestroyed();
 		});
 	
 }
@@ -97,4 +99,18 @@ void dae::SceneManager::SetActiveScene()
 		RemoveNonActiveScenes();
 		Start();
 	}
+}
+
+void dae::SceneManager::SuspendActiveScene()
+{
+	if (m_pMapScenes.contains(m_ActiveScene)) m_SuspendedScene = m_ActiveScene;
+}
+
+void dae::SceneManager::ResumeSuspendedScene()
+{
+	assert((!m_SuspendedScene.empty()) && "No Suspended scene available");
+	m_ActiveScene = m_SuspendedScene;
+	m_NextScene = m_SuspendedScene;
+	m_SuspendedScene.clear();
+	RemoveNonActiveScenes();
 }

@@ -7,7 +7,7 @@
 #include <Minigin.h>
 #include <Renderer.h>
 #include "Components.h"
-#include "LoadSceneCommand.h"
+#include "LoadSceneCommands.h"
 #include "Game.h"
 #include "ActivateButtonCommand.h"
 #include <KeyState.h>

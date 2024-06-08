@@ -20,7 +20,7 @@
 #include "Spawners.h"
 #include "ActivateButtonCommand.h"
 #include "Achievements.h"
-#include "LoadSceneCommand.h"
+#include "LoadSceneCommands.h"
 
 const std::string LevelState::m_SceneName{ "Level" };
 LevelState::PlayerInfo LevelState::m_pPlayerOne{ .textColor{ 116, 251, 77, 255 }, .spawnPos{24.f, dae::Minigin::GetWindowSize().y - 24.f}  };
@@ -43,6 +43,7 @@ void LevelState::OnEnter()
 
 	auto& scene = dae::SceneManager::GetInstance().CreateScene(m_SceneName + std::to_string(m_LevelNumber));
 	CreateSkipButton(scene);
+	CreatePauseButton(scene);
 	
 	UploadScene(scene);
 
@@ -67,10 +68,17 @@ void LevelState::OnExit()
 
 void LevelState::OnSuspend()
 {
+	dae::SceneManager::GetInstance().SuspendActiveScene();
+	dae::InputCommandBinder::GetInstance().DeactivateAllCommands();
 }
 
 void LevelState::OnResume()
 {
+	dae::SceneManager::GetInstance().ResumeSuspendedScene();
+	dae::Scene* activeScene = dae::SceneManager::GetInstance().GetActiveScene();
+
+	dae::InputCommandBinder::GetInstance().ActivateAllCommands();
+	CreatePauseButton(*activeScene);
 }
 
 void LevelState::AdvanceLevel()
@@ -87,6 +95,7 @@ void LevelState::AdvanceLevel()
 
 		auto& scene = dae::SceneManager::GetInstance().CreateScene(m_SceneName + std::to_string(m_LevelNumber));
 		CreateSkipButton(scene);
+		CreatePauseButton(scene);
 		UploadScene(scene);
 
 		dae::Renderer::GetInstance().StartFadeIn(0.5f);
@@ -107,10 +116,33 @@ void LevelState::CreateSkipButton(dae::Scene& scene)
 	pHandlerComp->AddButton(pButtonComp);
 
 	auto& inputMan = dae::InputCommandBinder::GetInstance();
-	inputMan.RemoveAllCommands();
 
 	std::shared_ptr<dae::Command> activateCommand = std::make_shared<ActivateButtonCommand>(pButtonHandler);
 	inputMan.AddKeyCommand(activateCommand, SDL_SCANCODE_F1, dae::KeyState::UpThisFrame);
+	inputMan.AddControllerCommand(activateCommand, dae::ControllerButton::RightThumb, dae::KeyState::UpThisFrame, 0);
+
+
+	scene.AddGameObject(std::move(pButtonHandler));
+	scene.AddGameObject(std::move(pButton));
+}
+
+void LevelState::CreatePauseButton(dae::Scene& scene)
+{
+	auto pButtonHandler = std::make_unique<dae::GameObject>();
+	pButtonHandler->AddComponent<ButtonHandlerComponent>();
+	auto pHandlerComp = pButtonHandler->GetComponent<ButtonHandlerComponent>();
+
+	std::unique_ptr<dae::Command> pNextLevelCommand = std::make_unique<PushSceneCommand>(Game::CurrScene::PauseScreen);
+	auto pButton = std::make_unique<dae::GameObject>();
+	pButton->AddComponent<ButtonComponent>(pNextLevelCommand);
+	auto pButtonComp = pButton->GetComponent<ButtonComponent>();
+
+	pHandlerComp->AddButton(pButtonComp);
+
+	auto& inputMan = dae::InputCommandBinder::GetInstance();
+
+	std::shared_ptr<dae::Command> activateCommand = std::make_shared<ActivateButtonCommand>(pButtonHandler);
+	inputMan.AddKeyCommand(activateCommand, SDL_SCANCODE_ESCAPE, dae::KeyState::UpThisFrame);
 	inputMan.AddControllerCommand(activateCommand, dae::ControllerButton::Start, dae::KeyState::UpThisFrame, 0);
 
 

@@ -4,7 +4,7 @@
 #include <Command.h>
 #include <GameObjectCommand.h>
 #include "MovementCommands.h"
-#include "LoadSceneCommand.h"
+#include "LoadSceneCommands.h"
 #include "SelectButtonCommand.h"
 #include "ActivateButtonCommand.h"
 #include "SetTextCommand.h"

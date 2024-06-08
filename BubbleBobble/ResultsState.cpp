@@ -2,7 +2,7 @@
 #include "LevelState.h"
 #include "Components.h"
 #include "HighScoreHandling.h"
-#include "LoadSceneCommand.h"
+#include "LoadSceneCommands.h"
 #include "InitialsCommands.h"
 #include <GameObject.h>
 #include <SceneManager.h>

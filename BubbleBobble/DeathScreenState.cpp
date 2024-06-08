@@ -5,7 +5,7 @@
 #include <GameObject.h>
 #include <Minigin.h>
 #include <SceneManager.h>
-#include "LoadSceneCommand.h"
+#include "LoadSceneCommands.h"
 #include "SelectButtonCommand.h"
 #include <KeyState.h>
 #include <InputCommandBinder.h>

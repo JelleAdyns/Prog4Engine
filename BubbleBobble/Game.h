@@ -3,7 +3,9 @@
 
 #include <Singleton.h>
 #include <AudioService.h>
+#include <vector>
 #include "TitleScreenState.h"
+#include "PauseScreenState.h"
 namespace dae
 {
 	class Scene;
@@ -55,13 +57,16 @@ public:
 
 	void StartGame();
 	void SetScene(Game::CurrScene newScene);
+	void PushScene(Game::CurrScene newScene);
+	void PopScene();
 	void SetGameMode(Game::GameMode newGameMode);
 	GameMode GetCurrentGameMode() {return m_CurrentGameMode;}
 private:
 
 	std::unique_ptr<SceneState> m_CurrScene{ nullptr };
+	std::unique_ptr<PauseScreenState> m_PauseScreen{ nullptr };
 	GameMode m_CurrentGameMode{ GameMode::SinglePlayer };
-
+	std::vector<std::unique_ptr<SceneState>> m_SceneStack;
 	friend class dae::Singleton<Game>;
 	Game() = default;
 };
