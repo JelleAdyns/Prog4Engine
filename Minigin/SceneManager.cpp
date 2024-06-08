@@ -2,6 +2,7 @@
 #include "SceneManager.h"
 #include "Scene.h"
 #include "Minigin.h"
+#include "Renderer.h"
 #include <iostream>
 #include <algorithm>
 
@@ -27,6 +28,9 @@ void dae::SceneManager::PrepareImGuiRender()
 void dae::SceneManager::Render() const
 {
 	if(m_pMapScenes.contains(m_SuspendedScene)) m_pMapScenes.at(m_SuspendedScene)->Render();
+
+	auto& renderer = dae::Renderer::GetInstance();
+	if (renderer.NeedsToRenderBG()) renderer.RenderTranslucentBackGround();
 	m_pMapScenes.at(m_ActiveScene)->Render();
 }
 

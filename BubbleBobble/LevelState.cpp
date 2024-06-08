@@ -91,6 +91,9 @@ void LevelState::AdvanceLevel()
 	}
 	else
 	{
+		auto& inputMan = dae::InputCommandBinder::GetInstance();
+		inputMan.RemoveAllCommands();
+
 		++m_LevelNumber;
 
 		auto& scene = dae::SceneManager::GetInstance().CreateScene(m_SceneName + std::to_string(m_LevelNumber));

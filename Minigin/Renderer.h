@@ -30,6 +30,7 @@ namespace dae
 
 		void RenderTexture(const Texture2D& texture, float x, float y, bool flip) const;
 		void RenderTexture(const Texture2D& texture, SDL_Rect srcRect, SDL_Rect dstRect, bool flip) const;
+		void RenderTranslucentBackGround() const;
 
 		SDL_Renderer* GetSDLRenderer() const;
 		
@@ -37,6 +38,9 @@ namespace dae
 		void SetBackgroundColor(const SDL_Color& color) { m_ClearColor = color; }
 
 		void StartFadeIn(float mulptiplier);
+
+		void SetRenderBG(bool renderBG);
+		bool NeedsToRenderBG() const { return m_RenderBG; }
 
 	private:
 
@@ -48,6 +52,8 @@ namespace dae
 		SDL_Window* m_Window{};
 		SDL_Color m_ClearColor{};	
 		SDL_Rect m_WindowRect{};	
+
+		bool m_RenderBG{};
 
 		float m_FadeTimer{};
 		float m_FadeMultiplier{};

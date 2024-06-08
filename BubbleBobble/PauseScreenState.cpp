@@ -10,11 +10,14 @@
 #include "LoadSceneCommands.h"
 #include "ActivateButtonCommand.h"
 #include <KeyState.h>
+#include <Renderer.h>
 
 const std::string PauseScreenState::m_SceneName{ "Pause" };
 
 void PauseScreenState::OnEnter()
 {
+	dae::Renderer::GetInstance().SetRenderBG(true);
+
 	auto& scene = dae::SceneManager::GetInstance().CreateScene(m_SceneName);
 
 	CreateReturnButton(scene);
@@ -44,6 +47,7 @@ void PauseScreenState::OnEnter()
 void PauseScreenState::OnExit()
 {
 	
+	dae::Renderer::GetInstance().SetRenderBG(false);
 }
 
 void PauseScreenState::OnSuspend()

@@ -119,6 +119,14 @@ void dae::Renderer::RenderTexture(const Texture2D& texture, SDL_Rect srcRect, SD
 	SDL_RenderCopyEx(GetSDLRenderer(), texture.GetSDLTexture(), &srcRect, &dst, 0, NULL, flip ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);
 }
 
+void dae::Renderer::RenderTranslucentBackGround() const
+{
+	SDL_SetRenderDrawBlendMode(m_Renderer, SDL_BLENDMODE_BLEND);
+
+	SDL_SetRenderDrawColor(m_Renderer, 0, 0, 0, 150);
+	SDL_RenderFillRect(m_Renderer, &m_WindowRect);
+}
+
 SDL_Renderer* dae::Renderer::GetSDLRenderer() const { return m_Renderer; }
 
 void dae::Renderer::StartFadeIn(float mulptiplier)
@@ -127,6 +135,11 @@ void dae::Renderer::StartFadeIn(float mulptiplier)
 	m_FadeTimer = 0.f;
 	m_FadingIn = true;
 	m_FadeMultiplier = mulptiplier;
+}
+
+void dae::Renderer::SetRenderBG(bool renderBG)
+{
+	m_RenderBG = renderBG;
 }
 
 
