@@ -8,6 +8,8 @@
 #include <RenderComponent.h>
 #include <GameTime.h>
 #include <algorithm>
+#include <AudioLocator.h>
+#include "Game.h"
 
 BubbleComponent::BubbleComponent(dae::GameObject* pOwner, PlayerComponent::PlayerType shooter, bool left):
 	dae::Component{pOwner},
@@ -22,6 +24,8 @@ BubbleComponent::BubbleComponent(dae::GameObject* pOwner, PlayerComponent::Playe
 	m_pTimerTick{std::make_unique<dae::Subject<BubbleComponent>>()},
 	m_pVecObservedSpriteSubjects{}
 {
+	dae::AudioLocator::GetAudioService().AddSound("Sounds/Shoot.wav", static_cast<dae::SoundID>(Game::SoundEvent::Shoot));
+	dae::AudioLocator::GetAudioService().PlaySoundClip(static_cast<dae::SoundID>(Game::SoundEvent::Shoot), 120, false);
 }
 
 BubbleComponent::~BubbleComponent()

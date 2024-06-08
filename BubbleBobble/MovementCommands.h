@@ -97,6 +97,9 @@ public:
 		m_pPhysicsComponent = GetGameObject()->GetComponent<dae::PhysicsComponent>();
 		m_pCollisionComponent = GetGameObject()->GetComponent<dae::CollisionComponent>();
 		m_pFloorCheckingComponent = GetGameObject()->GetComponent<FloorCheckingComponent>();
+
+		dae::AudioLocator::GetAudioService().AddSound("Sounds/Jump.wav", static_cast<dae::SoundID>(Game::SoundEvent::Jump));
+		dae::AudioLocator::GetAudioService().AddSound("Sounds/Jump_Bubble.wav", static_cast<dae::SoundID>(Game::SoundEvent::JumpBubble));
 	};
 	virtual ~JumpCommand() = default;
 
@@ -118,7 +121,10 @@ public:
 				if ((flags & bottomFlag) == bottomFlag)
 				{
 					if (bubble->GetComponent<BubbleComponent>()->IsFloating())
+					{
 						m_pPhysicsComponent->SetVelocityY(m_JumpVelocity);
+						dae::AudioLocator::GetAudioService().PlaySoundClip(static_cast<dae::SoundID>(Game::SoundEvent::JumpBubble), 120, false);
+					}
 				}
 			}
 			else
@@ -133,7 +139,10 @@ public:
 					if ((flags & bottomFlag) == bottomFlag)
 					{
 						if (occupiedBubble->GetComponent<BubbleComponent>()->IsFloating())
+						{
 							m_pPhysicsComponent->SetVelocityY(m_JumpVelocity);
+							dae::AudioLocator::GetAudioService().PlaySoundClip(static_cast<dae::SoundID>(Game::SoundEvent::JumpBubble), 120, false);
+						}
 					}
 				}
 			}
@@ -145,8 +154,6 @@ public:
 			{
 				m_pPhysicsComponent->SetVelocityY(m_JumpVelocity);
 
-				//this code is in here purely for demonstration purposes
-				dae::AudioLocator::GetAudioService().AddSound("Sounds/Jump.wav", static_cast<dae::SoundID>(Game::SoundEvent::Jump));
 				dae::AudioLocator::GetAudioService().PlaySoundClip(static_cast<dae::SoundID>(Game::SoundEvent::Jump), 120, false);
 			}
 		}

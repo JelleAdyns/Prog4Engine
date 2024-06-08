@@ -4,6 +4,8 @@
 #include <PhysicsComponent.h>
 #include <CollisionComponent.h>
 #include <algorithm>
+#include <AudioLocator.h>
+#include "Game.h"
 
 
 ProjectileComponent::ProjectileComponent(dae::GameObject* pOwner, bool left) :
@@ -13,6 +15,7 @@ ProjectileComponent::ProjectileComponent(dae::GameObject* pOwner, bool left) :
 	m_pWallComp{},
 	m_pPhysicsComp{}
 {
+	dae::AudioLocator::GetAudioService().AddSound("Sounds/Boulder.wav", static_cast<dae::SoundID>(Game::SoundEvent::Boulder));
 }
 
 ProjectileComponent::~ProjectileComponent()
@@ -45,6 +48,7 @@ void ProjectileComponent::Update()
 			m_pSpriteComp->AddRows(1);
 			m_pSpriteComp->SetCol(0);
 			m_pSpriteComp->SetFrameTime(0.2f);
+			dae::AudioLocator::GetAudioService().PlaySoundClip(static_cast<dae::SoundID>(Game::SoundEvent::Boulder), 120, false);
 		}
 	}
 }
@@ -59,6 +63,7 @@ void ProjectileComponent::Notify(SpriteComponent*)
 	{
 		
 		GetOwner()->MarkDead();
+
 	}
 }
 

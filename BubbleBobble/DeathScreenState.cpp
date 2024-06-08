@@ -10,6 +10,7 @@
 #include <KeyState.h>
 #include <InputCommandBinder.h>
 #include "ActivateButtonCommand.h"
+#include <AudioLocator.h>
 
 const std::string DeathScreenState::m_SceneName{ "Death" };
 
@@ -26,6 +27,11 @@ void DeathScreenState::OnExit()
 {
 	auto& inputMan = dae::InputCommandBinder::GetInstance();
 	inputMan.RemoveAllCommands();
+
+	auto& audioService = dae::AudioLocator::GetAudioService();
+	audioService.StopAllSounds();
+
+	audioService.PlaySoundClip(static_cast<dae::SoundID>(Game::SoundEvent::Select), 80, false);
 }
 
 void DeathScreenState::OnSuspend()

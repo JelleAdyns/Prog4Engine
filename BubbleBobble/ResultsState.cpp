@@ -42,6 +42,7 @@ void ResultsState::OnExit()
 
 	auto& audioService = dae::AudioLocator::GetAudioService();
 	audioService.StopAllSounds();
+	audioService.PlaySoundClip(static_cast<dae::SoundID>(Game::SoundEvent::Select), 80, false);
 }
 
 void ResultsState::OnSuspend()

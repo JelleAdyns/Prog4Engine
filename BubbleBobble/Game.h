@@ -51,7 +51,8 @@ public:
 		EnemyDeath,
 		PickUp,
 		Jump,
-		JumpBubble
+		JumpBubble,
+		Boulder
 	};
 
 

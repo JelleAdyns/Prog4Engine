@@ -13,6 +13,7 @@
 #include <Renderer.h>
 #include "SetTextCommand.h"
 #include "LevelState.h"
+#include <AudioLocator.h>
 
 const std::string PauseScreenState::m_SceneName{ "Pause" };
 
@@ -42,6 +43,9 @@ void PauseScreenState::OnEnter()
 	}
 
 	CreateReturnButton(scene);
+
+	auto& audioService = dae::AudioLocator::GetAudioService();
+	audioService.PlaySoundClip(static_cast<dae::SoundID>(Game::SoundEvent::Select), 80, false);
 }
 
 void PauseScreenState::OnExit()
@@ -53,6 +57,10 @@ void PauseScreenState::OnExit()
 
 	inputMan.RemoveChangingToControllerCommands();
 	inputMan.RemoveChangingToKeyboardCommands();
+
+	auto& audioService = dae::AudioLocator::GetAudioService();
+
+	audioService.PlaySoundClip(static_cast<dae::SoundID>(Game::SoundEvent::Select), 80, false);
 }
 
 void PauseScreenState::OnSuspend()

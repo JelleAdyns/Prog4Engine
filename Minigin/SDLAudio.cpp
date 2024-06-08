@@ -15,7 +15,10 @@ namespace dae
 	class SDLAudio::SDLAudioImpl
 	{
 	public:
-		SDLAudioImpl() { m_Thread = std::jthread{ &SDLAudio::SDLAudioImpl::HandleRequests, this}; }
+		SDLAudioImpl() { 
+			m_Thread = std::jthread{ &SDLAudio::SDLAudioImpl::HandleRequests, this};
+			Mix_AllocateChannels(20);
+		}
 		~SDLAudioImpl() {m_ServiceIsActive = false;}
 
 		SDLAudioImpl(const SDLAudioImpl&) = delete;

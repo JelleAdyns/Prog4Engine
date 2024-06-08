@@ -7,6 +7,8 @@
 #include <GameObject.h>
 #include <GameTime.h>
 #include <algorithm>
+#include <AudioLocator.h>
+#include "Game.h"
 
 PickUpComponent::PickUpComponent(dae::GameObject* pOwner, PickUpComponent::PickUpType pickUpType):
 	dae::Component{pOwner},
@@ -14,7 +16,7 @@ PickUpComponent::PickUpComponent(dae::GameObject* pOwner, PickUpComponent::PickU
 	m_pCollisionComp{},
 	m_pSpriteComp{}
 {
-
+	dae::AudioLocator::GetAudioService().AddSound("Sounds/Pickup.wav", static_cast<dae::SoundID>(Game::SoundEvent::PickUp));
 }
 
 PickUpComponent::~PickUpComponent()
@@ -54,6 +56,7 @@ void PickUpComponent::Update()
 		{
 			pPlayer->GetComponent<InventoryComponent>()->AddItem(m_PickUpType, GetOwner()->GetWorldPosition());
 			GetOwner()->MarkDead();
+			dae::AudioLocator::GetAudioService().PlaySoundClip(static_cast<dae::SoundID>(Game::SoundEvent::PickUp), 120, false);
 		}
 	}
 }

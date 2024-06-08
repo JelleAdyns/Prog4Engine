@@ -1,5 +1,7 @@
 #include "MaitaPoppedState.h"
 #include "CollisionTags.h"
+#include <AudioLocator.h>
+#include "Game.h"
 
 
 MaitaPoppedState::MaitaPoppedState(dae::GameObject* pEnemy) :
@@ -10,7 +12,12 @@ MaitaPoppedState::MaitaPoppedState(dae::GameObject* pEnemy) :
 	m_pFloorComp{ pEnemy->GetComponent<FloorCheckingComponent>() },
 	m_pWallComp{ pEnemy->GetComponent<WallCheckingComponent>() },
 	m_pSpriteComp{ pEnemy->GetComponent<SpriteComponent>() }
-{}
+{
+
+	dae::AudioLocator::GetAudioService().AddSound("Sounds/EnemyPopped.wav", static_cast<dae::SoundID>(Game::SoundEvent::EnemyDeath));
+	dae::AudioLocator::GetAudioService().PlaySoundClip(static_cast<dae::SoundID>(Game::SoundEvent::EnemyDeath), 120, false);
+}
+
 
 std::unique_ptr<EnemyState> MaitaPoppedState::Update()
 {
