@@ -2,10 +2,11 @@
 #include "KeyState.h"
 #include <map>
 #include <iostream>
+#include "Windows.h"
+#include <XInput.h>
 
 namespace dae
 {
-
 	//Implementation
 	class Controller::ControllerImpl
 	{
@@ -17,7 +18,20 @@ namespace dae
 			m_ButtonsPressedThisFrame{},
 			m_ButtonsReleasedThisFrame{}
 		{
-	
+			static_assert(static_cast<int>(ControllerButton::DpadUp) == XINPUT_GAMEPAD_DPAD_UP);
+			static_assert(static_cast<int>(ControllerButton::DpadDown) == XINPUT_GAMEPAD_DPAD_DOWN);
+			static_assert(static_cast<int>(ControllerButton::DpadLeft) == XINPUT_GAMEPAD_DPAD_LEFT);
+			static_assert(static_cast<int>(ControllerButton::DpadRight) == XINPUT_GAMEPAD_DPAD_RIGHT);
+			static_assert(static_cast<int>(ControllerButton::Start) == XINPUT_GAMEPAD_START);
+			static_assert(static_cast<int>(ControllerButton::Back) == XINPUT_GAMEPAD_BACK);
+			static_assert(static_cast<int>(ControllerButton::LeftThumb) == XINPUT_GAMEPAD_LEFT_THUMB);
+			static_assert(static_cast<int>(ControllerButton::RightThumb) == XINPUT_GAMEPAD_RIGHT_THUMB);
+			static_assert(static_cast<int>(ControllerButton::LeftShoulder) == XINPUT_GAMEPAD_LEFT_SHOULDER);
+			static_assert(static_cast<int>(ControllerButton::RightShoulder) == XINPUT_GAMEPAD_RIGHT_SHOULDER);
+			static_assert(static_cast<int>(ControllerButton::A) == XINPUT_GAMEPAD_A);
+			static_assert(static_cast<int>(ControllerButton::B) == XINPUT_GAMEPAD_B);
+			static_assert(static_cast<int>(ControllerButton::X) == XINPUT_GAMEPAD_X);
+			static_assert(static_cast<int>(ControllerButton::Y) == XINPUT_GAMEPAD_Y);
 		}
 
 		~ControllerImpl() = default;
