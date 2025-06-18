@@ -13,6 +13,8 @@
 #include "StartLevelCommand.h"
 #include <KeyState.h>
 #include "ActivateButtonCommand.h"
+#include "HighScoreState.h"
+#include "TitleScreenState.h"
 #include "SetTextCommand.h"
 
 const std::string MainMenuState::m_SceneName{ "MainMenu" };
@@ -109,7 +111,7 @@ void MainMenuState::LoadMainMenu() const
 	handlerComponent->AddButton(button3->GetComponent<ButtonComponent>());
 
 
-	std::unique_ptr<dae::Command> loadCommand4 = std::make_unique<LoadSceneCommand>(Game::CurrScene::HighScore);
+	std::unique_ptr<dae::Command> loadCommand4 = std::make_unique<LoadSceneCommand<HighScoreState>>();
 
 	auto button4 = std::make_unique<dae::GameObject>(0.f, distanceBetweenButton);
 	button4->AddRenderComponent(false);
@@ -120,7 +122,7 @@ void MainMenuState::LoadMainMenu() const
 	handlerComponent->AddButton(button4->GetComponent<ButtonComponent>());
 
 
-	std::unique_ptr<dae::Command> loadCommand5 = std::make_unique<LoadSceneCommand>(Game::CurrScene::TitleScreen);
+	std::unique_ptr<dae::Command> loadCommand5 = std::make_unique<LoadSceneCommand<TitleScreenState>>();
 
 	auto button5 = std::make_unique<dae::GameObject>(0.f, distanceBetweenButton);
 	button5->AddRenderComponent(false);

@@ -9,6 +9,7 @@
 #include "Game.h"
 #include "TimerComponent.h"
 #include "LoadSceneCommands.h"
+#include "LevelState.h"
 #include <AudioLocator.h>
 
 const std::string WelcomeScreenState::m_SceneName{ "WelcomeScreen" };
@@ -93,7 +94,7 @@ void WelcomeScreenState::LoadWelcomeScreen() const
 		scene.AddGameObject(std::move(pBob));
 	}
 
-	std::unique_ptr<dae::Command> nextScene = std::make_unique<LoadSceneCommand>(Game::CurrScene::Level);
+	std::unique_ptr<dae::Command> nextScene = std::make_unique<LoadSceneCommand<LevelState>>();
 
 	auto pTimer = std::make_unique<dae::GameObject>();
 	pTimer->AddComponent<TimerComponent>(8.f, std::move(nextScene));

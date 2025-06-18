@@ -4,12 +4,12 @@
 #include <Command.h>
 #include "Game.h"
 
+template <typename SceneType>
 class LoadSceneCommand final : public dae::Command 
 {
 public:
-	LoadSceneCommand(Game::CurrScene newScene) :
-		dae::Command{},
-		m_CurrScene{ newScene } 
+	LoadSceneCommand() :
+		dae::Command{}
 	{};
 	virtual ~LoadSceneCommand() = default;
 
@@ -20,18 +20,16 @@ public:
 
 	virtual void Execute() const override
 	{
-		Game::GetInstance().SetScene(m_CurrScene);
+		Game::GetInstance().SetScene<SceneType>();
 	}
-private:
-	const Game::CurrScene m_CurrScene;
 };
 
+template <typename SceneType>
 class PushSceneCommand final : public dae::Command
 {
 public:
-	PushSceneCommand(Game::CurrScene newScene) :
-		dae::Command{},
-		m_CurrScene{ newScene }
+	PushSceneCommand() :
+		dae::Command{}
 	{};
 	virtual ~PushSceneCommand() = default;
 
@@ -42,12 +40,9 @@ public:
 
 	virtual void Execute() const override
 	{
-		Game::GetInstance().PushScene(m_CurrScene);
+		Game::GetInstance().PushScene<SceneType>();
 	}
-private:
-	const Game::CurrScene m_CurrScene;
 };
-
 
 class PopSceneCommand final : public dae::Command
 {

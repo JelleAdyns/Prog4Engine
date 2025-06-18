@@ -3,6 +3,7 @@
 
 #include <Command.h>
 #include "Game.h"
+#include "WelcomeScreenState.h"
 
 class StartLevelCommand final : public dae::Command
 {
@@ -21,7 +22,7 @@ public:
 	virtual void Execute() const override
 	{
 		Game::GetInstance().SetGameMode(m_GameMode);
-		Game::GetInstance().SetScene(Game::CurrScene::WelcomeScreen);
+		Game::GetInstance().SetScene<WelcomeScreenState>();
 	}
 private:
 	const Game::GameMode m_GameMode;

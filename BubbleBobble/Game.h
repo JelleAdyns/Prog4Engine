@@ -4,6 +4,7 @@
 #include <Singleton.h>
 #include <AudioService.h>
 #include <vector>
+#include <algorithm>
 #include "TitleScreenState.h"
 #include "PauseScreenState.h"
 namespace dae
@@ -29,18 +30,6 @@ public:
 		Versus
 	};
 
-	enum class CurrScene
-	{
-		TitleScreen,
-		Menu,
-		Level,
-		PauseScreen,
-		Results,
-		HighScore,
-		DeathScreen,
-		WelcomeScreen
-	};
-
 	// I've got this idea of making sure the underlying type is SoundID from Wout Firlefyn
 	enum class SoundEvent : dae::SoundID
 	{
@@ -57,10 +46,45 @@ public:
 
 
 	void StartGame();
-	void SetScene(Game::CurrScene newScene);
-	void PushScene(Game::CurrScene newScene);
-	void PopScene();
-	void SetGameMode(Game::GameMode newGameMode);
+
+	template <typename SceneType>
+		requires std::derived_from<SceneType ,SceneState>
+	void SetScene()
+	{
+		std::for_each(m_SceneStack.crbegin(), m_SceneStack.crend(),
+			[](const std::unique_ptr<SceneState>& scene)
+			{
+				scene->OnExit();
+			}
+		);
+		m_SceneStack.clear();
+		
+		m_SceneStack.push_back(std::make_unique<SceneType>());
+		
+		m_SceneStack.back()->OnEnter();
+	}
+
+	template <typename SceneType>
+		requires std::derived_from<SceneType, SceneState>
+	void PushScene()
+	{
+		m_SceneStack.back()->OnSuspend();
+
+		m_SceneStack.push_back(std::make_unique<SceneType>());
+		
+		m_SceneStack.back()->OnEnter();
+	}
+
+	void PopScene()
+	{
+		m_SceneStack.back()->OnExit();
+
+		m_SceneStack.pop_back();
+
+		m_SceneStack.back()->OnResume();
+	}
+
+	void SetGameMode(Game::GameMode newGameMode) { m_CurrentGameMode = newGameMode; }
 	GameMode GetCurrentGameMode() {return m_CurrentGameMode;}
 private:
 

@@ -10,6 +10,7 @@
 #include "LoadSceneCommands.h"
 #include "Game.h"
 #include "ActivateButtonCommand.h"
+#include "MainMenuState.h"
 #include <KeyState.h>
 #include "SetTextCommand.h"
 
@@ -72,7 +73,7 @@ void TitleScreenState::LoadTitleScreen() const
 
 	const auto& handlerComponent = buttonHandler->GetComponent<ButtonHandlerComponent>();
 
-	std::unique_ptr<dae::Command> loadCommand = std::make_unique<LoadSceneCommand>(Game::CurrScene::Menu);
+	std::unique_ptr<dae::Command> loadCommand = std::make_unique<LoadSceneCommand<MainMenuState>>();
 
 	auto button1 = std::make_unique<dae::GameObject>(static_cast<float>(dae::Minigin::GetWindowSize().x) / 2, 180.f);
 	button1->AddRenderComponent(true);

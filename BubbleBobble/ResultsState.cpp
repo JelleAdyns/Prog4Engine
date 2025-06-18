@@ -11,6 +11,7 @@
 #include <AudioLocator.h>
 #include <KeyState.h>
 #include "ActivateButtonCommand.h"
+#include "TitleScreenState.h"
 #include "SetTextCommand.h"
 
 const std::string ResultsState::m_SceneName{ "Results" };
@@ -254,7 +255,7 @@ void ResultsState::CreateLeaveButton(dae::Scene& scene) const
 
 	const auto& handlerComponent = buttonHandler->GetComponent<ButtonHandlerComponent>();
 
-	std::unique_ptr<dae::Command> pNextSceneCmd = std::make_unique<LoadSceneCommand>(Game::CurrScene::TitleScreen);
+	std::unique_ptr<dae::Command> pNextSceneCmd = std::make_unique<LoadSceneCommand<TitleScreenState>>();
 	auto button = std::make_unique<dae::GameObject>(static_cast<float>(dae::Minigin::GetWindowSize().x) / 2, 180.f);
 	button->AddComponent<ButtonComponent>(std::move(pNextSceneCmd));
 

@@ -21,6 +21,9 @@
 #include "ActivateButtonCommand.h"
 #include "Achievements.h"
 #include "LoadSceneCommands.h"
+#include "PauseScreenState.h"
+#include "ResultsState.h"
+#include "DeathScreenState.h"
 
 const std::string LevelState::m_SceneName{ "Level" };
 LevelState::PlayerInfo LevelState::m_pPlayerOne{ .textColor{ 116, 251, 77, 255 }, .spawnPos{24.f, dae::Minigin::GetWindowSize().y - 24.f}  };
@@ -85,7 +88,7 @@ void LevelState::AdvanceLevel()
 
 	if(m_LevelNumber == m_MaxLevel)
 	{
-		Game::GetInstance().SetScene(Game::CurrScene::Results);
+		Game::GetInstance().SetScene<ResultsState>();
 	}
 	else
 	{
@@ -133,7 +136,7 @@ void LevelState::CreatePauseButton(dae::Scene& scene)
 	pButtonHandler->AddComponent<ButtonHandlerComponent>();
 	auto pHandlerComp = pButtonHandler->GetComponent<ButtonHandlerComponent>();
 
-	std::unique_ptr<dae::Command> pNextLevelCommand = std::make_unique<PushSceneCommand>(Game::CurrScene::PauseScreen);
+	std::unique_ptr<dae::Command> pNextLevelCommand = std::make_unique<PushSceneCommand<PauseScreenState>>();
 	auto pButton = std::make_unique<dae::GameObject>();
 	pButton->AddComponent<ButtonComponent>(pNextLevelCommand);
 	auto pButtonComp = pButton->GetComponent<ButtonComponent>();
@@ -262,7 +265,7 @@ void LevelState::UploadScene(dae::Scene& scene)
 	HighScoreUIComponent* pHighScoreComp = pHighScoreDisplay->GetComponent<HighScoreUIComponent>();
 
 	// PlayerCounter
-	std::unique_ptr<dae::Command> pNextCmd = std::make_unique<LoadSceneCommand>(Game::CurrScene::DeathScreen);
+	std::unique_ptr<dae::Command> pNextCmd = std::make_unique<LoadSceneCommand<DeathScreenState>>();
 	auto pCounter = std::make_unique<dae::GameObject>();
 	pCounter->AddComponent<PlayerCounterComponent>();
 	pCounter->AddComponent<TimerComponent>(3.f, std::move(pNextCmd));

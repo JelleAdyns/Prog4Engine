@@ -10,6 +10,7 @@
 #include "ActivateButtonCommand.h"
 #include <KeyState.h>
 #include "LoadSceneCommands.h"
+#include "MainMenuState.h"
 
 const std::string HighScoreState::m_SceneName{ "HighScore" };
 
@@ -31,7 +32,7 @@ void HighScoreState::OnEnter()
 
 	const auto& handlerComponent = buttonHandler->GetComponent<ButtonHandlerComponent>();
 
-	std::unique_ptr<dae::Command> pNextSceneCmd = std::make_unique<LoadSceneCommand>(Game::CurrScene::Menu);
+	std::unique_ptr<dae::Command> pNextSceneCmd = std::make_unique<LoadSceneCommand<MainMenuState>>();
 	auto button = std::make_unique<dae::GameObject>(static_cast<float>(dae::Minigin::GetWindowSize().x) / 2, 180.f);
 	button->AddComponent<ButtonComponent>(std::move(pNextSceneCmd));
 

@@ -10,6 +10,8 @@
 #include <KeyState.h>
 #include <InputCommandBinder.h>
 #include "ActivateButtonCommand.h"
+#include "ResultsState.h"
+#include "TitleScreenState.h"
 #include <AudioLocator.h>
 
 const std::string DeathScreenState::m_SceneName{ "Death" };
@@ -74,7 +76,7 @@ void DeathScreenState::CreateButtons(dae::Scene& scene) const
 	const auto& handlerComponent = buttonHandler->GetComponent<ButtonHandlerComponent>();
 
 	const float distanceBetweenButton{ 20.f };
-	std::unique_ptr<dae::Command> loadCommand = std::make_unique<LoadSceneCommand>(Game::CurrScene::Results);
+	std::unique_ptr<dae::Command> loadCommand = std::make_unique<LoadSceneCommand<ResultsState>>();
 
 	auto button1 = std::make_unique<dae::GameObject>(dae::Minigin::GetWindowSize().x / 2.f, dae::Minigin::GetWindowSize().y / 4.f*3);
 	button1->AddRenderComponent(true);
@@ -83,7 +85,7 @@ void DeathScreenState::CreateButtons(dae::Scene& scene) const
 	
 	handlerComponent->AddButton(button1->GetComponent<ButtonComponent>());
 
-	std::unique_ptr<dae::Command> loadCommand2 = std::make_unique<LoadSceneCommand>(Game::CurrScene::TitleScreen);
+	std::unique_ptr<dae::Command> loadCommand2 = std::make_unique<LoadSceneCommand<TitleScreenState>>();
 
 	auto button2 = std::make_unique<dae::GameObject>(0.f, distanceBetweenButton);
 	button2->AddRenderComponent(true);
