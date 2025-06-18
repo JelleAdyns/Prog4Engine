@@ -95,16 +95,13 @@ namespace dae
             box.left = worldPos.x + alternativeOffset.x;
             box.bottom = box.top + alternativeSize.y;
             box.right = box.left + alternativeSize.x;
-
-           
-
             
-
-            std::for_each(m_pVecAllCollisionComponents.cbegin(), m_pVecAllCollisionComponents.cend(), [&](CollisionComponent* pCollComponent)
+            std::for_each(m_pVecAllCollisionComponents.cbegin(), m_pVecAllCollisionComponents.cend(),
+                [&](CollisionComponent* pCollComponent)
                 {
 
                     if (pCollComponent->m_CollisionOn &&                    // check if collision is needed
-                        m_CollisionFlags == 0 &&                            // already collided with something
+                        m_CollisionFlags == 0 &&                            // check if not already collided with something
                         pCollComponent != this &&                           // don't check for itself
                         collisionTag == pCollComponent->m_CollisionTag)     // check for correct collision tag
                     {
