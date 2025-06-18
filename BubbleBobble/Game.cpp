@@ -40,16 +40,13 @@ void Game::StartGame()
 	dae::AudioLocator::RegisterAudioService(std::make_unique<dae::SDLAudio>());
 #endif // !NDEBUG
 
-
 	dae::InputCommandBinder::GetInstance().AddController();
 
 	auto& audioService = dae::AudioLocator::GetAudioService();
 	audioService.AddSound("Sounds/TitleScreen.wav", static_cast<dae::SoundID>(Game::SoundEvent::TitleScreen));
 	audioService.PlaySoundClip(static_cast<dae::SoundID>(Game::SoundEvent::TitleScreen), 80, false);
 
-	//m_CurrScene = std::make_unique<TitleScreenState>();
-	//m_CurrScene->OnEnter();
-	m_SceneStack.push_back(std::make_unique<TitleScreenState>());
-	m_SceneStack.back()->OnEnter();
+	m_SceneStack.push(std::make_unique<TitleScreenState>());
+	m_SceneStack.top()->OnEnter();
 }
 

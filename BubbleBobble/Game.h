@@ -3,8 +3,7 @@
 
 #include <Singleton.h>
 #include <AudioService.h>
-#include <vector>
-#include <algorithm>
+#include <stack>
 #include "TitleScreenState.h"
 #include "PauseScreenState.h"
 namespace dae
@@ -47,41 +46,35 @@ public:
 
 	void StartGame();
 
+
 	template <typename SceneType>
 		requires std::derived_from<SceneType ,SceneState>
 	void SetScene()
 	{
-		std::for_each(m_SceneStack.crbegin(), m_SceneStack.crend(),
-			[](const std::unique_ptr<SceneState>& scene)
-			{
-				scene->OnExit();
-			}
-		);
-		m_SceneStack.clear();
-		
-		m_SceneStack.push_back(std::make_unique<SceneType>());
-		
-		m_SceneStack.back()->OnEnter();
+		while (!m_SceneStack.empty())
+		{
+			m_SceneStack.top()->OnExit();
+			m_SceneStack.pop();
+		}
+
+		m_SceneStack.push(std::make_unique<SceneType>());
+		m_SceneStack.top()->OnEnter();
 	}
 
 	template <typename SceneType>
 		requires std::derived_from<SceneType, SceneState>
 	void PushScene()
 	{
-		m_SceneStack.back()->OnSuspend();
-
-		m_SceneStack.push_back(std::make_unique<SceneType>());
-		
-		m_SceneStack.back()->OnEnter();
+		m_SceneStack.top()->OnSuspend();
+		m_SceneStack.push(std::make_unique<SceneType>());
+		m_SceneStack.top()->OnEnter();
 	}
 
 	void PopScene()
 	{
-		m_SceneStack.back()->OnExit();
-
-		m_SceneStack.pop_back();
-
-		m_SceneStack.back()->OnResume();
+		m_SceneStack.top()->OnExit();
+		m_SceneStack.pop();
+		m_SceneStack.top()->OnResume();
 	}
 
 	void SetGameMode(Game::GameMode newGameMode) { m_CurrentGameMode = newGameMode; }
@@ -91,7 +84,7 @@ private:
 	std::unique_ptr<SceneState> m_CurrScene{ nullptr };
 	std::unique_ptr<PauseScreenState> m_PauseScreen{ nullptr };
 	GameMode m_CurrentGameMode{ GameMode::SinglePlayer };
-	std::vector<std::unique_ptr<SceneState>> m_SceneStack;
+	std::stack<std::unique_ptr<SceneState>> m_SceneStack;
 	friend class dae::Singleton<Game>;
 	Game() = default;
 };
