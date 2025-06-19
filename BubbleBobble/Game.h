@@ -60,25 +60,28 @@ public:
 		m_SceneStack.push(std::make_unique<SceneType>());
 		m_SceneStack.top()->OnEnter();
 	}
-
 	template <typename SceneType>
 		requires std::derived_from<SceneType, SceneState>
 	void PushScene()
 	{
-		m_SceneStack.top()->OnSuspend();
+		if (!m_SceneStack.empty())
+			m_SceneStack.top()->OnSuspend();
 		m_SceneStack.push(std::make_unique<SceneType>());
 		m_SceneStack.top()->OnEnter();
 	}
-
 	void PopScene()
 	{
+		if (m_SceneStack.empty()) return;
+		
 		m_SceneStack.top()->OnExit();
 		m_SceneStack.pop();
-		m_SceneStack.top()->OnResume();
+
+		if(!m_SceneStack.empty())
+			m_SceneStack.top()->OnResume();
 	}
 
 	void SetGameMode(Game::GameMode newGameMode) { m_CurrentGameMode = newGameMode; }
-	GameMode GetCurrentGameMode() {return m_CurrentGameMode;}
+	GameMode GetCurrentGameMode() const {return m_CurrentGameMode;}
 private:
 
 	std::unique_ptr<SceneState> m_CurrScene{ nullptr };
